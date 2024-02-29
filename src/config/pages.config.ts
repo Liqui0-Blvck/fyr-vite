@@ -251,6 +251,10 @@ export const appPages = {
 };
 
 export const componentsPages = {
+	// prueba: {
+	// 	id: 'prueba',
+	// 	to: '/prueba
+	// }
 	uiPages: {
 		id: 'uiPages',
 		to: '/ui',

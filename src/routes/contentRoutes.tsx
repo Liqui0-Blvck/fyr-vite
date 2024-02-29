@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { RouteProps } from 'react-router-dom';
 import { appPages, authPages, componentsPages, examplePages } from '../config/pages.config';
 import NotFoundPage from '../pages/NotFound.page';
@@ -145,6 +145,7 @@ const ChatVideoPage = lazy(() => import('../pages/ai/chat/ChatVideoPage/ChatVide
 const ChatAudioPage = lazy(() => import('../pages/ai/chat/ChatAudioPage/ChatAudio.page'));
 const ChatCodePage = lazy(() => import('../pages/ai/chat/ChatCodePage/ChatCode.page'));
 
+
 /**
  * CHAT
  */
@@ -154,6 +155,8 @@ const ChatPage = lazy(() => import('../pages/ChatPage/Chat.page'));
  * Other
  */
 const UnderConstructionPage = lazy(() => import('../pages/UnderConstruction.page'));
+
+import Prueba from '../components/Prueba';
 
 const contentRoutes: RouteProps[] = [
 	/**
@@ -384,6 +387,7 @@ const contentRoutes: RouteProps[] = [
 	{ path: authPages.loginPage.to, element: <LoginPage /> },
 	{ path: authPages.profilePage.to, element: <ProfilePage /> },
 
+	{ path: '/pruebas', element: <Prueba />},
 	{ path: '*', element: <NotFoundPage /> },
 ];
 
