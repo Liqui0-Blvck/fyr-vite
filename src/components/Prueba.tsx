@@ -16,13 +16,10 @@ interface PruebaFetch {
 }
 
 const Prueba = () => {
-  const { response } = useAxiosFunction({
+  const { response, setRefresh } = useAxiosFunction({
     method: 'GET',
     url: '/api/items/'
   })
-
-  console.log("yo estoy preguntando ", response)
-
 
   return (
     <div>

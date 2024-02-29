@@ -39,83 +39,71 @@ import Subheader, {
 import FieldWrap from '../../../../components/form/FieldWrap';
 import Avatar from '../../../../components/Avatar';
 import Tooltip from '../../../../components/ui/Tooltip';
+import { Cliente } from '../../../../types/UserTypes.type';
+import useAxiosFunction from '../../../../hooks/useAxiosFunction';
 
-const columnHelper = createColumnHelper<TUser>();
+const columnHelper = createColumnHelper<Cliente>();
 
 const editLinkPath = `../${appPages.crmAppPages.subPages.customerPage.subPages.editPageLink.to}/`;
 
 const columns = [
-	columnHelper.accessor('image', {
+	columnHelper.accessor('nombre', {
 		cell: (info) => (
 			<Link to={`${editLinkPath}${info.row.original.id}`}>
-				<Avatar
-					src={info.getValue()?.thumb}
-					name={`${info.row.original.firstName} ${info.row.original.lastName}`}
-					className='!aspect-[9/12] !w-14 2xl:!w-20'
-					rounded='rounded'
-				/>
-			</Link>
-		),
-		header: 'Image',
-		footer: 'Image',
-		enableGlobalFilter: false,
-		enableSorting: false,
-	}),
-	columnHelper.accessor('username', {
-		cell: (info) => (
-			<Link to={`${editLinkPath}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.firstName} ${info.row.original.lastName}`}</div>
+				<div className='font-bold'>{`${info.row.original.nombre} ${info.row.original.nombre}`}</div>
 				<div className='text-sm'>@{info.getValue()}</div>
 			</Link>
 		),
-		header: 'Username',
-		footer: 'Username',
+		header: 'nombre',
+		footer: 'nombre',
 	}),
-	columnHelper.accessor('email', {
+	columnHelper.accessor('correo', {
 		cell: (info) => (
 			<a href={`mailto:${info.getValue()}`} className='flex items-center gap-2'>
 				{info.getValue()}
-				{info.row.original.isVerified && <Icon icon='HeroCheckBadge' color='blue' />}
+				{/* {info.row.original.isVerified && <Icon icon='HeroCheckBadge' color='blue' />} */}
 			</a>
 		),
-		header: 'Email',
-		footer: 'Email',
+		header: 'correo',
+		footer: 'correo',
 	}),
-	columnHelper.accessor('position', {
+	columnHelper.accessor('tipo_cliente', {
 		cell: (info) => <span>{info.getValue()}</span>,
-		header: 'Position',
-		footer: 'Position',
+		header: 'tipo_cliente',
+		footer: 'tipo_cliente',
 	}),
-	columnHelper.display({
-		cell: (info) => (
-			<div className='flex items-center gap-2'>
-				{info.row.original.socialAuth?.google && (
-					<Tooltip text='Google'>
-						<Icon size='text-xl' icon='CustomGoogle' />
-					</Tooltip>
-				)}
-				{info.row.original.socialAuth?.facebook && (
-					<Tooltip text='Facebook'>
-						<Icon size='text-xl' icon='CustomFacebook' />
-					</Tooltip>
-				)}
-				{info.row.original.socialAuth?.apple && (
-					<Tooltip text='Apple'>
-						<Icon size='text-xl' icon='CustomApple' />
-					</Tooltip>
-				)}
-			</div>
-		),
-		header: 'Social Account',
-		footer: 'Social Account',
-	}),
+	// columnHelper.display({
+	// 	cell: (info) => (
+	// 		<div className='flex items-center gap-2'>
+	// 			{info.row.original.socialAuth?.google && (
+	// 				<Tooltip text='Google'>
+	// 					<Icon size='text-xl' icon='CustomGoogle' />
+	// 				</Tooltip>
+	// 			)}
+	// 			{info.row.original.socialAuth?.facebook && (
+	// 				<Tooltip text='Facebook'>
+	// 					<Icon size='text-xl' icon='CustomFacebook' />
+	// 				</Tooltip>
+	// 			)}
+	// 			{info.row.original.socialAuth?.apple && (
+	// 				<Tooltip text='Apple'>
+	// 					<Icon size='text-xl' icon='CustomApple' />
+	// 				</Tooltip>
+	// 			)}
+	// 		</div>
+	// 	),
+	// 	header: 'Social Account',
+	// 	footer: 'Social Account',
+	// }),
 ];
 
 const CustomerListPage = () => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('');
-
-	const [data] = useState<TUser[]>(() => [...usersDb]);
+	const { response: data } = useAxiosFunction({
+		method: 'GET',
+		url: '/api/clientes/'
+	})
 
 	const table = useReactTable({
 		data,

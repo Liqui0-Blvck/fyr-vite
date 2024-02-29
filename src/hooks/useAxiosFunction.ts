@@ -41,7 +41,8 @@ const useAxiosFunction = (configObj: {
 					...requestConfig,
 					signal: ctrl.signal,	
 				});
-				// console.log(res);
+
+
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access
 				setResponse(res.data);
 			}
@@ -49,6 +50,10 @@ const useAxiosFunction = (configObj: {
 			if (refresh){
 				crudOperator()
 			}
+
+			
+			crudOperator()
+
 			
 		} catch (err) {
 			// @ts-ignore
@@ -62,6 +67,7 @@ const useAxiosFunction = (configObj: {
 
 		return () => {
 			isMounted = false
+			setRefresh(false)
 		}
 	}, [])
 		
@@ -75,7 +81,7 @@ const useAxiosFunction = (configObj: {
 		return () => controller && controller.abort();
 	}, [controller]);
 
-	return { response, loading, error, refresh }
+	return { response, loading, error, refresh, setRefresh }
 };
 
 export default useAxiosFunction;
