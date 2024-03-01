@@ -23,12 +23,12 @@ const UserTemplate = () => {
 			}>
 			<NavSeparator />
 			<NavItem {...authPages.profilePage} />
-			<NavItem {...appPages.mailAppPages.subPages.inboxPages}>
+			{/* <NavItem {...appPages.mailAppPages.subPages.inboxPages}>
 				<Badge variant='solid' className='leading-none'>
 					3
 				</Badge>
 				<NavButton icon='HeroPlusCircle' title='New Mail' onClick={() => {}} />
-			</NavItem>
+			</NavItem> */}
 			<NavItem text='Logout' icon='HeroArrowRightOnRectangle' onClick={() => onLogout()} />
 		</User>
 	);

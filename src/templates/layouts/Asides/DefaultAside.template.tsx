@@ -35,7 +35,7 @@ const DefaultAsideTemplate = () => {
 						</Badge>
 					</NavItem>
 
-					<NavTitle>Apps</NavTitle>
+					{/* <NavTitle>Apps</NavTitle>
 					<NavCollapse
 						text={appPages.salesAppPages.text}
 						to={appPages.salesAppPages.to}
@@ -116,7 +116,7 @@ const DefaultAsideTemplate = () => {
 								6
 							</Badge>
 						</NavItem>
-					</NavCollapse>
+					</NavCollapse> */}
 				</Nav>
 			</AsideBody>
 			<AsideFooter>
