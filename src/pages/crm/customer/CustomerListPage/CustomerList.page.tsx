@@ -122,7 +122,6 @@ const CustomerListPage = () => {
 		initialState: {
 			pagination: { pageSize: 5 },
 		},
-		// debugTable: true,
 	});
 
 	return (
