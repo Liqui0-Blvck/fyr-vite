@@ -1,3 +1,4 @@
+// eslint-disable-next-line prettier/prettier
 import React, { forwardRef, InputHTMLAttributes } from 'react';
 import classNames from 'classnames';
 import { TInputTypes } from '../../types/input.type';

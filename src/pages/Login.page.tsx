@@ -6,11 +6,10 @@ import PageWrapper from '../components/layouts/PageWrapper/PageWrapper';
 import Button from '../components/ui/Button';
 import { useAuth } from '../context/authContext';
 import Input from '../components/form/Input';
-import usersDb from '../mocks/db/users.db';
-import LogoTemplate from '../templates/layouts/Logo/Logo.template';
 import FieldWrap from '../components/form/FieldWrap';
 import Icon from '../components/icon/Icon';
 import Validation from '../components/form/Validation';
+import useAxiosFunction from '../hooks/useAxiosFunction';
 
 type TValues = {
 	username: string;
@@ -19,13 +18,19 @@ type TValues = {
 
 const LoginPage = () => {
 	const { onLogin } = useAuth();
+	const { response } = useAxiosFunction({
+		method: 'GET',
+		url: '/api/clientes/'
+	})
+
+	console.log(response)
 
 	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
 
 	const formik = useFormik({
 		initialValues: {
-			username: usersDb[5].username,
-			password: usersDb[5].password,
+			username: '',
+			password: '',
 		},
 		validate: (values: TValues) => {
 			const errors: Partial<TValues> = {};
@@ -42,7 +47,7 @@ const LoginPage = () => {
 		},
 		onSubmit: (values: TValues, { setFieldError }) => {
 			onLogin(values.username, values.password)
-				.then(() => {})
+				.then(() => { })
 				.catch((e: Error) => {
 					if (e.cause === 'username') {
 						setFieldError('username', e.message);
@@ -58,39 +63,11 @@ const LoginPage = () => {
 			<div className='container mx-auto flex h-full items-center justify-center'>
 				<div className='flex max-w-sm flex-col gap-8'>
 					<div>
-						<LogoTemplate className='h-12' />
-					</div>
-					<div>
-						<span className='text-4xl font-semibold'>Sign in</span>
-					</div>
-					<div>
-						<span>Sign up with Open account</span>
-					</div>
-					<div className='grid grid-cols-12 gap-4'>
-						<div className='col-span-6'>
-							<Button
-								icon='CustomGoogle'
-								variant='outline'
-								color='zinc'
-								size='lg'
-								className='w-full'>
-								Google
-							</Button>
-						</div>
-						<div className='col-span-6'>
-							<Button
-								icon='CustomApple'
-								variant='outline'
-								color='zinc'
-								size='lg'
-								className='w-full'>
-								Apple
-							</Button>
-						</div>
+						<span className='text-4xl font-semibold'>Inicia Sesión</span>
 					</div>
 					<div className='border border-zinc-500/25 dark:border-zinc-500/50' />
 					<div>
-						<span>Or continue with email address</span>
+						<span>Ingresa con tu correo</span>
 					</div>
 					<form className='flex flex-col gap-4' noValidate>
 						<div
@@ -169,10 +146,10 @@ const LoginPage = () => {
 					<div>
 						<span className='flex gap-2 text-sm'>
 							<span className='text-zinc-400 dark:text-zinc-600'>
-								Don’t have an account?
+								Tienes una cuenta?
 							</span>
 							<Link to='/' className='hover:text-inherit'>
-								Sign up
+								Registrate
 							</Link>
 						</span>
 					</div>

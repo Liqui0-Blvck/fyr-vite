@@ -1,9 +1,11 @@
 import React, { createContext, FC, ReactNode, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useLocalStorage from '../hooks/useLocalStorage';
+import useCookieStorage from '../hooks/useLocalStorage';
 import { authPages } from '../config/pages.config';
-import useFakeUserAPI from '../mocks/hooks/useFakeUserAPI';
+import useUserAPI from '../mocks/hooks/useUserAPI';
 import { TUser } from '../mocks/db/users.db';
+import useAxiosFunction from '../hooks/useAxiosFunction';
+import axios from 'axios';
 
 export interface IAuthContextProps {
 	usernameStorage: string | ((newValue: string | null) => void) | null;
@@ -18,19 +20,34 @@ interface IAuthProviderProps {
 	children: ReactNode;
 }
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
-	const [usernameStorage, setUserName] = useLocalStorage('user', null);
+	const [usernameStorage, setUserName] = useCookieStorage('user', null);
+	const base_url = 'http://127.0.0.1:8000'
 
-	const { response, isLoading, getCheckUser } = useFakeUserAPI(usernameStorage as string);
+	const { response, isLoading, getCheckUser } = useUserAPI(usernameStorage as string);
 	const userData = response as TUser;
 
 	const navigate = useNavigate();
 
 	// call this function when you want to authenticate the user
 	const onLogin = async (username: string, password: string) => {
-		await getCheckUser(username, password).then(async () => {
-			if (typeof setUserName === 'function')
-				await setUserName(username).then(() => navigate('/'));
-		});
+		try {
+			const response = await axios.post(`${base_url}/auth/token/`, {
+				username: username,
+				password: password
+			});
+
+			if (response.status === 200) {
+				if (typeof setUserName === 'function') {
+					setUserName(response.data)
+				}
+				navigate('/')
+			}
+		} catch (error: any) {
+			console.error('Error:', error);
+			// Maneja el error de la solicitud aquí
+		}
+
+
 	};
 
 	// call this function to sign out logged-in user
