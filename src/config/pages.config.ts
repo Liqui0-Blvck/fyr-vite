@@ -494,6 +494,12 @@ export const authPages = {
 		text: 'Profile',
 		icon: 'HeroUser',
 	},
+	restorePage: {
+		id: 'restoreAccount',
+		to: '/restore-account',
+		text: 'Restore Account',
+		icon: 'HeroArrowPath'
+	}
 };
 
 const pagesConfig = {

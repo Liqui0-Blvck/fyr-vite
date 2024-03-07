@@ -16,22 +16,20 @@ interface Config {
   requestConfig?: AxiosRequestConfig; // Configuración adicional de la solicitud (opcional)
 }
 
-const useAxiosFunction = ({
-  axiosInstance = axiosInstanceDefault,
-  method,
-  url,
-  requestData,
-  requestConfig = {},
-}: Config) => {
+export const useAxiosFunction = () => {
   const [response, setResponse] = useState([]);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [controller, setController] = useState<AbortController | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-
+  const axiosFetch = ({
+    axiosInstance = axiosInstanceDefault,
+    method,
+    url,
+    requestData,
+    requestConfig = {},
+  }: Config) => {
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -59,16 +57,7 @@ const useAxiosFunction = ({
     }
 
     fetchData();
-
-    return () => {
-      isMounted = false;
-      if (controller) {
-        controller.abort();
-      }
-    };
-  }, [url, method, requestData, refresh]);
-
-  return { response, loading, error, refresh, setRefresh };
+  }
+  return { response, loading, error, setRefresh, axiosFetch }
 };
 
-export default useAxiosFunction;

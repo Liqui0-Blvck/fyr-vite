@@ -8,6 +8,7 @@ import ContentRouter from '../components/router/ContentRouter';
 import FooterRouter from '../components/router/FooterRouter';
 import useFontSize from '../hooks/useFontSize';
 import getOS from '../utils/getOS.util';
+import Toast, { Toaster } from 'react-hot-toast'
 
 const App = () => {
 	getOS();
@@ -21,6 +22,7 @@ const App = () => {
 			<div data-component-name='App' className='flex grow flex-col'>
 				<AsideRouter />
 				<Wrapper>
+					<Toaster />
 					<HeaderRouter />
 					<ContentRouter />
 					<FooterRouter />

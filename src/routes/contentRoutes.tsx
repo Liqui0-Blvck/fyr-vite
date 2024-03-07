@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { RouteProps } from 'react-router-dom';
 import { appPages, authPages, componentsPages, examplePages } from '../config/pages.config';
 import NotFoundPage from '../pages/NotFound.page';
-import LoginPage from '../pages/Login.page';
+import LoginPage from '../pages/auth/Login.page';
 
 
 
@@ -60,6 +60,8 @@ const contentRoutes: RouteProps[] = [
 
 
 	// { path: authPages.loginPage.to, element: <LoginPage /> },
+	{ path: authPages.profilePage.to, element: <ProfilePage /> },
+	{ path: authPages.loginPage.to, element: <LoginPage /> },
 	{ path: authPages.profilePage.to, element: <ProfilePage /> },
 
 	{ path: '*', element: <NotFoundPage /> },

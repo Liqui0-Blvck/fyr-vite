@@ -4,16 +4,17 @@ import useCookieStorage from '../hooks/useLocalStorage';
 import { authPages } from '../config/pages.config';
 import useUserAPI from '../mocks/hooks/useUserAPI';
 import { TUser } from '../mocks/db/users.db';
-import useAxiosFunction from '../hooks/useAxiosFunction';
-import axios from 'axios';
+import { useAxiosFunction } from '../hooks/useAxiosFunction';
+import { message } from 'antd'
+import toast from 'react-hot-toast';
 
 export interface IAuthContextProps {
 	usernameStorage: string | ((newValue: string | null) => void) | null;
 	onLogin: (username: string, password: string) => Promise<void>;
 	onLogout: () => void;
-	userData: TUser;
-	isLoading: boolean;
 }
+
+
 const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
 
 interface IAuthProviderProps {
@@ -21,33 +22,23 @@ interface IAuthProviderProps {
 }
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 	const [usernameStorage, setUserName] = useCookieStorage('user', null);
-	const base_url = 'http://127.0.0.1:8000'
-
-	const { response, isLoading, getCheckUser } = useUserAPI(usernameStorage as string);
-	const userData = response as TUser;
+	const { error ,axiosFetch } = useAxiosFunction()
 
 	const navigate = useNavigate();
 
 	// call this function when you want to authenticate the user
 	const onLogin = async (username: string, password: string) => {
-		try {
-			const response = await axios.post(`${base_url}/auth/token/`, {
-				username: username,
-				password: password
-			});
+		const body = JSON.stringify({
+			username: username,
+			password: password
+		})
+		axiosFetch({
+			method: 'POST',
+			url: 'api/token/',
+			requestData: body
+		})
 
-			if (response.status === 200) {
-				if (typeof setUserName === 'function') {
-					setUserName(response.data)
-				}
-				navigate('/')
-			}
-		} catch (error: any) {
-			console.error('Error:', error);
-			// Maneja el error de la solicitud aquí
-		}
-
-
+		error ? toast.error(error) : toast.success()
 	};
 
 	// call this function to sign out logged-in user
@@ -61,11 +52,9 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 			usernameStorage,
 			onLogin,
 			onLogout,
-			userData,
-			isLoading,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[usernameStorage, userData],
+		[usernameStorage],
 	);
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
