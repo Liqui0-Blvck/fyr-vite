@@ -1,5 +1,5 @@
-export type TDarkModeKEY = 'DARK' | 'LIGHT' | 'SYSTEM';
-export type TDarkMode = 'dark' | 'light' | 'system';
+export type TDarkModeKEY = 'DARK' | 'LIGHT' 
+export type TDarkMode = 'dark' | 'light' 
 
 export type TDarkModes = {
 	[key in TDarkModeKEY]: TDarkMode;

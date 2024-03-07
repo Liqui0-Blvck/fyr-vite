@@ -21,18 +21,10 @@ const DefaultAsideTemplate = () => {
 	return (
 		<Aside>
 			<AsideHead>
-				<LogoAndAsideTogglePart />
+				<LogoAndAsideTogglePart to={appPages.mainAppPages.to} />
 			</AsideHead>
 			<AsideBody>
 				<Nav>
-					<NavItem {...appPages.projectAppPages.subPages.projectDashboardPage}>
-						<Badge
-							variant='outline'
-							color='emerald'
-							className='border-transparent leading-none'>
-							6
-						</Badge>
-					</NavItem>
 					
 
 					<NavTitle>Accesos</NavTitle>

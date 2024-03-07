@@ -5,12 +5,16 @@ import Icon from '../../../../components/icon/Icon';
 import useAsideStatus from '../../../../hooks/useAsideStatus';
 import LogoTemplate from '../../Logo/Logo.template';
 
-const LogoAndAsideTogglePart = () => {
+interface ILogo {
+	to: string
+}
+
+const LogoAndAsideTogglePart = ({ to }: ILogo ) => {
 	const { asideStatus, setAsideStatus } = useAsideStatus();
 	return (
 		<>
 			<Visible is={asideStatus}>
-				<Link to='/' aria-label='Logo'>
+				<Link to={to} aria-label='Logo'>
 					<LogoTemplate className='h-12' />
 				</Link>
 			</Visible>

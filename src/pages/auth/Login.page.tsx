@@ -18,13 +18,8 @@ type TValues = {
 };
 
 const LoginPage = () => {
-	const { authTokens, validate } = useAuth() 
 	const { onLogin } = useAuth();
-	const { data } = useAuthenticatedFetch(
-		authTokens,
-		validate,
-		'/api/registros/operarios'
-	)
+	const [touched, setTouched] = useState<boolean>()
 	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
 
 	const formik = useFormik({
@@ -122,10 +117,14 @@ const LoginPage = () => {
 						</div>
 						<div>
 							<Button
+								isDisable = {touched}
 								size='lg'
 								variant='solid'
 								className='w-full font-semibold'
-								onClick={() => formik.handleSubmit()}>
+								onClick={() => {
+									formik.handleSubmit()
+									setTouched(true)
+								}}>
 								Sign in
 							</Button>
 						</div>

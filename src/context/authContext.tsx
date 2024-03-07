@@ -34,7 +34,6 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const authTokenLocalStorage = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
   const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(() => authTokenLocalStorage);
 
-  console.log(authTokens)
 
 	const base_url = process.env.VITE_BASE_URL_DEV
 
@@ -57,9 +56,11 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 		})
 
 		if (res.ok){
-			Cookies.set('user', JSON.stringify(await res.json()), { expires: 1})
+			Cookies.set('user', JSON.stringify(await res.json()))
 			toast.success('Inicio de sesión exitoso!')
-			navigate(`../${appPages.mainAppPages.to}`, { replace: true })
+			setTimeout(() => {
+        navigate(`../${appPages.mainAppPages.to}`, { replace: true })
+      }, 1500)
       
 			} else if (res.status === 401){
 				toast.error('Error al ingresar, volver a intentar')
@@ -92,7 +93,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
     if (response.status === 200) {
       setAuthTokens(data);
-      Cookies.set('authTokens', JSON.stringify(data), { expires: 2 });
+      Cookies.set('authTokens', JSON.stringify(data));
       return true;
     } else {
       return false;

@@ -17,6 +17,7 @@ import LoginPage from '../pages/auth/Login.page';
 const ExamplesPage = lazy(() => import('../pages/ExamplePage/Examples.page'));
 const ProfilePage = lazy(() => import('../pages/Profile.page'));
 const HomePage = lazy(() => import('../pages/main/Main.Page'))
+const Productores = lazy(() => import('../pages/productores/ListaProductores'))
 
 
 
@@ -54,7 +55,7 @@ const contentRoutes: RouteProps[] = [
 		element: <UnderConstructionPage />,
 	},
 	{ path: appPages.mainAppPages.to, element: <HomePage />},
-
+	{	path: appPages.registroAppPages.subPages.productores.to, element: <Productores />},
 
 	
 	{ path: examplePages.examplesPage.to, element: <ExamplesPage /> },
