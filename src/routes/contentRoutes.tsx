@@ -16,7 +16,7 @@ import LoginPage from '../pages/auth/Login.page';
 
 const ExamplesPage = lazy(() => import('../pages/ExamplePage/Examples.page'));
 const ProfilePage = lazy(() => import('../pages/Profile.page'));
-
+const HomePage = lazy(() => import('../pages/main/Main.Page'))
 
 
 
@@ -53,14 +53,14 @@ const contentRoutes: RouteProps[] = [
 		path: appPages.mailAppPages.to,
 		element: <UnderConstructionPage />,
 	},
+	{ path: appPages.mainAppPages.to, element: <HomePage />},
 
 
 	
 	{ path: examplePages.examplesPage.to, element: <ExamplesPage /> },
 
 
-	// { path: authPages.loginPage.to, element: <LoginPage /> },
-	{ path: authPages.profilePage.to, element: <ProfilePage /> },
+	// { path: authPages.profilePage.to, element: <ProfilePage /> },
 	{ path: authPages.loginPage.to, element: <LoginPage /> },
 	{ path: authPages.profilePage.to, element: <ProfilePage /> },
 

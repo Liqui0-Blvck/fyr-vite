@@ -1,63 +1,87 @@
-import { useEffect, useState } from "react";
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { authPages } from '../config/pages.config';
 
-const BASE_URL = "http://127.0.0.1:8000/";
-
-const axiosInstanceDefault = axios.create({
-  baseURL: BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-interface Config {
-  axiosInstance?: typeof axiosInstanceDefault;
-  method: Method;
-  url: string;
-  requestData?: any; // Datos para la solicitud (opcional)
-  requestConfig?: AxiosRequestConfig; // Configuración adicional de la solicitud (opcional)
+interface IToken {
+  access: string;
+  refresh: string;
 }
 
-export const useAxiosFunction = () => {
-  const [response, setResponse] = useState([]);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [refresh, setRefresh] = useState<boolean>(false);
-  const [controller, setController] = useState<AbortController | null>(null);
+interface IUseAuthenticatedFetchResult<T> {
+  loading: boolean;
+  data: T | null;
+  error: string | null;
+  setData: React.Dispatch<React.SetStateAction<T | null>>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const axiosFetch = ({
-    axiosInstance = axiosInstanceDefault,
-    method,
-    url,
-    requestData,
-    requestConfig = {},
-  }: Config) => {
+export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (token: IToken | null) => Promise<boolean>, url: string): IUseAuthenticatedFetchResult<T> => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<T | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const base_url = process.env.VITE_BASE_URL_DEV;
+
+  useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
         setLoading(true);
-        const ctrl = new AbortController();
-        setController(ctrl);
 
-        const res = await axiosInstance.request({
-          method,
-          url,
-          data: requestData,
-          ...requestConfig,
-          signal: ctrl.signal,
-        });
+        if (!isMounted) return;
 
-        setResponse(res.data);
-      } catch (err: any) {
-        setError(err.message);
+        const isValid = await validate(token);
+
+        if (!isValid) {
+          navigate(`../${authPages.loginPage.to}`, { replace: true });
+        } else {
+          const response = await fetch(base_url + url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'authorization': `Bearer ${token?.access}`
+            }
+          });
+
+          if (response.ok) {
+            const fetchedData: T = await response.json();
+            setData(fetchedData);
+          } else if (response.status === 401) {
+            setError('No estás autorizado para hacer esta petición');
+          } else if (response.status === 404) {
+            setError('La URL que ingresaste no tiene ninguna información');
+          } else {
+            setError('Cualquier otro error');
+          }
+        }
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
-    if (refresh || requestData) {
+    fetchData();
+
+    if (refresh) {
       fetchData();
     }
 
-    fetchData();
-  }
-  return { response, loading, error, setRefresh, axiosFetch }
+    return () => {
+      isMounted = false;
+      setRefresh(false);
+    };
+  }, [url, refresh, token, validate, navigate, base_url]);
+
+  return {
+    loading,
+    data,
+    error,
+    setData,
+    setRefresh
+  };
 };
 

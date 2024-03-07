@@ -16,7 +16,8 @@ const ComponentAndTemplateHeaderTemplate = () => {
 	return (
 		<Header>
 			<HeaderLeft>
-				<Dropdown className='max-md:hidden'>
+				""
+				{/* <Dropdown className='max-md:hidden'>
 					<DropdownToggle hasIcon={false}>
 						<Button
 							variant={
@@ -153,7 +154,7 @@ const ComponentAndTemplateHeaderTemplate = () => {
 							</div>
 						</div>
 					</DropdownMenu>
-				</Dropdown>
+				</Dropdown> */}
 			</HeaderLeft>
 			<HeaderRight>
 				<DefaultHeaderRightCommon />

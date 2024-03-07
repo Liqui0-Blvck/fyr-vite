@@ -20,6 +20,117 @@ export const examplePages = {
 };
 
 export const appPages = {
+	mainAppPages: {
+		id: 'main',
+		to: '/app/home',
+		text: 'Home',
+	},
+	registroAppPages: {
+		id: 'registros',
+		to: '/app/clientes',
+		text: 'Registros',
+		icon: 'DuoBook',
+		subPages: {
+			clientes: {
+				id: 'clientes',
+				to: '/app/clientes/',
+				text: 'Clientes',
+				icon: 'DuoUser'
+			},
+			productores: {
+				id: 'productores',
+				to: '/app/productores/',
+				text: 'Productores',
+				icon: 'DuoBriefcase'
+			},
+			camiones: {
+				id: 'camiones',
+				to: '/app/camiones/',
+				text: 'Camiones',
+				icon: 'HeroTruck'
+			},
+			conductores: {
+				id: 'conductores',
+				to: '/app/conductores/',
+				text: 'Conductores',
+				icon: 'HeroUser'
+			},
+			comercializadores: {
+				id: 'comercializadores',
+				to: '/app/comercializadores/',
+				text: 'Comercializadores',
+				icon: 'HeroUser'
+			}
+		}
+	},
+	recepcionAppPages: {
+		id: 'registros',
+		text: 'Recepciones',
+		icon: 'DuoBook',
+		subPages: {
+			recepcionMp: {
+				id: 'recepcionmp',
+				text: 'Recepcion MP',
+				to: '/app/recepciomp/',
+				icon: 'HeroListBullet',
+			},
+			envases: {
+				id: 'envases',
+				text: 'Envases',
+				to: '/app/envases/',
+				icon: 'HeroArchiveBox',
+			},
+			controlCalidad: {
+				id: 'control_calidad',
+				text: 'Ctrl Calidad',
+				to: '/app/control-calidad/',
+				icon: 'HeroArchiveBox',
+			},
+			lotes: {
+				id: 'lotes',
+				text: 'Lotes Internos',
+				to: '/app/lotes/',
+				icon: 'HeroArchiveBox',
+			}
+		}
+	},
+	produccion: {
+		id: 'produccion',
+		text: 'Producción',
+		icon: 'DuoBook',
+		subPages: {
+			p_produccion: {
+				id: 'programa',
+				text: 'Programa Producc',
+				to: '/app/programa-produccion/',
+				icon: 'HeroListBullet',
+			},
+			tarjas: {
+				id: 'tarjas',
+				text: 'Tarjas CC',
+				to: '/app/tarjas-cc/',
+				icon: 'HeroListBullet',
+			},
+			reproceso: {
+				id: 'reproceso',
+				text: 'Programa Reproceso',
+				to: '/app/programa-reproceso/',
+				icon: 'HeroListBullet',
+			},
+			seleccion: {
+				id: 'seleccion',
+				text: 'Programa Selección',
+				to: '/app/programa-seleccion/',
+				icon: 'HeroListBullet',
+			},
+			tarja_seleccion: {
+				id: 'tarja_seleccion',
+				text: 'Tarja Selección',
+				to: '/app/tarja-seleccion/',
+				icon: 'HeroListBullet',
+			}
+		}
+	},
 	aiAppPages: {
 		id: 'aiApp',
 		to: '/ai',

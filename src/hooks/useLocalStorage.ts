@@ -1,36 +1,46 @@
-import { useState } from "react";
-import Cookies from "js-cookie";
+import { useState } from 'react';
+import Cookies from 'js-cookie';
 
-interface ISetValue {
-  (newValue: string | null): Promise<string | boolean>;
+// Define el tipo para la función 'setValue'
+type SetValueFunction<T> = (newValue: T) => Promise<boolean>;
+
+// Define la interfaz para el hook
+interface IUseCookieStorage<T> {
+  storedValue: T | null;
+  setValue: SetValueFunction<T>;
 }
 
-const useCookieStorage = (keyName: string, defaultValue: string | null) => {
-  const [storedValue, setStoredValue] = useState<string | null>(() => {
-    try {
-      const value = Cookies.get(keyName);
-      if (value) {
-        return JSON.parse(value) as string;
-      }
-      Cookies.set(keyName, JSON.stringify(defaultValue), { expires: 1 });
-      return defaultValue;
-    } catch (err) {
-      return defaultValue;
-    }
-  });
+// Define el hook 'useCookieStorage'
+const useCookieStorage = <T>(keyName: string): IUseCookieStorage<T> => {
+  // Intenta recuperar el valor de los cookies con la clave 'keyName'
+  const storedValueJSON = Cookies.get(keyName);
+  const storedValue: T | null = storedValueJSON ? JSON.parse(storedValueJSON) : null;
 
-  const setValue: ISetValue = (newValue) => {
+  // Utiliza el hook useState para inicializar el estado 'storedValue' con el valor recuperado de los cookies
+  const [stored, setStoredValue] = useState<T | null>(storedValue);
+
+  // Define la función 'setValue' que actualiza el valor de los cookies con el nuevo valor proporcionado
+  const setValue: SetValueFunction<T> = (newValue) => {
     return new Promise((resolve) => {
       try {
+        // Guarda el nuevo valor en los cookies con la clave 'keyName'
         Cookies.set(keyName, JSON.stringify(newValue));
+        // Resuelve la promesa con verdadero (éxito)
         resolve(true);
       } catch (err) {
-        /* empty */
+        // Si hay un error, puedes manejarlo aquí si es necesario
+        // Por ejemplo, puedes enviar el error a un servicio de registro de errores
+        console.error('Error setting cookie value:', err);
+        // Resuelve la promesa con falso (fracaso)
+        resolve(false);
       }
+      // Actualiza el estado local con el nuevo valor
       setStoredValue(newValue);
     });
   };
-  return [storedValue, setValue];
+
+  // Devuelve el estado almacenado y la función para establecer el valor
+  return { storedValue: stored, setValue };
 };
 
 export default useCookieStorage;

@@ -9,7 +9,8 @@ import Input from '../../components/form/Input';
 import FieldWrap from '../../components/form/FieldWrap';
 import Icon from '../../components/icon/Icon';
 import Validation from '../../components/form/Validation';
-import { useAxiosFunction } from '../../hooks/useAxiosFunction';
+import {useAuthenticatedFetch} from '../../hooks/useAxiosFunction';
+import { authPages } from '../../config/pages.config';
 
 type TValues = {
 	username: string;
@@ -17,16 +18,13 @@ type TValues = {
 };
 
 const LoginPage = () => {
+	const { authTokens, validate } = useAuth() 
 	const { onLogin } = useAuth();
-	const { response, axiosFetch } = useAxiosFunction()
-
-	useEffect(() => {
-		axiosFetch({
-			method: 'GET',
-			url: '/api/registros/operarios'
-		})
-	}, [])
-
+	const { data } = useAuthenticatedFetch(
+		authTokens,
+		validate,
+		'/api/registros/operarios'
+	)
 	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
 
 	const formik = useFormik({
@@ -132,11 +130,18 @@ const LoginPage = () => {
 							</Button>
 						</div>
 					</form>
+
 					<div>
-						<span className='text-zinc-500'>
-							This site is protected by reCAPTCHA and the Google Privacy Policy.
+						<span className='flex gap-2 text-sm'>
+							<span className='text-zinc-400 dark:text-zinc-600'>
+								Se te olvido la contraseña?
+							</span>
+							<Link to={`${authPages.restorePage.to}`} className='hover:text-inherit'>
+								Recuperar Cuenta
+							</Link>
 						</span>
 					</div>
+						
 					<div>
 						<span className='flex gap-2 text-sm'>
 							<span className='text-zinc-400 dark:text-zinc-600'>

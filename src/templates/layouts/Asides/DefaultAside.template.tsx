@@ -14,7 +14,6 @@ import Nav, {
 } from '../../../components/layouts/Navigation/Nav';
 import Badge from '../../../components/ui/Badge';
 import UserTemplate from '../User/User.template';
-import usersDb from '../../../mocks/db/users.db';
 
 const DefaultAsideTemplate = () => {
 	const navigate = useNavigate();
@@ -34,89 +33,42 @@ const DefaultAsideTemplate = () => {
 							6
 						</Badge>
 					</NavItem>
+					
 
-					{/* <NavTitle>Apps</NavTitle>
+					<NavTitle>Accesos</NavTitle>
 					<NavCollapse
-						text={appPages.salesAppPages.text}
-						to={appPages.salesAppPages.to}
-						icon={appPages.salesAppPages.icon}>
-						<NavItem {...appPages.salesAppPages.subPages.salesDashboardPage} />
-						<NavCollapse
-							text={appPages.salesAppPages.subPages.productPage.text}
-							to={appPages.salesAppPages.subPages.productPage.to}
-							icon={appPages.salesAppPages.subPages.productPage.icon}>
-							<NavItem
-								{...appPages.salesAppPages.subPages.productPage.subPages.listPage}
-							/>
-							<NavItem
-								{...appPages.salesAppPages.subPages.productPage.subPages.editPage}
-							/>
-						</NavCollapse>
-						<NavCollapse
-							text={appPages.salesAppPages.subPages.categoryPage.text}
-							to={appPages.salesAppPages.subPages.categoryPage.to}
-							icon={appPages.salesAppPages.subPages.categoryPage.icon}>
-							<NavItem
-								{...appPages.salesAppPages.subPages.categoryPage.subPages.listPage}
-							/>
-							<NavItem
-								{...appPages.salesAppPages.subPages.categoryPage.subPages.editPage}
-							/>
-						</NavCollapse>
+						text={appPages.registroAppPages.text}
+						to={'registro'}
+						icon={appPages.registroAppPages.icon}
+						>
+						<NavItem {...appPages.registroAppPages.subPages.clientes} />
+						<NavItem {...appPages.registroAppPages.subPages.productores} />
+						<NavItem {...appPages.registroAppPages.subPages.camiones} />
+						<NavItem {...appPages.registroAppPages.subPages.conductores} />
+						<NavItem {...appPages.registroAppPages.subPages.comercializadores} />
 					</NavCollapse>
 
 					<NavCollapse
-						text={appPages.crmAppPages.text}
-						to={appPages.crmAppPages.to}
-						icon={appPages.crmAppPages.icon}>
-						<NavItem {...appPages.crmAppPages.subPages.crmDashboardPage} />
-						<NavCollapse
-							text={appPages.crmAppPages.subPages.customerPage.text}
-							to={appPages.crmAppPages.subPages.customerPage.to}
-							icon={appPages.crmAppPages.subPages.customerPage.icon}>
-							<NavItem
-								{...appPages.crmAppPages.subPages.customerPage.subPages.listPage}
-							/>
-							<NavItem
-								{...appPages.crmAppPages.subPages.customerPage.subPages.editPage}
-							/>
-						</NavCollapse>
-						<NavCollapse
-							text={appPages.crmAppPages.subPages.rolePage.text}
-							to={appPages.crmAppPages.subPages.rolePage.to}
-							icon={appPages.crmAppPages.subPages.rolePage.icon}>
-							<NavItem
-								{...appPages.crmAppPages.subPages.rolePage.subPages.listPage}
-							/>
-							<NavItem
-								{...appPages.crmAppPages.subPages.rolePage.subPages.editPage}
-							/>
-						</NavCollapse>
+						text={appPages.recepcionAppPages.text}
+						to={'recepcion'}
+						icon={appPages.recepcionAppPages.icon}
+						>
+						<NavItem {...appPages.recepcionAppPages.subPages.recepcionMp} />
+						<NavItem {...appPages.recepcionAppPages.subPages.envases} />
+						<NavItem {...appPages.recepcionAppPages.subPages.controlCalidad} />
+						<NavItem {...appPages.recepcionAppPages.subPages.lotes} />
 					</NavCollapse>
+
 					<NavCollapse
-						text={appPages.projectAppPages.text}
-						to={appPages.projectAppPages.to}
-						icon={appPages.projectAppPages.icon}>
-						<NavItem {...appPages.projectAppPages.subPages.projectDashboardPage}>
-							<NavButton
-								title='New Project'
-								icon='HeroPlusCircle'
-								onClick={() => {
-									navigate(
-										`../${appPages.projectAppPages.subPages.projectBoardPageLink.to}/new`,
-									);
-								}}
-							/>
-						</NavItem>
-						<NavItem {...appPages.projectAppPages.subPages.projectBoardPage}>
-							<Badge
-								variant='outline'
-								color='emerald'
-								className='border-transparent leading-none'>
-								6
-							</Badge>
-						</NavItem>
-					</NavCollapse> */}
+						text={appPages.produccion.text}
+						to={'produccion'}
+						icon={appPages.produccion.icon}
+						>
+						<NavItem {...appPages.produccion.subPages.p_produccion} />
+						<NavItem {...appPages.produccion.subPages.tarjas} />
+						<NavItem {...appPages.produccion.subPages.reproceso} />
+						<NavItem {...appPages.produccion.subPages.tarja_seleccion} />
+					</NavCollapse>
 				</Nav>
 			</AsideBody>
 			<AsideFooter>

@@ -5,17 +5,33 @@ import { NavButton, NavItem, NavSeparator } from '../../../components/layouts/Na
 import { appPages, authPages } from '../../../config/pages.config';
 import User from '../../../components/layouts/User/User';
 import { useAuth } from '../../../context/authContext';
+import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
+
+interface IUser {
+	first_name: string,
+	last_name: string,
+	email: string,
+	username: string
+}
 
 const UserTemplate = () => {
-	const { isLoading, userData, onLogout } = useAuth();
+	const { authTokens, validate, onLogout } = useAuth();
+	const { data: userData, loading } = useAuthenticatedFetch<IUser>(
+		authTokens,
+		validate,
+		'/api/registros/users/1'
+	)
+
+	console.log(userData)
+
 
 	return (
 		<User
-			isLoading={isLoading}
-			name={userData?.firstName}
-			nameSuffix={userData?.isVerified && <Icon icon='HeroCheckBadge' color='blue' />}
-			position={userData?.position}
-			src={userData?.image?.thumb}
+			isLoading={loading}
+			name={userData && userData?.username}
+			nameSuffix={userData && userData?.email}
+			position={''}
+			src={''}
 			suffix={
 				<Badge color='amber' variant='solid' className='text-xs font-bold'>
 					PRO
@@ -23,12 +39,6 @@ const UserTemplate = () => {
 			}>
 			<NavSeparator />
 			<NavItem {...authPages.profilePage} />
-			{/* <NavItem {...appPages.mailAppPages.subPages.inboxPages}>
-				<Badge variant='solid' className='leading-none'>
-					3
-				</Badge>
-				<NavButton icon='HeroPlusCircle' title='New Mail' onClick={() => {}} />
-			</NavItem> */}
 			<NavItem text='Logout' icon='HeroArrowRightOnRectangle' onClick={() => onLogout()} />
 		</User>
 	);

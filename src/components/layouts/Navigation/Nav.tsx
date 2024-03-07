@@ -307,6 +307,10 @@ export const NavCollapse: FC<INavCollapseProps> = (props) => {
 		setIsActive(here);
 	}, [here, location.pathname]);
 
+	console.log(isActive)
+	console.log(here)
+	console.log(location.pathname)
+
 	return (
 		<li
 			data-component-name='Nav/NavCollapse'

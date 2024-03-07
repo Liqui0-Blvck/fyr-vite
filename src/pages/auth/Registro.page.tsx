@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import PageWrapper from '../components/layouts/PageWrapper/PageWrapper';
-import Button from '../components/ui/Button';
-import { useAuth } from '../context/authContext';
-import Input from '../components/form/Input';
-import FieldWrap from '../components/form/FieldWrap';
-import Icon from '../components/icon/Icon';
-import Validation from '../components/form/Validation';
-import useAxiosFunction from '../hooks/useAxiosFunction';
+import PageWrapper from '../../components/layouts/PageWrapper/PageWrapper';
+import Button from '../../components/ui/Button';
+import { useAuth } from '../../context/authContext';
+import Input from '../../components/form/Input';
+import FieldWrap from '../../components/form/FieldWrap';
+import Icon from '../../components/icon/Icon';
+import Validation from '../../components/form/Validation';
 
 type TValues = {
 	username: string;
@@ -17,13 +16,7 @@ type TValues = {
 };
 
 const LoginPage = () => {
-	const { onLogin } = useAuth();
-	const { response } = useAxiosFunction({
-		method: 'GET',
-		url: '/api/clientes/'
-	})
 
-	console.log(response)
 
 	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
 
@@ -46,15 +39,7 @@ const LoginPage = () => {
 			return errors;
 		},
 		onSubmit: (values: TValues, { setFieldError }) => {
-			onLogin(values.username, values.password)
-				.then(() => { })
-				.catch((e: Error) => {
-					if (e.cause === 'username') {
-						setFieldError('username', e.message);
-						setFieldError('password', e.message);
-					}
-					if (e.cause === 'password') setFieldError('password', e.message);
-				});
+			
 		},
 	});
 
