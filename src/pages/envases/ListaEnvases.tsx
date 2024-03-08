@@ -1,20 +1,19 @@
 import { useAuth } from "../../context/authContext"
 import { useAuthenticatedFetch } from "../../hooks/useAxiosFunction"
-import { TCamion } from "../../types/registros types/registros.types"
-import TablaCamion from "./Tabla/TablaCamion"
+import { TEnvases } from "../../types/registros types/registros.types"
+import TablaEnvases from "./Tabla/TablaEnvases"
 
 const ListaCamiones = () => {
   const { authTokens, validate } = useAuth()
-  const { data: camiones, setData, setRefresh } = useAuthenticatedFetch<TCamion[]>(
+  const { data: envases, setRefresh } = useAuthenticatedFetch<TEnvases[]>(
     authTokens,
     validate,
-    `/api/registros/camiones/`
+    `/api/envasesmp/`
   )
-
 
   return (
     <div className="h-full">
-      <TablaCamion data={camiones ? camiones : []} refresh={setRefresh} />
+      <TablaEnvases data={envases ? envases : []} refresh={setRefresh} />
     </div>
   )
 }

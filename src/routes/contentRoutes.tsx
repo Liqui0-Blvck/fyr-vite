@@ -4,7 +4,7 @@ import { appPages, authPages, componentsPages, examplePages } from '../config/pa
 import NotFoundPage from '../pages/NotFound.page';
 import LoginPage from '../pages/auth/Login.page';
 import FormularioRegistroProductores from '../pages/productores/Formulario Registro/FormularioRegistroProductores';
-import ListaCamiones from '@/pages/camiones/ListaCamiones';
+import ListaCamiones from '../pages/camiones/ListaCamiones';
 
 
 
@@ -39,6 +39,19 @@ const Conductores = lazy(() => import('../pages/choferes/ListaConductores'))
 
 // Comercializadores
 const Comercializadores = lazy(() => import('../pages/comercializador/ListaComercializadores'))
+
+
+
+// OPERARIOS
+const Operarios = lazy(() => import('../pages/operarios/ListaOperarios'))
+
+
+
+
+
+// RECEPCION
+const GuiaRecepcion = lazy(() => import('../pages/guia recepcion/ListaGuiaRecepcion'))
+const Envases = lazy(() => import('../pages/envases/ListaEnvases'))
 
 
 /**
@@ -78,6 +91,7 @@ const contentRoutes: RouteProps[] = [
 	{ path: appPages.registroAppPages.subPages.productores.to, element: <Productores /> },
 	{ path: '/app/registro-productor', element: <RegistroProductor /> },
 	{ path: '/app/productor/:id', element: <DetalleProductor /> },
+	
 
 
 	// Camiones
@@ -92,6 +106,17 @@ const contentRoutes: RouteProps[] = [
 	// Comercializadores
 
 	{ path: appPages.registroAppPages.subPages.comercializadores.to, element: <Comercializadores /> },
+
+
+	// OPERARIOS
+	{ path: appPages.registroAppPages.subPages.operarios.to, element: <Operarios /> },
+
+
+	// RECEPCION MP
+	{ path: appPages.recepcionAppPages.subPages.recepcionMp.to, element: <GuiaRecepcion /> },
+	{ path: appPages.recepcionAppPages.subPages.envases.to, element: <Envases /> },
+
+
 
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -25,40 +25,18 @@ import TableTemplate, {
 	TableCardFooterTemplate,
 } from '../../../templates/common/TableParts.template';
 import Badge from '../../../components/ui/Badge';
-import Dropdown, {
-	DropdownItem,
-	DropdownMenu,
-	DropdownNavLinkItem,
-	DropdownToggle,
-} from '../../../components/ui/Dropdown';
 import Subheader, {
 	SubheaderLeft,
 	SubheaderRight,
 } from '../../../components/layouts/Subheader/Subheader';
 import FieldWrap from '../../../components/form/FieldWrap';
-import { useAuth } from '../../../context/authContext';
 import { format } from "@formkit/tempo"
+import ModalRegistro from '../../../components/ModalRegistro';
+import FormularioRegistroProductores from '../Formulario Registro/FormularioRegistroProductores';
+import { TProductor } from '../../../types/registros types/registros.types';
 
 
-
-interface IProductor {
-	id: number,
-	rut_productor: string,
-	nombre: string,
-	telefono: string,
-	region: number,
-	provincia: number,
-	comuna: number,
-	direccion: string,
-	movil: string,
-	pagina_web: string,
-	email: string,
-	fecha_creacion: string,
-	numero_contrato: number,
-	usuarios: []
-}
-
-const columnHelper = createColumnHelper<IProductor>();
+const columnHelper = createColumnHelper<TProductor>();
 
 const editLinkProductor = `/app/productor/`
 const createLinkProductor = `/app/registro-productor/`
@@ -124,9 +102,17 @@ const columns = [
 ];
 
 
-const CustomerListPage = ({ data }: { data: IProductor[] | [] }) => {
+interface IProductorProps {
+	data: TProductor[] | []
+	refresh: Dispatch<SetStateAction<boolean>>
+}
+
+
+const TablaProductor : FC<IProductorProps> = ({ data, refresh }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [modalStatus, setModalStatus] = useState<boolean>(false)
+
 
 
 	const table = useReactTable({
@@ -176,11 +162,15 @@ const CustomerListPage = ({ data }: { data: IProductor[] | [] }) => {
 					</FieldWrap>
 				</SubheaderLeft>
 				<SubheaderRight>
-					<Link to={`${createLinkProductor}`}>
-						<Button variant='solid' icon='HeroPlus'>
-							Agregar Productores
-						</Button>
-					</Link>
+					<ModalRegistro
+							open={modalStatus} 
+							setOpen={setModalStatus} 
+							title='Registro Productores'
+							textButton='Agregar Productor'
+							size={1200}
+							>
+						<FormularioRegistroProductores setOpen={setModalStatus} refresh={refresh}/>
+					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>
 			<Container>
@@ -208,4 +198,4 @@ const CustomerListPage = ({ data }: { data: IProductor[] | [] }) => {
 	);
 };
 
-export default CustomerListPage;
+export default TablaProductor;

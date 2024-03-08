@@ -1,21 +1,12 @@
 import { useAuth } from "../../context/authContext"
 import { useAuthenticatedFetch } from "../../hooks/useAxiosFunction"
+import { TComercializador } from "../../types/registros types/registros.types"
 import TablaComercializadores from "./Tabla/TablaComercializador"
 
 
-interface IComercializador {
-  id: number,
-  nombre: string,
-  razon_social: string,
-  giro: string,
-  direccion: string,
-  zip_code: string,
-  email_comercializador: string
-}
-
 const ListaComercializadores = () => {
   const { authTokens, validate } = useAuth()
-  const { data: comercializador, setData, loading } = useAuthenticatedFetch<IComercializador[]>(
+  const { data: comercializador, setData, setRefresh } = useAuthenticatedFetch<TComercializador[]>(
     authTokens,
     validate,
     `/api/comercializador/`
@@ -24,7 +15,7 @@ const ListaComercializadores = () => {
 
   return (
     <div className='h-full'>
-      <TablaComercializadores data={comercializador ? comercializador : []} />
+      <TablaComercializadores data={comercializador ? comercializador : []} refresh={setRefresh}/>
     </div>
   )
 }

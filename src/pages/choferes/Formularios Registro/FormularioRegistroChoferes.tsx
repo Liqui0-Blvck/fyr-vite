@@ -1,13 +1,19 @@
-import MaxWidthWrapper from '@/componentes/MaxWidthWrapper'
 import { useFormik } from 'formik'
-import { Input } from 'antd'
-import React from 'react'
+import Input from '../../../components/form/Input'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/context/AuthContext'
+import useDarkMode from '../../../hooks/useDarkMode'
+import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
-const FormularioRegistroChoferes = () => {
-  const base_url = import.meta.env.VITE_BASE_URL
+interface IFormChoferes {
+  refresh: Dispatch<SetStateAction<boolean>>
+  setOpen: Dispatch<SetStateAction<boolean>>
+}
+
+const FormularioRegistroChoferes : FC<IFormChoferes> = ({ setOpen, refresh }) => {
+  const base_url = process.env.VITE_BASE_URL_DEV
+  const { isDarkTheme } = useDarkMode() 
   const navigate = useNavigate()
 
 
@@ -31,7 +37,9 @@ const FormularioRegistroChoferes = () => {
         })
         if (res.ok) {
           toast.success("El conductor fue registrado exitosamente!!")
-          navigate('/app/lista-conductores')
+          setOpen(false)
+          refresh(true)
+          navigate('/app/conductores')
 
         } else {
           toast.error("No se pudo registrar el camión volver a intentar")
@@ -43,12 +51,12 @@ const FormularioRegistroChoferes = () => {
   })
 
   return (
-    <MaxWidthWrapper>
       <form 
         onSubmit={formik.handleSubmit}
-        className='flex flex-col 
+        className={`
+          flex flex-col 
           md:grid md:grid-cols-4 gap-x-4 gap-y-8 mt-10 
-          relative p-4 border border-gray-200 rounded-md'
+          relative p-4 ${ isDarkTheme ? oneDark : oneLight} rounded-md`}
         >
         <div className='md:col-span-2 md:flex-col items-center'>
           <label htmlFor="nombre">Nombre: </label>
@@ -56,6 +64,7 @@ const FormularioRegistroChoferes = () => {
             name='nombre'
             onChange={formik.handleChange}
             className='py-3'
+            value={formik.values.nombre}
           />
         </div>
 
@@ -65,6 +74,7 @@ const FormularioRegistroChoferes = () => {
             name='apellido'
             onChange={formik.handleChange}
             className='py-3'
+            value={formik.values.apellido}
           />
         </div>
 
@@ -74,6 +84,7 @@ const FormularioRegistroChoferes = () => {
             name='rut'
             onChange={formik.handleChange}
             className='py-3'
+            value={formik.values.rut}
           />
         </div>
 
@@ -83,14 +94,14 @@ const FormularioRegistroChoferes = () => {
             name='telefono'
             onChange={formik.handleChange}
             className='py-3'
+            value={formik.values.telefono}
           />
         </div>
 
-        <div className='relative w-full h-12 col-span-6 '>
-          <button className='absolute bottom-0 right-5 md:mt-10 md:row-start-2 bg-[#1693A7] hover:bg-[#1694a7d0] rounded-md text-white p-2'>Registrar Conductor</button>
+        <div className='md:row-start-3 md:col-span-2 md:col-start-3 h-14 w-full   '>
+          <button className='w-full h-full bg-[#3B82F6] hover:bg-[#3b83f6c9] rounded-md text-white p-2'>Registrar Conductor</button>
         </div>
       </form>
-    </MaxWidthWrapper>
   )
 }
 

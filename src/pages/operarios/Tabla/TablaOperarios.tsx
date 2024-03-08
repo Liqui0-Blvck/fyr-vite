@@ -25,37 +25,32 @@ import TableTemplate, {
   TableCardFooterTemplate,
 } from '../../../templates/common/TableParts.template';
 import Badge from '../../../components/ui/Badge';
-import Dropdown, {
-  DropdownItem,
-  DropdownMenu,
-  DropdownNavLinkItem,
-  DropdownToggle,
-} from '../../../components/ui/Dropdown';
 import Subheader, {
   SubheaderLeft,
   SubheaderRight,
 } from '../../../components/layouts/Subheader/Subheader';
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
-import { TComercializador } from '../../../types/registros types/registros.types';
+import { TOperarios } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
-import FormularioRegistroComercializador from '../Formulario Registro/FormularioRegistroComercializador';
+import FormularioRegistroOperario from '../Formularios Registro/FormularioRegistroOperario';
 
 
 
-const columnHelper = createColumnHelper<TComercializador>();
 
-const editLinkProductor = `/app/comercializador/`
-const createLinkProductor = `/app/registro-comercializador/`
+const columnHelper = createColumnHelper<TOperarios>();
+
+const editLinkProductor = `/app/productor/`
+const createLinkProductor = `/app/registro-productor/`
 
 const columns = [
-  columnHelper.accessor('nombre', {
+  columnHelper.accessor('rut', {
     cell: (info) => (
       <Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-        <div className='font-bold w-20'>{`${info.row.original.nombre}`}</div>
+        <div className='font-bold w-20'>{`${info.row.original.rut}`}</div>
       </Link>
     ),
-    header: 'Rut Productor'
+    header: 'Rut '
   }),
   columnHelper.accessor('nombre', {
     cell: (info) => (
@@ -65,48 +60,48 @@ const columns = [
     ),
     header: 'Nombre',
   }),
-  columnHelper.accessor('razon_social', {
+  columnHelper.accessor('apellido', {
     cell: (info) => (
       <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold truncate'>{`${info.row.original.razon_social}`}</div>
+        <div className='font-bold truncate'>{`${info.row.original.apellido}`}</div>
       </Link>
     ),
-    header: 'Razón Social',
+    header: 'Apellido',
   }),
-  columnHelper.accessor('giro', {
+  columnHelper.accessor('tipo_operario', {
     cell: (info) => (
       <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.giro}`}</div>
+        <div className='font-bold'>{`${info.row.original.tipo_operario}`}</div>
       </Link>
     ),
-    header: 'Giro',
+    header: 'Tipo Operario',
   }),
-  columnHelper.accessor('email_comercializador', {
+  columnHelper.accessor('activo', {
     cell: (info) => (
       <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.email_comercializador}`}</div>
+        <div className='font-bold'>{`${info.row.original.activo ? 'Si' : 'No'}`}</div>
       </Link>
     ),
-    header: 'Email',
+    header: 'Estado',
   }),
-  columnHelper.accessor('direccion', {
+  columnHelper.accessor('etiquetas', {
     cell: (info) => (
       <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.direccion}`}</div>
+        <div className='font-bold'>{`${info.row.original.etiquetas}`}</div>
       </Link>
     ),
-    header: 'Dirección',
+    header: 'Etiqueta',
   }),
 
 ];
 
-interface IFormComercializadorProps {
-  data: TComercializador[] | [],
+interface IOperarioProps {
+  data: TOperarios[] | []
   refresh: Dispatch<SetStateAction<boolean>>
 }
 
 
-const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh }) => {
+const TablaOperarios : FC<IOperarioProps> = ({ data, refresh }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
@@ -133,7 +128,7 @@ const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh 
   });
 
   return (
-    <PageWrapper name='ListaComercializadores'>
+    <PageWrapper name='ListaProductores'>
       <Subheader>
         <SubheaderLeft>
           <FieldWrap
@@ -153,7 +148,7 @@ const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh 
             <Input
               id='search'
               name='search'
-              placeholder='Busca al comercializador ...'
+              placeholder='Busca al operario...'
               value={globalFilter ?? ''}
               onChange={(e) => setGlobalFilter(e.target.value)}
             />
@@ -163,11 +158,11 @@ const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh 
           <ModalRegistro
                 open={modalStatus} 
                 setOpen={setModalStatus} 
-                title='Registro Comercializador'
-                textButton='Agregar Comercializador'
+                title='Registro Operario'
+                textButton='Agregar Operario'
                 size={900}
                 >
-						<FormularioRegistroComercializador refresh={refresh} setOpen={setModalStatus}/>
+						<FormularioRegistroOperario refresh={refresh} setOpen={setModalStatus}/>
 					</ModalRegistro>
         </SubheaderRight>
       </Subheader>
@@ -175,7 +170,7 @@ const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh 
         <Card className='h-full'>
           <CardHeader>
             <CardHeaderChild>
-              <CardTitle>Comercializador</CardTitle>
+              <CardTitle>Operarios</CardTitle>
               <Badge
                 variant='outline'
                 className='border-transparent px-4'
@@ -196,4 +191,4 @@ const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh 
   );
 };
 
-export default TablaComercializadores;
+export default TablaOperarios;

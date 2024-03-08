@@ -60,6 +60,12 @@ export const appPages = {
 				to: '/app/comercializadores/',
 				text: 'Comercializadores',
 				icon: 'HeroUser'
+			},
+			operarios: {
+				id: 'operarios',
+				to: '/app/operarios/',
+				text: 'Operarios',
+				icon: 'HeroUser'
 			}
 		}
 	},

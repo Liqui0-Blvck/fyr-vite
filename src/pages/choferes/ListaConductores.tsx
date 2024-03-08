@@ -1,28 +1,19 @@
 import { useAuth } from '../../context/authContext'
 import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction'
+import { TConductor } from '../../types/registros types/registros.types'
 import TablaConductor from './Tabla/TablaConductor'
-
-
-interface IConductor {
-  id: number
-  nombre: string,
-  apellido: string,
-  rut: string,
-  telefono: string
-}
-
 
 const ListaConductores = () => {
   const { authTokens, validate } = useAuth()
-  const { data: conductores, setData, loading } = useAuthenticatedFetch<IConductor[]>(
+  const { data: conductores, setRefresh } = useAuthenticatedFetch<TConductor[]>(
     authTokens,
     validate,
-    `/api/conductores/`
+    `/api/registros/choferes`
   )
 
   return (
-    <div className=''>
-      <TablaConductor data={conductores ? conductores : []} />
+    <div className='h-full'>
+      <TablaConductor data={conductores ? conductores : []} refresh={setRefresh}/>
     </div>
   )
 }

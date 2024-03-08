@@ -8,9 +8,9 @@ import Cookies from 'js-cookie';
 
 interface IAuthTokens {
   access: string;
-  refresh: string;
-  // Otros campos si es necesario
+  refresh: string
 }
+
 
 interface IUser {
 
@@ -32,13 +32,18 @@ interface IAuthProviderProps {
 
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const authTokenLocalStorage = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
+  const refreshTokenStorage = Cookies.get('refresh') ? JSON.parse(Cookies.get('refresh')!) : null;
   const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(() => authTokenLocalStorage);
+  const [refreshToken, setRefreshToken] = useState<IAuthTokens | null>(() => refreshTokenStorage);
 
   const base_url = process.env.VITE_BASE_URL_DEV
 
   useEffect(() => {
     const authTokenLocalStorage = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
+    const refreshTokenStorage = Cookies.get('refresh') ? JSON.parse(Cookies.get('refresh')!) : null;
     setAuthTokens(authTokenLocalStorage);
+    setRefreshToken(refreshTokenStorage)
+
   }, [])
 
 
@@ -60,7 +65,9 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     })
 
     if (res.ok) {
-      Cookies.set('user', JSON.stringify(await res.json()))
+      const data = await res.json()
+      Cookies.set('user', JSON.stringify(data))
+      Cookies.set('refresh', JSON.stringify(data.refresh))
       toast.success('Inicio de sesión exitoso!')
       navigate(`../${appPages.mainAppPages.to}`, { replace: true })
 
@@ -71,6 +78,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
 
   const validate = async (token: IAuthTokens | null): Promise<boolean> => {
+    console.log(token)
     const response = await fetch(`${base_url}/api/token/verify/`, {
       method: 'POST',
       headers: {
@@ -88,7 +96,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ 'refresh': authTokens?.refresh })
+      body: JSON.stringify({ 'refresh': refreshToken })
     });
 
 
@@ -110,7 +118,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     const fourMinutes = 1000 * 60 * 4
     const interval = setInterval(async () => {
       try {
-        if (authTokens) {
+        if (authTokens && isMounted) {
           const isTokenValid = await validate(authTokens);
           if (!isTokenValid) {
             await updateToken();

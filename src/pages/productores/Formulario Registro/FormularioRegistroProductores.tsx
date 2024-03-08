@@ -1,11 +1,18 @@
 import { useFormik } from 'formik'
-import { Input, Select, Switch } from 'antd'
-import React from 'react'
+// import { Select, Switch } from 'antd'
+import Input from '../../../components/form/Input'
+import Select from '../../../components/form/Select'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-// import { TIPOS_OPERARIO } from '../../const/constantes'
+import Container from '../../../components/layouts/Container/Container'
+import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper'
+import Card, { CardBody, CardHeader } from '../../../components/ui/Card'
+import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
+import useDarkMode from '../../../hooks/useDarkMode'
+import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface IRegion {
   region_id: number
@@ -22,11 +29,16 @@ interface IComuna {
   comuna_nombre: string
 }
 
-const FormularioRegistroProductores = () => {
+interface IFormProductor {
+  refresh: Dispatch<SetStateAction<boolean>>
+  setOpen: Dispatch<SetStateAction<boolean>>
+}
+
+const FormularioRegistroProductores : FC<IFormProductor> = ({ refresh, setOpen }) => {
   const { authTokens, validate } = useAuth()
   const base_url = process.env.VITE_BASE_URL
   const navigate = useNavigate()
-
+  const { isDarkTheme } = useDarkMode() 
 
   const formik = useFormik({
     initialValues: {
@@ -55,7 +67,9 @@ const FormularioRegistroProductores = () => {
         })
         if (res.ok) {
           toast.success("El operario fue registrado exitosamente!!")
-          navigate('/app/lista-operarios')
+          setOpen(false)
+          refresh(true)
+          navigate('/app/operarios')
 
         } else {
           toast.error("No se pudo registrar el camión volver a intentar")
@@ -84,165 +98,171 @@ const FormularioRegistroProductores = () => {
     `/api/provincias/${formik.values.provincia}/comunas/`
   )
 
-  const onSearch = (value: string) => {
-    console.log("search:", value);
-  };
+  const region = regiones?.map((region: IRegion) => ({
+    value: String(region.region_id),
+    label: region.region_nombre
+  })) ?? []
 
-  const filterOption = (input: string, option?: { label: string; value: string }) =>
-    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+  const provincia = provincias?.map((provincia: IProvincia) => ({
+    value: String(provincia.provincia_id),
+    label: provincia.provincia_nombre
+  })) ?? []
 
+  const comuna = comunas?.map((comuna: IComuna) => ({
+    value: String(comuna.comuna_id),
+    label: comuna.comuna_nombre
+  })) ?? []
+
+  const optionsRegion: TSelectOptions | [] = region
+  const optionsProvincia: TSelectOptions | [] = provincia
+  const optionsComuna: TSelectOptions | [] = comuna
 
 
   return (
-    <div className='p-10 h-full'>
-      <form
-        onSubmit={formik.handleSubmit}
-        className='flex flex-col 
-          md:grid md:grid-cols-6 gap-x-6 gap-y-2
-          relative p-2 rounded-md h-full'
-      >
-        <div className='md:col-span-2 md:flex-col items-center'>
-          <label htmlFor="rut_productor">Rut Productor: </label>
-          <Input
-            type='text'
-            name='rut_productor'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+    <form
+      onSubmit={formik.handleSubmit}
+      className={`flex flex-col md:grid md:grid-cols-6 gap-x-3
+      gap-y-10 mt-10 ${ isDarkTheme ? oneDark : oneLight} relative px-5 py-6
+      rounded-md`}
+    >
+      <div className='md:col-span-2 md:flex-col items-center'>
+        <label htmlFor="rut_productor">Rut Productor: </label>
+        <Input
+          type='text'
+          name='rut_productor'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.rut_productor}
+        />
+      </div>
 
-        <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
-          <label htmlFor="nombre">Nombre: </label>
-          <Input
-            type='text'
-            name='nombre'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+      <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
+        <label htmlFor="nombre">Nombre: </label>
+        <Input
+          type='text'
+          name='nombre'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.nombre}
+        />
+      </div>
 
-        <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
-          <label htmlFor="email">Correo: </label>
-          <Input
-            type='email'
-            name='email'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+      <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
+        <label htmlFor="email">Correo: </label>
+        <Input
+          type='email'
+          name='email'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.email}
+        />
+      </div>
 
-        <div className='md:col-span-2 md:row-start-2 md:flex-col items-center'>
-          <label htmlFor="region">Región: </label>
-          <Select
-            showSearch
-            placeholder="Selecciona una región"
-            optionFilterProp="children"
-            className='rounded-md mt-1 col-span-3 h-14 w-full'
-            onChange={value => formik.setFieldValue('region', value)}
-            onSearch={onSearch}
-            name='region'
-            filterOption={filterOption}
-            options={regiones && regiones.map((region: IRegion) => ({
-              value: region.region_id,
-              label: region.region_nombre
-            }))}
-          />
-        </div>
+      <div className='md:col-span-2 md:row-start-2 md:flex-col items-center'>
+        <label htmlFor="region">Región: </label>
+        <SelectReact
+          options={optionsRegion}
+          id='region'
+          name='region'
+          placeholder='Selecciona una región'
+          className='h-14'
+          onChange={(value: any) => {
+            formik.setFieldValue('region', value.value)
+          }}
+        />
+      </div>
 
-        <div className='md:col-span-2  md:row-start-2 md:col-start-3 md:flex-col items-center'>
-          <label htmlFor="provincia">Provincia: </label>
-          <Select
-            showSearch
-            placeholder="Selecciona una tipo de operario"
-            optionFilterProp="children"
-            className='rounded-md mt-1 col-span-3 h-14 w-full'
-            onChange={value => formik.setFieldValue('provincia', value)}
-            onSearch={onSearch}
-            name='provincia'
-            filterOption={filterOption}
-            options={provincias && provincias.map((prov: IProvincia) => ({
-              value: prov.provincia_id,
-              label: prov.provincia_nombre
-            }))}
-          />
-        </div>
+      <div className='md:col-span-2  md:row-start-2 md:col-start-3 md:flex-col items-center'>
+        <label htmlFor="provincia">Provincia: </label>
+        <SelectReact
+          options={optionsProvincia}
+          id='provincia'
+          name='provincia'
+          placeholder='Selecciona una provincia'
+          className='h-14'
+          onChange={(value: any) => {
+            formik.setFieldValue('provincia', value.value)
+          }}
+        />
+      </div>
 
-        <div className='md:col-span-2 md:row-start-2 md:col-start-5 md:flex-col items-center'>
-          <label htmlFor="comuna">Comuna: </label>
-          <Select
-            showSearch
-            placeholder="Selecciona una comuna"
-            optionFilterProp="children"
-            className='rounded-md mt-1 col-span-3 h-14 w-full'
-            onChange={value => formik.setFieldValue('comuna', value)}
-            onSearch={onSearch}
-            filterOption={filterOption}
-            options={comunas && comunas.map((comu: IComuna) => ({
-              value: comu.comuna_id,
-              label: comu.comuna_nombre
-            }))}
-          />
-        </div>
+      <div className='md:col-span-2 md:row-start-2 md:col-start-5 md:flex-col items-center'>
+        <label htmlFor="comuna">Comuna: </label>
+        <SelectReact
+          options={optionsComuna}
+          id='comuna'
+          name='comuna'
+          placeholder='Selecciona una comuna'
+          className='h-14'
+          onChange={(value: any) => {
+            formik.setFieldValue('comuna', value.value)
+          }}
+        />
+      </div>
 
-        <div className='md:col-span-2 md:row-start-3  md:flex-col items-center'>
-          <label htmlFor="direccion">Dirección: </label>
-          <Input
-            type='text'
-            name='direccion'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+      <div className='md:col-span-2 md:row-start-3  md:flex-col items-center'>
+        <label htmlFor="direccion">Dirección: </label>
+        <Input
+          type='text'
+          name='direccion'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.direccion}
+        />
+      </div>
 
 
-        <div className='md:col-span-2 md:row-start-3 md:col-start-3 md:flex-col items-center'>
-          <label htmlFor="telefono">Telefono Fijo: </label>
-          <Input
-            type='text'
-            name='telefono'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+      <div className='md:col-span-2 md:row-start-3 md:col-start-3 md:flex-col items-center'>
+        <label htmlFor="telefono">Telefono Fijo: </label>
+        <Input
+          type='text'
+          name='telefono'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.telefono}
+        />
+      </div>
 
 
 
-        <div className='md:col-span-2 md:row-start-3 md:col-start-5 md:flex-col items-center'>
-          <label htmlFor="movil">Telefono Celular: </label>
-          <Input
-            type='text'
-            name='movil'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+      <div className='md:col-span-2 md:row-start-3 md:col-start-5 md:flex-col items-center'>
+        <label htmlFor="movil">Telefono Celular: </label>
+        <Input
+          type='text'
+          name='movil'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.movil}
+        />
+      </div>
 
-        <div className='md:col-span-2 md:row-start-4 md:flex-col items-center'>
-          <label htmlFor="pagina_web">Página Web: </label>
-          <Input
-            type='text'
-            name='pagina_web'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+      <div className='md:col-span-2 md:row-start-4 md:flex-col items-center'>
+        <label htmlFor="pagina_web">Página Web: </label>
+        <Input
+          type='text'
+          name='pagina_web'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.pagina_web}
+        />
+      </div>
 
-        <div className='md:col-span-2 md:row-start-4 md:col-start-3 md:flex-col items-center'>
-          <label htmlFor="numero_contrato">N° Contrato: </label>
-          <Input
-            type='text'
-            name='numero_contrato'
-            onChange={formik.handleChange}
-            className='py-3'
-          />
-        </div>
+      <div className='md:col-span-2 md:row-start-4 md:col-start-3 md:flex-col items-center'>
+        <label htmlFor="numero_contrato">N° Contrato: </label>
+        <Input
+          type='text'
+          name='numero_contrato'
+          onChange={formik.handleChange}
+          className='py-3'
+          value={formik.values.numero_contrato!}
+        />
+      </div>
 
 
-        <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-          <button className='w-full mt-6 bg-[#1693A7] hover:bg-[#1694a7d0] rounded-md text-white py-3.5'>Registrar Operario</button>
-        </div>
-      </form>
-    </div>
+      <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
+        <button className='w-full mt-6 bg-[#1693A7] hover:bg-[#1694a7d0] rounded-md text-white py-3.5'>Registrar Operario</button>
+      </div>
+    </form>
   )
 }
 

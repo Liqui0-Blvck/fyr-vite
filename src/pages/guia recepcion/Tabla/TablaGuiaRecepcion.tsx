@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -38,77 +38,80 @@ import Subheader, {
 import FieldWrap from '../../../components/form/FieldWrap';
 import { useAuth } from '../../../context/authContext';
 import { format } from "@formkit/tempo"
-import { TConductor } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
-import FormularioRegistroChoferes from '../Formularios Registro/FormularioRegistroChoferes';
+import { TGuia } from "../../../types/registros types/registros.types"
 
 
 
+const columnHelper = createColumnHelper<TGuia>();
 
-
-
-const columnHelper = createColumnHelper<TConductor>();
-
-const editLinkProductor = `/app/conductores/`
-const createLinkProductor = `/app/registro-conductor/`
+const editLinkProductor = `/app/productor/`
+const createLinkProductor = `/app/registro-productor/`
 
 const columns = [
-	columnHelper.accessor('rut', {
+	columnHelper.accessor('numero_guia_productor', {
 		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.rut}`}</div>
+			<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
+				<div className='font-bold w-20'>{`${info.row.original.numero_guia_productor}`}</div>
 			</Link>
 		),
-		header: 'Rut',
+		header: 'N° Guia Productor'
 	}),
-	columnHelper.accessor('nombre', {
+	columnHelper.accessor('camion', {
 		cell: (info) => (
 			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold '>{`${info.row.original.nombre}`}</div>
+				<div className='font-bold '>{`${info.row.original.camion}`}</div>
 			</Link>
 		),
-		header: 'Nombre',
+		header: 'Camión',
 	}),
-	columnHelper.accessor('apellido', {
+	columnHelper.accessor('camionero', {
 		cell: (info) => (
 			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold truncate'>{`${info.row.original.apellido}`}</div>
+				<div className='font-bold truncate'>{`${info.row.original.camionero}`}</div>
 			</Link>
 		),
-		header: 'Apellido',
+		header: 'Conductor',
 	}),
-	columnHelper.accessor('telefono', {
+	columnHelper.accessor('comercializador', {
 		cell: (info) => (
 			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.telefono}`}</div>
+				<div className='font-bold'>{`${info.row.original.comercializador}`}</div>
 			</Link>
 		),
-		header: 'Telefono',
+		header: 'Comercializador',
+	}),
+	columnHelper.accessor('lotesrecepcionmp', {
+		cell: (info) => (
+			<Link to={`${editLinkProductor}${info.row.original.id}`}>
+				<div className='font-bold'>{`${info.row.original.lotesrecepcionmp.length}`}</div>
+			</Link>
+		),
+		header: 'Lotes',
+	}),
+	columnHelper.accessor('estado_recepcion', {
+		cell: (info) => (
+			<Link to={`${editLinkProductor}${info.row.original.id}`}>
+				<div className='font-bold'>{`${info.row.original.estado_recepcion}`}</div>
+			</Link>
+		),
+		header: 'Estado',
 	}),
 	columnHelper.accessor('fecha_creacion', {
 		cell: (info) => (
 			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}</div>
+				<div className='font-bold'>{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short'})}`}</div>
 			</Link>
 		),
-		header: 'Fecha Creación',
-	}),
-	
+		header: 'Estado',
+	})
 	
 
 ];
 
-interface IConductorProps {
-	data: TConductor[] | []
-	refresh: Dispatch<SetStateAction<boolean>>
-}
 
-
-const TablaConductor : FC<IConductorProps> = ({ data, refresh }) => {
+const TablaGuiaRecepcion = ({ data }: { data: TGuia[] | [] }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
-	const [modalStatus, setModalStatus] = useState<boolean>(false)
-
 
 
 	const table = useReactTable({
@@ -131,7 +134,7 @@ const TablaConductor : FC<IConductorProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaConductores'>
+		<PageWrapper name='ListaProductores'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap
@@ -151,29 +154,25 @@ const TablaConductor : FC<IConductorProps> = ({ data, refresh }) => {
 						<Input
 							id='search'
 							name='search'
-							placeholder='Busca al conductor...'
+							placeholder='Busca al productor...'
 							value={globalFilter ?? ''}
 							onChange={(e) => setGlobalFilter(e.target.value)}
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
 				<SubheaderRight>
-					<ModalRegistro
-							open={modalStatus} 
-							setOpen={setModalStatus} 
-							title='Registro Conductores'
-							textButton='Agregar Conductor'
-							size={900}
-							>
-						<FormularioRegistroChoferes refresh={refresh} setOpen={setModalStatus}/>
-					</ModalRegistro>
+					<Link to={`${createLinkProductor}`}>
+						<Button variant='solid' icon='HeroPlus'>
+							Agregar Productores
+						</Button>
+					</Link>
 				</SubheaderRight>
 			</Subheader>
 			<Container>
 				<Card className='h-full'>
 					<CardHeader>
 						<CardHeaderChild>
-							<CardTitle>Conductores</CardTitle>
+							<CardTitle>Productores</CardTitle>
 							<Badge
 								variant='outline'
 								className='border-transparent px-4'
@@ -194,4 +193,4 @@ const TablaConductor : FC<IConductorProps> = ({ data, refresh }) => {
 	);
 };
 
-export default TablaConductor;
+export default TablaGuiaRecepcion;

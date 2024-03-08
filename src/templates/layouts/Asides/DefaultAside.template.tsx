@@ -38,6 +38,7 @@ const DefaultAsideTemplate = () => {
 						<NavItem {...appPages.registroAppPages.subPages.camiones} />
 						<NavItem {...appPages.registroAppPages.subPages.conductores} />
 						<NavItem {...appPages.registroAppPages.subPages.comercializadores} />
+						<NavItem {...appPages.registroAppPages.subPages.operarios} />
 					</NavCollapse>
 
 					<NavCollapse

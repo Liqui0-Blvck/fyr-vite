@@ -1,5 +1,6 @@
 import { useAuth } from '../../context/authContext'
 import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction'
+import TablaProductor from './Tabla/TablaProductor'
 import CustomerListPage from './Tabla/TablaProductor'
 
 
@@ -23,7 +24,7 @@ interface IProductor {
 
 const ListaProductores = () => {
   const { authTokens, validate } = useAuth()
-  const { data: productores, setData, loading } = useAuthenticatedFetch<IProductor[]>(
+  const { data: productores, setData, loading, setRefresh } = useAuthenticatedFetch<IProductor[]>(
     authTokens,
     validate,
     `/api/productores/`
@@ -31,7 +32,7 @@ const ListaProductores = () => {
 
   return (
     <div className=''>
-      <CustomerListPage data={productores ? productores : []} />
+      <TablaProductor data={productores ? productores : []} refresh={setRefresh} />
     </div>
   )
 }
