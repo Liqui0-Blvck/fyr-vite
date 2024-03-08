@@ -8,7 +8,7 @@ import { TIPOS_OPERARIO } from '@/const/constantes'
 import { useAuth } from '@/context/AuthContext'
 import { useAuthenticatedFetch } from '@/hooks/useAuthenticatedFetch'
 
-const FormularioRegistroProductores  = () => {
+const FormularioRegistroComercializador  = () => {
   const { authTokens, validToken } = useAuth()
   const base_url = import.meta.env.VITE_BASE_URL
   const navigate = useNavigate()
@@ -16,17 +16,12 @@ const FormularioRegistroProductores  = () => {
   
   const formik = useFormik({
     initialValues: {
-      rut_productor: "",
       nombre: "",
-      telefono: "",
-      region: null,
-      provincia: null,
-      comuna: null,
+      razon_social: "",
+      giro: "",
       direccion: "",
-      movil: "",
-      pagina_web: "",
-      email: "",
-      numero_contrato: null
+      zip_code: "",
+      email_comercializador: ""
     },
     onSubmit: async (values) => {
       try {
@@ -52,23 +47,6 @@ const FormularioRegistroProductores  = () => {
     }
   })
 
-  const { data: regiones } = useAuthenticatedFetch(
-    authTokens,
-    validToken,
-    '/api/regiones'
-  )
-
-  const { data: provincias } = useAuthenticatedFetch(
-    authTokens,
-    validToken,
-    `/api/region/${formik.values.region}/provincias/`
-  )
-
-  const { data: comunas } = useAuthenticatedFetch(
-    authTokens,
-    validToken,
-    `/api/provincias/${formik.values.provincia}/comunas/`
-  )
 
   const onSearch = (value) => {
     console.log("search:", value);
@@ -130,10 +108,10 @@ const FormularioRegistroProductores  = () => {
             onSearch={onSearch}
             name='region'
             filterOption={filterOption}
-            options={regiones && regiones.map((region) => ({
-              value: region.region_id,
-              label: region.region_nombre
-            }))}
+            // options={regiones && regiones.map((region) => ({
+            //   value: region.region_id,
+            //   label: region.region_nombre
+            // }))}
             />
         </div>
 
@@ -148,10 +126,10 @@ const FormularioRegistroProductores  = () => {
             onSearch={onSearch}
             name='provincia'
             filterOption={filterOption}
-            options={provincias && provincias.map((prov) => ({
-              value: prov.provincia_id,
-              label: prov.provincia_nombre
-            }))}
+            // options={provincias && provincias.map((prov) => ({
+            //   value: prov.provincia_id,
+            //   label: prov.provincia_nombre
+            // }))}
             />
         </div>
 
@@ -166,10 +144,10 @@ const FormularioRegistroProductores  = () => {
             onSearch={onSearch}
             name='comuna'
             filterOption={filterOption}
-            options={comunas && comunas.map((comu) => ({
-              value: comu.comuna_id,
-              label: comu.comuna_nombre
-            }))}
+            // options={comunas && comunas.map((comu) => ({
+            //   value: comu.comuna_id,
+            //   label: comu.comuna_nombre
+            // }))}
             />
         </div>
         
@@ -235,4 +213,4 @@ const FormularioRegistroProductores  = () => {
   )
 }
 
-export default FormularioRegistroProductores  
+export default FormularioRegistroComercializador  

@@ -22,8 +22,6 @@ const UserTemplate = () => {
 		'/api/registros/users/1'
 	)
 
-	console.log(userData)
-
 
 	return (
 		<User

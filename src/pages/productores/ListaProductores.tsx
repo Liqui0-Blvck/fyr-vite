@@ -1,25 +1,37 @@
 import { useAuth } from '../../context/authContext'
 import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction'
-import TablaProductores from './Tabla/TablaProductores'
+import CustomerListPage from './Tabla/TablaProductor'
 
+
+interface IProductor {
+  id: number,
+  rut_productor: string,
+  nombre: string,
+  telefono: string,
+  region: number,
+  provincia: number,
+  comuna: number,
+  direccion: string,
+  movil: string,
+  pagina_web: string,
+  email: string,
+  fecha_creacion: string,
+  numero_contrato: number,
+  usuarios: []
+}
 
 
 const ListaProductores = () => {
   const { authTokens, validate } = useAuth()
-  const { data: productores, setData, loading } = useAuthenticatedFetch(
+  const { data: productores, setData, loading } = useAuthenticatedFetch<IProductor[]>(
     authTokens,
     validate,
     `/api/productores/`
   )
-  
-  console.log(productores)
 
   return (
-    <div>
-        <div className='flex justify-center mt-10'>
-            Hola ya esto en tabla productores
-            {/* <TablaProductores data={productores} setData={setData} token={authTokens?.access} loading={loading}/> */}
-        </div>
+    <div className=''>
+      <CustomerListPage data={productores ? productores : []} />
     </div>
   )
 }

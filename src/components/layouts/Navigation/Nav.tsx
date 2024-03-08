@@ -45,11 +45,11 @@ const navItemChildCheck = (
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	return children?.length > 1
 		? // @ts-ignore
-		  // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
-		  children?.map((child) => child.type.displayName).includes('NavButton')
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
+		children?.map((child) => child.type.displayName).includes('NavButton')
 		: // @ts-ignore
-		  // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
-		  children?.type?.displayName === 'NavButton';
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
+		children?.type?.displayName === 'NavButton';
 };
 
 interface INavItemTextProps extends HTMLAttributes<HTMLDivElement> {
@@ -213,15 +213,15 @@ export const NavItem: FC<INavItemProps> = (props) => {
 							className={({ isActive }) =>
 								isActive
 									? classNames(
-											navItemClasses.default,
-											navItemClasses.active,
-											'max-md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.active,
+										'max-md:hidden',
+									)
 									: classNames(
-											navItemClasses.default,
-											navItemClasses.inactive,
-											'max-md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.inactive,
+										'max-md:hidden',
+									)
 							}>
 							{CONTENT}
 						</NavLink>
@@ -233,15 +233,15 @@ export const NavItem: FC<INavItemProps> = (props) => {
 							className={({ isActive }) =>
 								isActive
 									? classNames(
-											navItemClasses.default,
-											navItemClasses.active,
-											'md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.active,
+										'md:hidden',
+									)
 									: classNames(
-											navItemClasses.default,
-											navItemClasses.inactive,
-											'md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.inactive,
+										'md:hidden',
+									)
 							}>
 							{CONTENT}
 						</NavLink>
@@ -306,10 +306,6 @@ export const NavCollapse: FC<INavCollapseProps> = (props) => {
 	useEffect(() => {
 		setIsActive(here);
 	}, [here, location.pathname]);
-
-	console.log(isActive)
-	console.log(here)
-	console.log(location.pathname)
 
 	return (
 		<li
@@ -457,15 +453,15 @@ export const NavUser: FC<INavUserProps> = (props) => {
 							className={({ isActive }) =>
 								isActive
 									? classNames(
-											navItemClasses.default,
-											navItemClasses.active,
-											'max-md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.active,
+										'max-md:hidden',
+									)
 									: classNames(
-											navItemClasses.default,
-											navItemClasses.inactive,
-											'max-md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.inactive,
+										'max-md:hidden',
+									)
 							}>
 							{CONTENT}
 						</NavLink>
@@ -477,15 +473,15 @@ export const NavUser: FC<INavUserProps> = (props) => {
 							className={({ isActive }) =>
 								isActive
 									? classNames(
-											navItemClasses.default,
-											navItemClasses.active,
-											'md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.active,
+										'md:hidden',
+									)
 									: classNames(
-											navItemClasses.default,
-											navItemClasses.inactive,
-											'md:hidden',
-									  )
+										navItemClasses.default,
+										navItemClasses.inactive,
+										'md:hidden',
+									)
 							}>
 							{CONTENT}
 						</NavLink>

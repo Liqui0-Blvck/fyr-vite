@@ -13,13 +13,13 @@ interface IAuthTokens {
 }
 
 interface IUser {
-  
+
 }
 
 
 export interface IAuthContextProps {
-	authTokens: IAuthTokens | null
-	validate: (token: IAuthTokens | null) => Promise<boolean>;
+  authTokens: IAuthTokens | null
+  validate: (token: IAuthTokens | null) => Promise<boolean>;
   onLogin: (username: string, password: string) => Promise<void>;
   onLogout: () => void;
 }
@@ -34,8 +34,12 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const authTokenLocalStorage = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
   const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(() => authTokenLocalStorage);
 
+  const base_url = process.env.VITE_BASE_URL_DEV
 
-	const base_url = process.env.VITE_BASE_URL_DEV
+  useEffect(() => {
+    const authTokenLocalStorage = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
+    setAuthTokens(authTokenLocalStorage);
+  }, [])
 
 
   const navigate = useNavigate();
@@ -48,39 +52,37 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     });
 
     const res = await fetch(`${base_url}/api/token/`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: body
-		})
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body
+    })
 
-		if (res.ok){
-			Cookies.set('user', JSON.stringify(await res.json()))
-			toast.success('Inicio de sesión exitoso!')
-			setTimeout(() => {
-        navigate(`../${appPages.mainAppPages.to}`, { replace: true })
-      }, 1500)
-      
-			} else if (res.status === 401){
-				toast.error('Error al ingresar, volver a intentar')
-			}
-	}
+    if (res.ok) {
+      Cookies.set('user', JSON.stringify(await res.json()))
+      toast.success('Inicio de sesión exitoso!')
+      navigate(`../${appPages.mainAppPages.to}`, { replace: true })
+
+    } else if (res.status === 401) {
+      toast.error('Error al ingresar, volver a intentar')
+    }
+  }
 
 
-	const validate = async (token: IAuthTokens | null): Promise<boolean> => {
-		const response = await fetch(`${base_url}/api/token/verify/`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({'token': token?.access})
-		});
-		
-		return response.status === 200 ? true : response.status === 401 ? await updateToken() : false;
-	}
+  const validate = async (token: IAuthTokens | null): Promise<boolean> => {
+    const response = await fetch(`${base_url}/api/token/verify/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 'token': token?.access })
+    });
 
-	const updateToken = async () => {
+    return response.status === 200 ? true : response.status === 401 ? await updateToken() : false;
+  }
+
+  const updateToken = async () => {
     const response = await fetch(`${base_url}/api/token/refresh/`, {
       method: 'POST',
       headers: {
@@ -89,11 +91,12 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
       body: JSON.stringify({ 'refresh': authTokens?.refresh })
     });
 
-    const data = await response.json();
 
     if (response.status === 200) {
+      const data = await response.json();
+      console.log(data)
       setAuthTokens(data);
-      Cookies.set('authTokens', JSON.stringify(data));
+      Cookies.set('user', JSON.stringify(data));
       return true;
     } else {
       return false;
@@ -101,40 +104,41 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   };
 
 
-	// useEffect(() => {
-	// 	let isMounted = true
-  //   const fourMinutes = 1000 * 60 * 4;
-  //   const interval = setInterval(async () => {
-  //     try {
-  //       if (authTokens && isMounted) {
-  //         const isTokenValid = await validate(authTokens);
-  //         if (!isTokenValid) {
-  //           await updateToken();
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error al verificar o actualizar el token:", error);
-  //     }
-  //   }, fourMinutes);
+  useEffect(() => {
+    let isMounted = true
 
-  //   return () => {
-	// 		clearInterval(interval)
-	// 		isMounted = false
-	// 	};
-  // }, [authTokens, validate, updateToken]);
+    const fourMinutes = 1000 * 60 * 4
+    const interval = setInterval(async () => {
+      try {
+        if (authTokens) {
+          const isTokenValid = await validate(authTokens);
+          if (!isTokenValid) {
+            await updateToken();
+          }
+        }
+      } catch (error) {
+        console.error("Error al verificar o actualizar el token:", error);
+      }
+    }, fourMinutes);
+
+    return () => {
+      clearInterval(interval)
+      isMounted = false
+    };
+  }, [authTokens, validate, updateToken]);
 
 
   // Función para cerrar sesión
   const onLogout = async () => {
-		setAuthTokens(null);
+    setAuthTokens(null);
     Cookies.remove('user')
     navigate(`../${authPages.loginPage.to}`, { replace: true });
   };
 
   const value: IAuthContextProps = useMemo(
     () => ({
-			authTokens,
-			validate,
+      authTokens,
+      validate,
       onLogin,
       onLogout,
     }),

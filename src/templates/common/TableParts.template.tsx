@@ -158,7 +158,6 @@ const TableTemplate: FC<ITableTemplateProps> = (props) => {
 				<>
 					{hasHeader && <TableHeaderTemplate table={table} />}
 					<TableBodyTemplate table={table} />
-					{hasFooter && <TableFooterTemplate table={table} />}
 				</>
 			)}
 		</Table>
