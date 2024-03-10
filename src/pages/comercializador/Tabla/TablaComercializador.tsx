@@ -18,19 +18,13 @@ import Card, {
   CardHeaderChild,
   CardTitle,
 } from '../../../components/ui/Card';
-import Button from '../../../components/ui/Button';
 import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/form/Input';
 import TableTemplate, {
   TableCardFooterTemplate,
 } from '../../../templates/common/TableParts.template';
 import Badge from '../../../components/ui/Badge';
-import Dropdown, {
-  DropdownItem,
-  DropdownMenu,
-  DropdownNavLinkItem,
-  DropdownToggle,
-} from '../../../components/ui/Dropdown';
+
 import Subheader, {
   SubheaderLeft,
   SubheaderRight,
@@ -40,65 +34,16 @@ import { format } from "@formkit/tempo"
 import { TComercializador } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroComercializador from '../Formulario Registro/FormularioRegistroComercializador';
+import useDarkMode from '../../../hooks/useDarkMode';
+import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
+import { Tooltip } from 'antd';
+import FormularioEdicionComercializador from '../Formulario Edicion/FormularioEdicionComercializador';
+import DetalleComercializador from '../Detalle/Detalle';
 
 
 
 const columnHelper = createColumnHelper<TComercializador>();
 
-const editLinkProductor = `/app/comercializador/`
-const createLinkProductor = `/app/registro-comercializador/`
-
-const columns = [
-  columnHelper.accessor('nombre', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-        <div className='font-bold w-20'>{`${info.row.original.nombre}`}</div>
-      </Link>
-    ),
-    header: 'Rut Productor'
-  }),
-  columnHelper.accessor('nombre', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold '>{`${info.row.original.nombre}`}</div>
-      </Link>
-    ),
-    header: 'Nombre',
-  }),
-  columnHelper.accessor('razon_social', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold truncate'>{`${info.row.original.razon_social}`}</div>
-      </Link>
-    ),
-    header: 'Razón Social',
-  }),
-  columnHelper.accessor('giro', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.giro}`}</div>
-      </Link>
-    ),
-    header: 'Giro',
-  }),
-  columnHelper.accessor('email_comercializador', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.email_comercializador}`}</div>
-      </Link>
-    ),
-    header: 'Email',
-  }),
-  columnHelper.accessor('direccion', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.direccion}`}</div>
-      </Link>
-    ),
-    header: 'Dirección',
-  }),
-
-];
 
 interface IFormComercializadorProps {
   data: TComercializador[] | [],
@@ -106,10 +51,124 @@ interface IFormComercializadorProps {
 }
 
 
-const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh }) => {
+const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('')
-	const [modalStatus, setModalStatus] = useState<boolean>(false)
+  const [modalStatus, setModalStatus] = useState<boolean>(false)
+  const { isDarkTheme } = useDarkMode();
+
+
+  const asisteDelete = async (id: number) => {
+    const base_url = process.env.VITE_BASE_URL_DEV
+    const response = await fetch(`${base_url}/api/comercializador/${id}/`, {
+      method: 'DELETE',
+    })
+    if (response.ok) {
+      refresh(true)
+    } else {
+      console.log("nop no lo logre")
+    }
+  }
+
+  const editLinkProductor = `/app/comercializador/`
+  const createLinkProductor = `/app/registro-comercializador/`
+
+  const columns = [
+    columnHelper.accessor('nombre', {
+      cell: (info) => (
+        <div className='font-bold w-20'>
+          {`${info.row.original.nombre}`}
+        </div>
+      ),
+      header: 'Rut Productor'
+    }),
+    columnHelper.accessor('nombre', {
+      cell: (info) => (
+        <div className='font-bold '>
+          {`${info.row.original.nombre}`}
+        </div>
+      ),
+      header: 'Nombre',
+    }),
+    columnHelper.accessor('razon_social', {
+      cell: (info) => (
+        <div className='font-bold truncate'>
+          {`${info.row.original.razon_social}`}
+        </div>
+      ),
+      header: 'Razón Social',
+    }),
+    columnHelper.accessor('giro', {
+      cell: (info) => (
+        <div className='font-bold'>
+          {`${info.row.original.giro}`}
+        </div>
+      ),
+      header: 'Giro',
+    }),
+    columnHelper.accessor('email_comercializador', {
+      cell: (info) => (
+        <div className='font-bold'>
+          {`${info.row.original.email_comercializador}`}
+        </div>
+      ),
+      header: 'Email',
+    }),
+    columnHelper.accessor('direccion', {
+      cell: (info) => (
+        <div className='font-bold'>
+          {`${info.row.original.direccion}`}
+        </div>
+      ),
+      header: 'Dirección',
+    }),
+    columnHelper.display({
+      id: 'actions',
+      cell: (info) => {
+        const id = info.row.original.id;
+        const [detalleModalStatus, setDetalleModalStatus] = useState(false);
+        const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+
+        return (
+          <div className='h-full w-full flex justify-around gap-2'>
+            <ModalRegistro
+              open={detalleModalStatus}
+              setOpen={setDetalleModalStatus}
+              textTool='Detalle'
+              title='Detalle Camión'
+              size={900}
+              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              icon={<HeroEye style={{ fontSize: 25 }} />}
+            >
+              <DetalleComercializador id={id} />
+            </ModalRegistro>
+
+            <ModalRegistro
+              open={edicionModalStatus}
+              setOpen={setEdicionModalStatus}
+              title='Edición Camiones'
+              textTool='Editar'
+              size={900}
+              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              icon={<HeroPencilSquare style={{ fontSize: 25 }}
+              />}
+            >
+              <FormularioEdicionComercializador refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+            </ModalRegistro>
+
+            <Tooltip title='Eliminar'>
+              <button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+                <HeroXMark style={{ fontSize: 25 }} />
+              </button>
+            </Tooltip>
+          </div>
+        );
+      },
+      header: 'Acciones'
+    }),
+
+  ];
+
 
 
 
@@ -161,14 +220,15 @@ const TablaComercializadores : FC<IFormComercializadorProps> = ({ data, refresh 
         </SubheaderLeft>
         <SubheaderRight>
           <ModalRegistro
-                open={modalStatus} 
-                setOpen={setModalStatus} 
-                title='Registro Comercializador'
-                textButton='Agregar Comercializador'
-                size={900}
-                >
-						<FormularioRegistroComercializador refresh={refresh} setOpen={setModalStatus}/>
-					</ModalRegistro>
+            open={modalStatus}
+            setOpen={setModalStatus}
+            title='Registro Comercializador'
+            textButton='Agregar Comercializador'
+            width={`w-full p-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+            size={900}
+          >
+            <FormularioRegistroComercializador refresh={refresh} setOpen={setModalStatus} />
+          </ModalRegistro>
         </SubheaderRight>
       </Subheader>
       <Container>

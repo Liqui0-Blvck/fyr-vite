@@ -1,20 +1,30 @@
 import { useFormik } from 'formik'
 import Input from '../../../components/form/Input'
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { useAuth } from '../../../context/authContext'
+import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
+import { TConductor } from '../../../types/registros types/registros.types'
 
 interface IFormChoferes {
   refresh: Dispatch<SetStateAction<boolean>>
   setOpen: Dispatch<SetStateAction<boolean>>
+  id: number
 }
 
-const FormularioRegistroChoferes: FC<IFormChoferes> = ({ setOpen, refresh }) => {
-  const base_url = process.env.VITE_BASE_URL_DEV
+const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id }) => {
+  const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode()
   const navigate = useNavigate()
+  const base_url = process.env.VITE_BASE_URL_DEV
+  const { data: conductor } = useAuthenticatedFetch<TConductor>(
+    authTokens,
+    validate,
+    `/api/registros/choferes/${id}`
+  )
 
 
   const formik = useFormik({
@@ -26,8 +36,8 @@ const FormularioRegistroChoferes: FC<IFormChoferes> = ({ setOpen, refresh }) => 
     },
     onSubmit: async (values) => {
       try {
-        const res = await fetch(`${base_url}/api/registros/choferes/`, {
-          method: 'POST',
+        const res = await fetch(`${base_url}/api/registros/choferes/${id}/`, {
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -50,6 +60,18 @@ const FormularioRegistroChoferes: FC<IFormChoferes> = ({ setOpen, refresh }) => 
     }
   })
 
+  useEffect(() => {
+    let isMounted = true
+
+    if (isMounted && conductor) {
+      formik.setValues({
+        nombre: conductor.nombre,
+        apellido: conductor.apellido,
+        rut: conductor.rut,
+        telefono: conductor.telefono
+      })
+    }
+  }, [conductor])
 
   return (
     <form
@@ -106,4 +128,4 @@ const FormularioRegistroChoferes: FC<IFormChoferes> = ({ setOpen, refresh }) => 
   )
 }
 
-export default FormularioRegistroChoferes
+export default FormularioEdicionConductores

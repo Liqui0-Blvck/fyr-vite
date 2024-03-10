@@ -34,72 +34,11 @@ import { format } from "@formkit/tempo"
 import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroProductores from '../Formulario Registro/FormularioRegistroProductores';
 import { TProductor } from '../../../types/registros types/registros.types';
-
-
-const columnHelper = createColumnHelper<TProductor>();
-
-const editLinkProductor = `/app/productor/`
-const createLinkProductor = `/app/registro-productor/`
-
-const columns = [
-	columnHelper.accessor('rut_productor', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-				<div className='font-bold w-20'>{`${info.row.original.rut_productor}`}</div>
-			</Link>
-		),
-		header: 'Rut Productor'
-	}),
-	columnHelper.accessor('nombre', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold '>{`${info.row.original.nombre}`}</div>
-			</Link>
-		),
-		header: 'nombre',
-		footer: 'nombre',
-	}),
-	columnHelper.accessor('email', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold truncate'>{`${info.row.original.email}`}</div>
-			</Link>
-		),
-		header: 'Email',
-	}),
-	columnHelper.accessor('telefono', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.telefono}`}</div>
-			</Link>
-		),
-		header: 'Telefono',
-	}),
-	columnHelper.accessor('numero_contrato', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.numero_contrato}`}</div>
-			</Link>
-		),
-		header: 'N° Contrato',
-	}),
-	columnHelper.accessor('direccion', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.direccion}`}</div>
-			</Link>
-		),
-		header: 'Dirección',
-	}),
-	columnHelper.accessor('fecha_creacion', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}</div>
-			</Link>
-		),
-		header: 'Fecha creación',
-	}),
-];
+import useDarkMode from '../../../hooks/useDarkMode';
+import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
+import { Tooltip } from 'antd';
+import DetalleProductor from '../Detalle/DetalleProductor';
+import FormularioEdicionProductores from '../Formulario Edicion/FormularioEdicionProductores';
 
 
 interface IProductorProps {
@@ -107,11 +46,126 @@ interface IProductorProps {
 	refresh: Dispatch<SetStateAction<boolean>>
 }
 
+const columnHelper = createColumnHelper<TProductor>();
 
-const TablaProductor : FC<IProductorProps> = ({ data, refresh }) => {
+
+
+const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
+	const { isDarkTheme } = useDarkMode();
+
+	const asisteDelete = async (id: number) => {
+		const base_url = process.env.VITE_BASE_URL_DEV
+		const response = await fetch(`${base_url}/api/productores/${id}/`, {
+			method: 'DELETE',
+		})
+		if (response.ok) {
+			refresh(true)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
+
+
+	const editLinkProductor = `/app/productor/`
+	const createLinkProductor = `/app/registro-productor/`
+
+	const columns = [
+		columnHelper.accessor('rut_productor', {
+			cell: (info) => (
+				<div className='font-bold w-20'>
+					{`${info.row.original.rut_productor}`}
+				</div>
+			),
+			header: 'Rut Productor'
+		}),
+		columnHelper.accessor('nombre', {
+			cell: (info) => (
+				<div className='font-bold '>
+					{`${info.row.original.nombre}`}
+				</div>
+			),
+			header: 'nombre',
+		}),
+		columnHelper.accessor('email', {
+			cell: (info) => (
+				<div className='font-bold truncate'>
+					{`${info.row.original.email}`}
+				</div>
+			),
+			header: 'Email',
+		}),
+		columnHelper.accessor('telefono', {
+			cell: (info) => (
+				<div className='font-bold'>
+					{`${info.row.original.telefono}`}
+				</div>
+
+			),
+			header: 'Telefono',
+		}),
+		columnHelper.accessor('direccion', {
+			cell: (info) => (
+				<div className='font-bold'>
+					{`${info.row.original.direccion}`}
+				</div>
+			),
+			header: 'Dirección',
+		}),
+		columnHelper.accessor('fecha_creacion', {
+			cell: (info) => (
+				<div className='font-bold'>
+					{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}
+				</div>
+			),
+			header: 'Fecha creación',
+		}),
+		columnHelper.display({
+			id: 'actions',
+			cell: (info) => {
+				const id = info.row.original.id;
+				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
+				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+
+				return (
+					<div className='h-full w-full flex justify-around gap-2'>
+
+						<ModalRegistro
+							open={detalleModalStatus}
+							setOpen={setDetalleModalStatus}
+							textTool='Detalle'
+							title='Detalle Camión'
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroEye style={{ fontSize: 25 }} />}
+						>
+							<DetalleProductor id={id} />
+						</ModalRegistro>
+
+						<ModalRegistro
+							open={edicionModalStatus}
+							setOpen={setEdicionModalStatus}
+							title='Edición Camiones'
+							textTool='Editar'
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
+						>
+							<FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+						</ModalRegistro>
+
+						<Tooltip title='Eliminar'>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+								<HeroXMark style={{ fontSize: 25 }} />
+							</button>
+						</Tooltip>
+					</div>
+				);
+			},
+			header: 'Acciones'
+		}),
+	];
 
 
 
@@ -163,13 +217,14 @@ const TablaProductor : FC<IProductorProps> = ({ data, refresh }) => {
 				</SubheaderLeft>
 				<SubheaderRight>
 					<ModalRegistro
-							open={modalStatus} 
-							setOpen={setModalStatus} 
-							title='Registro Productores'
-							textButton='Agregar Productor'
-							size={1200}
-							>
-						<FormularioRegistroProductores setOpen={setModalStatus} refresh={refresh}/>
+						open={modalStatus}
+						setOpen={setModalStatus}
+						title='Registro Productores'
+						textButton='Agregar Productor'
+						width={`w-full md:w-full px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+						size={1200}
+					>
+						<FormularioRegistroProductores setOpen={setModalStatus} refresh={refresh} />
 					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>

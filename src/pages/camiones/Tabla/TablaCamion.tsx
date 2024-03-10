@@ -29,16 +29,15 @@ import Subheader, {
 } from '../../../components/layouts/Subheader/Subheader';
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
-import { TCamion } from '../../../types/registros types/registros.types'; 
+import { TCamion } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroCamiones from '../Formularios Registro/FormularioRegistroCamiones';
+import FormularioEditarCamiones from '../Formulario Edicion/FormularioEditarCamiones';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
-import { Tooltip } from 'antd';
+import { Row, Tooltip } from 'antd';
+import DetalleCamion from '../Detalle/Detalle';
+import useDarkMode from '../../../hooks/useDarkMode';
 
-
-
-
-const columnHelper = createColumnHelper<TCamion>();
 
 
 
@@ -53,99 +52,116 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
+	const { isDarkTheme } = useDarkMode();
+
 
 	const asisteDelete = async (id: number) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/registros/camiones/${id}/`, {
 			method: 'DELETE',
 		})
-		if (response.ok){
+		if (response.ok) {
 			refresh(true)
 		} else {
 			console.log("nop no lo logre")
 		}
 	}
-	
+
+	const columnHelper = createColumnHelper<TCamion>();
 	const editLinkProductor = `/app/camion/`
 	const createLinkProductor = `/app/registro-camiones/`
-	
+
 	const columns = [
 		columnHelper.accessor('id', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-					<div className='font-bold w-20'>{`${info.row.original.id}`}</div>
-				</Link>
+				<div className='font-bold w-20'>
+					{`${info.row.original.id}`}
+				</div>
 			),
 			header: 'ID'
 		}),
 		columnHelper.accessor('patente', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold '>{`${info.row.original.patente} ${info.row.original.patente}`}</div>
-				</Link>
+				<div className='font-bold '>
+					{`${info.row.original.patente}`}
+				</div>
 			),
 			header: 'Patente',
 		}),
 		columnHelper.accessor('observaciones', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${info.row.original.observaciones}`}</div>
-				</Link>
+				<div className='font-bold'>
+					{`${info.row.original.observaciones}`}
+				</div>
 			),
 			header: 'Observaciones',
 		}),
 		columnHelper.accessor('acoplado', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold truncate'>{`${info.row.original.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`}</div>
-				</Link>
+				<div className='font-bold truncate'>
+					{`${info.row.original.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`}
+				</div>
 			),
 			header: 'acoplado',
 		}),
 		columnHelper.accessor('fecha_creacion', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}</div>
-				</Link>
+				<div className='font-bold'>
+					{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}
+				</div>
 			),
 			header: 'Fecha creación',
 		}),
 		columnHelper.display({
 			id: 'actions',
-			cell: props => (
-				<div className=' h-full w-full flex justify-between gap-2 overflow-hidden p-2'>
-					<ModalRegistro
-						open={modalStatus} 
-						setOpen={setModalStatus}
-						textTool='Detalle'
-						title='Registro Camiones'
-						icon={<HeroEye className='text-xl' />}
-						>
-					<FormularioRegistroCamiones refresh={refresh} setOpen={setModalStatus}/>
-					</ModalRegistro>
+			cell: (info) => {
+				const id = info.row.original.id;
+				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
+				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
 
-					<ModalRegistro
-						open={modalStatus} 
-						setOpen={setModalStatus} 
-						title='Registro Camiones'
-						textTool='Editar'
-						icon={<HeroPencilSquare className='text-xl'/>}
+				return (
+					<div className='h-full w-full flex justify-around gap-2'>
+						<ModalRegistro
+							open={detalleModalStatus}
+							setOpen={setDetalleModalStatus}
+							textTool='Detalle'
+							title='Detalle Camión'
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
-					<FormularioRegistroCamiones refresh={refresh} setOpen={setModalStatus}/>
-					</ModalRegistro>
-	
-					<Tooltip title='Eliminar'>
-						<button onClick={async () => await asisteDelete(
-							props.row.original.id,
-						)} type='button' className='w-10 h-10 bg-red-800 rounded-md flex items-center justify-center'>
-							<HeroXMark className='text-xl'/>
-						</button>
-					</Tooltip>
-				</div>
-			),
+							<DetalleCamion id={id} />
+						</ModalRegistro>
+
+						<ModalRegistro
+							open={edicionModalStatus}
+							setOpen={setEdicionModalStatus}
+							title='Edición Camiones'
+							textTool='Editar'
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
+						>
+							<FormularioEditarCamiones refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+						</ModalRegistro>
+
+						<Tooltip title='Eliminar'>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+								<HeroXMark style={{ fontSize: 25 }} />
+							</button>
+						</Tooltip>
+					</div>
+				);
+			},
 			header: 'Acciones'
 		}),
+
+
 	];
+
+
+
+
+
+
 
 
 	const table = useReactTable({
@@ -196,12 +212,13 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 				</SubheaderLeft>
 				<SubheaderRight>
 					<ModalRegistro
-						open={modalStatus} 
-						setOpen={setModalStatus} 
+						open={modalStatus}
+						setOpen={setModalStatus}
 						title='Registro Camiones'
+						width={`w-full px-5 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] hover:bg-[#3b83f6cd] text-white'} hover:scale-105`}
 						textButton='Agregar Camión'
-						>
-					<FormularioRegistroCamiones refresh={refresh} setOpen={setModalStatus}/>
+					>
+						<FormularioRegistroCamiones refresh={refresh} setOpen={setModalStatus} />
 					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>
@@ -223,7 +240,7 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 					<CardBody className='overflow-auto'>
 						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} />
 					</CardBody>
-					<TableCardFooterTemplate table={table} />
+					<TableCardFooterTemplate table={table} className='mt-2 mb-10' />
 				</Card>
 			</Container>
 		</PageWrapper>

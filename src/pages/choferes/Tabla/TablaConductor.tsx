@@ -41,62 +41,16 @@ import { format } from "@formkit/tempo"
 import { TConductor } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroChoferes from '../Formularios Registro/FormularioRegistroChoferes';
-
-
-
-
+import useDarkMode from '../../../hooks/useDarkMode';
+import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
+import FormularioEdicionConductores from '../Formulario Edicion/FormularioEdicionConductores';
+import { Tooltip } from 'antd';
+import DetalleConductor from '../Detalle/DetalleConductor';
 
 
 const columnHelper = createColumnHelper<TConductor>();
 
-const editLinkProductor = `/app/conductores/`
-const createLinkProductor = `/app/registro-conductor/`
 
-const columns = [
-	columnHelper.accessor('rut', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.rut}`}</div>
-			</Link>
-		),
-		header: 'Rut',
-	}),
-	columnHelper.accessor('nombre', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold '>{`${info.row.original.nombre}`}</div>
-			</Link>
-		),
-		header: 'Nombre',
-	}),
-	columnHelper.accessor('apellido', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold truncate'>{`${info.row.original.apellido}`}</div>
-			</Link>
-		),
-		header: 'Apellido',
-	}),
-	columnHelper.accessor('telefono', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.telefono}`}</div>
-			</Link>
-		),
-		header: 'Telefono',
-	}),
-	columnHelper.accessor('fecha_creacion', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}</div>
-			</Link>
-		),
-		header: 'Fecha Creación',
-	}),
-	
-	
-
-];
 
 interface IConductorProps {
 	data: TConductor[] | []
@@ -104,10 +58,117 @@ interface IConductorProps {
 }
 
 
-const TablaConductor : FC<IConductorProps> = ({ data, refresh }) => {
+const TablaConductor: FC<IConductorProps> = ({ data, refresh }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
+	const { isDarkTheme } = useDarkMode();
+
+	const asisteDelete = async (id: number) => {
+		const base_url = process.env.VITE_BASE_URL_DEV
+		const response = await fetch(`${base_url}/api/registros/choferes/${id}/`, {
+			method: 'DELETE',
+		})
+		if (response.ok) {
+			refresh(true)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
+
+	const editLinkProductor = `/app/conductores/`
+	const createLinkProductor = `/app/registro-conductor/`
+
+	const columns = [
+		columnHelper.accessor('rut', {
+			cell: (info) => (
+				<div className='font-bold'>
+					{`${info.row.original.rut}`}
+				</div>
+
+			),
+			header: 'Rut',
+		}),
+		columnHelper.accessor('nombre', {
+			cell: (info) => (
+				<div className='font-bold '
+				>{`${info.row.original.nombre}`}
+				</div>
+
+			),
+			header: 'Nombre',
+		}),
+		columnHelper.accessor('apellido', {
+			cell: (info) => (
+				<div className='font-bold truncate'>
+					{`${info.row.original.apellido}`}
+				</div>
+			),
+			header: 'Apellido',
+		}),
+		columnHelper.accessor('telefono', {
+			cell: (info) => (
+				<div className='font-bold'>
+					{`${info.row.original.telefono}`}
+				</div>
+
+			),
+			header: 'Telefono',
+		}),
+		columnHelper.accessor('fecha_creacion', {
+			cell: (info) => (
+				<div className='font-bold'>
+					{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}
+				</div>
+
+			),
+			header: 'Fecha Creación',
+		}),
+		columnHelper.display({
+			id: 'actions',
+			cell: (info) => {
+				const id = info.row.original.id;
+				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
+				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+
+				return (
+					<div className='h-full w-full flex justify-around gap-2'>
+						<ModalRegistro
+							open={detalleModalStatus}
+							setOpen={setDetalleModalStatus}
+							textTool='Detalle'
+							title='Detalle Camión'
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroEye style={{ fontSize: 25 }} />}
+						>
+							<DetalleConductor id={id} />
+						</ModalRegistro>
+
+						<ModalRegistro
+							open={edicionModalStatus}
+							setOpen={setEdicionModalStatus}
+							title='Edición Camiones'
+							textTool='Editar'
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
+						>
+							<FormularioEdicionConductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+						</ModalRegistro>
+
+						<Tooltip title='Eliminar'>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+								<HeroXMark style={{ fontSize: 25 }} />
+							</button>
+						</Tooltip>
+					</div>
+				);
+			},
+			header: 'Acciones'
+		}),
+
+
+	];
 
 
 
@@ -159,13 +220,14 @@ const TablaConductor : FC<IConductorProps> = ({ data, refresh }) => {
 				</SubheaderLeft>
 				<SubheaderRight>
 					<ModalRegistro
-							open={modalStatus} 
-							setOpen={setModalStatus} 
-							title='Registro Conductores'
-							textButton='Agregar Conductor'
-							size={900}
-							>
-						<FormularioRegistroChoferes refresh={refresh} setOpen={setModalStatus}/>
+						open={modalStatus}
+						setOpen={setModalStatus}
+						title='Registro Conductores'
+						textButton='Agregar Conductor'
+						width={`w-full px-5 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}`}
+						size={900}
+					>
+						<FormularioRegistroChoferes refresh={refresh} setOpen={setModalStatus} />
 					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>

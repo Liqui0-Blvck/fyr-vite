@@ -1,37 +1,21 @@
 import { useAuth } from '../../context/authContext'
 import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction'
+import { TProductor } from '../../types/registros types/registros.types'
 import TablaProductor from './Tabla/TablaProductor'
-import CustomerListPage from './Tabla/TablaProductor'
 
 
-interface IProductor {
-  id: number,
-  rut_productor: string,
-  nombre: string,
-  telefono: string,
-  region: number,
-  provincia: number,
-  comuna: number,
-  direccion: string,
-  movil: string,
-  pagina_web: string,
-  email: string,
-  fecha_creacion: string,
-  numero_contrato: number,
-  usuarios: []
-}
 
 
 const ListaProductores = () => {
   const { authTokens, validate } = useAuth()
-  const { data: productores, setData, loading, setRefresh } = useAuthenticatedFetch<IProductor[]>(
+  const { data: productores, setData, loading, setRefresh } = useAuthenticatedFetch<TProductor[]>(
     authTokens,
     validate,
     `/api/productores/`
   )
 
   return (
-    <div className=''>
+    <div className='h-full'>
       <TablaProductor data={productores ? productores : []} refresh={setRefresh} />
     </div>
   )

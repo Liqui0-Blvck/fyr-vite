@@ -1,18 +1,14 @@
-import { useFormik } from 'formik'
-// import { Select, Switch } from 'antd'
+import { useFormik, validateYupSchema } from 'formik'
 import Input from '../../../components/form/Input'
-import Select from '../../../components/form/Select'
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import Container from '../../../components/layouts/Container/Container'
-import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper'
-import Card, { CardBody, CardHeader } from '../../../components/ui/Card'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { TProductor } from '../../../types/registros types/registros.types'
 
 interface IRegion {
   region_id: number
@@ -32,32 +28,39 @@ interface IComuna {
 interface IFormProductor {
   refresh: Dispatch<SetStateAction<boolean>>
   setOpen: Dispatch<SetStateAction<boolean>>
+  id: number
 }
 
-const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen }) => {
+const FormularioEdicionProductores: FC<IFormProductor> = ({ refresh, setOpen, id }) => {
   const { authTokens, validate } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
+  const { data: productores } = useAuthenticatedFetch<TProductor>(
+    authTokens,
+    validate,
+    `/api/productores/${id}`
+  )
+
 
   const formik = useFormik({
     initialValues: {
       rut_productor: "",
       nombre: "",
       telefono: "",
-      region: null,
-      provincia: null,
-      comuna: null,
+      region: 0,
+      provincia: 0,
+      comuna: 0,
       direccion: "",
       movil: "",
       pagina_web: "",
       email: "",
-      numero_contrato: null
+      numero_contrato: 0
     },
     onSubmit: async (values) => {
       try {
-        const res = await fetch(`${base_url}/api/productores/`, {
-          method: 'POST',
+        const res = await fetch(`${base_url}/api/productores/${id}/`, {
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -79,6 +82,30 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
       }
     }
   })
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (isMounted && productores) {
+      formik.setValues({
+        rut_productor: productores?.rut_productor,
+        nombre: productores?.nombre,
+        telefono: productores?.telefono,
+        region: productores.region,
+        provincia: productores.provincia,
+        comuna: productores.comuna,
+        direccion: productores.direccion,
+        movil: productores.movil,
+        pagina_web: productores.pagina_web,
+        email: productores.email,
+        numero_contrato: productores.numero_contrato
+      })
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [productores])
 
   const { data: regiones } = useAuthenticatedFetch<IRegion[]>(
     authTokens,
@@ -117,6 +144,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
   const optionsProvincia: TSelectOptions | [] = provincia
   const optionsComuna: TSelectOptions | [] = comuna
 
+  console.log(formik.values)
 
   return (
     <form
@@ -165,6 +193,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           id='region'
           name='region'
           placeholder='Selecciona una región'
+          value={optionsRegion.find(option => Number(option?.value) === formik.values.region)}
           className='h-14'
           onChange={(value: any) => {
             formik.setFieldValue('region', value.value)
@@ -179,6 +208,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           id='provincia'
           name='provincia'
           placeholder='Selecciona una provincia'
+          value={optionsProvincia.find(option => Number(option?.value) === formik.values.provincia)}
           className='h-14'
           onChange={(value: any) => {
             formik.setFieldValue('provincia', value.value)
@@ -193,6 +223,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           id='comuna'
           name='comuna'
           placeholder='Selecciona una comuna'
+          value={optionsComuna.find(option => Number(option?.value) === formik.values.comuna)}
           className='h-14'
           onChange={(value: any) => {
             formik.setFieldValue('comuna', value.value)
@@ -260,10 +291,10 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
 
 
       <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-        <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3.5'>Registrar Operario</button>
+        <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3.5'>Guardar Cambios</button>
       </div>
     </form>
   )
 }
 
-export default FormularioRegistroProductores  
+export default FormularioEdicionProductores  

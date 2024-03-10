@@ -13,22 +13,23 @@ interface IComponentProps {
   icon?: ReactNode
   size?: number,
   textTool?: string
+  width?: string
 }
 
-const ModalRegistro: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool}) => {
+const ModalRegistro: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool, width }) => {
   return (
     <>
       <Tooltip title={textTool}>
-        <button 
-          type='button' 
-          className='w-10 h-10 bg-blue-800 rounded-md flex items-center justify-center' 
+        <button
+          type='button'
+          className={`${width} h-10 rounded-md flex items-center justify-center text-white'`}
           onClick={() => setOpen(true)}>
-            {textButton || icon}
+          {textButton || icon}
         </button>
       </Tooltip>
       <Modal
         size={size}
-        isOpen={open} 
+        isOpen={open}
         setIsOpen={() => setOpen(false)}>
         <ModalHeader>{title}</ModalHeader>
         <ModalBody>

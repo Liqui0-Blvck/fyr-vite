@@ -34,66 +34,17 @@ import { format } from "@formkit/tempo"
 import { TOperarios } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroOperario from '../Formularios Registro/FormularioRegistroOperario';
+import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
+import { Tooltip } from 'antd';
+import useDarkMode from '../../../hooks/useDarkMode';
+import FormularioEdicionOperario from '../Formulario Edicion/FormularioEdicionOperario';
+import DetalleOperario from '../Detalle/Detalle';
 
 
 
 
 const columnHelper = createColumnHelper<TOperarios>();
 
-const editLinkProductor = `/app/productor/`
-const createLinkProductor = `/app/registro-productor/`
-
-const columns = [
-  columnHelper.accessor('rut', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-        <div className='font-bold w-20'>{`${info.row.original.rut}`}</div>
-      </Link>
-    ),
-    header: 'Rut '
-  }),
-  columnHelper.accessor('nombre', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold '>{`${info.row.original.nombre}`}</div>
-      </Link>
-    ),
-    header: 'Nombre',
-  }),
-  columnHelper.accessor('apellido', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold truncate'>{`${info.row.original.apellido}`}</div>
-      </Link>
-    ),
-    header: 'Apellido',
-  }),
-  columnHelper.accessor('tipo_operario', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.tipo_operario}`}</div>
-      </Link>
-    ),
-    header: 'Tipo Operario',
-  }),
-  columnHelper.accessor('activo', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.activo ? 'Si' : 'No'}`}</div>
-      </Link>
-    ),
-    header: 'Estado',
-  }),
-  columnHelper.accessor('etiquetas', {
-    cell: (info) => (
-      <Link to={`${editLinkProductor}${info.row.original.id}`}>
-        <div className='font-bold'>{`${info.row.original.etiquetas}`}</div>
-      </Link>
-    ),
-    header: 'Etiqueta',
-  }),
-
-];
 
 interface IOperarioProps {
   data: TOperarios[] | []
@@ -101,10 +52,125 @@ interface IOperarioProps {
 }
 
 
-const TablaOperarios : FC<IOperarioProps> = ({ data, refresh }) => {
+const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>('')
-	const [modalStatus, setModalStatus] = useState<boolean>(false)
+  const [modalStatus, setModalStatus] = useState<boolean>(false)
+  const { isDarkTheme } = useDarkMode();
+
+
+  const asisteDelete = async (id: number) => {
+    const base_url = process.env.VITE_BASE_URL_DEV
+    const response = await fetch(`${base_url}/api/comercializador/${id}/`, {
+      method: 'DELETE',
+    })
+    if (response.ok) {
+      refresh(true)
+    } else {
+      console.log("nop no lo logre")
+    }
+  }
+
+  const editLinkProductor = `/app/productor/`
+  const createLinkProductor = `/app/registro-productor/`
+
+  const columns = [
+    columnHelper.accessor('rut', {
+      cell: (info) => (
+        <div className='font-bold w-20'>
+          {`${info.row.original.rut}`}
+        </div>
+      ),
+      header: 'Rut '
+    }),
+    columnHelper.accessor('nombre', {
+      cell: (info) => (
+        <div className='font-bold '>
+          {`${info.row.original.nombre}`}
+        </div>
+      ),
+      header: 'Nombre',
+    }),
+    columnHelper.accessor('apellido', {
+      cell: (info) => (
+        <div className='font-bold truncate'>
+          {`${info.row.original.apellido}`}
+        </div>
+      ),
+      header: 'Apellido',
+    }),
+    columnHelper.accessor('tipo_operario', {
+      cell: (info) => (
+        <div className='font-bold'>
+          {`${info.row.original.tipo_operario}`}
+        </div>
+      ),
+      header: 'Tipo Operario',
+    }),
+    columnHelper.accessor('activo', {
+      cell: (info) => (
+        <div className='font-bold'>
+          {`${info.row.original.activo ? 'Si' : 'No'}`}
+        </div>
+      ),
+      header: 'Estado',
+    }),
+    columnHelper.accessor('etiquetas', {
+      cell: (info) => (
+        <div className='font-bold'>
+          {`${info.row.original.etiquetas}`}
+        </div>
+      ),
+      header: 'Etiqueta',
+    }),
+    columnHelper.display({
+      id: 'actions',
+      cell: (info) => {
+        const id = info.row.original.id;
+        const [detalleModalStatus, setDetalleModalStatus] = useState(false);
+        const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+
+        return (
+          <div className='h-full w-full flex justify-around gap-2'>
+            <ModalRegistro
+              open={detalleModalStatus}
+              setOpen={setDetalleModalStatus}
+              textTool='Detalle'
+              title='Detalle Camión'
+              size={900}
+
+              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              icon={<HeroEye style={{ fontSize: 25 }} />}
+            >
+              <DetalleOperario id={id} />
+            </ModalRegistro>
+
+            <ModalRegistro
+              open={edicionModalStatus}
+              setOpen={setEdicionModalStatus}
+              title='Edición Camiones'
+              textTool='Editar'
+              size={900}
+              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              icon={<HeroPencilSquare style={{ fontSize: 25 }}
+              />}
+            >
+              <FormularioEdicionOperario refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+            </ModalRegistro>
+
+            <Tooltip title='Eliminar'>
+              <button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+                <HeroXMark style={{ fontSize: 25 }} />
+              </button>
+            </Tooltip>
+          </div>
+        );
+      },
+      header: 'Acciones'
+    }),
+
+  ];
+
 
 
 
@@ -156,14 +222,15 @@ const TablaOperarios : FC<IOperarioProps> = ({ data, refresh }) => {
         </SubheaderLeft>
         <SubheaderRight>
           <ModalRegistro
-                open={modalStatus} 
-                setOpen={setModalStatus} 
-                title='Registro Operario'
-                textButton='Agregar Operario'
-                size={900}
-                >
-						<FormularioRegistroOperario refresh={refresh} setOpen={setModalStatus}/>
-					</ModalRegistro>
+            open={modalStatus}
+            setOpen={setModalStatus}
+            title='Registro Operario'
+            textButton='Agregar Operario'
+            size={900}
+            width={`w-full md:w-full px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+          >
+            <FormularioRegistroOperario refresh={refresh} setOpen={setModalStatus} />
+          </ModalRegistro>
         </SubheaderRight>
       </Subheader>
       <Container>
