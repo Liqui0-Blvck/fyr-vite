@@ -18,6 +18,7 @@ const PageWrapper: FC<IPageWrapperProps> = (props) => {
 	useDocumentTitle({ title, name });
 
 	const { authTokens } = useAuth();
+
 	if (isProtectedRoute && !authTokens) {
 		// user is not authenticated
 		return <Navigate to={authPages.loginPage.to} />;

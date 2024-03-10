@@ -138,7 +138,8 @@ const TablaConductor: FC<IConductorProps> = ({ data, refresh }) => {
 							open={detalleModalStatus}
 							setOpen={setDetalleModalStatus}
 							textTool='Detalle'
-							title='Detalle Camión'
+							title='Detalle Conductor'
+							size={700}
 							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
@@ -148,7 +149,8 @@ const TablaConductor: FC<IConductorProps> = ({ data, refresh }) => {
 						<ModalRegistro
 							open={edicionModalStatus}
 							setOpen={setEdicionModalStatus}
-							title='Edición Camiones'
+							title='Edición Conductor'
+							size={700}
 							textTool='Editar'
 							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}

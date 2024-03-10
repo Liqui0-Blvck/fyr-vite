@@ -136,7 +136,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
               open={detalleModalStatus}
               setOpen={setDetalleModalStatus}
               textTool='Detalle'
-              title='Detalle Camión'
+              title='Detalle Operario'
               size={900}
 
               width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
@@ -148,7 +148,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
             <ModalRegistro
               open={edicionModalStatus}
               setOpen={setEdicionModalStatus}
-              title='Edición Camiones'
+              title='Edición Operario'
               textTool='Editar'
               size={900}
               width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}

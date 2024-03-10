@@ -1,53 +1,33 @@
-import React, { createContext, FC, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, FC, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useCookieStorage from '../hooks/useLocalStorage';
 import { authPages, appPages } from '../config/pages.config';
-import { message } from 'antd';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
 
 interface IAuthTokens {
   access: string;
-  refresh: string
+  refresh: string;
 }
 
-
-interface IUser {
-
-}
-
-
-export interface IAuthContextProps {
-  authTokens: IAuthTokens | null
+interface IAuthContext {
+  authTokens: IAuthTokens | null;
+  setAuthTokens: (tokens: IAuthTokens | null) => void;
   validate: (token: IAuthTokens | null) => Promise<boolean>;
   onLogin: (username: string, password: string) => Promise<void>;
   onLogout: () => void;
 }
 
-const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
+const AuthContext = createContext<IAuthContext | null>(null);
 
 interface IAuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
-  const authTokenLocalStorage = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
-  const refreshTokenStorage = Cookies.get('refresh') ? JSON.parse(Cookies.get('refresh')!) : null;
+  const authTokenLocalStorage = Cookies.get('token') ? JSON.parse(Cookies.get('token')!) : null;
   const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(() => authTokenLocalStorage);
-  const [refreshToken, setRefreshToken] = useState<IAuthTokens | null>(() => refreshTokenStorage);
-
-  const base_url = process.env.VITE_BASE_URL_DEV
-
-  useEffect(() => {
-    const authTokenLocalStorage = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
-    const refreshTokenStorage = Cookies.get('refresh') ? JSON.parse(Cookies.get('refresh')!) : null;
-    setAuthTokens(authTokenLocalStorage);
-    setRefreshToken(refreshTokenStorage)
-
-  }, [])
-
-
   const navigate = useNavigate();
+  const base_url = process.env.VITE_BASE_URL_DEV
 
   // Función para iniciar sesión
   const onLogin = async (username: string, password: string) => {
@@ -66,8 +46,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
     if (res.ok) {
       const data = await res.json()
-      Cookies.set('user', JSON.stringify(data))
-      Cookies.set('refresh', JSON.stringify(data.refresh))
+      setAuthTokens(data)
+      Cookies.set('token', JSON.stringify(data), { expires: 7 });
       toast.success('Inicio de sesión exitoso!')
       navigate(`../${appPages.mainAppPages.to}`, { replace: true })
 
@@ -78,7 +58,6 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
 
   const validate = async (token: IAuthTokens | null): Promise<boolean> => {
-    console.log(token)
     const response = await fetch(`${base_url}/api/token/verify/`, {
       method: 'POST',
       headers: {
@@ -96,7 +75,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ 'refresh': refreshToken })
+      body: JSON.stringify({ 'refresh': authTokens?.access })
     });
 
 
@@ -111,14 +90,15 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     }
   };
 
+  const saveTokens = (tokens: IAuthTokens | null) => {
+    setAuthTokens(tokens);
+  };
+
 
   useEffect(() => {
-    let isMounted = true
-
-    const fourMinutes = 1000 * 60 * 4
     const interval = setInterval(async () => {
       try {
-        if (authTokens && isMounted) {
+        if (authTokens) {
           const isTokenValid = await validate(authTokens);
           if (!isTokenValid) {
             await updateToken();
@@ -126,13 +106,12 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
         }
       } catch (error) {
         console.error("Error al verificar o actualizar el token:", error);
-      }
-    }, fourMinutes);
 
-    return () => {
-      clearInterval(interval)
-      isMounted = false
-    };
+      }
+    }, 1000 * 60 * 4);
+
+
+    return () => clearInterval(interval);
   }, [authTokens, validate, updateToken]);
 
 
@@ -143,20 +122,21 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     navigate(`../${authPages.loginPage.to}`, { replace: true });
   };
 
-  const value: IAuthContextProps = useMemo(
-    () => ({
-      authTokens,
-      validate,
-      onLogin,
-      onLogout,
-    }),
-    [authTokens]
-  );
+  const value: IAuthContext = {
+    authTokens,
+    setAuthTokens: saveTokens,
+    validate,
+    onLogin,
+    onLogout,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
-

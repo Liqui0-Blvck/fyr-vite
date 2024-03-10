@@ -82,10 +82,6 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
 
   const options: TSelectOptions | [] = acoplados
 
-  console.log(formik.values)
-
-  console.log(camiones)
-
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -133,7 +129,7 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
 
       <div className='relative w-full h-20 col-span-4'>
         <button type='submit' className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
-          Registrar Camión
+          Guardar Cambios
         </button>
       </div>
     </form>

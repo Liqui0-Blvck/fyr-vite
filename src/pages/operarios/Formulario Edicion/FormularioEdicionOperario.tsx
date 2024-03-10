@@ -183,7 +183,9 @@ const FormularioEdicionOperario: FC<IFormChoferes> = ({ setOpen, refresh, id }) 
       </div>
 
       <div className='md:row-start-3 md:col-span-2 md:col-start-5 h-12 w-full mt-7'>
-        <button type='submit' className='w-full h-full bg-[#3B82F6] hover:bg-[#3b83f6c9] rounded-md text-white p-2'>Registrar Conductor</button>
+        <button type='submit' className='w-full h-full bg-[#3B82F6] hover:bg-[#3b83f6c9] rounded-md text-white p-2'>
+          Guardar Cambios
+        </button>
       </div>
     </form>
   )
