@@ -14,7 +14,8 @@ interface IFormComercializadorProps {
 }
 
 const FormularioRegistroComercializador: FC<IFormComercializadorProps> = ({ refresh, setOpen }) => {
-  const { isDarkTheme } = useDarkMode() 
+  const { authTokens } = useAuth()
+  const { isDarkTheme } = useDarkMode()
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
 
@@ -33,7 +34,9 @@ const FormularioRegistroComercializador: FC<IFormComercializadorProps> = ({ refr
         const res = await fetch(`${base_url}/api/comercializador/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
+
           },
           body: JSON.stringify({
             ...values

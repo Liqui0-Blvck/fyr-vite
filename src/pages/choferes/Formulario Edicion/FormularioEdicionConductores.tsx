@@ -34,12 +34,14 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
       rut: "",
       telefono: ""
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/registros/choferes/${id}/`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
+
           },
           body: JSON.stringify({
             ...values

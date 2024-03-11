@@ -12,14 +12,19 @@ import { useState } from 'react'
 import { ACTIVO } from '../../../constants/select.constanst'
 import FooterFormularioRegistro from './FooterFormularioRegistroGuiaRecepcion'
 
+import Label from '../../../components/form/Label'
+import Radio, { RadioGroup } from '../../../components/form/Radio'
 
 const FormularioRegistroGuiaRecepcion = () => {
   const { authTokens, validate, userID } = useAuth()
   const [guiaGenerada, setGuiaGenerada] = useState<boolean>(false)
   const [guiaID, setGuiaID] = useState<number | null>(null)
+  const [variedad, setVariedad] = useState<boolean>(false)
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
+
+  console.log(variedad)
 
   const { data: camiones } = useAuthenticatedFetch<TCamion[]>(
     authTokens,
@@ -45,6 +50,12 @@ const FormularioRegistroGuiaRecepcion = () => {
     '/api/comercializador/'
   )
 
+  const optionsRadio = [
+    { id: 1, value: true, label: 'Si'},
+    { id: 2, value: false, label: 'No'}
+  ];
+
+
 
 
   const formik = useFormik({
@@ -67,7 +78,8 @@ const FormularioRegistroGuiaRecepcion = () => {
         const res = await fetch(`${base_url}/api/recepcionmp/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values,
@@ -80,6 +92,7 @@ const FormularioRegistroGuiaRecepcion = () => {
           const data = await res.json()
           console.log(data.id)
           setGuiaID(data.id)
+          setVariedad(data.mezcla_variedades)
           toast.success("la guia de recepción fue registrado exitosamente!!")
           setGuiaGenerada(true)
 
@@ -140,20 +153,6 @@ const FormularioRegistroGuiaRecepcion = () => {
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
-          <label htmlFor="camion">Camión: </label>
-          <SelectReact
-            options={optionsCamion}
-            id='camion'
-            name='camion'
-            placeholder='Selecciona un camión'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('camion', value.value)
-            }}
-          />
-        </div>
-
-        <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
           <label htmlFor="productor">Productor: </label>
           <SelectReact
             options={optionsProductor}
@@ -165,18 +164,34 @@ const FormularioRegistroGuiaRecepcion = () => {
               formik.setFieldValue('productor', value.value)
             }}
           />
+          
         </div>
 
-        <div className='md:row.start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
-          <label htmlFor="camionero">Camionero: </label>
+        <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
+          <label htmlFor="camionero">Chofer: </label>
           <SelectReact
             options={optionsConductor}
             id='camionero'
             name='camionero'
-            placeholder='Selecciona un camionero'
+            placeholder='Selecciona un chofer'
             className='h-14'
             onChange={(value: any) => {
               formik.setFieldValue('camionero', value.value)
+            }}
+          />
+          
+        </div>
+
+        <div className='md:row.start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
+          <label htmlFor="camion">Camion: </label>
+          <SelectReact
+            options={optionsCamion}
+            id='camion'
+            name='camion'
+            placeholder='Selecciona un camión'
+            className='h-14'
+            onChange={(value: any) => {
+              formik.setFieldValue('camion', value.value)
             }}
           />
         </div>
@@ -195,18 +210,27 @@ const FormularioRegistroGuiaRecepcion = () => {
           />
         </div>
 
-        <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center'>
+        <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center justify-center'>
           <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
-          <SelectReact
-            options={optionsMezcla}
-            id='mezcla_variedades'
-            name='mezcla_variedades'
-            placeholder='Selecciona una opción'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('mezcla_variedades', value.value)
-            }}
-          />
+
+          <div className='w-full h-14 bg-gray-100  rounded-md flex items-center justify-center'>
+          <RadioGroup isInline>
+            {optionsRadio.map(({ id, value, label }) => {
+              return (
+                <Radio
+                  key={id}
+                  label={label}
+                  name='mezcla_variedades'
+                  value={label} // Asignar el valor correcto de cada botón de radio
+                  checked={formik.values.mezcla_variedades === value} // Comprobar si este botón de radio está seleccionado
+                  onChange={(e) => {
+                    formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false ); // Actualizar el valor de mezcla_variedades en el estado de formik
+                  }}
+                />
+              );
+            })}
+          </RadioGroup>
+          </div>
         </div>
 
         <div className='md:col-span-2  md:col-start-5 md:flex-col items-center'>
@@ -228,19 +252,20 @@ const FormularioRegistroGuiaRecepcion = () => {
             :
             (
               <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-                <button className='w-full mt-6 bg-[#1693A7] hover:bg-[#1694a7d0] rounded-md text-white py-3'>Registrar Operario</button>
+                <button className='w-full mt-6 bg-[#1693A7] hover:bg-[#1694a7d0] rounded-md text-white py-3'>Continuar con la guia</button>
               </div>
             )
         }
       </form>
 
       {
-        guiaGenerada
+        (guiaGenerada && variedad)
           ? (
-            <FooterFormularioRegistro id_guia={guiaID!} />
-          )
+            <FooterFormularioRegistro id_guia={guiaID!} variedades={variedad} />
+            )
           : null
       }
+
     </div>
   )
 }

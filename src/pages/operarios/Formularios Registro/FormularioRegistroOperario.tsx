@@ -7,6 +7,7 @@ import useDarkMode from '../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
 import { ACTIVO, TIPOS_OPERARIO } from '../../../constants/select.constanst'
+import { useAuth } from '../../../context/authContext'
 
 interface IFormChoferes {
   refresh: Dispatch<SetStateAction<boolean>>
@@ -14,6 +15,7 @@ interface IFormChoferes {
 }
 
 const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) => {
+  const { authTokens } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode() 
   const navigate = useNavigate()
@@ -34,7 +36,8 @@ const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) =>
         const res = await fetch(`${base_url}/api/registros/operarios/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values

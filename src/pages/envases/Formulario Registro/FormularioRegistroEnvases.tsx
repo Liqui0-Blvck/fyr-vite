@@ -30,7 +30,8 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
         const res = await fetch(`${base_url}/api/envasesmp/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values

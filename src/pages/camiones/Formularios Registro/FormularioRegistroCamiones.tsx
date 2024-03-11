@@ -7,6 +7,7 @@ import { TIPO_ACOPLADO } from '../../../constants/select.constanst'
 import Textarea from '../../../components/form/Textarea'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import useDarkMode from '../../../hooks/useDarkMode'
+import { useAuth } from '../../../context/authContext'
 
 
 
@@ -16,6 +17,7 @@ interface IFormCamiones {
 }
 
 const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => {
+  const { authTokens } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
   const formik = useFormik({
@@ -29,7 +31,8 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
         const res = await fetch(`${base_url}/api/registros/camiones/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values,

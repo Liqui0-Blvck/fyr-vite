@@ -37,12 +37,13 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
       zip_code: "",
       email_comercializador: ""
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/comercializador/${id}/`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values

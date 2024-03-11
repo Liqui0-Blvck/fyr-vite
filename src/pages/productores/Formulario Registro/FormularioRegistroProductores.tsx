@@ -54,12 +54,13 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
       email: "",
       numero_contrato: null
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/productores/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values

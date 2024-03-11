@@ -40,7 +40,8 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
         const res = await fetch(`${base_url}/api/registros/camiones/${id}/`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({ ...values })
         })

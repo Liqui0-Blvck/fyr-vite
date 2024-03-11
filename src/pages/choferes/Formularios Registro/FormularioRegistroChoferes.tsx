@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { useAuth } from '../../../context/authContext'
 
 interface IFormChoferes {
   refresh: Dispatch<SetStateAction<boolean>>
@@ -12,6 +13,7 @@ interface IFormChoferes {
 }
 
 const FormularioRegistroChoferes: FC<IFormChoferes> = ({ setOpen, refresh }) => {
+  const { authTokens } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
   const navigate = useNavigate()
@@ -29,7 +31,9 @@ const FormularioRegistroChoferes: FC<IFormChoferes> = ({ setOpen, refresh }) => 
         const res = await fetch(`${base_url}/api/registros/choferes/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
+
           },
           body: JSON.stringify({
             ...values
