@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Icon from '../../../components/icon/Icon';
 import Badge from '../../../components/ui/Badge';
 import { NavButton, NavItem, NavSeparator } from '../../../components/layouts/Navigation/Nav';
@@ -6,6 +6,7 @@ import { appPages, authPages } from '../../../config/pages.config';
 import User from '../../../components/layouts/User/User';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
+import { jwtDecode } from 'jwt-decode';
 
 interface IUser {
 	first_name: string,
@@ -15,12 +16,14 @@ interface IUser {
 }
 
 const UserTemplate = () => {
-	const { authTokens, validate, onLogout } = useAuth();
+	const { userID, authTokens, validate, onLogout } = useAuth();
 	const { data: userData, loading } = useAuthenticatedFetch<IUser>(
 		authTokens,
 		validate,
-		'/api/registros/users/1'
+		`/api/users/${userID?.user_id}`
 	)
+
+
 
 
 	return (

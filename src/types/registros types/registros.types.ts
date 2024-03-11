@@ -88,3 +88,11 @@ export type TOperarios = {
   etiquetas: string;
   pago_x_kilo: number;
 };
+
+export type TUsuario = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  username: string;
+};

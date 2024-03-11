@@ -76,7 +76,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 	const columns = [
 		columnHelper.accessor('rut_productor', {
 			cell: (info) => (
-				<div className='font-bold w-20'>
+				<div className='font-bold truncate'>
 					{`${info.row.original.rut_productor}`}
 				</div>
 			),
@@ -100,7 +100,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 		}),
 		columnHelper.accessor('telefono', {
 			cell: (info) => (
-				<div className='font-bold'>
+				<div className='font-bold truncate'>
 					{`${info.row.original.telefono}`}
 				</div>
 
@@ -117,7 +117,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 		}),
 		columnHelper.accessor('fecha_creacion', {
 			cell: (info) => (
-				<div className='font-bold'>
+				<div className='font-bold truncate text-clip'>
 					{`${format(info.row.original.fecha_creacion, { date: 'short', time: 'short' })}`}
 				</div>
 			),
@@ -151,7 +151,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 							title='Edición Productor'
 							textTool='Editar'
 							size={900}
-							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
 						>
 							<FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />

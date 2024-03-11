@@ -6,7 +6,7 @@ import TablaGuiaRecepcion from "./Tabla/TablaGuiaRecepcion"
 
 const ListaGuiaRecepcion = () => {
   const { authTokens, validate } = useAuth()
-  const { data: guia_recepcion, setData, loading } = useAuthenticatedFetch<TGuia[]>(
+  const { data: guia_recepcion, setData, loading, setRefresh } = useAuthenticatedFetch<TGuia[]>(
     authTokens,
     validate,
     `/api/recepcionmp/`
@@ -14,7 +14,7 @@ const ListaGuiaRecepcion = () => {
 
   return (
     <div className="h-full">
-      <TablaGuiaRecepcion data={guia_recepcion ? guia_recepcion : []}/>
+      <TablaGuiaRecepcion data={guia_recepcion ? guia_recepcion : []} refresh={setRefresh} />
     </div>
   )
 }

@@ -25,6 +25,8 @@
 		]
 	},
 	"dependencies": {
+		"@emotion/react": "^11.11.4",
+		"@emotion/styled": "^11.11.0",
 		"@formkit/tempo": "^0.0.15",
 		"@fortawesome/fontawesome-svg-core": "^6.5.1",
 		"@fullcalendar/core": "^6.1.10",
@@ -34,6 +36,7 @@
 		"@fullcalendar/react": "^6.1.10",
 		"@fullcalendar/timegrid": "^6.1.10",
 		"@hello-pangea/dnd": "^16.5.0",
+		"@mui/material": "^5.15.12",
 		"@popperjs/core": "^2.11.8",
 		"@tanstack/react-table": "^8.10.7",
 		"@testing-library/jest-dom": "^6.1.5",

@@ -52,6 +52,7 @@ const Operarios = lazy(() => import('../pages/operarios/ListaOperarios'))
 // RECEPCION
 const GuiaRecepcion = lazy(() => import('../pages/guia recepcion/ListaGuiaRecepcion'))
 const Envases = lazy(() => import('../pages/envases/ListaEnvases'))
+const RegistroGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Registro/FormularioRegistroGuiaRecepcion.tsx'))
 
 
 /**
@@ -61,26 +62,6 @@ const UnderConstructionPage = lazy(() => import('../pages/UnderConstruction.page
 
 const contentRoutes: RouteProps[] = [
 
-
-	// {
-	// 	path: appPages.projectAppPages.subPages.projectDashboardPage.to,
-	// 	element: <ProjectDashboardPage />,
-	// },
-	// {
-	// 	path: `${appPages.projectAppPages.subPages.projectBoardPageLink.to}/:id`,
-	// 	element: <ProjectBoardPage />,
-	// },
-
-	// {
-	// 	path: appPages.educationAppPages.to,
-	// 	element: <UnderConstructionPage />,
-	// },
-
-	// {
-	// 	path: appPages.reservationAppPages.to,
-	// 	element: <UnderConstructionPage />,
-	// },
-
 	{
 		path: appPages.mailAppPages.to,
 		element: <UnderConstructionPage />,
@@ -89,9 +70,7 @@ const contentRoutes: RouteProps[] = [
 
 	// Productores
 	{ path: appPages.registroAppPages.subPages.productores.to, element: <Productores /> },
-	{ path: '/app/registro-productor', element: <RegistroProductor /> },
-	{ path: '/app/productor/:id', element: <DetalleProductor /> },
-	
+
 
 
 	// Camiones
@@ -115,6 +94,8 @@ const contentRoutes: RouteProps[] = [
 	// RECEPCION MP
 	{ path: appPages.recepcionAppPages.subPages.recepcionMp.to, element: <GuiaRecepcion /> },
 	{ path: appPages.recepcionAppPages.subPages.envases.to, element: <Envases /> },
+	{ path: '/app/registro-guia-recepcion', element: <RegistroGuiaRecepcion /> },
+
 
 
 

@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { authPages, appPages } from '../config/pages.config';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { TUsuario } from '../types/registros types/registros.types';
+import { useAuthenticatedFetch } from '../hooks/useAxiosFunction';
+
 
 interface IAuthTokens {
   access: string;
@@ -11,11 +15,18 @@ interface IAuthTokens {
 
 interface IAuthContext {
   authTokens: IAuthTokens | null;
-  setAuthTokens: (tokens: IAuthTokens | null) => void;
+  userID: TokenPayload | null
   validate: (token: IAuthTokens | null) => Promise<boolean>;
   onLogin: (username: string, password: string) => Promise<void>;
   onLogout: () => void;
 }
+
+interface TokenPayload {
+  user_id: number;
+  // Otros campos según la estructura de tu token JWT
+}
+
+
 
 const AuthContext = createContext<IAuthContext | null>(null);
 
@@ -25,11 +36,16 @@ interface IAuthProviderProps {
 
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const authTokenLocalStorage = Cookies.get('token') ? JSON.parse(Cookies.get('token')!) : null;
-  const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(() => authTokenLocalStorage);
-  const navigate = useNavigate();
-  const base_url = process.env.VITE_BASE_URL_DEV
+  const userLocalStorage = Cookies.get('user') ? jwtDecode<TokenPayload>(Cookies.get('user')!) : null;
 
-  // Función para iniciar sesión
+  const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(authTokenLocalStorage);
+  const [userID, setUserID] = useState<TokenPayload | null>(userLocalStorage)
+
+  const base_url = process.env.VITE_BASE_URL_DEV
+  const navigate = useNavigate()
+
+
+
   const onLogin = async (username: string, password: string) => {
     const body = JSON.stringify({
       username: username,
@@ -42,19 +58,21 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
         'Content-Type': 'application/json'
       },
       body: body
-    })
+    });
 
     if (res.ok) {
-      const data = await res.json()
+      const data = await res.json();
+      toast.success('Inicio de sesión exitoso!');// Convierte a TUsuario
       setAuthTokens(data)
-      Cookies.set('token', JSON.stringify(data), { expires: 7 });
-      toast.success('Inicio de sesión exitoso!')
-      navigate(`../${appPages.mainAppPages.to}`, { replace: true })
+      Cookies.set('token', JSON.stringify(data), { expires: 2 });
+      Cookies.set('user', JSON.stringify(data.access), { expires: 2 });
 
+      navigate(`../${appPages.mainAppPages.to}`, { replace: true });
     } else if (res.status === 401) {
-      toast.error('Error al ingresar, volver a intentar')
+      toast.error('Error al ingresar, volver a intentar');
     }
-  }
+  };
+
 
 
   const validate = async (token: IAuthTokens | null): Promise<boolean> => {
@@ -90,10 +108,6 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     }
   };
 
-  const saveTokens = (tokens: IAuthTokens | null) => {
-    setAuthTokens(tokens);
-  };
-
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -118,13 +132,13 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   // Función para cerrar sesión
   const onLogout = async () => {
     setAuthTokens(null);
-    Cookies.remove('user')
+    Cookies.remove('token')
     navigate(`../${authPages.loginPage.to}`, { replace: true });
   };
 
   const value: IAuthContext = {
     authTokens,
-    setAuthTokens: saveTokens,
+    userID,
     validate,
     onLogin,
     onLogout,

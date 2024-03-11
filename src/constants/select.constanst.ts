@@ -71,7 +71,6 @@ export const CAPACIDAD_DISCO = [
   "2 TB",
 ];
 
-
 export const TIPO_CLIENTE = [
   { value: 1, label: "Empresa" },
   { value: 2, label: "Fundacion" },
@@ -90,11 +89,11 @@ export const TIPOS_OPERARIO = [
 ];
 
 export const TIPO_ACOPLADO = [
-  { values: 'true', label: "Con Acoplado" },
-  { values: 'false', label: "Sin Acoplado" },
+  { values: "true", label: "Con Acoplado" },
+  { values: "false", label: "Sin Acoplado" },
 ];
 
 export const ACTIVO = [
-  { values: 'true', label: "Si" },
-  { values: 'false', label: "No" },
+  { values: "true", label: "Si" },
+  { values: "false", label: "No" },
 ];
