@@ -140,3 +140,13 @@ export const TIPO_PRODUCTOS_RECEPCIONMP = [
   {value: '2', label: 'Pepa Calibrada'},
   {value: '3', label: 'Canuto'}
 ]
+
+
+export const ESTADOS_LOTE_COLOSOS = [
+  {value: '1', label: 'Lote Colosos Creado'},
+  {value: '2', label: 'Lote En Inspecion Visual Por CC'},
+  {value: '3', label: 'Lote Interno Aprobado'},
+  {value: '4', label: 'Lote Interno Rechazado'},
+  {value: '5', label: 'MP Almacenada'},
+]
+  

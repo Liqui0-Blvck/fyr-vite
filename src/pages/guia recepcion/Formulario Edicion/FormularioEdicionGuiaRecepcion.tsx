@@ -1,21 +1,25 @@
 import { useFormik } from 'formik'
 import Input from '../../../components/form/Input'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../../types/registros types/registros.types'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { ACTIVO } from '../../../constants/select.constanst'
-import FooterFormularioRegistro from './FooterFormularioRegistroGuiaRecepcion'
+import FooterFormularioEdicion from './FooterFormularioEdicionGuiaRecepcion'
 
 import Radio, { RadioGroup } from '../../../components/form/Radio'
+import { urlNumeros } from '../../../services/url_number'
 
-const FormularioRegistroGuiaRecepcion = () => {
+
+const FormularioEdicionGuiaRecepcion = () => {
   const { authTokens, validate, userID } = useAuth()
+  const { pathname } = useLocation()
+  const id = urlNumeros(pathname)
   const [guiaGenerada, setGuiaGenerada] = useState<boolean>(false)
   const [guiaID, setGuiaID] = useState<number | null>(null)
   const [variedad, setVariedad] = useState<boolean>(false)
@@ -55,6 +59,11 @@ const FormularioRegistroGuiaRecepcion = () => {
     { id: 2, value: false, label: 'No'}
   ];
 
+  const { data: guia_recepcion } = useAuthenticatedFetch<TGuia>(
+    authTokens,
+    validate,
+    `/api/recepcionmp/${id}`
+  )
 
 
 
@@ -135,6 +144,30 @@ const FormularioRegistroGuiaRecepcion = () => {
   const optionsConductor: TSelectOptions | [] = conductoresFilter
   const optionsComercializador: TSelectOptions | [] = comercializadoresFilter
   const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
+
+  useEffect(() => {
+    let isMounted = true
+    if (guia_recepcion && isMounted){
+      formik.setValues({
+        estado_recepcion: guia_recepcion.estado_recepcion,
+        mezcla_variedades: guia_recepcion.mezcla_variedades,
+        cierre_guia: guia_recepcion.cierre_guia,
+        tara_camion_1: guia_recepcion.tara_camion_1,
+        tara_camion_2: guia_recepcion.tara_camion_2,
+        terminar_guia: guia_recepcion.terminar_guia,
+        numero_guia_productor: guia_recepcion.numero_guia_productor,
+        creado_por: guia_recepcion.creado_por,
+        comercializador: guia_recepcion.comercializador,
+        productor: guia_recepcion.productor,
+        camionero: guia_recepcion.camionero,
+        camion: guia_recepcion.camion
+      })
+
+    }
+    return () => {
+      isMounted = false
+    }
+  }, [guia_recepcion])
 
 
   console.log(isDarkTheme)
@@ -258,28 +291,12 @@ const FormularioRegistroGuiaRecepcion = () => {
         }
       </form>
 
-      {
-        (guiaGenerada && !variedad)
-          ? (
-            <FooterFormularioRegistro data={datosGuia!} variedad={variedad} />
-            )
-          : (guiaGenerada && activo)
-              ? (
-                  <FooterFormularioRegistro data={datosGuia!} variedad={variedad} />
-              )
-              : guiaGenerada
-                  ? (
-                    <button
-                      className={`${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
-                      ml-10 mt-10 px-6 py-3 rounded-md font-semibold text-md
-                      `}
-                      onClick={() => setActivo(prev => !prev)}>Agregar Lotes</button>
-                    )
-                  : null
-      }
+      <FooterFormularioEdicion data={datosGuia!} variedad={variedad} />
+  
+     
 
     </div>
   )
 }
 
-export default FormularioRegistroGuiaRecepcion 
+export default FormularioEdicionGuiaRecepcion 

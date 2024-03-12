@@ -15,6 +15,10 @@ export type TGuia = {
   tara_camion_2: number;
   terminar_guia: boolean;
   numero_guia_productor: number;
+  nombre_camion: string,
+  nombre_camionero: string,
+  nombre_productor: string,
+  nombre_comercializador: string
 };
 
 export type TCamion = {
@@ -96,3 +100,12 @@ export type TUsuario = {
   email: string;
   username: string;
 };
+
+export type TEnvaseEnGuia = {
+  id: number,
+  variedad: string,
+  tipo_producto: string,
+  cantidad_envases: number,
+  envase: number,
+  recepcionmp: number
+}

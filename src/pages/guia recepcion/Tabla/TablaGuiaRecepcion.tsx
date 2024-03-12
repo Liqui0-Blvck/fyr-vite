@@ -51,6 +51,7 @@ interface IGuiaProps {
 
 
 const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
+	const { authTokens } = useAuth()
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const { isDarkTheme } = useDarkMode();
@@ -59,6 +60,9 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
 			method: 'DELETE',
+			headers: {
+				'Authorization' : `Bearer ${authTokens?.access}`
+			}
 		})
 		if (response.ok) {
 			refresh(true)
@@ -134,18 +138,12 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 							<HeroEye style={{ fontSize: 25 }} />
 						</Link>
 
-						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
-							title='Edición Productor'
-							textTool='Editar'
-							size={900}
-							width={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
-						>
-							{/* <FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
-							hola
-						</ModalRegistro>
+						<Link to={`/app/edicion-guia-recepcion/${info.row.original.id}`}
+							className={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 
+								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
+								 hover:scale-105 rounded-md flex items-center justify-center`}>
+							<HeroPencilSquare style={{ fontSize: 25 }} />
+						</Link>
 
 						<Tooltip title='Eliminar'>
 							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>

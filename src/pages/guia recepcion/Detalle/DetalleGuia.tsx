@@ -1,21 +1,26 @@
 import { useFormik } from 'formik'
 import Input from '../../../components/form/Input'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../../types/registros types/registros.types'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { ACTIVO } from '../../../constants/select.constanst'
-import FooterFormularioRegistro from './FooterFormularioRegistroGuiaRecepcion'
 
 import Radio, { RadioGroup } from '../../../components/form/Radio'
+import { urlNumeros } from '../../../services/url_number'
+import FooterDetalleGuia from './FooterDetalleGuia'
+import { options } from '@fullcalendar/core/preact.js'
 
-const FormularioRegistroGuiaRecepcion = () => {
+
+const DetalleGuia = () => {
   const { authTokens, validate, userID } = useAuth()
+  const { pathname } = useLocation()
+  const id = urlNumeros(pathname)
   const [guiaGenerada, setGuiaGenerada] = useState<boolean>(false)
   const [guiaID, setGuiaID] = useState<number | null>(null)
   const [variedad, setVariedad] = useState<boolean>(false)
@@ -24,7 +29,6 @@ const FormularioRegistroGuiaRecepcion = () => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
-
 
   const { data: camiones } = useAuthenticatedFetch<TCamion[]>(
     authTokens,
@@ -55,8 +59,11 @@ const FormularioRegistroGuiaRecepcion = () => {
     { id: 2, value: false, label: 'No'}
   ];
 
-
-
+  const { data: guia_recepcion } = useAuthenticatedFetch<TGuia>(
+    authTokens,
+    validate,
+    `/api/recepcionmp/${id}`
+  )
 
   const formik = useFormik({
     initialValues: {
@@ -105,6 +112,8 @@ const FormularioRegistroGuiaRecepcion = () => {
     }
   })
 
+  
+
   const camionFilter = camiones?.map((camion: TCamion) => ({
     value: String(camion.id),
     label: (`${camion.patente},  ${camion.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`)
@@ -136,8 +145,34 @@ const FormularioRegistroGuiaRecepcion = () => {
   const optionsComercializador: TSelectOptions | [] = comercializadoresFilter
   const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
 
+  useEffect(() => {
+    let isMounted = true
+    if (guia_recepcion && isMounted){
+      formik.setValues({
+        estado_recepcion: guia_recepcion.estado_recepcion,
+        mezcla_variedades: guia_recepcion.mezcla_variedades,
+        cierre_guia: guia_recepcion.cierre_guia,
+        tara_camion_1: guia_recepcion.tara_camion_1,
+        tara_camion_2: guia_recepcion.tara_camion_2,
+        terminar_guia: guia_recepcion.terminar_guia,
+        numero_guia_productor: guia_recepcion.numero_guia_productor,
+        creado_por: guia_recepcion.creado_por,
+        comercializador: guia_recepcion.comercializador,
+        productor: guia_recepcion.productor,
+        camionero: guia_recepcion.camionero,
+        camion: guia_recepcion.camion
+      })
 
-  console.log(isDarkTheme)
+      setDatosGuia(guia_recepcion)
+
+    }
+    return () => {
+      isMounted = false
+    }
+  }, [guia_recepcion])
+
+
+  console.log(formik.values)
 
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
@@ -160,9 +195,11 @@ const FormularioRegistroGuiaRecepcion = () => {
             name='productor'
             placeholder='Selecciona un productor'
             className='h-14'
+            value={optionsProductor.find(productor => productor?.value === String(formik.values.productor))}
             onChange={(value: any) => {
               formik.setFieldValue('productor', value.value)
             }}
+            disabled
           />
           
         </div>
@@ -175,9 +212,11 @@ const FormularioRegistroGuiaRecepcion = () => {
             name='camionero'
             placeholder='Selecciona un chofer'
             className='h-14'
+            value={optionsConductor.find(conductor => conductor?.value === String(formik.values.camionero))}
             onChange={(value: any) => {
               formik.setFieldValue('camionero', value.value)
             }}
+            disabled
           />
           
         </div>
@@ -190,9 +229,11 @@ const FormularioRegistroGuiaRecepcion = () => {
             name='camion'
             placeholder='Selecciona un camión'
             className='h-14'
+            value={optionsCamion.find(camion => camion?.value === String(formik.values.camion))}
             onChange={(value: any) => {
               formik.setFieldValue('camion', value.value)
             }}
+            disabled
           />
         </div>
 
@@ -204,9 +245,11 @@ const FormularioRegistroGuiaRecepcion = () => {
             name='comercializador'
             placeholder='Selecciona una opción'
             className='h-14'
+            value={optionsComercializador.find(comercializador => comercializador?.value === String(formik.values.comercializador))}
             onChange={(value: any) => {
               formik.setFieldValue('comercializador', value.value)
             }}
+            disabled
           />
         </div>
 
@@ -226,7 +269,8 @@ const FormularioRegistroGuiaRecepcion = () => {
                   onChange={(e) => {
                     formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
                   } } 
-                  selectedValue={undefined} />
+                  selectedValue={undefined} 
+                  disabled/>
               );
             })}
           </RadioGroup>
@@ -241,45 +285,14 @@ const FormularioRegistroGuiaRecepcion = () => {
             onChange={formik.handleChange}
             className='py-3'
             value={formik.values.numero_guia_productor!}
+            disabled
           />
         </div>
-
-
-
-        {
-          guiaGenerada
-            ? null
-            :
-            (
-              <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-                <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3'>Continuar con la guia</button>
-              </div>
-            )
-        }
       </form>
 
-      {
-        (guiaGenerada && !variedad)
-          ? (
-            <FooterFormularioRegistro data={datosGuia!} variedad={variedad} />
-            )
-          : (guiaGenerada && activo)
-              ? (
-                  <FooterFormularioRegistro data={datosGuia!} variedad={variedad} />
-              )
-              : guiaGenerada
-                  ? (
-                    <button
-                      className={`${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
-                      ml-10 mt-10 px-6 py-3 rounded-md font-semibold text-md
-                      `}
-                      onClick={() => setActivo(prev => !prev)}>Agregar Lotes</button>
-                    )
-                  : null
-      }
-
+      <FooterDetalleGuia data={guia_recepcion!} />
     </div>
   )
 }
 
-export default FormularioRegistroGuiaRecepcion 
+export default DetalleGuia 

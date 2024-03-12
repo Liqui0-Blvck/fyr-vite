@@ -53,6 +53,8 @@ const Operarios = lazy(() => import('../pages/operarios/ListaOperarios'))
 const GuiaRecepcion = lazy(() => import('../pages/guia recepcion/ListaGuiaRecepcion'))
 const Envases = lazy(() => import('../pages/envases/ListaEnvases'))
 const RegistroGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Registro/FormularioRegistroGuiaRecepcion.tsx'))
+const EdicionGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Edicion/FormularioEdicionGuiaRecepcion.tsx'))
+const DetalleGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Detalle/DetalleGuia.tsx'))
 
 
 /**
@@ -95,6 +97,8 @@ const contentRoutes: RouteProps[] = [
 	{ path: appPages.recepcionAppPages.subPages.recepcionMp.to, element: <GuiaRecepcion /> },
 	{ path: appPages.recepcionAppPages.subPages.envases.to, element: <Envases /> },
 	{ path: '/app/registro-guia-recepcion', element: <RegistroGuiaRecepcion /> },
+	{ path: '/app/edicion-guia-recepcion/:id', element: <EdicionGuiaRecepcion /> },
+	{ path: '/app/recepciomp/:id', element: <DetalleGuiaRecepcion /> },
 
 
 
