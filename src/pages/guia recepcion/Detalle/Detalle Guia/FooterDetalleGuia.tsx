@@ -1,25 +1,26 @@
-import { FC, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Input from '../../../../components/form/Input'
-import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
-import { FaCirclePlus } from "react-icons/fa6";
 import { useAuth } from '../../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import useDarkMode from '../../../../hooks/useDarkMode';
-import { TCamion, TEnvaseEnGuia, TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
-import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
+import { TCamion,TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
+import { ESTADOS_MP, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
 import { useNavigate } from 'react-router-dom';
 import Dropdown, { DropdownToggle, DropdownMenu, DropdownItem } from '../../../../components/ui/Dropdown'
 import Button from '../../../../components/ui/Button';
 import { HeroEye, HeroPencilSquare } from '../../../../components/icon/heroicons';
+import ModalRegistro from '../../../../components/ModalRegistro';
+import DetalleEnvase from '../Detalle Envases/DetalleEnvase';
+import FooterDetalleEnvase from '../Detalle Envases/FooterDetalleEnvase';
+import FooterFormularioEdicionEnvase from '../../Formulario Edicion/Edicion Envase/FooterFormularioEdicionEnvase';
+import ModalBasicText from '../../Formulario Edicion/Edicion Estado Modal/ModalBasicText';
 
 interface Row {
   kilos_brutos_1: null,
@@ -41,6 +42,12 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const [lotes, setLotes] = useState<TLoteGuia | null>(null)
+  const [estadoActivo, setEstadoActivo] = useState<string | null>(null)
+  const [openModalRows, setOpenModalRows] = useState<{ [key: string]: boolean }>({});
+  const [openModalEdicion, setOpenModalEdicion] = useState<{ [key: string]: boolean }>({});
+  const [openModalConfirmacion, setOpenModalConfirmacion] = useState<{ [key: string]: boolean }>({});
+
+  
 
   const initialRows = [
     {
@@ -121,12 +128,6 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
     }
   })
 
-
-  const envasesList = envases?.map((envase: TEnvases) => ({
-    value: String(envase.id),
-    label: envase.nombre
-  })) ?? []
-
   const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
     value: String(variedad.value),
     label: variedad.label
@@ -137,15 +138,15 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
     label: producto.label
   })) ?? []
 
+  const estadoRecepcion = ESTADOS_MP?.map((estado) => ({
+    value: String(estado.value),
+    label: estado.label
+  })) ?? []
+
   const camionAcoplado = camiones?.find(camion => camion?.id === Number(data?.camion))?.acoplado
+  const estadoActivoCoincide = estadoRecepcion.find((estado) => estado.value === (estadoActivo ? estadoActivo : '1'))
 
-  useEffect(() => {
-    data?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-      setLotes(lote)
-    })
-  }, [data])
-
-  console.log(lotes)
+  console.log(estadoActivoCoincide)
 
   return (
     <div>
@@ -158,17 +159,17 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
               <TableRow>
                 <TableCell align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10, width: 100 }}>N° Lote</TableCell>
                 <TableCell align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10, width: 120 }}>Kilos Brutos Camión</TableCell>
-                {data?.mezcla_variedades ? <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10, width: 120 }}>Kilos Brutos Acoplado</TableCell> : null}
+                {camionAcoplado ? <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10, width: 120 }}>Kilos Brutos Acoplado</TableCell> : null}
                 <TableCell align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10, width: 150 }}>Tipo Envase</TableCell>
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, width: 150 }}>Variedad</TableCell>
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, width: 200 }}>Tipo Producto</TableCell>
-                {data?.mezcla_variedades ? <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Opciones</TableCell> : null}
+                <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Opciones</TableCell>
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Estado</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data && data.lotesrecepcionmp.map((row: TLoteGuia) => {
-                console.log(row)
+              {data && data.lotesrecepcionmp.map((row: TLoteGuia) => {  
+
                 return (
                   <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative', height: 10 }}>
                     <TableCell component="th" sx={{ maxWidth: 20, minWidth: 20, background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`, borderRight: '4px solid white', paddingY: 1 }}>
@@ -240,33 +241,68 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
                       </div>
                     </TableCell>
 
-                    {
-                      data?.mezcla_variedades
-                        ? (
-                          <TableCell sx={{ maxWidth: 100, minWidth: 100, background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`, borderRight: '4px solid white', paddingY: 1 }}>
-                            <div className='flex justify-around flex-wrap gap-2'>
-                              <div
 
-                                className='w-4/12 bg-[#3B82F6] hover:bg-[#3b83f6cd] text-white flex items-center justify-center rounded-md p-1 cursor-pointer hover:scale-105'>
-                                <HeroEye style={{ fontSize: 25 }} />
-                              </div>
-                              <div
-
-                                className='w-4/12 bg-[#3B82F6] hover:bg-[#3b83f6cd] text-white flex items-center justify-center rounded-md p-1 cursor-pointer hover:scale-105'>
-                                <HeroPencilSquare style={{ fontSize: 25 }} />
-                              </div>
-                            </div>
-                          </TableCell>
-                        )
-                        : null
-                    }
-                    <TableCell sx={{ maxWidth: 100, minWidth: 100, paddingY: 1, background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}` }}>
-                      <div className='w-full flex items-center justify-center rounded-md'>
-                        <button className=' bg-gray-300 px-6 py-3 text-black font-semibold'>
-                          Iniciar Inspección Visual
-                        </button>
-                      </div>
+                    <TableCell sx={{ maxWidth: 100, minWidth: 100, background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`, borderRight: '4px solid white', paddingY: 1 }}>
+                      <div className='flex justify-around flex-wrap gap-2'>
+                      <ModalRegistro
+                          open={openModalRows[row.id] || false}
+                          setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpenModalRows(prevState => ({ ...prevState, [row.id]: isOpen }))}
+                          title='Detalle Envases'
+                          textTool='Detalle'
+                          size={900}
+                          width={`md:w-20 lg:w-20 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                          icon={<HeroEye style={{ fontSize: 25 }} 
+                          />}
+                        >
+                          <FooterDetalleEnvase id_lote={row.id} id_guia={data?.id!}/>
+                        </ModalRegistro>
+                        
+                        <ModalRegistro
+                          open={openModalEdicion[row.id] || false}
+                          setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row.id]: isOpen }))}
+                          title='Detalle Envases'
+                          textTool='Detalle'
+                          size={900}
+                          width={`md:w-20 lg:w-20 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                          icon={<HeroPencilSquare style={{ fontSize: 25 }} 
+                          />}
+                        >
+                          <FooterFormularioEdicionEnvase id_lote={row.id} id_guia={data?.id!}/>
+                        </ModalRegistro>
+                      </div>  
                     </TableCell>
+                    <TableCell sx={{ maxWidth: 100, minWidth: 100, background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`, borderRight: '4px solid white', paddingY: 1 }}>
+     
+                      {
+                        !estadoActivo
+                          ? (
+                            <ModalRegistro
+                              open={openModalConfirmacion[row.id] || false}
+                              setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row.id]: isOpen }))}
+                              title='Detalle Envases'
+                              textTool='Detalle'
+                              size={800}
+                              width={`md:w-20 lg:w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                              textButton='Iniciar Inspección'
+                            >
+                              <ModalBasicText id={row.id} estadoActivo={setEstadoActivo} setOpen={setOpenModalConfirmacion} numero_estado={`${estadoActivoCoincide?.value}`} id_lote={row.id}/>
+                            </ModalRegistro>
+                          )
+                          : (
+                            <ModalRegistro
+                              open={openModalConfirmacion[row.id] || false}
+                              setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row.id]: isOpen }))}
+                              title='Detalle Envases'
+                              textTool='Detalle'
+                              size={400}
+                              width={`md:w-20 lg:w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                              textButton={`${estadoActivoCoincide?.label}`}
+                            >
+                              <ModalBasicText id={row.id} estadoActivo={setEstadoActivo} setOpen={setOpenModalConfirmacion} numero_estado={`${estadoActivoCoincide?.value}`}/>
+                            </ModalRegistro>
+                          )
+                      }
+                   </TableCell>
                   </TableRow>
 
                 )

@@ -56,6 +56,16 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const { isDarkTheme } = useDarkMode();
 
+	const cargosPermitidos = ['Recepcionista', 'Finanzas']
+
+	const role = {
+    username: 'Nicolas',
+    cargo: 'Recepcionista',
+  }
+
+	console.log(role.cargo in cargosPermitidos)
+
+
 	const asisteDelete = async (id: number) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
@@ -75,18 +85,18 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 	const createLinkProductor = `/app/registro-guia-recepcion/`
 
 	const columns = [
-		columnHelper.accessor('numero_guia_productor', {
+		columnHelper.accessor('id', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-					<div className='font-bold w-20'>{`${info.row.original.numero_guia_productor}`}</div>
+					<div className='font-bold w-20'>{`${info.row.original.id}`}</div>
 				</Link>
 			),
-			header: 'N° Guia Productor'
+			header: 'N° Guia '
 		}),
 		columnHelper.accessor('camion', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold '>{`${info.row.original.camion}`}</div>
+					<div className='font-bold '>{`${info.row.original.nombre_camion}`}</div>
 				</Link>
 			),
 			header: 'Camión',
@@ -94,7 +104,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 		columnHelper.accessor('camionero', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold truncate'>{`${info.row.original.camionero}`}</div>
+					<div className='font-bold truncate'>{`${info.row.original.nombre_camionero}`}</div>
 				</Link>
 			),
 			header: 'Conductor',
@@ -102,7 +112,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 		columnHelper.accessor('comercializador', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${info.row.original.comercializador}`}</div>
+					<div className='font-bold'>{`${info.row.original.nombre_comercializador}`}</div>
 				</Link>
 			),
 			header: 'Comercializador',
@@ -138,18 +148,27 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 							<HeroEye style={{ fontSize: 25 }} />
 						</Link>
 
-						<Link to={`/app/edicion-guia-recepcion/${info.row.original.id}`}
-							className={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 
-								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
-								 hover:scale-105 rounded-md flex items-center justify-center`}>
-							<HeroPencilSquare style={{ fontSize: 25 }} />
-						</Link>
+						
 
-						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
-								<HeroXMark style={{ fontSize: 25 }} />
-							</button>
-						</Tooltip>
+						{
+							!cargosPermitidos.includes(role.cargo)
+								? null
+								: (
+									<>
+										<Link to={`/app/edicion-guia-recepcion/${info.row.original.id}`}
+											className={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 
+												${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
+												hover:scale-105 rounded-md flex items-center justify-center`}>
+											<HeroPencilSquare style={{ fontSize: 25 }} />
+										</Link>
+										<Tooltip title='Eliminar'>
+											<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+												<HeroXMark style={{ fontSize: 25 }} />
+											</button>
+										</Tooltip>
+									</>
+									)
+						}
 					</div>
 				);
 			},

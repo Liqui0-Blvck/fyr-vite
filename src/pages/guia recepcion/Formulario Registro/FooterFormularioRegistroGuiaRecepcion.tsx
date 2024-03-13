@@ -84,8 +84,8 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     onSubmit: async (values: any) => {
       const formData = new FormData()
 
-      const lotesData = rows.map((row) => ({
-        numero_lote: row.id,
+      const lotesData = [{
+        numero_lote: 0,
         kilos_brutos_1: values.kilos_brutos_1,
         kilos_brutos_2: values.kilos_brutos_2,
         kilos_tara_1: 0,
@@ -93,10 +93,10 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
         estado_recepcion: '1',
         guiarecepcion: data.id,
         creado_por: data.creado_por,
-      }))
+      }]
       formData.append('lotes', JSON.stringify(lotesData))
+      
       const envasesData = rows.map((row) => ({
-
         envase: row.envase,
         variedad: row.variedad,
         tipo_producto: row.tipo_producto,
@@ -141,15 +141,35 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     );
   };
 
-  const envasesList = envases?.map((envase: TEnvases) => ({
-    value: String(envase.id),
-    label: envase.nombre
-  })) ?? []
+  const envasesList = (rows.length < 1) ?
+    envases?.map(envase => ({
+      value: String(envase.id),
+      label: envase.nombre
+    })) ?? []:
+    envases?.filter(envase => 
+      !rows.some(row => row.envase === String(envase.id)))
+    .map((envase) => ({
+      value: String(envase.id),
+      label: envase.nombre
+    })) ?? []
 
-  const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
-    value: String(variedad.value),
-    label: variedad.label
-  })) ?? []
+  const variedadFilter = (rows.length <= 1) ?
+    VARIEDADES_MP.map(variedad => ({
+      value: String(variedad.value),
+      label: variedad.label
+    })) ?? [] :
+    VARIEDADES_MP.filter(variedad =>
+      rows.some(row => row.variedad === variedad.value)
+    ).map(variedad => ({
+      value: String(variedad.value),
+      label: variedad.label
+    })) ?? []
+  
+
+  // const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
+  //   value: String(variedad.value),
+  //   label: variedad.label
+  // })) ?? []
 
   const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
     value: String(producto.value),

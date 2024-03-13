@@ -56,7 +56,7 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 
 	const asisteDelete = async (id: number) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
-		const response = await fetch(`${base_url}/api/comercializador/${id}/`, {
+		const response = await fetch(`${base_url}/api/envasesmp/${id}/`, {
 			method: 'DELETE',
 		})
 		if (response.ok) {

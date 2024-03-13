@@ -14,15 +14,16 @@ interface IComponentProps {
   size?: number,
   textTool?: string
   width?: string
+  height?: string 
 }
 
-const ModalRegistro: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool, width }) => {
+const ModalRegistro: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool, width, height }) => {
   return (
     <>
       <Tooltip title={textTool}>
         <button
           type='button'
-          className={`${width} h-10 rounded-md flex items-center justify-center text-white'`}
+          className={`${width} ${height} rounded-md flex items-center justify-center text-white'`}
           onClick={() => setOpen(true)}>
           {textButton || icon}
         </button>

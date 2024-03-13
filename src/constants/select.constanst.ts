@@ -149,4 +149,25 @@ export const ESTADOS_LOTE_COLOSOS = [
   {value: '4', label: 'Lote Interno Rechazado'},
   {value: '5', label: 'MP Almacenada'},
 ]
+
+
+export const ESTADOS_MP = [
+  { value: '1', label: 'MP Recepcionada'},
+  { value: '2', label: 'MP En Inspecion Visual Por CC'},
+  { value: '3', label: 'MP Aprobada, Esperando Ubicacion Descarga'},
+  { value: '4', label: 'MP Rechazada'},
+  { value: '5', label: 'MP Almacenada'},     
+  { value: '6', label: 'MP Recepcion Completada'},
+  { value: '7', label: 'Lote Procesado'},
+]
+
+export const ESTADOSGUIARECEPCION_MP = [
+  { value: '1', label: 'Guia Creada'},
+  { value: '2', label: 'Guia En Proceso'},
+  { value: '3', label: 'Guia Completada, esperando Tara'},
+  { value: '4', label: 'Guia Cerrada'},
+]
+  
+
+
   

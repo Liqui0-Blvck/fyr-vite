@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
-import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../../../types/registros types/registros.types'
+import { TCamion, TComercializador, TConductor, TGuia, TLoteGuia, TProductor } from '../../../../types/registros types/registros.types'
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -14,13 +14,15 @@ import { ACTIVO } from '../../../../constants/select.constanst'
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'
 import FooterDetalleGuia from './FooterDetalleEnvase'
-import { options } from '@fullcalendar/core/preact.js'
 
+interface IDetalleProps {
+  id_lote: number
+}
 
-const DetalleEnvase = () => {
+const DetalleEnvase: FC<IDetalleProps> = ({ id_lote }) => {
   const { authTokens, validate, userID } = useAuth()
   const { pathname } = useLocation()
-  const id = urlNumeros(pathname)
+  const id_url = urlNumeros(pathname)
   const [guiaGenerada, setGuiaGenerada] = useState<boolean>(false)
   const [guiaID, setGuiaID] = useState<number | null>(null)
   const [variedad, setVariedad] = useState<boolean>(false)
@@ -29,6 +31,8 @@ const DetalleEnvase = () => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
+
+
 
   const { data: camiones } = useAuthenticatedFetch<TCamion[]>(
     authTokens,
@@ -59,10 +63,10 @@ const DetalleEnvase = () => {
     { id: 2, value: false, label: 'No' }
   ];
 
-  const { data: guia_recepcion } = useAuthenticatedFetch<TGuia>(
+  const { data: lotes } = useAuthenticatedFetch<TLoteGuia>(
     authTokens,
     validate,
-    `/api/recepcionmp/${id}`
+    `/api/recepcionmp/${id_url}/lotes/${id_lote}`
   )
 
   const formik = useFormik({
@@ -144,36 +148,7 @@ const DetalleEnvase = () => {
   const optionsConductor: TSelectOptions | [] = conductoresFilter
   const optionsComercializador: TSelectOptions | [] = comercializadoresFilter
   const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
-
-  useEffect(() => {
-    let isMounted = true
-    if (guia_recepcion && isMounted) {
-      formik.setValues({
-        estado_recepcion: guia_recepcion.estado_recepcion,
-        mezcla_variedades: guia_recepcion.mezcla_variedades,
-        cierre_guia: guia_recepcion.cierre_guia,
-        tara_camion_1: guia_recepcion.tara_camion_1,
-        tara_camion_2: guia_recepcion.tara_camion_2,
-        terminar_guia: guia_recepcion.terminar_guia,
-        numero_guia_productor: guia_recepcion.numero_guia_productor,
-        creado_por: guia_recepcion.creado_por,
-        comercializador: guia_recepcion.comercializador,
-        productor: guia_recepcion.productor,
-        camionero: guia_recepcion.camionero,
-        camion: guia_recepcion.camion
-      })
-
-      setDatosGuia(guia_recepcion)
-
-    }
-    return () => {
-      isMounted = false
-    }
-  }, [guia_recepcion])
-
-
-  console.log(formik.values)
-
+  
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
       <form
@@ -290,7 +265,7 @@ const DetalleEnvase = () => {
         </div>
       </form>
 
-      <FooterDetalleGuia data={guia_recepcion!} />
+      <FooterDetalleGuia data={lotes?.envases!} />
     </div>
   )
 }

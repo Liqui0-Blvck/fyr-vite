@@ -45,6 +45,7 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
   const [iotBruto, setIotBruto] = useState<boolean>(false)
   const [iotBrutoAcoplado, setIotBrutoAcoplado] = useState<boolean>(false)
 
+ 
   const initialRows = [
     {
       id: 1,

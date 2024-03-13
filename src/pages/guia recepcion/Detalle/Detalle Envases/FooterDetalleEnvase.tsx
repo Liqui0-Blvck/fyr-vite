@@ -14,7 +14,7 @@ import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import useDarkMode from '../../../../hooks/useDarkMode';
-import { TEnvaseEnGuia, TEnvases, TGuia } from '../../../../types/registros types/registros.types';
+import { TEnvaseEnGuia, TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,15 +29,15 @@ interface Row {
 }
 
 interface IFooterProps {
-  data: TGuia,
+  id_lote: number,
+  id_guia: number
 }
 
-const FooterDetalleEnvase: FC<IFooterProps> = ({ data }) => {
+const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
-  const [lotes, setLotes] = useState(null)
 
   const initialRows = [
     {
@@ -50,7 +50,17 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ data }) => {
 
   const [rows, setRows] = useState(
     initialRows.map((row, index) => ({ ...row, id: index }))
+    
   );
+
+  console.log(id_guia)
+  console.log(id_lote)
+
+  const { data: loteEnGuia } = useAuthenticatedFetch<TLoteGuia>(
+    authTokens,
+    validate,
+    `/api/recepcionmp/${id_guia}/lotes/${id_lote}`
+  )
 
   const { data: envases } = useAuthenticatedFetch<TEnvases[]>(
     authTokens,
@@ -58,85 +68,13 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ data }) => {
     `/api/envasesmp/`
   )
 
-  const { data: envasesEnGuia } = useAuthenticatedFetch<TEnvaseEnGuia[]>(
-    authTokens,
-    validate,
-    `/api/envaseguiamp/`
-  )
+  console.log(loteEnGuia)
 
 
-  const formik = useFormik({
-    initialValues: {
-      kilos_brutos_1: 0,
-      kilos_brutos_2: 0,
-      kilos_tara_1: 0,
-      kilos_tara_2: 0,
-      estado_recepcion: null,
-      guiarecepcion: null,
-      creado_por: null,
-    },
-    onSubmit: async (values: any) => {
-      const formData = new FormData()
-      const lotesData = rows.map((row) => ({
-        numero_lote: row.id,
-        kilos_brutos_1: values.kilos_brutos_1,
-        kilos_brutos_2: values.kilos_brutos_2,
-        kilos_tara_1: 0,
-        kilos_tara_2: 0,
-        estado_recepcion: '1',
-        guiarecepcion: data.id,
-        creado_por: data.creado_por,
-      }))
-      formData.append('lotes', JSON.stringify(lotesData))
-      const envasesData = rows.map((row) => ({
-        envase: row.envase,
-        variedad: row.variedad,
-        tipo_producto: row.tipo_producto,
-        cantidad_envases: row.cantidad_envases,
-      }));
-      formData.append('envases', JSON.stringify(envasesData));
-
-
-      try {
-        const res = await fetch(`${base_url}/api/recepcionmp/${data.id}/lotes/`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authTokens?.access}`
-          },
-          body: formData
-        })
-        if (res.ok) {
-          toast.success("la guia de recepción fue registrado exitosamente!!")
-          navigate(`/app/recepciomp`)
-        } else {
-          toast.error("No se pudo registrar la guia de recepción volver a intentar")
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  })
-
-
-  const agregarFila = () => {
-    const nuevaFila = { id: rows.length, kilos_brutos_1: 0, kilos_brutos_2: 0, envase: null, variedad: null, tipo_producto: '1', cantidad_envases: null };
-    setRows((prevRows) => [...prevRows, nuevaFila]);
-  };
-
-  const eliminarFila = (id: number) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-  };
-
-  const handleChangeRow = (id: number, fieldName: string, value: string | number) => {
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === id ? { ...row, [fieldName]: value } : row))
-    );
-  };
-
-  const envasesList = envases?.map((envase: TEnvases) => ({
-    value: String(envase.id),
-    label: envase.nombre
-  })) ?? []
+  // const envasesList = envases?.map((envase: TEnvases) => ({
+  //   value: String(envase.id),
+  //   label: envase.nombre
+  // })) ?? []
 
   const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
     value: String(variedad.value),
@@ -148,148 +86,66 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ data }) => {
     label: producto.label
   })) ?? []
 
-  const optionEnvases: TSelectOptions | [] = envasesList
+  // const optionEnvases: TSelectOptions | [] = envasesList
   const optionsVariedad: TSelectOptions | [] = variedadFilter
   const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
   // const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
-  useEffect(() => {
-    data?.lotesrecepcionmp.map((lote: any) => {
-      setRows(lote.envases)
-    })
-  }, [data])
-
-  console.log(data)
-
   return (
     <div>
-      <form
-        onSubmit={formik.handleSubmit}
+      <div
         className='relative'>
         <TableContainer sx={{ height: 350, overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
           <Table sx={{ minWidth: 750, background: `${isDarkTheme ? '#09090B' : 'white'}` }} aria-label="simple table">
-            <TableHead >
-              <TableRow>
-                <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Envase</TableCell>
-                <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Cantidad Envases</TableCell>
-                <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Variedad</TableCell>
-                <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Producto</TableCell>
-                {data?.mezcla_variedades ? <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Acciones</TableCell> : null}
-                <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Estado</TableCell>
+            <TableHead className='bg-[#f1eeeeb0] flex'>
+              <TableRow className='flex flex-wrap'>
+                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Envase</TableCell>
+                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Cantidad Envases</TableCell>
+                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Variedad</TableCell>
+                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Producto</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows && rows.map((row, index) => {
+              {loteEnGuia && loteEnGuia.envases.map((row: TEnvaseEnGuia) => {
                 console.log(row)
+                const nombre_envase = envases?.find(envaseList => envaseList.id === row.envase)?.nombre
+                const nombre_variedad = variedadFilter.find(variedad => variedad.value === row.variedad)?.label;
+                const nombre_producto = tipoFrutaFilter.find(producto => producto.value === row.tipo_producto)?.label
+
                 return (
-                  <TableRow key={index} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative' }}>
-                    <TableCell style={{ zIndex: 1, maxWidth: 150, minWidth: 150 }}>
-                      <SelectReact
-                        options={optionEnvases}
-                        id='camion'
-                        name='camion'
-                        placeholder='Selecciona un envase'
-                        className='h-14 w-full absolute'
-                        value={optionEnvases.find(envase => envase?.value === String(row.envase))}
-                        onChange={(value: any) => {
-                          handleChangeRow(row.id, 'envase', value.value)
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell component="th" scope="row" sx={{ maxWidth: 120, minWidth: 120 }}>
-                      <Input
-                        type='number'
-                        name='kilos_brutos_2'
-                        className='py-3 '
-                        value={row.cantidad_envases!}
-                        onChange={(e: any) => {
-                          handleChangeRow(row.id, 'cantidad_envases', e.target.value)
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell style={{ zIndex: 1, maxWidth: 150, minWidth: 150 }}>
-                      <SelectReact
-                        options={optionsVariedad}
-                        id='camion'
-                        name='camion'
-                        placeholder='Selecciona una variedad'
-                        className='h-14 '
-                        value={optionsVariedad.find(envase => envase?.value === String(row.variedad))}
-                        onChange={(value: any) => {
-                          handleChangeRow(row.id, 'variedad', value.value)
-                        }}
-                      />
-
+                  <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative'}}>
+                    
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid black', paddingY: 1 }}>
+                      <div className=' h-full w-full flex items-center justify-center'>
+                        <span className='text-xl' >{nombre_envase}</span>
+                      </div>
                     </TableCell>
 
-                    <TableCell style={{ zIndex: 1, maxWidth: 150, minWidth: 150 }}>
-                      <SelectReact
-                        options={optionsTipoFruta}
-                        id='tipo_producto'
-                        name='tipo_producto'
-                        placeholder='Selecciona una variedad'
-                        value={optionsTipoFruta.find(option => option?.value === '1')}
-                        className='h-14'
-                        onChange={(value: any) => {
-                          handleChangeRow(row.id, 'tipo_producto', value.value)
-                        }}
-                      />
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid white', paddingY: 1 }}>
+                      <div className=' h-full w-full flex items-center justify-center'>
+                        <span className='text-xl' >{row.cantidad_envases!}</span>
+                      </div>
                     </TableCell>
 
-                    {
-                      data?.mezcla_variedades
-                        ? (
-                          <TableCell align="right">
-                            <button type='button'
-                              onClick={() => eliminarFila(row.id)}
-                              className='border border-red-800 px-4 py-2 rounded-md 
-                                  hover:scale-110 hover:bg-red-700 text-red-800 hover:text-white'>
-                              Eliminar
-                            </button>
-                          </TableCell>
-                        )
-                        : null
-                    }
-                    <TableCell align="right">
-                      <button type='button'
-                        onClick={() => eliminarFila(row.id)}
-                        className='border border-red-800 px-4 py-2 rounded-md 
-                            hover:scale-110 hover:bg-red-700 text-red-800 hover:text-white'>
-                        Eliminar
-                      </button>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid white', paddingY: 1 }}>
+                      <div className=' h-full w-full flex items-center justify-center'>
+                        <span className='text-xl'>{nombre_variedad}</span>
+                      </div>
                     </TableCell>
+                    
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid white', paddingY: 1 }}>
+                    <div className=' h-full w-full flex items-center justify-center'>
+                        <span className='text-xl'>{nombre_producto}</span>
+                      </div>
+                    </TableCell>
+
                   </TableRow>
-
                 )
               })}
             </TableBody>
           </Table>
         </TableContainer>
-
-        {
-          data?.mezcla_variedades
-            ? (
-              <div
-                onClick={agregarFila}
-                className='relative top-4 left-10 md:left-0 lg:left-0 
-                    right-0 w-32 mx-auto'>
-                <FaCirclePlus className='text-3xl' />
-              </div>
-            )
-            : null
-        }
-
-        <div className='flex bg-gray-300 w-full flex-row-reverse mt-12 md:mt-10 lg:mt-10'>
-          <button
-            type='submit'
-            className='lg:relative lg:px-6 lg:py-4 lg:right-5 lg:bottom-0 lg:top-0
-              md:relative md:px-6 md:py-4 md:right-5 md:bottom-0 md:top-0
-              px-6 py-4 w-full
-              bg-[#2732FF] rounded-md text-white'>
-            Registrar Guia de Recepción
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };

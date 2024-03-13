@@ -124,3 +124,17 @@ export type TLoteGuia = {
   guiarecepcion: number;
   creado_por: number;
 };
+
+
+export type TControlCalidad = {
+  id: number,
+  estado_aprobacion_cc: number,
+  estado_cc: number,
+  presencia_insectos: boolean,
+  humedad: string,
+  observaciones: string,
+  fecha_modificacion: string,
+  fecha_creacion: string,
+  recepcionmp: number,
+  cc_registrado_por: number
+}

@@ -13,9 +13,7 @@ import { ACTIVO } from '../../../../constants/select.constanst'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'
-import { options } from '@fullcalendar/core/preact.js'
 import FooterDetalleGuia from './FooterDetalleGuia'
-import FooterFormularioEdicion from '../../Formulario Edicion/Edicion Envase/FooterFormularioEdicionEnvase'
 import FooterFormularioEdicionGuia from '../../Formulario Edicion/Edicion Guia/FooterFormularioEdicionGuiaRecepcion'
 
 
@@ -185,7 +183,8 @@ const DetalleGuia = () => {
       >
 
         <div className='border border-gray-300 rounded-md col-span-6'>
-          <h1 className='text-center text-2xl p-4'>Registro Guía Recepción Para Materias Primas Origen</h1>
+          <h1 className='text-center text-2xl p-4'>Guía Recepción Materia Prima</h1>
+          <h4 className='text-center text-xl p-4'>Estado: {guia_recepcion?.estado_recepcion}</h4>
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
@@ -294,13 +293,15 @@ const DetalleGuia = () => {
       {
         nuevoLote
           ? null
-          : (
-            <div
-              onClick={() => setNuevoLote(prev => !prev)}
-              className='ml-10 bg-blue-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer'>
-              <span className='text-white'>Agregar Lote</span>
-            </div>
-          )
+          : guia_recepcion?.mezcla_variedades
+              ? (
+                <div
+                  onClick={() => setNuevoLote(prev => !prev)}
+                  className='ml-10 bg-blue-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer'>
+                  <span className='text-white'>Agregar Lote</span>
+                </div>
+                )
+              : null
       }
 
 

@@ -149,7 +149,8 @@ const FormularioRegistroGuiaRecepcion = () => {
       >
 
         <div className='border border-gray-300 rounded-md col-span-6'>
-          <h1 className='text-center text-2xl p-4'>Registro Guía Recepción Para Materias Primas Origen</h1>
+          <h1 className='text-center text-2xl p-4'>Guía Recepción Materia Prima</h1>
+          <h4>{datosGuia?.estado_recepcion}</h4>
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
