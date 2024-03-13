@@ -32,39 +32,15 @@ import { format } from "@formkit/tempo"
 import { TEnvases } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroEnvases from '../Formulario Registro/FormularioRegistroEnvases';
+import useDarkMode from '../../../hooks/useDarkMode';
+import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
+import { Tooltip } from 'antd';
 
 
 
 const columnHelper = createColumnHelper<TEnvases>();
 
-const editLinkProductor = `/app/envases/`
 
-const columns = [
-	columnHelper.accessor('id', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-				<div className='font-bold w-20'>{`${info.row.original.id}`}</div>
-			</Link>
-		),
-		header: 'ID'
-	}),
-	columnHelper.accessor('nombre', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold '>{`${info.row.original.nombre}`}</div>
-			</Link>
-		),
-		header: 'Nombre',
-	}),
-	columnHelper.accessor('peso', {
-		cell: (info) => (
-			<Link to={`${editLinkProductor}${info.row.original.id}`}>
-				<div className='font-bold'>{`${info.row.original.peso}`}</div>
-			</Link>
-		),
-		header: 'Peso',
-	}),
-];
 
 
 interface IEnvasesProps {
@@ -76,6 +52,94 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
+	const { isDarkTheme } = useDarkMode()
+
+	const asisteDelete = async (id: number) => {
+		const base_url = process.env.VITE_BASE_URL_DEV
+		const response = await fetch(`${base_url}/api/comercializador/${id}/`, {
+			method: 'DELETE',
+		})
+		if (response.ok) {
+			refresh(true)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
+	const editLinkProductor = `/app/envases/`
+
+	const columns = [
+		columnHelper.accessor('id', {
+			cell: (info) => (
+				<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
+					<div className='font-bold w-20'>{`${info.row.original.id}`}</div>
+				</Link>
+			),
+			header: 'ID'
+		}),
+		columnHelper.accessor('nombre', {
+			cell: (info) => (
+				<Link to={`${editLinkProductor}${info.row.original.id}`}>
+					<div className='font-bold '>{`${info.row.original.nombre}`}</div>
+				</Link>
+			),
+			header: 'Nombre',
+		}),
+		columnHelper.accessor('peso', {
+			cell: (info) => (
+				<Link to={`${editLinkProductor}${info.row.original.id}`}>
+					<div className='font-bold'>{`${info.row.original.peso}`}</div>
+				</Link>
+			),
+			header: 'Peso',
+		}),
+		columnHelper.display({
+			id: 'actions',
+			cell: (info) => {
+				const id = info.row.original.id;
+				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
+				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+
+				return (
+					<div className='h-full w-full flex justify-around gap-2'>
+						<ModalRegistro
+							open={detalleModalStatus}
+							setOpen={setDetalleModalStatus}
+							textTool='Detalle'
+							title='Detalle Comercializador'
+							size={900}
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroEye style={{ fontSize: 25 }} />}
+						>
+							{/* <DetalleComercializador id={id} /> */}
+							hola
+						</ModalRegistro>
+
+						<ModalRegistro
+							open={edicionModalStatus}
+							setOpen={setEdicionModalStatus}
+							title='Edición Comercializador'
+							textTool='Editar'
+							size={900}
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroPencilSquare style={{ fontSize: 25 }}
+							/>}
+						>
+							{/* <FormularioEdicionComercializador refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
+							hola
+						</ModalRegistro>
+
+						<Tooltip title='Eliminar'>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+								<HeroXMark style={{ fontSize: 25 }} />
+							</button>
+						</Tooltip>
+					</div>
+				);
+			},
+			header: 'Acciones'
+		}),
+	];
 
 	const table = useReactTable({
 		data,
@@ -124,14 +188,16 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 					</FieldWrap>
 				</SubheaderLeft>
 				<SubheaderRight>
-						<ModalRegistro
-							open={modalStatus} 
-							setOpen={setModalStatus} 
-							title='Registro Envases'
-							textButton='Agregar Envases'
-							>
-						<FormularioRegistroEnvases refresh={refresh} setOpen={setModalStatus}/>
-						</ModalRegistro>
+					<ModalRegistro
+						open={modalStatus}
+						setOpen={setModalStatus}
+						title='Registro Envases'
+						textButton='Agregar Envases'
+						width={`px-6 py-3 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+
+					>
+						<FormularioRegistroEnvases refresh={refresh} setOpen={setModalStatus} />
+					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>
 			<Container>

@@ -61,7 +61,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 		const response = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
 			method: 'DELETE',
 			headers: {
-				'Authorization' : `Bearer ${authTokens?.access}`
+				'Authorization': `Bearer ${authTokens?.access}`
 			}
 		})
 		if (response.ok) {

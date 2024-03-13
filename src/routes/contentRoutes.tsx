@@ -53,8 +53,8 @@ const Operarios = lazy(() => import('../pages/operarios/ListaOperarios'))
 const GuiaRecepcion = lazy(() => import('../pages/guia recepcion/ListaGuiaRecepcion'))
 const Envases = lazy(() => import('../pages/envases/ListaEnvases'))
 const RegistroGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Registro/FormularioRegistroGuiaRecepcion.tsx'))
-const EdicionGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Edicion/FormularioEdicionGuiaRecepcion.tsx'))
-const DetalleGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Detalle/DetalleGuia.tsx'))
+const EdicionGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Edicion/Edicion Guia/FormularioEdicionGuiaRecepcion.tsx'))
+const DetalleGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Detalle/Detalle Guia/DetalleGuia.tsx'))
 
 
 /**

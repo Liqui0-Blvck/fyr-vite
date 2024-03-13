@@ -1,23 +1,22 @@
 import { useFormik } from 'formik'
-import Input from '../../../components/form/Input'
+import Input from '../../../../components/form/Input'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../../context/authContext'
-import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../../types/registros types/registros.types'
-import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
-import useDarkMode from '../../../hooks/useDarkMode'
+import { useAuth } from '../../../../context/authContext'
+import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
+import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../../../types/registros types/registros.types'
+import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
+import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { FC, useEffect, useState } from 'react'
-import { ACTIVO } from '../../../constants/select.constanst'
+import { ACTIVO } from '../../../../constants/select.constanst'
+import FooterFormularioEdicion from './FooterFormularioEdicionGuiaRecepcion'
 
-import Radio, { RadioGroup } from '../../../components/form/Radio'
-import { urlNumeros } from '../../../services/url_number'
-import FooterDetalleGuia from './FooterDetalleGuia'
-import { options } from '@fullcalendar/core/preact.js'
+import Radio, { RadioGroup } from '../../../../components/form/Radio'
+import { urlNumeros } from '../../../../services/url_number'
 
 
-const DetalleGuia = () => {
+const FormularioEdicionGuiaRecepcion = () => {
   const { authTokens, validate, userID } = useAuth()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -29,6 +28,7 @@ const DetalleGuia = () => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
+
 
   const { data: camiones } = useAuthenticatedFetch<TCamion[]>(
     authTokens,
@@ -55,8 +55,8 @@ const DetalleGuia = () => {
   )
 
   const optionsRadio = [
-    { id: 1, value: true, label: 'Si'},
-    { id: 2, value: false, label: 'No'}
+    { id: 1, value: true, label: 'Si' },
+    { id: 2, value: false, label: 'No' }
   ];
 
   const { data: guia_recepcion } = useAuthenticatedFetch<TGuia>(
@@ -64,6 +64,8 @@ const DetalleGuia = () => {
     validate,
     `/api/recepcionmp/${id}`
   )
+
+
 
   const formik = useFormik({
     initialValues: {
@@ -112,8 +114,6 @@ const DetalleGuia = () => {
     }
   })
 
-  
-
   const camionFilter = camiones?.map((camion: TCamion) => ({
     value: String(camion.id),
     label: (`${camion.patente},  ${camion.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`)
@@ -147,7 +147,7 @@ const DetalleGuia = () => {
 
   useEffect(() => {
     let isMounted = true
-    if (guia_recepcion && isMounted){
+    if (guia_recepcion && isMounted) {
       formik.setValues({
         estado_recepcion: guia_recepcion.estado_recepcion,
         mezcla_variedades: guia_recepcion.mezcla_variedades,
@@ -163,8 +163,6 @@ const DetalleGuia = () => {
         camion: guia_recepcion.camion
       })
 
-      setDatosGuia(guia_recepcion)
-
     }
     return () => {
       isMounted = false
@@ -172,7 +170,7 @@ const DetalleGuia = () => {
   }, [guia_recepcion])
 
 
-  console.log(formik.values)
+  console.log(isDarkTheme)
 
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
@@ -195,13 +193,11 @@ const DetalleGuia = () => {
             name='productor'
             placeholder='Selecciona un productor'
             className='h-14'
-            value={optionsProductor.find(productor => productor?.value === String(formik.values.productor))}
             onChange={(value: any) => {
               formik.setFieldValue('productor', value.value)
             }}
-            disabled
           />
-          
+
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
@@ -212,13 +208,11 @@ const DetalleGuia = () => {
             name='camionero'
             placeholder='Selecciona un chofer'
             className='h-14'
-            value={optionsConductor.find(conductor => conductor?.value === String(formik.values.camionero))}
             onChange={(value: any) => {
               formik.setFieldValue('camionero', value.value)
             }}
-            disabled
           />
-          
+
         </div>
 
         <div className='md:row.start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
@@ -229,11 +223,9 @@ const DetalleGuia = () => {
             name='camion'
             placeholder='Selecciona un camión'
             className='h-14'
-            value={optionsCamion.find(camion => camion?.value === String(formik.values.camion))}
             onChange={(value: any) => {
               formik.setFieldValue('camion', value.value)
             }}
-            disabled
           />
         </div>
 
@@ -245,35 +237,32 @@ const DetalleGuia = () => {
             name='comercializador'
             placeholder='Selecciona una opción'
             className='h-14'
-            value={optionsComercializador.find(comercializador => comercializador?.value === String(formik.values.comercializador))}
             onChange={(value: any) => {
               formik.setFieldValue('comercializador', value.value)
             }}
-            disabled
           />
         </div>
 
         <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center justify-center'>
           <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
 
-          <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100' } rounded-md flex items-center justify-center relative`}>
-          <RadioGroup isInline>
-            {optionsRadio.map(({ id, value, label }) => {
-              return (
-                <Radio
-                  key={id}
-                  label={label}
-                  name='mezcla_variedades'
-                  value={label} // Asignar el valor correcto de cada botón de radio
-                  checked={formik.values.mezcla_variedades === value} // Comprobar si este botón de radio está seleccionado
-                  onChange={(e) => {
-                    formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
-                  } } 
-                  selectedValue={undefined} 
-                  disabled/>
-              );
-            })}
-          </RadioGroup>
+          <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
+            <RadioGroup isInline>
+              {optionsRadio.map(({ id, value, label }) => {
+                return (
+                  <Radio
+                    key={id}
+                    label={label}
+                    name='mezcla_variedades'
+                    value={label} // Asignar el valor correcto de cada botón de radio
+                    checked={formik.values.mezcla_variedades === value} // Comprobar si este botón de radio está seleccionado
+                    onChange={(e) => {
+                      formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
+                    }}
+                    selectedValue={undefined} />
+                );
+              })}
+            </RadioGroup>
           </div>
         </div>
 
@@ -285,14 +274,29 @@ const DetalleGuia = () => {
             onChange={formik.handleChange}
             className='py-3'
             value={formik.values.numero_guia_productor!}
-            disabled
           />
         </div>
+
+
+
+        {
+          guiaGenerada
+            ? null
+            :
+            (
+              <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
+                <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3'>Continuar con la guia</button>
+              </div>
+            )
+        }
       </form>
 
-      <FooterDetalleGuia data={guia_recepcion!} />
+      <FooterFormularioEdicion data={datosGuia!} variedad={variedad} />
+
+
+
     </div>
   )
 }
 
-export default DetalleGuia 
+export default FormularioEdicionGuiaRecepcion 

@@ -6,18 +6,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Input from '../../../components/form/Input'
-import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
+import Input from '../../../../components/form/Input'
+import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import { FaCirclePlus } from "react-icons/fa6";
-import { useAuth } from '../../../context/authContext';
-import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
+import { useAuth } from '../../../../context/authContext';
+import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
-import useDarkMode from '../../../hooks/useDarkMode';
-import { TCamion, TEnvases, TGuia } from '../../../types/registros types/registros.types';
-import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../constants/select.constanst';
+import useDarkMode from '../../../../hooks/useDarkMode';
+import { TCamion, TEnvases, TGuia } from '../../../../types/registros types/registros.types';
+import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
 import { useNavigate } from 'react-router-dom';
-import { Switch } from 'antd';
+import { values } from 'lodash';
 
 interface Row {
   kilos_brutos_1: null,
@@ -34,13 +34,11 @@ interface IFooterProps {
   variedad: boolean
 }
 
-const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
+const FooterFormularioEdicion: FC<IFooterProps> = ({ data, variedad }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
-  const [iotBruto, setIotBruto] = useState<boolean>(false)
-  const [iotBrutoAcoplado, setIotBrutoAcoplado] = useState<boolean>(false)
 
   const initialRows = [
     {
@@ -81,13 +79,12 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
       guiarecepcion: null,
       creado_por: null,
     },
-    onSubmit: async (values: any) => {
+    onSubmit: async () => {
       const formData = new FormData()
-
       const lotesData = rows.map((row) => ({
         numero_lote: row.id,
-        kilos_brutos_1: values.kilos_brutos_1,
-        kilos_brutos_2: values.kilos_brutos_2,
+        kilos_brutos_1: row.kilos_brutos_1,
+        kilos_brutos_2: row.kilos_brutos_2,
         kilos_tara_1: 0,
         kilos_tara_2: 0,
         estado_recepcion: '1',
@@ -146,10 +143,6 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     label: envase.nombre
   })) ?? []
 
-  const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
-    value: String(variedad.value),
-    label: variedad.label
-  })) ?? []
 
   const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
     value: String(producto.value),
@@ -157,7 +150,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   })) ?? []
 
   const optionEnvases: TSelectOptions | [] = envasesList
-  const optionsVariedad: TSelectOptions | [] = variedadFilter
+
   const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
   const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
@@ -165,55 +158,15 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     <div>
       <form
         onSubmit={formik.handleSubmit}
-        className='relative flex flex-col'>
-        <div className='w-full mb-5 flex px-5 justify-between'>
-          <div className={`grid grid-cols-4 gap-2 items-center justify-center ${camionAcoplado ? 'w-full' : 'w-[90%]'}`}>
-            <label
-              htmlFor="kilos_brutos_1"
-              className='col-span-3'
-            >Kilos Brutos</label>
-            <Input
-              type='number'
-              name='kilos_brutos_1'
-              className='py-3 row-start-2 col-span-3 w-56'
-              value={formik.values.kilos_brutos_1}
-              onChange={formik.handleChange}
-              disabled={iotBruto ? true : false}
-            />
-            <Switch
-              className='row-start-2 col-start-4 w-16 bg-slate-300'
-              onChange={() => setIotBruto(prev => !prev)} />
-          </div>
-
-          {
-            camionAcoplado
-              ? (
-                <div className='grid grid-cols-4 gap-2 items-center justify-center w-full'>
-                  <label
-                    htmlFor="kilos_brutos_2"
-                    className='col-span-3'
-                  >Kilos Brutos Acoplado</label>
-                  <Input
-                    type='number'
-                    name='kilos_brutos_2'
-                    className='py-3 row-start-2 col-span-3 w-56'
-                    value={formik.values.kilos_brutos_2}
-                    onChange={formik.handleChange}
-                    disabled={iotBrutoAcoplado ? true : false}
-
-                  />
-                  <Switch
-                    className='row-start-2 col-start-4 w-16 bg-slate-300'
-                    onChange={() => setIotBrutoAcoplado(prev => !prev)} />
-                </div>
-              )
-              : null
-          }
-        </div>
+        className='relative'>
         <TableContainer sx={{ height: 350, overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
           <Table sx={{ minWidth: 750, background: `${isDarkTheme ? '#09090B' : 'white'}` }} aria-label="simple table">
             <TableHead >
               <TableRow>
+                <TableCell align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Kilos Brutos</TableCell>
+                {
+                  camionAcoplado ? <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Kilos Brutos Acoplado</TableCell> : null
+                }
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Envase</TableCell>
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Cantidad Envases</TableCell>
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Variedad</TableCell>
@@ -223,9 +176,39 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
             </TableHead>
             <TableBody>
               {rows && rows.map((row, index) => {
+
+
                 return (
                   <TableRow key={index} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative' }}>
+                    <TableCell component="th" scope="row" sx={{ maxWidth: 120, minWidth: 120 }}>
+                      <Input
+                        type='text'
+                        name='kilos_brutos_1'
+                        className='py-3'
+                        value={row.kilos_brutos_1}
+                        onChange={(e) => {
+                          handleChangeRow(row.id, 'kilos_brutos_1', e.target.value)
+                        }}
+                      />
 
+                    </TableCell>
+                    {
+                      camionAcoplado
+                        ? (
+                          <TableCell component="th" scope="row" sx={{ maxWidth: 120, minWidth: 120 }}>
+                            <Input
+                              type='number'
+                              name='kilos_brutos_2'
+                              className='py-3 '
+                              value={row.kilos_brutos_2}
+                              onChange={(e) => {
+                                handleChangeRow(row.id, 'kilos_brutos_2', e.target.value)
+                              }}
+                            />
+                          </TableCell>
+                        )
+                        : null
+                    }
                     <TableCell style={{ zIndex: 1, maxWidth: 150, minWidth: 150 }}>
                       <SelectReact
                         options={optionEnvases}
@@ -327,4 +310,4 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   );
 };
 
-export default FooterFormularioRegistro;
+export default FooterFormularioEdicion;

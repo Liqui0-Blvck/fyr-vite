@@ -224,7 +224,7 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
             setOpen={setModalStatus}
             title='Registro Comercializador'
             textButton='Agregar Comercializador'
-            width={`w-full p-2   hover:scale-105`}
+            width={`px-6 py-3 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
             size={900}
           >
             <FormularioRegistroComercializador refresh={refresh} setOpen={setModalStatus} />

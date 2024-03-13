@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,17 +6,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Input from '../../../components/form/Input'
-import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
+import Input from '../../../../components/form/Input'
+import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import { FaCirclePlus } from "react-icons/fa6";
-import { useAuth } from '../../../context/authContext';
-import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
+import { useAuth } from '../../../../context/authContext';
+import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
-import useDarkMode from '../../../hooks/useDarkMode';
-import { TCamion, TEnvases, TGuia } from '../../../types/registros types/registros.types';
-import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../constants/select.constanst';
+import useDarkMode from '../../../../hooks/useDarkMode';
+import { TCamion, TEnvases, TGuia } from '../../../../types/registros types/registros.types';
+import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
 import { useNavigate } from 'react-router-dom';
+import { values } from 'lodash';
 import { Switch } from 'antd';
 
 interface Row {
@@ -30,11 +31,13 @@ interface Row {
 }
 
 interface IFooterProps {
-  data: TGuia,
+  data: TGuia
   variedad: boolean
+  detalle: Dispatch<SetStateAction<boolean>>
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
+const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle, refresh }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
   const base_url = process.env.VITE_BASE_URL_DEV
@@ -83,9 +86,8 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     },
     onSubmit: async (values: any) => {
       const formData = new FormData()
-
-      const lotesData = rows.map((row) => ({
-        numero_lote: row.id,
+      const lotesData = [{
+        numero_lote: data.id,
         kilos_brutos_1: values.kilos_brutos_1,
         kilos_brutos_2: values.kilos_brutos_2,
         kilos_tara_1: 0,
@@ -93,10 +95,9 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
         estado_recepcion: '1',
         guiarecepcion: data.id,
         creado_por: data.creado_por,
-      }))
+      }]
       formData.append('lotes', JSON.stringify(lotesData))
       const envasesData = rows.map((row) => ({
-
         envase: row.envase,
         variedad: row.variedad,
         tipo_producto: row.tipo_producto,
@@ -115,7 +116,8 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
         })
         if (res.ok) {
           toast.success("la guia de recepción fue registrado exitosamente!!")
-          navigate(`/app/recepciomp`)
+          detalle(false)
+          refresh(true)
         } else {
           toast.error("No se pudo registrar la guia de recepción volver a intentar")
         }
@@ -146,10 +148,25 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     label: envase.nombre
   })) ?? []
 
-  const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
-    value: String(variedad.value),
-    label: variedad.label
-  })) ?? []
+  // const variedadFilter = VARIEDADES_MP?.
+  //   filter(variedad => variedad.value === row.variedad).
+  //   map((variedad) => ({
+  //     value: String(variedad.value),
+  //     label: variedad.label
+  //   })) ?? []
+
+
+  const variedadFilter = (rows.length <= 1) ?
+    VARIEDADES_MP.map(variedad => ({
+      value: String(variedad.value),
+      label: variedad.label
+    })) :
+    VARIEDADES_MP.filter(variedad =>
+      rows.some(row => row.variedad === variedad.value)
+    ).map(variedad => ({
+      value: String(variedad.value),
+      label: variedad.label
+    }));
 
   const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
     value: String(producto.value),
@@ -165,7 +182,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     <div>
       <form
         onSubmit={formik.handleSubmit}
-        className='relative flex flex-col'>
+        className='relative'>
         <div className='w-full mb-5 flex px-5 justify-between'>
           <div className={`grid grid-cols-4 gap-2 items-center justify-center ${camionAcoplado ? 'w-full' : 'w-[90%]'}`}>
             <label
@@ -223,6 +240,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
             </TableHead>
             <TableBody>
               {rows && rows.map((row, index) => {
+
                 return (
                   <TableRow key={index} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative' }}>
 
@@ -327,4 +345,4 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   );
 };
 
-export default FooterFormularioRegistro;
+export default FooterFormularioEdicionGuia;

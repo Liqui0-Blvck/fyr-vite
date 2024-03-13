@@ -15,10 +15,10 @@ export type TGuia = {
   tara_camion_2: number;
   terminar_guia: boolean;
   numero_guia_productor: number;
-  nombre_camion: string,
-  nombre_camionero: string,
-  nombre_productor: string,
-  nombre_comercializador: string
+  nombre_camion: string;
+  nombre_camionero: string;
+  nombre_productor: string;
+  nombre_comercializador: string;
 };
 
 export type TCamion = {
@@ -102,10 +102,25 @@ export type TUsuario = {
 };
 
 export type TEnvaseEnGuia = {
-  id: number,
-  variedad: string,
-  tipo_producto: string,
-  cantidad_envases: number,
-  envase: number,
-  recepcionmp: number
-}
+  id: number;
+  variedad: string;
+  tipo_producto: string;
+  cantidad_envases: number;
+  envase: number;
+  recepcionmp: number;
+};
+
+export type TLoteGuia = {
+  id: number;
+  envases: TEnvaseEnGuia[];
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  kilos_brutos_1: number;
+  kilos_brutos_2: number;
+  kilos_tara_1: number;
+  kilos_tara_2: number;
+  estado_recepcion: string;
+  numero_lote: number;
+  guiarecepcion: number;
+  creado_por: number;
+};
