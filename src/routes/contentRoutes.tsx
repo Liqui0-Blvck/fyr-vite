@@ -57,6 +57,10 @@ const EdicionGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formular
 const DetalleGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Detalle/Detalle Guia/DetalleGuia.tsx'))
 
 
+
+// CONTROL CALIDAD
+const ControlCalidad = lazy(() => import('../pages/control calidad/ListaControlCalidad.tsx'))
+
 /**
  * Other
  */
@@ -99,6 +103,12 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/registro-guia-recepcion', element: <RegistroGuiaRecepcion /> },
 	{ path: '/app/edicion-guia-recepcion/:id', element: <EdicionGuiaRecepcion /> },
 	{ path: '/app/recepciomp/:id', element: <DetalleGuiaRecepcion /> },
+
+
+
+	// CONTROL CALIDAD
+	{ path: '/app/control-calidad/', element: <ControlCalidad /> },
+
 
 
 

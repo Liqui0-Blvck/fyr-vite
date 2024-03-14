@@ -34,9 +34,10 @@ interface Row {
 
 interface IFooterProps {
   data: TGuia,
+  refresh: Dispatch<SetStateAction<boolean>> 
 }
 
-const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
+const FooterDetalleGuia: FC<IFooterProps> = ({ data, refresh }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
   const base_url = process.env.VITE_BASE_URL_DEV
@@ -144,9 +145,8 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
   })) ?? []
 
   const camionAcoplado = camiones?.find(camion => camion?.id === Number(data?.camion))?.acoplado
-  const estadoActivoCoincide = estadoRecepcion.find((estado) => estado.value === (estadoActivo ? estadoActivo : '1'))
 
-  console.log(estadoActivoCoincide)
+
 
   return (
     <div>
@@ -168,7 +168,11 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data && data.lotesrecepcionmp.map((row: TLoteGuia) => {  
+              {data && data.lotesrecepcionmp.map((row: TLoteGuia) => { 
+                console.log(row)
+                const estadoActivoCoincide = estadoRecepcion.find((estado) => estado.value === (row.estado_recepcion ? row.estado_recepcion : '1'))
+                console.log(estadoActivoCoincide)
+
 
                 return (
                   <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative', height: 10 }}>
@@ -219,7 +223,6 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
                         {
                           [...new Set(row?.envases.map(envase => envase.variedad))].map(variedadId => {
                             const variedad_nombre = variedadFilter.find(variedad => variedad.value === variedadId)?.label;
-                            console.log(variedad_nombre)
                             return (
                               <span key={variedadId} className='text-xl'>{variedad_nombre}</span>
                             );
@@ -283,9 +286,9 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
                               textTool='Detalle'
                               size={800}
                               width={`md:w-20 lg:w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-                              textButton='Iniciar Inspección'
+                              textButton={`${estadoActivoCoincide?.label}`}
                             >
-                              <ModalBasicText id={row.id} estadoActivo={setEstadoActivo} setOpen={setOpenModalConfirmacion} numero_estado={`${estadoActivoCoincide?.value}`} id_lote={row.id}/>
+                              <ModalBasicText id={row.id} estadoActivo={setEstadoActivo} setOpen={setOpenModalConfirmacion} numero_estado={`${estadoActivoCoincide?.value}`} id_lote={row.id} refresh={refresh}/>
                             </ModalRegistro>
                           )
                           : (
@@ -298,7 +301,7 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
                               width={`md:w-20 lg:w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                               textButton={`${estadoActivoCoincide?.label}`}
                             >
-                              <ModalBasicText id={row.id} estadoActivo={setEstadoActivo} setOpen={setOpenModalConfirmacion} numero_estado={`${estadoActivoCoincide?.value}`}/>
+                              <ModalBasicText id={row.id} estadoActivo={setEstadoActivo!} setOpen={setOpenModalConfirmacion!} numero_estado={`${estadoActivoCoincide?.value}`} refresh={refresh}/>
                             </ModalRegistro>
                           )
                       }

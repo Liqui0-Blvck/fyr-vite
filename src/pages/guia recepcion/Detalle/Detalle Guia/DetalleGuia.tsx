@@ -308,7 +308,7 @@ const DetalleGuia = () => {
       {
         nuevoLote
           ? <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
-          : <FooterDetalleGuia data={guia_recepcion!} />
+          : <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh}/>
       }
     </div>
   )

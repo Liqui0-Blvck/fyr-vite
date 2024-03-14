@@ -14,13 +14,15 @@ import { TControlCalidad } from '../../../types/registros types/registros.types'
 
 interface IFormCC {
   refresh?: Dispatch<SetStateAction<boolean>>
-  setOpen?: Dispatch<SetStateAction<boolean>>
+  setOpen: Dispatch<SetStateAction<boolean>>
   id_lote: number
 }
 
 const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_lote }) => {
+  
 
-  const { authTokens, validate } = useAuth()
+  console.log(id_lote)
+  const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
   const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad[]>(
@@ -29,7 +31,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
     `/api/control-calidad/recepcionmp/?search=${id_lote}`
   ) 
 
-  console.log(control_calidad)
+  console.log(userID)
 
   useEffect(() => {
     let isMounted = true
@@ -66,15 +68,16 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
           body: JSON.stringify({
             ...values,
             recepcionmp: id_lote,
+            cc_registrado_por: userID?.user_id
           })
         })
         if (res.ok) {
           toast.success("El control de calidad fue registrado exitosamente!!")
-          // refresh(true)
-          // setOpen(false)
+          setOpen(false)
 
         } else {
           toast.error("No se pudo registrar el control de calidad, volver a intentar")
+          
         }
       } catch (error) {
         console.log(error)
@@ -91,12 +94,6 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
     { id: 2, value: false, label: 'No'}
   ];
 
-  const acoplados = TIPO_ACOPLADO?.map((acoplado) => ({
-    value: acoplado.values,
-    label: acoplado.label
-  })) ?? []
-
-  const options: TSelectOptions | [] = acoplados
 
 
   return (
