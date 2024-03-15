@@ -53,9 +53,6 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
     
   );
 
-  console.log(id_guia)
-  console.log(id_lote)
-
   const { data: loteEnGuia } = useAuthenticatedFetch<TLoteGuia>(
     authTokens,
     validate,
@@ -68,14 +65,6 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
     `/api/envasesmp/`
   )
 
-  console.log(loteEnGuia)
-
-
-  // const envasesList = envases?.map((envase: TEnvases) => ({
-  //   value: String(envase.id),
-  //   label: envase.nombre
-  // })) ?? []
-
   const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
     value: String(variedad.value),
     label: variedad.label
@@ -85,11 +74,6 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
     value: String(producto.value),
     label: producto.label
   })) ?? []
-
-  // const optionEnvases: TSelectOptions | [] = envasesList
-  const optionsVariedad: TSelectOptions | [] = variedadFilter
-  const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
-  // const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
   return (
     <div>
@@ -107,35 +91,34 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
             </TableHead>
             <TableBody>
               {loteEnGuia && loteEnGuia.envases.map((row: TEnvaseEnGuia) => {
-                console.log(row)
                 const nombre_envase = envases?.find(envaseList => envaseList.id === row.envase)?.nombre
                 const nombre_variedad = variedadFilter.find(variedad => variedad.value === row.variedad)?.label;
                 const nombre_producto = tipoFrutaFilter.find(producto => producto.value === row.tipo_producto)?.label
 
                 return (
-                  <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative'}}>
+                  <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative',}}>
                     
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid black', paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1}}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl' >{nombre_envase}</span>
+                        <span className='text-xl text-center'>{nombre_envase}</span>
                       </div>
                     </TableCell>
 
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid white', paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl' >{row.cantidad_envases!}</span>
+                        <span className='text-xl text-center' >{row.cantidad_envases!}</span>
                       </div>
                     </TableCell>
 
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid white', paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl'>{nombre_variedad}</span>
+                        <span className='text-xl text-center'>{nombre_variedad}</span>
                       </div>
                     </TableCell>
                     
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#27272A' : '#F4F4F5'}`,borderRight: '4px solid white', paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1 }}>
                     <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl'>{nombre_producto}</span>
+                        <span className='text-xl text-center'>{nombre_producto}</span>
                       </div>
                     </TableCell>
 

@@ -271,6 +271,7 @@ const FormularioRegistroGuiaRecepcion = () => {
               : guiaGenerada
                   ? (
                     <button
+                      type='submit'
                       className={`${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
                       ml-10 mt-10 px-6 py-3 rounded-md font-semibold text-md
                       `}

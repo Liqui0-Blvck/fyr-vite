@@ -2,12 +2,13 @@ import React, { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import Modal, { ModalBody, ModalFooter, ModalHeader } from './ui/Modal';
 import Button from './ui/Button';
 import { Tooltip } from 'antd';
+import useDarkMode from '../hooks/useDarkMode';
 
 
 interface IComponentProps {
   children: ReactNode
   open: boolean
-  setOpen: Dispatch<SetStateAction<boolean>>
+  setOpen: Dispatch<SetStateAction<boolean | null>>
   title: string
   textButton?: string
   icon?: ReactNode
@@ -18,12 +19,13 @@ interface IComponentProps {
 }
 
 const ModalRegistro: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool, width, height }) => {
+  const { isDarkTheme } = useDarkMode()
   return (
     <>
       <Tooltip title={textTool}>
         <button
           type='button'
-          className={`${width} ${height} rounded-md flex items-center justify-center text-white'`}
+          className={`${width} ${height} text-[14px] font-700 rounded-md flex items-center justify-center ${isDarkTheme ? 'text-white' : 'text-black' }`}
           onClick={() => setOpen(true)}>
           {textButton || icon}
         </button>

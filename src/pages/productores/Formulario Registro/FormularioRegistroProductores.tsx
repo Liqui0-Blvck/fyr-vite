@@ -13,6 +13,7 @@ import Card, { CardBody, CardHeader } from '../../../components/ui/Card'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { productorSchema } from '../../../services/Validator'
 
 interface IRegion {
   region_id: number
@@ -54,6 +55,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
       email: "",
       numero_contrato: null
     },
+    validationSchema: productorSchema,
     onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/productores/`, {

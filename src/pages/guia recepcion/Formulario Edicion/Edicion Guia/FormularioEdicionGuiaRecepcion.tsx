@@ -8,15 +8,18 @@ import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { FC, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { ACTIVO } from '../../../../constants/select.constanst'
-import FooterFormularioEdicion from './FooterFormularioEdicionGuiaRecepcion'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'
 
+interface IFormularioEditable {
+  refresh: Dispatch<SetStateAction<boolean | null>>
+  isOpen: Dispatch<SetStateAction<boolean | null>>
+}
 
-const FormularioEdicionGuiaRecepcion = () => {
+const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isOpen }) => {
   const { authTokens, validate, userID } = useAuth()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -83,16 +86,17 @@ const FormularioEdicionGuiaRecepcion = () => {
       camion: null
     },
     onSubmit: async (values: any) => {
+      console.log(values.tara_camion_1)
       try {
-        const res = await fetch(`${base_url}/api/recepcionmp/`, {
-          method: 'POST',
+        const res = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values,
-            estado_recepcion: 1,
+            estado_recepcion: 4,
             creado_por: userID?.user_id
 
           })
@@ -104,6 +108,8 @@ const FormularioEdicionGuiaRecepcion = () => {
           setDatosGuia(data)
           toast.success("la guia de recepción fue registrado exitosamente!!")
           setGuiaGenerada(true)
+          refresh(true)
+          isOpen(false)
 
         } else {
           toast.error("No se pudo registrar la guia de recepción volver a intentar")
@@ -142,8 +148,10 @@ const FormularioEdicionGuiaRecepcion = () => {
   const optionsCamion: TSelectOptions | [] = camionFilter
   const optionsProductor: TSelectOptions | [] = productoresFilter
   const optionsConductor: TSelectOptions | [] = conductoresFilter
-  const optionsComercializador: TSelectOptions | [] = comercializadoresFilter
-  const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
+  const optionsComercializador: TSelectOptions | [] = comercializadoresFilter 
+  
+  
+
 
   useEffect(() => {
     let isMounted = true
@@ -170,6 +178,7 @@ const FormularioEdicionGuiaRecepcion = () => {
   }, [guia_recepcion])
 
 
+  const camionAcoplado = camiones?.find(camion => camion.id === Number(guia_recepcion?.camion))?.acoplado
   console.log(isDarkTheme)
 
   return (
@@ -177,12 +186,12 @@ const FormularioEdicionGuiaRecepcion = () => {
       <form
         onSubmit={formik.handleSubmit}
         className={`flex flex-col md:grid md:grid-cols-6 gap-x-3
-      gap-y-10 mt-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6 
+      gap-y-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6 
       rounded-md`}
       >
 
-        <div className='border border-gray-300 rounded-md col-span-6'>
-          <h1 className='text-center text-2xl p-4'>Registro Guía Recepción Para Materias Primas Origen</h1>
+        <div className='rounded-md col-span-6'>
+          {/* <h1 className='text-center text-xl p-4'>Registro Guía Recepción Para Materias Primas Origen</h1> */}
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
@@ -192,10 +201,13 @@ const FormularioEdicionGuiaRecepcion = () => {
             id='productor'
             name='productor'
             placeholder='Selecciona un productor'
+            value={optionsProductor.find(productor => productor?.value === String(formik.values.productor))}
             className='h-14'
             onChange={(value: any) => {
               formik.setFieldValue('productor', value.value)
             }}
+            disabled
+
           />
 
         </div>
@@ -207,15 +219,18 @@ const FormularioEdicionGuiaRecepcion = () => {
             id='camionero'
             name='camionero'
             placeholder='Selecciona un chofer'
+            value={optionsProductor.find(productor => productor?.value === String(formik.values.productor))}
             className='h-14'
             onChange={(value: any) => {
               formik.setFieldValue('camionero', value.value)
             }}
+            disabled
+
           />
 
         </div>
 
-        <div className='md:row.start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
+        <div className='md:row-start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
           <label htmlFor="camion">Camion: </label>
           <SelectReact
             options={optionsCamion}
@@ -226,6 +241,8 @@ const FormularioEdicionGuiaRecepcion = () => {
             onChange={(value: any) => {
               formik.setFieldValue('camion', value.value)
             }}
+            disabled
+
           />
         </div>
 
@@ -240,10 +257,12 @@ const FormularioEdicionGuiaRecepcion = () => {
             onChange={(value: any) => {
               formik.setFieldValue('comercializador', value.value)
             }}
+            disabled
+
           />
         </div>
 
-        <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center justify-center'>
+        <div className='md:rw-start-3 md:col-span-2 md:col-start-3 md:flex-col items-center justify-center'>
           <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
 
           <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
@@ -259,14 +278,16 @@ const FormularioEdicionGuiaRecepcion = () => {
                     onChange={(e) => {
                       formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
                     }}
-                    selectedValue={undefined} />
+                    selectedValue={undefined} 
+                    disabled
+                    />
                 );
               })}
             </RadioGroup>
           </div>
         </div>
 
-        <div className='md:col-span-2  md:col-start-5 md:flex-col items-center'>
+        <div className='md:row-start-3 md:col-span-2  md:col-start-5 md:flex-col items-center'>
           <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
           <Input
             type='text'
@@ -274,27 +295,44 @@ const FormularioEdicionGuiaRecepcion = () => {
             onChange={formik.handleChange}
             className='py-3'
             value={formik.values.numero_guia_productor!}
+            disabled
+          />
+        </div>
+
+        <div className={`md:row-start-4 ${!camionAcoplado ? 'md:col-start-2 md:col-span-4': 'md:col-start-1 md:col-span-3 '} md:flex-col items-center`}>
+          <label htmlFor="tara_camion_1">Tara Camión: </label>
+          <Input
+            type='text'
+            name='tara_camion_1'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.tara_camion_1!}
           />
         </div>
 
 
-
         {
-          guiaGenerada
-            ? null
-            :
-            (
-              <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-                <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3'>Continuar con la guia</button>
+          camionAcoplado
+            ? (
+              <div className='md:row-start-4 md:col-span-3 md:col-start-4 md:flex-col items-center'>
+                <label htmlFor="tara_camion_">Tara Camión Acoplado: </label>
+                <Input
+                  type='text'
+                  name='tara_camion_2'
+                  onChange={formik.handleChange}
+                  className='py-3'
+                  value={formik.values.tara_camion_2!}
+                  
+                />
               </div>
             )
+            : null
         }
+
+        <div className='md:row-start-5 md:col-start-5 md:col-span-2 relative w-full'>
+          <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3'>Añadir Tara</button>
+        </div>
       </form>
-
-      <FooterFormularioEdicion data={datosGuia!} variedad={variedad} />
-
-
-
     </div>
   )
 }

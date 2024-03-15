@@ -33,8 +33,8 @@ interface Row {
 interface IFooterProps {
   data: TGuia
   variedad: boolean
-  detalle: Dispatch<SetStateAction<boolean>>
-  refresh: Dispatch<SetStateAction<boolean>>
+  detalle?: Dispatch<SetStateAction<boolean>>
+  refresh?: Dispatch<SetStateAction<boolean>>
 }
 
 const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle, refresh }) => {

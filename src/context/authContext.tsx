@@ -109,24 +109,24 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   };
 
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        if (authTokens) {
-          const isTokenValid = await validate(authTokens);
-          if (!isTokenValid) {
-            await updateToken();
-          }
-        }
-      } catch (error) {
-        console.error("Error al verificar o actualizar el token:", error);
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     try {
+  //       if (authTokens) {
+  //         const isTokenValid = await validate(authTokens);
+  //         if (!isTokenValid) {
+  //           await updateToken();
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error al verificar o actualizar el token:", error);
 
-      }
-    }, 1000 * 60 * 4);
+  //     }
+  //   }, 1000 * 60 * 4);
 
 
-    return () => clearInterval(interval);
-  }, [authTokens, validate, updateToken]);
+  //   return () => clearInterval(interval);
+  // }, [authTokens, validate, updateToken]);
 
 
   // Función para cerrar sesión

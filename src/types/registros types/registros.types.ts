@@ -4,6 +4,7 @@ export type TGuia = {
   camion: string;
   camionero: string;
   estado_recepcion: string;
+  estado_recepcion_label: string;
   productor: string;
   comercializador: string;
   creado_por: string;
@@ -129,8 +130,9 @@ export type TLoteGuia = {
 export type TControlCalidad = {
   id: number,
   estado_aprobacion_cc: number,
-  estado_cc: number,
+  estado_cc: string,
   presencia_insectos: boolean,
+  presencia_insectos_selected: string,
   humedad: string,
   observaciones: string,
   fecha_modificacion: string,

@@ -23,8 +23,6 @@ const StyledButton: FC<IStyledButtonProps> = ({ text, icon, status }) => {
 			if (darkModeStatus === DARK_MODE.DARK) {
 				setDarkModeStatus(DARK_MODE.LIGHT);
 			} else if (darkModeStatus === DARK_MODE.LIGHT) {
-				setDarkModeStatus(DARK_MODE.SYSTEM);
-			} else {
 				setDarkModeStatus(DARK_MODE.DARK);
 			}
 		} else {

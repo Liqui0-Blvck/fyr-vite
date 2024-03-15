@@ -170,4 +170,22 @@ export const ESTADOSGUIARECEPCION_MP = [
   
 
 
+export const ESTADOS_GUIA_MP = [
+  { value: '1', label: 'Iniciar Inspección'},
+  { value: '2', label: 'Registrar Control Calidad'}
+]
+
+export const ESTADO_CONTROL = [
+  { value: '1', label: 'Lote Aprobado x CC'},
+  { value: '0', label: 'Lote Rechazado x CC'},
+  { value: '2', label: 'Pendiente CC'},
+]
+
   
+
+
+export const perfilesPermitidos = ['Recepcion', 'Control Calidad', 'Bodega']
+export const usuarioRole = {
+  name: 'Nicolas',
+  area: 'Recepcion' 
+}

@@ -4,17 +4,18 @@ import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
-import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../../../types/registros types/registros.types'
+import { TCamion, TComercializador, TConductor, TControlCalidad, TGuia, TLoteGuia, TProductor } from '../../../../types/registros types/registros.types'
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { FC, useEffect, useState } from 'react'
-import { ACTIVO } from '../../../../constants/select.constanst'
+import { ACTIVO, ESTADO_CONTROL, usuarioRole } from '../../../../constants/select.constanst'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'
 import FooterDetalleGuia from './FooterDetalleGuia'
 import FooterFormularioEdicionGuia from '../../Formulario Edicion/Edicion Guia/FooterFormularioEdicionGuiaRecepcion'
+import FooterDetalleGuiaFinalizada from './FooterDetalleGuiaFinalizada'
 
 
 const DetalleGuia = () => {
@@ -53,6 +54,12 @@ const DetalleGuia = () => {
     validate,
     '/api/comercializador/'
   )
+
+  const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad[]>(
+    authTokens,
+    validate,
+    `/api/control-calidad/recepcionmp`
+  ) 
 
   const optionsRadio = [
     { id: 1, value: true, label: 'Si' },
@@ -111,6 +118,25 @@ const DetalleGuia = () => {
     }
   })
 
+  const estado_guia_update = async (id: any) => {
+    const res = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        estado_recepcion: 3
+      })
+    })
+
+    if (res.ok){
+      toast.success('Guia Finalizada')
+      setRefresh(true)
+    } else {
+      toast.error('No se pudo finalizar la guia')
+    }
+  }
+
 
 
   const camionFilter = camiones?.map((camion: TCamion) => ({
@@ -137,6 +163,25 @@ const DetalleGuia = () => {
     value: String(variedad.values),
     label: variedad.label
   })) ?? []
+
+  // const controlesRechazados = control_calidad?.
+  //   filter(control => control.recepcionmp === lote.id && control.estado_cc === '0')
+  //   .map(control => {
+  //       return control; // Puedes devolver el control si lo necesitas para otros propósitos
+  //   }).length;
+
+
+  // const controlesAprobados = control_calidad?.
+  //   filter(control => control.recepcionmp === lote.id && control.estado_cc === '1')
+  //   .map(control => {
+  //       return control; // Puedes devolver el control si lo necesitas para otros propósitos
+  //   }).length;
+
+  // const controlesEnEspera = control_calidad?.
+  //   filter(control => control.recepcionmp === lote.id && control.estado_cc === '2')
+  //   .map(control => {
+  //       return control; // Puedes devolver el control si lo necesitas para otros propósitos
+  //   }).length;
 
   const optionsCamion: TSelectOptions | [] = camionFilter
   const optionsProductor: TSelectOptions | [] = productoresFilter
@@ -171,7 +216,7 @@ const DetalleGuia = () => {
   }, [guia_recepcion])
 
 
-  console.log(formik.values)
+  console.log(control_calidad)
 
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
@@ -182,81 +227,44 @@ const DetalleGuia = () => {
       rounded-md`}
       >
 
-        <div className='border border-gray-300 rounded-md col-span-6'>
-          <h1 className='text-center text-2xl p-4'>Guía Recepción Materia Prima</h1>
-          <h4 className='text-center text-xl p-4'>Estado: {guia_recepcion?.estado_recepcion}</h4>
+        <div className='border border-[#18181B] rounded-md col-span-6'>
+          <h1 className='text-center text-2xl p-2'>Guía Recepción Materia Prima</h1>
+          <h5 className='text-center text-xl p-2'>Estado: {guia_recepcion?.estado_recepcion_label}</h5>
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="productor">Productor: </label>
-          <SelectReact
-            options={optionsProductor}
-            id='productor'
-            name='productor'
-            placeholder='Selecciona un productor'
-            className='h-14'
-            value={optionsProductor.find(productor => productor?.value === String(formik.values.productor))}
-            onChange={(value: any) => {
-              formik.setFieldValue('productor', value.value)
-            }}
-            disabled
-          />
-
+          <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+            <span>{guia_recepcion?.nombre_productor}</span>
+          </div>
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
           <label htmlFor="camionero">Chofer: </label>
-          <SelectReact
-            options={optionsConductor}
-            id='camionero'
-            name='camionero'
-            placeholder='Selecciona un chofer'
-            className='h-14'
-            value={optionsConductor.find(conductor => conductor?.value === String(formik.values.camionero))}
-            onChange={(value: any) => {
-              formik.setFieldValue('camionero', value.value)
-            }}
-            disabled
-          />
+          <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+            <span>{guia_recepcion?.nombre_camionero}</span>
+          </div>
 
         </div>
 
         <div className='md:row.start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
           <label htmlFor="camion">Camion: </label>
-          <SelectReact
-            options={optionsCamion}
-            id='camion'
-            name='camion'
-            placeholder='Selecciona un camión'
-            className='h-14'
-            value={optionsCamion.find(camion => camion?.value === String(formik.values.camion))}
-            onChange={(value: any) => {
-              formik.setFieldValue('camion', value.value)
-            }}
-            disabled
-          />
+          <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+            <span>{guia_recepcion?.nombre_camion}</span>
+          </div>
         </div>
 
         <div className='md:row-start-3 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="comercializador">Comercializador: </label>
-          <SelectReact
-            options={optionsComercializador}
-            id='comercializador'
-            name='comercializador'
-            placeholder='Selecciona una opción'
-            className='h-14'
-            value={optionsComercializador.find(comercializador => comercializador?.value === String(formik.values.comercializador))}
-            onChange={(value: any) => {
-              formik.setFieldValue('comercializador', value.value)
-            }}
-            disabled
-          />
+          <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+            <span>{guia_recepcion?.comercializador}</span>
+          </div>
         </div>
 
         <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center justify-center'>
           <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
 
-          <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
+          <div className={`w-full h-12  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
             <RadioGroup isInline>
               {optionsRadio.map(({ id, value, label }) => {
                 return (
@@ -279,15 +287,28 @@ const DetalleGuia = () => {
 
         <div className='md:col-span-2  md:col-start-5 md:flex-col items-center'>
           <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
-          <Input
-            type='text'
-            name='numero_guia_productor'
-            onChange={formik.handleChange}
-            className='py-3'
-            value={formik.values.numero_guia_productor!}
-            disabled
-          />
+          <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+            <span>{guia_recepcion?.numero_guia_productor}</span>
+          </div>
         </div>
+
+        {
+          guia_recepcion?.tara_camion_2
+            ? (
+              <div className='md:row-start-4 md:col-span-2  md:col-start-3 md:flex-col items-center'>
+                <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
+                <Input
+                  type='text'
+                  name='numero_guia_productor'
+                  onChange={formik.handleChange}
+                  className='py-3'
+                  value={formik.values.numero_guia_productor!}
+                  disabled
+                />
+              </div>  
+              )
+            : null
+        }
       </form>
 
       {
@@ -295,10 +316,26 @@ const DetalleGuia = () => {
           ? null
           : guia_recepcion?.mezcla_variedades
               ? (
-                <div
-                  onClick={() => setNuevoLote(prev => !prev)}
-                  className='ml-10 bg-blue-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer'>
-                  <span className='text-white'>Agregar Lote</span>
+                <div className='w-full flex ml-6 gap-5'>
+                  <div
+                    onClick={() => setNuevoLote(prev => !prev)}
+                    className=' bg-blue-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
+                    <span className='text-white'>Agregar Lote</span>
+                  </div>
+
+                  {
+                    (guia_recepcion.lotesrecepcionmp.length >= 2 && usuarioRole.area === 'Recepcion' && guia_recepcion.estado_recepcion === '3')
+                      ? (
+                        <div
+                          onClick={() => estado_guia_update(id)}
+                          className=' bg-slate-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
+                          <span className='text-white'>Finalizar Guia</span>
+                        </div>
+                        )
+                      : null
+                  }
+
+                  
                 </div>
                 )
               : null
@@ -306,9 +343,12 @@ const DetalleGuia = () => {
 
 
       {
-        nuevoLote
-          ? <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
-          : <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh}/>
+        guia_recepcion?.estado_recepcion === '4'
+          ? <FooterDetalleGuiaFinalizada data={guia_recepcion!} refresh={setRefresh}/>
+          : nuevoLote
+              ? <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
+              : <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh}/>
+
       }
     </div>
   )

@@ -166,11 +166,6 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     })) ?? []
   
 
-  // const variedadFilter = VARIEDADES_MP?.map((variedad) => ({
-  //   value: String(variedad.value),
-  //   label: variedad.label
-  // })) ?? []
-
   const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
     value: String(producto.value),
     label: producto.label

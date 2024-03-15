@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import React, { FC, useState, Dispatch, SetStateAction } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -17,60 +17,46 @@ import Card, {
 	CardHeaderChild,
 	CardTitle,
 } from '../../../components/ui/Card';
-import Button from '../../../components/ui/Button';
 import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/form/Input';
 import TableTemplate, {
 	TableCardFooterTemplate,
 } from '../../../templates/common/TableParts.template';
 import Badge from '../../../components/ui/Badge';
-
 import Subheader, {
 	SubheaderLeft,
 	SubheaderRight,
 } from '../../../components/layouts/Subheader/Subheader';
 import FieldWrap from '../../../components/form/FieldWrap';
-import { useAuth } from '../../../context/authContext';
 import { format } from "@formkit/tempo"
-import { TGuia } from "../../../types/registros types/registros.types"
+import { TControlCalidad, TEnvases } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
+import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';
-import useDarkMode from '../../../hooks/useDarkMode';
 
 
 
-const columnHelper = createColumnHelper<TGuia>();
+const columnHelper = createColumnHelper<TControlCalidad>();
 
 
-interface IGuiaProps {
-	data: TGuia[] | []
+
+
+interface IControlProps {
+	data: TControlCalidad[] | []
 	refresh: Dispatch<SetStateAction<boolean>>
 }
 
-
-
-const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
-	const { authTokens } = useAuth()
+const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
-	const { isDarkTheme } = useDarkMode();
-
-	const cargosPermitidos = ['Recepcionista', 'Finanzas']
-
-	const role = {
-    username: 'Nicolas',
-    cargo: 'Recepcionista',
-  }
-
+	const [modalStatus, setModalStatus] = useState<boolean>(false);
+	const { isDarkTheme } = useDarkMode()
 
 	const asisteDelete = async (id: number) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
-		const response = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
+		const response = await fetch(`${base_url}/api/envasesmp/${id}/`, {
 			method: 'DELETE',
-			headers: {
-				'Authorization': `Bearer ${authTokens?.access}`
-			}
 		})
 		if (response.ok) {
 			refresh(true)
@@ -79,54 +65,45 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 		}
 	}
 
-	const editLinkProductor = `/app/productor/`
-	const createLinkProductor = `/app/registro-guia-recepcion/`
+	const editLinkProductor = `/app/envases/`
 
 	const columns = [
-		columnHelper.accessor('id', {
-			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-					<div className='font-bold w-20'>{`${info.row.original.id}`}</div>
-				</Link>
-			),
-			header: 'N° Guia '
-		}),
-		columnHelper.accessor('camion', {
+		columnHelper.accessor('humedad', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold '>{`${info.row.original.nombre_camion}`}</div>
+					<div className='font-bold '>{`${info.row.original.humedad}`}</div>
 				</Link>
 			),
-			header: 'Camión',
+			header: 'Nivel Humedad',
 		}),
-		columnHelper.accessor('camionero', {
+		columnHelper.accessor('presencia_insectos', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold truncate'>{`${info.row.original.nombre_camionero}`}</div>
+					<div className='font-bold'>{`${info.row.original.presencia_insectos_selected}`}</div>
 				</Link>
 			),
-			header: 'Conductor',
+			header: 'Presencia Insectos',
 		}),
-		columnHelper.accessor('comercializador', {
+		columnHelper.accessor('observaciones', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${info.row.original.nombre_comercializador}`}</div>
+					<div className='font-bold'>{`${info.row.original.observaciones}`}</div>
 				</Link>
 			),
-			header: 'Comercializador',
+			header: 'Observaciones',
 		}),
-		columnHelper.accessor('lotesrecepcionmp', {
+		columnHelper.accessor('recepcionmp', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${info.row.original.lotesrecepcionmp.length}`}</div>
+					<div className='font-bold'>{`${info.row.original.recepcionmp}`}</div>
 				</Link>
 			),
-			header: 'Lotes',
+			header: 'N° Lote',
 		}),
-		columnHelper.accessor('estado_recepcion', {
+		columnHelper.accessor('estado_cc', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${info.row.original.estado_recepcion_label}`}</div>
+					<div className='font-bold'>{`${info.row.original.estado_cc}`}</div>
 				</Link>
 			),
 			header: 'Estado',
@@ -135,48 +112,49 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const id = info.row.original.id;
+				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
 				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
 
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
-						<Link to={`/app/recepciomp/${info.row.original.id}`}
-							className={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 
-								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
-								 hover:scale-105 rounded-md flex items-center justify-center`}>
-							<HeroEye style={{ fontSize: 25 }} />
-						</Link>
+						<ModalRegistro
+							open={detalleModalStatus}
+							setOpen={setDetalleModalStatus}
+							textTool='Detalle'
+							title='Detalle Comercializador'
+							size={900}
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroEye style={{ fontSize: 25 }} />}
+						>
+							{/* <DetalleComercializador id={id} /> */}
+							hola
+						</ModalRegistro>
 
-						
+						<ModalRegistro
+							open={edicionModalStatus}
+							setOpen={setEdicionModalStatus}
+							title='Edición Comercializador'
+							textTool='Editar'
+							size={900}
+							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							icon={<HeroPencilSquare style={{ fontSize: 25 }}
+							/>}
+						>
+							{/* <FormularioEdicionComercializador refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
+							hola
+						</ModalRegistro>
 
-						{
-							!cargosPermitidos.includes(role.cargo)
-								? null
-								: (
-									<>
-										<Link to={`/app/edicion-guia-recepcion/${info.row.original.id}`}
-											className={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 
-												${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
-												hover:scale-105 rounded-md flex items-center justify-center`}>
-											<HeroPencilSquare style={{ fontSize: 25 }} />
-										</Link>
-										<Tooltip title='Eliminar'>
-											<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
-												<HeroXMark style={{ fontSize: 25 }} />
-											</button>
-										</Tooltip>
-									</>
-									)
-						}
+						<Tooltip title='Eliminar'>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+								<HeroXMark style={{ fontSize: 25 }} />
+							</button>
+						</Tooltip>
 					</div>
 				);
 			},
 			header: 'Acciones'
 		}),
-
-
 	];
-
-
 
 	const table = useReactTable({
 		data,
@@ -198,7 +176,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaProductores'>
+		<PageWrapper name='ListaEnvases'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap
@@ -218,25 +196,31 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 						<Input
 							id='search'
 							name='search'
-							placeholder='Busca la guia...'
+							placeholder='Busca el control...'
 							value={globalFilter ?? ''}
 							onChange={(e) => setGlobalFilter(e.target.value)}
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
 				<SubheaderRight>
-					<Link to={`${createLinkProductor}`}>
-						<Button variant='solid' icon='HeroPlus'>
-							Agregar Guia Recepción
-						</Button>
-					</Link>
+					{/* <ModalRegistro
+						open={modalStatus}
+						setOpen={setModalStatus}
+						title='Registro Envases'
+						textButton='Agregar Envases'
+						width={`px-6 py-3 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+
+					>
+						<FormularioRegistroEnvases refresh={refresh} setOpen={setModalStatus} />
+					</ModalRegistro> */}
+					algo
 				</SubheaderRight>
 			</Subheader>
 			<Container>
 				<Card className='h-full'>
 					<CardHeader>
 						<CardHeaderChild>
-							<CardTitle>Guias de Recepción</CardTitle>
+							<CardTitle>Controles de Calidad</CardTitle>
 							<Badge
 								variant='outline'
 								className='border-transparent px-4'
@@ -257,4 +241,4 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 	);
 };
 
-export default TablaGuiaRecepcion;
+export default TablaControlCalidad;

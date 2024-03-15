@@ -161,3 +161,170 @@
 		}
 	}
 }
+
+
+
+
+.table-container {
+	padding: 20px;
+	height: 350px;
+	/* background: black; */
+}
+
+.table {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	/* background-color: black; */
+	
+	
+}
+
+.table-header {
+	width: 100%;
+	/* background-color: #232222; */
+	display: flex;	
+	height: 5px;
+	border: 1px solid rgba(146, 140, 140, 0.281) !important
+}
+
+.table-row {
+	width: 100%;
+	display: flex;
+}
+
+.table-cell-1 {
+	width: 10%;
+	/* border-right: 1px solid rgba(146, 140, 140, 0.281); */
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.table-cell-2 {
+	width: 11%;
+	/* border-right: 1px solid rgba(146, 140, 140, 0.281); */
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.table-cell-3 {
+	width: 15%;
+	/* border-right: 1px solid rgba(146, 140, 140, 0.281); */
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.table-cell-4 {
+	width: 5%;
+	/* border-right: 1px solid rgba(146, 140, 140, 0.281); */
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.table-cell-5 {
+	width: 12%;
+	/* border-right: 1px solid rgba(146, 140, 140, 0.281); */
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.table-cell-6 {
+	width: 20%;
+	/* border-right: 1px solid rgba(146, 140, 140, 0.281); */
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.table-cell-7 {
+	width: 16%;
+	/* border-right: 1px solid rgba(146, 140, 140, 0.281); */
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.table-body {
+	display: flex;
+	width: 100%;
+	background-color: #232222;
+	border: 1px solid rgba(146, 140, 140, 0.281);
+
+}
+
+.table-row-body {
+	width: 100%;
+	display: flex;
+	border: 1px solid rgba(146, 140, 140, 0.281);
+	height: 10px;
+	
+}
+
+.table-cell-row-1 {
+	width: 5%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 4px !important;
+}
+
+.table-cell-row-2 {
+	width: 11%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-3 {
+	width: 12%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-4 {
+	width: 5%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-5 {
+	width: 12%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-6 {
+	width: 24%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-7 {
+	width: 16%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+

@@ -1,6 +1,7 @@
 import { useAuth } from "../../context/authContext"
 import { useAuthenticatedFetch } from "../../hooks/useAxiosFunction"
 import { TControlCalidad, TGuia } from "../../types/registros types/registros.types"
+import TablaControlCalidad from "./Tabla/TablaControlCalidad"
 // import TablaGuiaRecepcion from "./Tabla/TablaGuiaRecepcion"
 
 
@@ -16,7 +17,7 @@ const ListaControlCalidad = () => {
 
   return (
     <div className="h-full">
-      {/* <TablaGuiaRecepcion data={guia_recepcion ? guia_recepcion : []} refresh={setRefresh} /> */}
+      <TablaControlCalidad data={control_calidad ? control_calidad : []} refresh={setRefresh} />
     </div>
   )
 }

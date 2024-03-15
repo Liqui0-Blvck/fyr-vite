@@ -10,15 +10,16 @@ import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import Radio, { RadioGroup } from '../../../components/form/Radio'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TControlCalidad } from '../../../types/registros types/registros.types'
+import { TControlCalidad, TLoteGuia } from '../../../types/registros types/registros.types'
 
 interface IFormCC {
-  refresh?: Dispatch<SetStateAction<boolean>>
-  setOpen: Dispatch<SetStateAction<boolean>>
-  id_lote: number
+  refresh: Dispatch<SetStateAction<boolean | null>>
+  setOpen: Dispatch<SetStateAction<boolean | null>>
+  id_lote: number,
+  updateEstado: (id: number, estado: string) => void
 }
 
-const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_lote }) => {
+const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_lote, updateEstado }) => {
   
 
   console.log(id_lote)
@@ -38,7 +39,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
 
     if (isMounted && control_calidad){
       formik.setValues({
-        humedad: control_calidad[0]?.humedad,
+        humedad: parseFloat(control_calidad[0]?.humedad),
         presencia_insectos: control_calidad[0].presencia_insectos,
         observaciones: control_calidad[0].observaciones
       })
@@ -51,9 +52,11 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
 
   
 
+  
+
   const formik = useFormik({
     initialValues: {
-      humedad: "",
+      humedad: 0,
       presencia_insectos: false,
       observaciones: ""
     },
@@ -73,7 +76,9 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
         })
         if (res.ok) {
           toast.success("El control de calidad fue registrado exitosamente!!")
+          updateEstado(id_lote,'3')
           setOpen(false)
+          refresh(true)
 
         } else {
           toast.error("No se pudo registrar el control de calidad, volver a intentar")
@@ -106,6 +111,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
         <div className='md:col-span-2 md:flex-col items-center'>
           <label htmlFor="humedad">Humedad: </label>
           <Input
+            type='number'
             name='humedad'
             onChange={formik.handleChange}
             className='py-2'

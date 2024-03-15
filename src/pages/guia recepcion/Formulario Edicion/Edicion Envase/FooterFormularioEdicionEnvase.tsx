@@ -40,7 +40,13 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
   const base_url = process.env.VITE_BASE_URL_DEV
-  const navigate = useNavigate()
+  const navigate = useNavigate()  
+  const [iotBruto, setIotBruto] = useState<boolean>(false)
+  const [iotBrutoAcoplado, setIotBrutoAcoplado] = useState<boolean>(false)
+
+
+  
+
 
   const initialRows = [
     {
@@ -164,11 +170,58 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
     })
   }, [guia_recepcion])
 
+
+
   return (
     <div>
       <form
         onSubmit={formik.handleSubmit}
         className='relative'>
+
+        <div className='w-full mb-5 flex px-5 justify-between'>
+          <div className={`grid grid-cols-4 gap-2 items-center justify-center ${camionAcoplado ? 'w-full' : 'w-[50%]'}`}>
+            <label
+              htmlFor="kilos_brutos_1"
+              className='col-span-3'
+            >Kilos Brutos</label>
+            <Input
+              type='number'
+              name='kilos_brutos_1'
+              className='py-3 row-start-2 col-span-3 w-56'
+              value={formik.values.kilos_brutos_1}
+              onChange={formik.handleChange}
+              disabled={iotBruto ? true : false}
+            />
+            <Switch
+              className='row-start-2 col-start-4 w-16 bg-slate-300'
+              onChange={() => setIotBruto(prev => !prev)} />
+          </div>
+
+          {
+            camionAcoplado
+              ? (
+                <div className='grid grid-cols-4 gap-2 items-center justify-center w-full'>
+                  <label
+                    htmlFor="kilos_brutos_2"
+                    className='col-span-3'
+                  >Kilos Brutos Acoplado</label>
+                  <Input
+                    type='number'
+                    name='kilos_brutos_2'
+                    className='py-3 row-start-2 col-span-3 w-56'
+                    value={formik.values.kilos_brutos_2}
+                    onChange={formik.handleChange}
+                    disabled={iotBrutoAcoplado ? true : false}
+
+                  />
+                  <Switch
+                    className='row-start-2 col-start-4 w-16 bg-slate-300'
+                    onChange={() => setIotBrutoAcoplado(prev => !prev)} />
+                </div>
+              )
+              : null
+          }
+        </div>
         <TableContainer sx={{ height: 350, overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
           <Table sx={{ minWidth: 750, background: `${isDarkTheme ? '#09090B' : 'white'}` }} aria-label="simple table">
             <TableHead >
@@ -177,6 +230,8 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Envase</TableCell>
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Cantidad Envases</TableCell>
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Variedad</TableCell>
+                <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Tipo Producto</TableCell>
+
                 <TableCell align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Acciones</TableCell>
               </TableRow>
             </TableHead>
