@@ -137,7 +137,6 @@ const FormularioRegistroGuiaRecepcion = () => {
   const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
 
 
-  console.log(isDarkTheme)
 
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>

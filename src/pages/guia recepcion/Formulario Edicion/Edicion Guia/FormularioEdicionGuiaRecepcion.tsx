@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
-import { TCamion, TComercializador, TConductor, TGuia, TProductor } from '../../../../types/registros types/registros.types'
+import { TCamion, TComercializador, TConductor, TGuia, TLoteGuia, TProductor } from '../../../../types/registros types/registros.types'
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -17,20 +17,18 @@ import { urlNumeros } from '../../../../services/url_number'
 interface IFormularioEditable {
   refresh: Dispatch<SetStateAction<boolean | null>>
   isOpen: Dispatch<SetStateAction<boolean | null>>
+  guia: TGuia | null
+  lote: TLoteGuia | null
 }
 
-const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isOpen }) => {
+const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isOpen, guia, lote }) => {
   const { authTokens, validate, userID } = useAuth()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
-  const [guiaGenerada, setGuiaGenerada] = useState<boolean>(false)
-  const [guiaID, setGuiaID] = useState<number | null>(null)
-  const [variedad, setVariedad] = useState<boolean>(false)
-  const [activo, setActivo] = useState<boolean>(false)
-  const [datosGuia, setDatosGuia] = useState<TGuia | null>(null)
   const base_url = process.env.VITE_BASE_URL_DEV
-  const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
+
+  console.log(lote)
 
 
   const { data: camiones } = useAuthenticatedFetch<TCamion[]>(
@@ -62,54 +60,66 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
     { id: 2, value: false, label: 'No' }
   ];
 
-  const { data: guia_recepcion } = useAuthenticatedFetch<TGuia>(
+  const { data: loteGuia } = useAuthenticatedFetch<TLoteGuia>(
     authTokens,
     validate,
-    `/api/recepcionmp/${id}`
+    `/api/recepcionmp/${id}/lotes/${lote?.id}`
   )
 
+  console.log(loteGuia)
 
+  const updateEstadoLote = async (id: number, estado: string) => {
+    console.log(estado);
+    const res = await fetch(`${base_url}/api/estado-update/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({  
+        estado_recepcion: estado
+      })
+    });
+
+    if (res.ok) {
+      console.log('si')
+    } else {
+      console.log("Errores sobre errores");
+    }
+  }
+
+
+  
 
   const formik = useFormik({
     initialValues: {
+      kilos_brutos_1: 0,
+      kilos_brutos_2: 0,
+      kilos_tara_1: 0,
+      kilos_tara_2: 0,
       estado_recepcion: null,
-      mezcla_variedades: false,
-      cierre_guia: false,
-      tara_camion_1: null,
-      tara_camion_2: null,
-      terminar_guia: false,
-      numero_guia_productor: null,
+      guiarecepcion: null,
       creado_por: null,
-      comercializador: null,
-      productor: null,
-      camionero: null,
-      camion: null
     },
     onSubmit: async (values: any) => {
-      console.log(values.tara_camion_1)
       try {
-        const res = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
+        const res = await fetch(`${base_url}/api/recepcionmp/${guia?.id}/lotes/${lote?.id}/`, {
           method: 'PATCH',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authTokens?.access}`
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${authTokens?.access}` 
           },
           body: JSON.stringify({
-            ...values,
-            estado_recepcion: 4,
-            creado_por: userID?.user_id
-
+            ...values, 
+            creado_por: userID?.user_id, 
+            estado_recepcion: 3 
           })
-        })
+        });
         if (res.ok) {
-          const data = await res.json()
-          setGuiaID(data.id)
-          setVariedad(data.mezcla_variedades)
-          setDatosGuia(data)
+          updateEstadoLote(lote?.id!, '7')
           toast.success("la guia de recepción fue registrado exitosamente!!")
-          setGuiaGenerada(true)
           refresh(true)
           isOpen(false)
+          
 
         } else {
           toast.error("No se pudo registrar la guia de recepción volver a intentar")
@@ -155,31 +165,25 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
   useEffect(() => {
     let isMounted = true
-    if (guia_recepcion && isMounted) {
+    if (loteGuia && isMounted) {
       formik.setValues({
-        estado_recepcion: guia_recepcion.estado_recepcion,
-        mezcla_variedades: guia_recepcion.mezcla_variedades,
-        cierre_guia: guia_recepcion.cierre_guia,
-        tara_camion_1: guia_recepcion.tara_camion_1,
-        tara_camion_2: guia_recepcion.tara_camion_2,
-        terminar_guia: guia_recepcion.terminar_guia,
-        numero_guia_productor: guia_recepcion.numero_guia_productor,
-        creado_por: guia_recepcion.creado_por,
-        comercializador: guia_recepcion.comercializador,
-        productor: guia_recepcion.productor,
-        camionero: guia_recepcion.camionero,
-        camion: guia_recepcion.camion
+        kilos_brutos_1: loteGuia.kilos_brutos_1,
+        kilos_brutos_2: loteGuia.kilos_brutos_2,
+        estado_recepcion: loteGuia.estado_recepcion,
+        guiarecepcion: loteGuia.guiarecepcion,
+        creado_por: loteGuia.creado_por,
       })
 
     }
     return () => {
       isMounted = false
     }
-  }, [guia_recepcion])
+  }, [loteGuia])
 
 
-  const camionAcoplado = camiones?.find(camion => camion.id === Number(guia_recepcion?.camion))?.acoplado
-  console.log(isDarkTheme)
+  const camionAcoplado = camiones?.find(camion => camion.id === Number(guia?.camion))?.acoplado
+
+
 
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
@@ -196,70 +200,32 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="productor">Productor: </label>
-          <SelectReact
-            options={optionsProductor}
-            id='productor'
-            name='productor'
-            placeholder='Selecciona un productor'
-            value={optionsProductor.find(productor => productor?.value === String(formik.values.productor))}
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('productor', value.value)
-            }}
-            disabled
-
-          />
+          <div className=' h-full w-full flex items-center justify-center'>
+            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_productor}</span>
+          </div>
 
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
           <label htmlFor="camionero">Chofer: </label>
-          <SelectReact
-            options={optionsConductor}
-            id='camionero'
-            name='camionero'
-            placeholder='Selecciona un chofer'
-            value={optionsProductor.find(productor => productor?.value === String(formik.values.productor))}
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('camionero', value.value)
-            }}
-            disabled
-
-          />
+          <div className=' h-full w-full flex items-center justify-center'>
+            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camionero}</span>
+          </div>
 
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
           <label htmlFor="camion">Camion: </label>
-          <SelectReact
-            options={optionsCamion}
-            id='camion'
-            name='camion'
-            placeholder='Selecciona un camión'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('camion', value.value)
-            }}
-            disabled
-
-          />
+          <div className=' h-full w-full flex items-center justify-center'>
+            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camion}</span>
+          </div>
         </div>
 
         <div className='md:row-start-3 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="comercializador">Comercializador: </label>
-          <SelectReact
-            options={optionsComercializador}
-            id='comercializador'
-            name='comercializador'
-            placeholder='Selecciona una opción'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('comercializador', value.value)
-            }}
-            disabled
-
-          />
+          <div className=' h-full w-full flex items-center justify-center'>
+            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_comercializador}</span>
+          </div>
         </div>
 
         <div className='md:rw-start-3 md:col-span-2 md:col-start-3 md:flex-col items-center justify-center'>
@@ -289,24 +255,19 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
         <div className='md:row-start-3 md:col-span-2  md:col-start-5 md:flex-col items-center'>
           <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
-          <Input
-            type='text'
-            name='numero_guia_productor'
-            onChange={formik.handleChange}
-            className='py-3'
-            value={formik.values.numero_guia_productor!}
-            disabled
-          />
+          <div className=' h-full w-full flex items-center justify-center'>
+            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.numero_guia_productor}</span>
+          </div>
         </div>
 
         <div className={`md:row-start-4 ${!camionAcoplado ? 'md:col-start-2 md:col-span-4': 'md:col-start-1 md:col-span-3 '} md:flex-col items-center`}>
-          <label htmlFor="tara_camion_1">Tara Camión: </label>
+          <label htmlFor="kilos_tara_1">Tara Camión: </label>
           <Input
             type='text'
-            name='tara_camion_1'
+            name='kilos_tara_1'
             onChange={formik.handleChange}
             className='py-3'
-            value={formik.values.tara_camion_1!}
+            value={formik.values.kilos_tara_1!}
           />
         </div>
 

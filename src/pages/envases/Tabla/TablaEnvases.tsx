@@ -69,14 +69,6 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 	const editLinkProductor = `/app/envases/`
 
 	const columns = [
-		columnHelper.accessor('id', {
-			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
-					<div className='font-bold w-20'>{`${info.row.original.id}`}</div>
-				</Link>
-			),
-			header: 'ID'
-		}),
 		columnHelper.accessor('nombre', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>

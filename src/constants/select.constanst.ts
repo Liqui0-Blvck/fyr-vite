@@ -181,11 +181,18 @@ export const ESTADO_CONTROL = [
   { value: '2', label: 'Pendiente CC'},
 ]
 
-  
 
+export const UBICACION_PATIO_TECHADO_EXT = [
+  { value: '0', label: 'Pendiente Ubicacion'},
+  { value: '1', label: 'Sector 1'},
+  { value: '2', label: 'Sector 2'},
+  { value: '3', label: 'Sector 3'},
+]
+
+  
 
 export const perfilesPermitidos = ['Recepcion', 'Control Calidad', 'Bodega']
 export const usuarioRole = {
   name: 'Nicolas',
-  area: 'Recepcion' 
+  area: 'Recepcion'
 }

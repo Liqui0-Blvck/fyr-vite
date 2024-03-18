@@ -8,9 +8,9 @@ import useDarkMode from '../hooks/useDarkMode';
 interface IComponentProps {
   children: ReactNode
   open: boolean
-  setOpen: Dispatch<SetStateAction<boolean | null>>
-  title: string
-  textButton?: string
+  setOpen: (isOpen: Dispatch<SetStateAction<boolean | null>>) => void
+  title: string | boolean
+  textButton?: string | null
   icon?: ReactNode
   size?: number,
   textTool?: string

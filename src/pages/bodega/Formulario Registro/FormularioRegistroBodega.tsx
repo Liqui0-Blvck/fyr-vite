@@ -21,13 +21,17 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
 
   const formik = useFormik({
     initialValues: {
-      nombre: "",
-      peso: null,
-      descripcion: ""
+      id_recepcion: null,
+      ubicacion: null,
+      estado_lote: null,
+      procesado: false,
+      cc_guia: null,
+      tipo_recepcion: null,
+      registrado_por: null
     },
     onSubmit: async (values) => {
       try {
-        const res = await fetch(`${base_url}/api/envasesmp/`, {
+        const res = await fetch(`${base_url}/api/patio-techado-ex/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

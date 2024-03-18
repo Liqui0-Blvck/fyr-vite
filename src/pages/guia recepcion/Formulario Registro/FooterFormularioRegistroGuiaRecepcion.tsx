@@ -18,6 +18,9 @@ import { TCamion, TEnvases, TGuia } from '../../../types/registros types/registr
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../constants/select.constanst';
 import { useNavigate } from 'react-router-dom';
 import { Switch } from 'antd';
+import { generarNumeroLote } from '../../../utils/numberLote';
+
+
 
 interface Row {
   kilos_brutos_1: null,
@@ -124,6 +127,10 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
       }
     }
   })
+
+  const numeroLote: string = generarNumeroLote();
+
+  console.log(numeroLote)
 
 
   const agregarFila = () => {

@@ -72,14 +72,6 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 	const createLinkProductor = `/app/registro-camiones/`
 
 	const columns = [
-		columnHelper.accessor('id', {
-			cell: (info) => (
-				<div className='font-bold w-20'>
-					{`${info.row.original.id}`}
-				</div>
-			),
-			header: 'ID'
-		}),
 		columnHelper.accessor('patente', {
 			cell: (info) => (
 				<div className='font-bold '>
@@ -215,7 +207,7 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 						open={modalStatus}
 						setOpen={setModalStatus}
 						title='Registro Camiones'
-						width={`w-full px-5 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] hover:bg-[#3b83f6cd] text-white'} hover:scale-105`}
+						width={`w-full h-11 px-5 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] hover:bg-[#3b83f6cd] text-white'} hover:scale-105`}
 						textButton='Agregar Camión'
 					>
 						<FormularioRegistroCamiones refresh={refresh} setOpen={setModalStatus} />

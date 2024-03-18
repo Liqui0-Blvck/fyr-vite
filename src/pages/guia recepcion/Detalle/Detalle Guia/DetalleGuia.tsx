@@ -8,7 +8,7 @@ import { TCamion, TComercializador, TConductor, TControlCalidad, TGuia, TLoteGui
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { FC, useEffect, useState } from 'react'
+import React, { FC, SyntheticEvent, useEffect, useState } from 'react'
 import { ACTIVO, ESTADO_CONTROL, usuarioRole } from '../../../../constants/select.constanst'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
@@ -16,6 +16,42 @@ import { urlNumeros } from '../../../../services/url_number'
 import FooterDetalleGuia from './FooterDetalleGuia'
 import FooterFormularioEdicionGuia from '../../Formulario Edicion/Edicion Guia/FooterFormularioEdicionGuiaRecepcion'
 import FooterDetalleGuiaFinalizada from './FooterDetalleGuiaFinalizada'
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import { Tabs, Typography } from '@mui/material'
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 
 const DetalleGuia = () => {
@@ -125,7 +161,7 @@ const DetalleGuia = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        estado_recepcion: 3
+        estado_recepcion: 4
       })
     })
 
@@ -218,6 +254,20 @@ const DetalleGuia = () => {
 
   console.log(control_calidad)
 
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const controles = guia_recepcion?.lotesrecepcionmp.some((lote: TGuia) => {
+    const controlesAprobados = control_calidad?.filter(control => control.recepcionmp === lote.id && (control.estado_cc === '1' || control.estado_cc === '0')).length;
+    return controlesAprobados
+  })
+
+  console.log(controles)
+
+
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
       <form
@@ -227,7 +277,7 @@ const DetalleGuia = () => {
       rounded-md`}
       >
 
-        <div className='border border-[#18181B] rounded-md col-span-6'>
+        <div className='rounded-md col-span-6 bg-[#F4F4F5]'>
           <h1 className='text-center text-2xl p-2'>Guía Recepción Materia Prima</h1>
           <h5 className='text-center text-xl p-2'>Estado: {guia_recepcion?.estado_recepcion_label}</h5>
         </div>
@@ -257,7 +307,7 @@ const DetalleGuia = () => {
         <div className='md:row-start-3 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="comercializador">Comercializador: </label>
           <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
-            <span>{guia_recepcion?.comercializador}</span>
+            <span>{guia_recepcion?.nombre_comercializador}</span>
           </div>
         </div>
 
@@ -292,39 +342,31 @@ const DetalleGuia = () => {
           </div>
         </div>
 
-        {
-          guia_recepcion?.tara_camion_2
-            ? (
-              <div className='md:row-start-4 md:col-span-2  md:col-start-3 md:flex-col items-center'>
-                <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
-                <Input
-                  type='text'
-                  name='numero_guia_productor'
-                  onChange={formik.handleChange}
-                  className='py-3'
-                  value={formik.values.numero_guia_productor!}
-                  disabled
-                />
-              </div>  
-              )
-            : null
-        }
+       
       </form>
 
       {
         nuevoLote
           ? null
-          : guia_recepcion?.mezcla_variedades
+          : guia_recepcion?.mezcla_variedades && guia_recepcion?.estado_recepcion !== '4' &&  usuarioRole.area === 'Recepcion'
               ? (
                 <div className='w-full flex ml-6 gap-5'>
-                  <div
-                    onClick={() => setNuevoLote(prev => !prev)}
-                    className=' bg-blue-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
-                    <span className='text-white'>Agregar Lote</span>
-                  </div>
+                  {
+                  controles
+                    ? (
+                      <div
+                        onClick={() => setNuevoLote(prev => !prev)}
+                        className='bg-blue-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
+                        <span className='text-white'>Agregar Lote</span>
+                      </div>
+                    )
+                    : null
+                  }
+
+
 
                   {
-                    (guia_recepcion.lotesrecepcionmp.length >= 2 && usuarioRole.area === 'Recepcion' && guia_recepcion.estado_recepcion === '3')
+                    (controles && usuarioRole.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4')
                       ? (
                         <div
                           onClick={() => estado_guia_update(id)}
@@ -340,15 +382,34 @@ const DetalleGuia = () => {
                 )
               : null
       }
+      
 
 
       {
-        guia_recepcion?.estado_recepcion === '4'
-          ? <FooterDetalleGuiaFinalizada data={guia_recepcion!} refresh={setRefresh}/>
-          : nuevoLote
-              ? <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
-              : <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh}/>
-
+        nuevoLote
+          ?  <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
+          : (
+            <div className='mt-10'>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                    <Tab label="Lotes Pendientes" {...a11yProps(0)} />
+                    <Tab label="Lotes Aprobados" {...a11yProps(1)} />
+                    <Tab label="Lote Rechazado" {...a11yProps(2)} />
+                  </Tabs>
+                </Box>
+                <CustomTabPanel value={value} index={0}>
+                  <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh}/>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
+                  <FooterDetalleGuiaFinalizada data={guia_recepcion!} refresh={setRefresh}/>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
+                  Item Three
+                </CustomTabPanel>
+              </Box>
+            </div>
+          )
       }
     </div>
   )

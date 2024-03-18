@@ -227,7 +227,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
             title='Registro Operario'
             textButton='Agregar Operario'
             size={900}
-            width={`w-full md:w-full px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+            width={`w-full h-11 md:w-full px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
           >
             <FormularioRegistroOperario refresh={refresh} setOpen={setModalStatus} />
           </ModalRegistro>

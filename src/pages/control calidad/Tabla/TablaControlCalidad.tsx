@@ -103,7 +103,7 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 		columnHelper.accessor('estado_cc', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${info.row.original.estado_cc}`}</div>
+					<div className='font-bold'>{`${info.row.original.estado_cc_label}`}</div>
 				</Link>
 			),
 			header: 'Estado',

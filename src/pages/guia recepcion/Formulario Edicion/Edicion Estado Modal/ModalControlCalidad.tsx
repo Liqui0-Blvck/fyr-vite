@@ -14,7 +14,7 @@ interface IModalProps {
   refresh: Dispatch<SetStateAction<boolean | null>>
   lote: TLoteGuia | null,
   usuario: any
-  guia_id: number
+  guia_id: number | null
 }
 
 const ModalControlCalidad: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado, refresh, lote, guia_id }) => {

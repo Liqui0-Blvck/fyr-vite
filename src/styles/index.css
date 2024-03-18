@@ -328,3 +328,110 @@
 }
 
 
+.table-cell-final-1 {
+	width: 3%;
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 4px !important;
+}
+
+.table-cell-final-2 {
+	width: 11%;
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-final-3 {
+	width: 12%;
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-final-4 {
+	width: 5%;
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 2px !important;
+
+}
+
+.table-cell-final-5 {
+	width: 12%;
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-final-6 {
+	width: 24%;
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-final-7 {
+	width: 16%;
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+
+
+.table-cell-row-final-1 {
+	width: 3%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 4px !important;
+}
+
+.table-cell-row-final-2 {
+	width: 11%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-final-3 {
+	width: 12%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-final-4 {
+	width: 5%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 2px !important;
+
+}
+
+.table-cell-row-final-5 {
+	width: 12%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-final-6 {
+	width: 24%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-final-7 {
+	width: 16%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+
+

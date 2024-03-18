@@ -85,7 +85,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
               id='acoplado'
               placeholder='Selecciona un opción'
               name='acoplado'
-              className='h-12'
+              className='h-12 py-2'
               onChange={(value: any) => {
                 formik.setFieldValue('acoplado', value.value)
               }}

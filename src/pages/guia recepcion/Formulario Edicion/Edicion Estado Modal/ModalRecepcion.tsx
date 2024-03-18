@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SetStateAction, useState, useEffect } from 'react';
 import FormularioRegistroControlCalidad from '../../../control calidad/Formulario Registro/FormularioRegistroControlCalidad';
-import { TEnvaseEnGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
+import { TEnvaseEnGuia, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
 import { GoQuestion } from "react-icons/go";
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
@@ -13,15 +13,15 @@ interface IModalProps {
   setOpen: Dispatch<SetStateAction<boolean | null>>;
   numero_estado: string;
   refresh: Dispatch<SetStateAction<boolean | null>>
-  lote: TLoteGuia | null,
-  usuario: any
+  lote: TLoteGuia | null
+  guia: TGuia
 }
 
-const ModalRecepcion: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado, refresh, lote, usuario }) => {
+const ModalRecepcion: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado, refresh, lote, guia }) => {
   const base_url = process.env.VITE_BASE_URL_DEV;
   const { isDarkTheme } = useDarkMode()
 
-  console.log(id)
+  console.log(lote)
 
 
   const variedadFilter = VARIEDADES_MP?.map((producto) => ({
@@ -56,7 +56,7 @@ const ModalRecepcion: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_est
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({  
+      body: JSON.stringify({
         estado_recepcion: estado
       })
     });
@@ -74,13 +74,13 @@ const ModalRecepcion: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_est
 
   return (
     <div className='w-full h-full flex items-center flex-col justify-between'>
-      {confirmacion && numero_estado === '3' ? (
-        <FormularioEdicionGuiaRecepcion refresh={refresh} isOpen={setOpen}/>
+      {confirmacion && numero_estado === '5' ? (
+        <FormularioEdicionGuiaRecepcion refresh={refresh} isOpen={setOpen} guia={guia} lote={lote}/>
       ) : (
         <>  
           {!confirmacion && (
             <div className='py-10'>{
-              numero_estado === '3' 
+              numero_estado === '5' 
                 ? (
                   <div className={`${isDarkTheme ? 'bg-gray-50' : 'bg-gray-700'}w-full h-full  flex flex-col justify-center items-center`}>
                     <GoQuestion className='text-9xl text-yellow-500' />

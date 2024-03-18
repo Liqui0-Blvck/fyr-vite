@@ -223,7 +223,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 						setOpen={setModalStatus}
 						title='Registro Productores'
 						textButton='Agregar Productor'
-						width={`w-full md:w-full px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+						width={`w-full md:w-full px-4 py-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 						size={1200}
 					>
 						<FormularioRegistroProductores setOpen={setModalStatus} refresh={refresh} />

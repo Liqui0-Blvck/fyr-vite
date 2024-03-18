@@ -85,49 +85,48 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 	const columns = [
 		columnHelper.accessor('id', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`} className='w-full bg-white'>
+				
 					<div className='font-bold w-20'>{`${info.row.original.id}`}</div>
-				</Link>
+				
 			),
 			header: 'N° Guia '
 		}),
 		columnHelper.accessor('camion', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
+				
 					<div className='font-bold '>{`${info.row.original.nombre_camion}`}</div>
-				</Link>
+				
 			),
 			header: 'Camión',
 		}),
 		columnHelper.accessor('camionero', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
+				
 					<div className='font-bold truncate'>{`${info.row.original.nombre_camionero}`}</div>
-				</Link>
+				
 			),
 			header: 'Conductor',
 		}),
 		columnHelper.accessor('comercializador', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
+				
 					<div className='font-bold'>{`${info.row.original.nombre_comercializador}`}</div>
-				</Link>
+				
 			),
 			header: 'Comercializador',
 		}),
 		columnHelper.accessor('lotesrecepcionmp', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
+				
 					<div className='font-bold'>{`${info.row.original.lotesrecepcionmp.length}`}</div>
-				</Link>
+				
 			),
 			header: 'Lotes',
 		}),
 		columnHelper.accessor('estado_recepcion', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
+				
 					<div className='font-bold'>{`${info.row.original.estado_recepcion_label}`}</div>
-				</Link>
 			),
 			header: 'Estado',
 		}),

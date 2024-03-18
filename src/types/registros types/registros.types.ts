@@ -131,6 +131,7 @@ export type TControlCalidad = {
   id: number,
   estado_aprobacion_cc: number,
   estado_cc: string,
+  estado_cc_label: string,
   presencia_insectos: boolean,
   presencia_insectos_selected: string,
   humedad: string,
@@ -139,4 +140,17 @@ export type TControlCalidad = {
   fecha_creacion: string,
   recepcionmp: number,
   cc_registrado_por: number
+}
+
+export type TPatioExterior = {
+  id: number,
+  id_recepcion: number,
+  ubicacion: string,
+  fecha_creacion: string,
+  fecha_modificacion: string,
+  estado_lote: string,
+  procesado: boolean,
+  cc_guia: number,
+  tipo_recepcion: number,
+  registrado_por: number
 }

@@ -53,6 +53,8 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
       kilos_brutos_2: 0,
       envase: null,
       variedad: null,
+      kilos_tara_1: 0,
+      kilos_tara_2: 0,
       tipo_producto: '1',
       cantidad_envases: null
     },
@@ -91,8 +93,8 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
         numero_lote: data.id,
         kilos_brutos_1: values.kilos_brutos_1,
         kilos_brutos_2: values.kilos_brutos_2,
-        kilos_tara_1: 0,
-        kilos_tara_2: 0,
+        kilos_tara_1: values.kilos_brutos_1,
+        kilos_tara_2: values.kilos_brutos_2,
         estado_recepcion: '1',
         guiarecepcion: data.id,
         creado_por: data.creado_por,
@@ -130,7 +132,7 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
 
 
   const agregarFila = () => {
-    const nuevaFila = { id: rows.length, kilos_brutos_1: 0, kilos_brutos_2: 0, envase: null, variedad: null, tipo_producto: '1', cantidad_envases: null };
+    const nuevaFila = { id: rows.length, kilos_brutos_1: 0, kilos_brutos_2: 0, kilos_tara_1: 0, kilos_tara_2: 0, envase: null, variedad: null, tipo_producto: '1', cantidad_envases: null };
     setRows((prevRows) => [...prevRows, nuevaFila]);
   };
 
@@ -148,14 +150,6 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
     value: String(envase.id),
     label: envase.nombre
   })) ?? []
-
-  // const variedadFilter = VARIEDADES_MP?.
-  //   filter(variedad => variedad.value === row.variedad).
-  //   map((variedad) => ({
-  //     value: String(variedad.value),
-  //     label: variedad.label
-  //   })) ?? []
-
 
   const variedadFilter = (rows.length <= 1) ?
     VARIEDADES_MP.map(variedad => ({

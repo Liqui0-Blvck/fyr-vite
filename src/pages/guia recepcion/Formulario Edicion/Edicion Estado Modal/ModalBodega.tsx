@@ -4,6 +4,7 @@ import { TEnvaseEnGuia, TLoteGuia } from '../../../../types/registros types/regi
 import { GoQuestion } from "react-icons/go";
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
+import FormularioEdicionBodega from '../../../bodega/Edicion Registro/FormularioRegistroBodega';
 
 interface IModalProps {
   id: number;
@@ -13,7 +14,6 @@ interface IModalProps {
   numero_estado: string;
   refresh: Dispatch<SetStateAction<boolean | null>>
   lote: TLoteGuia | null,
-  usuario: any
 }
 
 const ModalBodega: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado, refresh, lote, usuario }) => {
@@ -41,46 +41,16 @@ const ModalBodega: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado
     setPrevNumeroEstado(Number(numero_estado));
   }, [numero_estado]);
 
-  const handleConfirm = () => {
-    if (confirmacion) {
-      setOpen(false);
-    } else {
-      setConfirmacion(true);
-    }
-  }
-
-  const updateEstadoLote = async (id: number, estado: string) => {
-    console.log(estado);
-    const res = await fetch(`${base_url}/api/estado-update/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({  
-        estado_recepcion: estado
-      })
-    });
-
-    if (res.ok) {
-      estadoActivo(estado);
-      if (numero_estado >= '1') {
-        setOpen(false)
-        refresh(true)
-      }  
-    } else {
-      console.log("Errores sobre errores");
-    }
-  }
 
   return (
     <div className='w-full h-full flex items-center flex-col justify-between'>
-      {confirmacion && numero_estado === '2' ? (
-        <FormularioRegistroControlCalidad id_lote={id} setOpen={setOpen} refresh={refresh}/>
+      {confirmacion ? (
+        <FormularioEdicionBodega id_lote={id} setOpen={setOpen} refresh={refresh} lote={lote}/>
       ) : (
         <>
           {!confirmacion && (
             <div className='py-10'>{
-              numero_estado === '1' 
+              numero_estado === '3' 
                 ? (
                   <div className={`${isDarkTheme ? 'bg-gray-50' : 'bg-gray-700'}w-full h-full  flex flex-col justify-center items-center`}>
                     <GoQuestion className='text-9xl text-yellow-500' />
@@ -113,15 +83,10 @@ const ModalBodega: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado
               className='w-48 py-3 px-6 rounded-md bg-blue-800 text-white'
               onClick={() => {
                 if (!confirmacion) {
-                  if (numero_estado === '1') {
-                    updateEstadoLote(id, '2'); 
-                  } else {
                     setConfirmacion(true); 
-                  }
                 } else {
                   setConfirmacion(false);
-                }
-              }}
+                }}}
             > 
               {confirmacion ? 'Sí' : 'Confirmar'}
             </button>

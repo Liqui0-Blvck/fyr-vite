@@ -226,7 +226,7 @@ const TablaConductor: FC<IConductorProps> = ({ data, refresh }) => {
 						setOpen={setModalStatus}
 						title='Registro Conductores'
 						textButton='Agregar Conductor'
-						width={`w-full px-5 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}`}
+						width={`w-full h-11 px-5 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}`}
 						size={900}
 					>
 						<FormularioRegistroChoferes refresh={refresh} setOpen={setModalStatus} />

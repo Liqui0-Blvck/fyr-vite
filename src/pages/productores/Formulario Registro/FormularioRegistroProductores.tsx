@@ -55,7 +55,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
       email: "",
       numero_contrato: null
     },
-    validationSchema: productorSchema,
+    // validationSchema: productorSchema,
     onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/productores/`, {
@@ -263,7 +263,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
 
 
       <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-        <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3.5'>Registrar Operario</button>
+        <button type='submit' className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3.5'>Registrar Productor</button>
       </div>
     </form>
   )
