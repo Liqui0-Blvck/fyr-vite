@@ -172,6 +172,8 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     })) ?? []
 
 
+
+
   const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
     value: String(producto.value),
     label: producto.label
@@ -182,6 +184,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
   const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
+  console.log(optionEnvases)
   return (
     <div>
       <form
@@ -248,7 +251,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               {rows && rows.map((row, index) => {
                 return (
                   <TableRow key={index} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative' }}>
-
+                    
                     <TableCell style={{ maxWidth: 150, minWidth: 150, }}>
                       <SelectReact
                         options={optionEnvases}

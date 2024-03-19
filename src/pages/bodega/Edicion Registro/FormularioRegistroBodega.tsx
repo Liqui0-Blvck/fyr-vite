@@ -31,7 +31,6 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
     `/api/patio-techado-ex/${lote?.id}`
   )
 
-  console.log(patio_exterior)
 
   const updateEstadoLote = async (id: number, estado: string) => {
     console.log(estado);
@@ -81,7 +80,7 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/patio-techado-ex/${patio_exterior?.id}/`, {
+        const res = await fetch(`${base_url}/api/patio-techado-ex-id/${patio_exterior?.id}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

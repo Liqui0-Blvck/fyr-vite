@@ -263,7 +263,7 @@ const FormularioRegistroGuiaRecepcion = () => {
         </div>
 
         <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center justify-center'>
-          <Label htmlFor='mezcla_variedades'>Comercializador: </Label>
+          <Label htmlFor='mezcla_variedades'>Mezcla Variedades: </Label>
 
 
           <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>

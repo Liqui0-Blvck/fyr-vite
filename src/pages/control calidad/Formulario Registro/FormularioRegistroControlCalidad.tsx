@@ -90,7 +90,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
     }
   })
 
-  console.log(formik.values)
+
 
   
 
@@ -121,7 +121,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
 
         <div className='md:col-span-2 md:col-start-3 md:flex-col flex-col lg:flex-row '>
           <label htmlFor="acoplado">Presencia Insectos: </label>
-          <div className='w-full bg-gray-100 flex items-center justify-center py-[2.3px] rounded-lg'>
+          <div className={`w-full ${isDarkTheme ? 'bg-zinc-800' : 'bg-gray-100'} flex items-center justify-center py-[2.3px] rounded-lg`}>
             <RadioGroup isInline>
               {optionsRadio.map(({ id, value, label }) => {
                 return (

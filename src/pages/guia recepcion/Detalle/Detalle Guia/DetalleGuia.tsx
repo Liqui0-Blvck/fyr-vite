@@ -8,7 +8,7 @@ import { TCamion, TComercializador, TConductor, TControlCalidad, TGuia, TLoteGui
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import React, { FC, SyntheticEvent, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, SyntheticEvent, useEffect, useState } from 'react'
 import { ACTIVO, ESTADO_CONTROL, usuarioRole } from '../../../../constants/select.constanst'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
@@ -19,6 +19,10 @@ import FooterDetalleGuiaFinalizada from './FooterDetalleGuiaFinalizada'
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { Tabs, Typography } from '@mui/material'
+import ModalConfirmacion from '../../../../components/ModalConfirmacion'
+import ModalRegistro from '../../../../components/ModalRegistro'
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -62,6 +66,8 @@ const DetalleGuia = () => {
   const [guiaID, setGuiaID] = useState<number | null>(null)
   const [variedad, setVariedad] = useState<boolean>(false)
   const [datosGuia, setDatosGuia] = useState<TGuia | null>(null)
+  const [confirmacion, setConfirmacion] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
 
@@ -289,12 +295,28 @@ const DetalleGuia = () => {
                 {
                   (controles && perfilData?.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4')
                     ? (
-                      <div
-                        onClick={() => estado_guia_update(id)}
-                        className=' bg-slate-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
-                        <span className='text-white'>Finalizar Guia</span>
-                      </div>
-                    )
+                      // <div
+                      //   onClick={() => estado_guia_update(id)}
+                      //   className=' bg-slate-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
+                      //   <span className='text-white'>Finalizar Guia</span>
+                      // </div>
+                      <ModalRegistro
+                        open={open || false}
+                        setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpen(prev => (!prev))}
+                        title={'Finalizar Guía'}
+                        textTool='Detalle'
+                        size={450}
+                        width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                        icon={<IoCheckmarkDoneSharp />}
+                      >
+                        <ModalConfirmacion 
+                          id={id[0]}
+                          confirmacion={confirmacion}
+                          setConfirmacion={setConfirmacion}
+                          setOpen={setOpen}
+                          refresh={setRefresh} />
+                      </ModalRegistro>
+                          )
                     : null
                 }
 
@@ -303,11 +325,29 @@ const DetalleGuia = () => {
             )
             : controles && perfilData?.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4'
               ? (
-                <div
-                  onClick={() => estado_guia_update(id)}
-                  className=' bg-slate-400 w-32 flex items-center ml-6 justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
-                  <span className='text-white'>Finalizar Guia</span>
-                </div>
+                <ModalRegistro
+                  open={open || false}
+                  setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpen(prev => (!prev))}
+                  title={'Finalizar Guía'}
+                  textTool='Detalle'
+                  size={450}
+                  width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                  icon={<IoCheckmarkDoneSharp />}
+                >
+                  <ModalConfirmacion 
+                    id={id[0]}
+                    confirmacion={confirmacion}
+                    setConfirmacion={setConfirmacion}
+                    setOpen={setOpen}
+                    refresh={setRefresh} />
+                </ModalRegistro>
+
+                  
+                // <div
+                //   onClick={() => estado_guia_update(id)}
+                //   className=' bg-slate-400 w-32 flex items-center ml-6 justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
+                //   <span className='text-white'>Finalizar Guia</span>
+                // </div>
               )
               : null
       }
