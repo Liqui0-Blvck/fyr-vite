@@ -55,47 +55,21 @@ function a11yProps(index: number) {
 
 
 const DetalleGuia = () => {
-  const { authTokens, validate, userID } = useAuth()
+  const { authTokens, validate, userID, perfilData } = useAuth()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
   const [nuevoLote, setNuevoLote] = useState<boolean>(false)
   const [guiaID, setGuiaID] = useState<number | null>(null)
   const [variedad, setVariedad] = useState<boolean>(false)
-  const [activo, setActivo] = useState<boolean>(false)
   const [datosGuia, setDatosGuia] = useState<TGuia | null>(null)
   const base_url = process.env.VITE_BASE_URL_DEV
-  const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
-
-  const { data: camiones } = useAuthenticatedFetch<TCamion[]>(
-    authTokens,
-    validate,
-    '/api/registros/camiones/'
-  )
-
-  const { data: productores } = useAuthenticatedFetch<TProductor[]>(
-    authTokens,
-    validate,
-    '/api/productores/'
-  )
-
-  const { data: conductores } = useAuthenticatedFetch<TConductor[]>(
-    authTokens,
-    validate,
-    '/api/registros/choferes'
-  )
-
-  const { data: comercializadores } = useAuthenticatedFetch<TComercializador[]>(
-    authTokens,
-    validate,
-    '/api/comercializador/'
-  )
 
   const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad[]>(
     authTokens,
     validate,
     `/api/control-calidad/recepcionmp`
-  ) 
+  )
 
   const optionsRadio = [
     { id: 1, value: true, label: 'Si' },
@@ -165,7 +139,7 @@ const DetalleGuia = () => {
       })
     })
 
-    if (res.ok){
+    if (res.ok) {
       toast.success('Guia Finalizada')
       setRefresh(true)
     } else {
@@ -173,57 +147,6 @@ const DetalleGuia = () => {
     }
   }
 
-
-
-  const camionFilter = camiones?.map((camion: TCamion) => ({
-    value: String(camion.id),
-    label: (`${camion.patente},  ${camion.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`)
-  })) ?? []
-
-  const productoresFilter = productores?.map((productor: TProductor) => ({
-    value: String(productor.id),
-    label: productor.nombre
-  })) ?? []
-
-  const conductoresFilter = conductores?.map((conductor: TConductor) => ({
-    value: String(conductor.id),
-    label: conductor.nombre
-  })) ?? []
-
-  const comercializadoresFilter = comercializadores?.map((comerciante: TComercializador) => ({
-    value: String(comerciante.id),
-    label: comerciante.nombre
-  })) ?? []
-
-  const mezclaVariedadesFilter = ACTIVO?.map((variedad) => ({
-    value: String(variedad.values),
-    label: variedad.label
-  })) ?? []
-
-  // const controlesRechazados = control_calidad?.
-  //   filter(control => control.recepcionmp === lote.id && control.estado_cc === '0')
-  //   .map(control => {
-  //       return control; // Puedes devolver el control si lo necesitas para otros propósitos
-  //   }).length;
-
-
-  // const controlesAprobados = control_calidad?.
-  //   filter(control => control.recepcionmp === lote.id && control.estado_cc === '1')
-  //   .map(control => {
-  //       return control; // Puedes devolver el control si lo necesitas para otros propósitos
-  //   }).length;
-
-  // const controlesEnEspera = control_calidad?.
-  //   filter(control => control.recepcionmp === lote.id && control.estado_cc === '2')
-  //   .map(control => {
-  //       return control; // Puedes devolver el control si lo necesitas para otros propósitos
-  //   }).length;
-
-  const optionsCamion: TSelectOptions | [] = camionFilter
-  const optionsProductor: TSelectOptions | [] = productoresFilter
-  const optionsConductor: TSelectOptions | [] = conductoresFilter
-  const optionsComercializador: TSelectOptions | [] = comercializadoresFilter
-  const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
 
   useEffect(() => {
     let isMounted = true
@@ -252,7 +175,6 @@ const DetalleGuia = () => {
   }, [guia_recepcion])
 
 
-  console.log(control_calidad)
 
   const [value, setValue] = useState(0);
 
@@ -265,7 +187,6 @@ const DetalleGuia = () => {
     return controlesAprobados
   })
 
-  console.log(controles)
 
 
   return (
@@ -277,7 +198,7 @@ const DetalleGuia = () => {
       rounded-md`}
       >
 
-        <div className='rounded-md col-span-6 bg-[#F4F4F5]'>
+        <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} rounded-md col-span-6 bg-[#F4F4F5]`}>
           <h1 className='text-center text-2xl p-2'>Guía Recepción Materia Prima</h1>
           <h5 className='text-center text-xl p-2'>Estado: {guia_recepcion?.estado_recepcion_label}</h5>
         </div>
@@ -342,16 +263,16 @@ const DetalleGuia = () => {
           </div>
         </div>
 
-       
+
       </form>
 
       {
         nuevoLote
           ? null
-          : guia_recepcion?.mezcla_variedades && guia_recepcion?.estado_recepcion !== '4' &&  usuarioRole.area === 'Recepcion'
-              ? (
-                <div className='w-full flex ml-6 gap-5'>
-                  {
+          : guia_recepcion?.mezcla_variedades && guia_recepcion?.estado_recepcion !== '4' && perfilData?.area === 'Recepcion'
+            ? (
+              <div className='w-full flex ml-6 gap-5'>
+                {
                   controles
                     ? (
                       <div
@@ -361,33 +282,41 @@ const DetalleGuia = () => {
                       </div>
                     )
                     : null
-                  }
+                }
 
 
 
-                  {
-                    (controles && usuarioRole.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4')
-                      ? (
-                        <div
-                          onClick={() => estado_guia_update(id)}
-                          className=' bg-slate-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
-                          <span className='text-white'>Finalizar Guia</span>
-                        </div>
-                        )
-                      : null
-                  }
+                {
+                  (controles && perfilData?.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4')
+                    ? (
+                      <div
+                        onClick={() => estado_guia_update(id)}
+                        className=' bg-slate-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
+                        <span className='text-white'>Finalizar Guia</span>
+                      </div>
+                    )
+                    : null
+                }
 
-                  
+
+              </div>
+            )
+            : controles && perfilData?.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4'
+              ? (
+                <div
+                  onClick={() => estado_guia_update(id)}
+                  className=' bg-slate-400 w-32 flex items-center ml-6 justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
+                  <span className='text-white'>Finalizar Guia</span>
                 </div>
-                )
+              )
               : null
       }
-      
+
 
 
       {
         nuevoLote
-          ?  <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
+          ? <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
           : (
             <div className='mt-10'>
               <Box sx={{ width: '100%' }}>
@@ -399,10 +328,10 @@ const DetalleGuia = () => {
                   </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                  <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh}/>
+                  <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                  <FooterDetalleGuiaFinalizada data={guia_recepcion!} refresh={setRefresh}/>
+                  <FooterDetalleGuiaFinalizada data={guia_recepcion!} refresh={setRefresh} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
                   Item Three

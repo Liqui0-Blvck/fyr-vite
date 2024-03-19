@@ -16,6 +16,7 @@ interface IAuthTokens {
 interface IAuthContext {
   authTokens: IAuthTokens | null;
   userID: TokenPayload | null
+  perfilData: TPerfil
   validate: (token: IAuthTokens | null) => Promise<boolean>;
   onLogin: (username: string, password: string) => Promise<void>;
   onLogout: () => void;
@@ -24,6 +25,27 @@ interface IAuthContext {
 interface TokenPayload {
   user_id: number;
   // Otros campos según la estructura de tu token JWT
+}
+
+type TPerfil = {
+  id: number,
+  fecha_creacion: string,
+  fecha_modificacion: string,
+  sexo: string,
+  direccion: string,
+  comuna: string,
+  celular: string,
+  fnacimiento: string,
+  valoracion: number,
+  fotoperfil: string,
+  area: string,
+  user: {
+    id: number,
+    first_name: string,
+    last_name: string,
+    email: string,
+    username: string
+  }
 }
 
 
@@ -40,9 +62,13 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
   const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(authTokenLocalStorage);
   const [userID, setUserID] = useState<TokenPayload | null>(userLocalStorage)
+  const [perfilData, setPerfilData] = useState<TPerfil | null>()
+  const [refresh, setRefresh] = useState<boolean>(false)
 
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
+
+  console.log(userID?.user_id)
 
 
 
@@ -63,9 +89,10 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     if (res.ok) {
       const data = await res.json();
       toast.success('Inicio de sesión exitoso!');// Convierte a TUsuario
+      setRefresh(true)
       setAuthTokens(data)
       Cookies.set('token', JSON.stringify(data), { expires: 2 });
-      Cookies.set('user', JSON.stringify(data.access), { expires: 2 });
+      Cookies.set('user', JSON.stringify(data.access), { expires: 2 })
 
       navigate(`../${appPages.mainAppPages.to}`, { replace: true });
     } else if (res.status === 401) {
@@ -109,6 +136,75 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   };
 
 
+
+  console.log(userID?.user_id)
+
+  console.log(refresh)
+
+  // const getProfile = async (id: number) => {
+  //   try {
+  //     const res = await fetch(`${base_url}/api/registros/perfil/${id}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${authTokens?.access}`
+  //       }
+  //     });
+
+  //     if (res.ok) {
+  //       const data = await res.json();
+
+  //       setPerfilData(data);
+  //     } else {
+  //       console.log("Tenemos un problema nuevo");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error al obtener el perfil:", error);
+  //   }
+  // };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchProfile = async () => {
+      try {
+        if (authTokens && userID && isMounted) {
+          const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authTokens.access}`
+            }
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            if (isMounted) {
+              setPerfilData(data);
+            }
+          } else {
+            console.log("Tenemos un problema nuevo");
+          }
+        }
+      } catch (error) {
+        console.error("Error al obtener el perfil:", error);
+      }
+    };
+
+    if (refresh) {
+      fetchProfile();
+    }
+
+    fetchProfile();
+
+    return () => {
+      isMounted = false;
+      setRefresh(false);
+    };
+  }, [authTokens, userID, refresh]);
+
+
+
   // useEffect(() => {
   //   const interval = setInterval(async () => {
   //     try {
@@ -132,12 +228,16 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   // Función para cerrar sesión
   const onLogout = async () => {
     setAuthTokens(null);
+    setPerfilData(null)
     Cookies.remove('token')
+    Cookies.remove('user')
+
     navigate(`../${authPages.loginPage.to}`, { replace: true });
   };
 
   const value: IAuthContext = {
     authTokens,
+    perfilData,
     userID,
     validate,
     onLogin,

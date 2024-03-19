@@ -20,16 +20,18 @@ interface IFormEnvasesProps {
   lote: TLoteGuia | null
 }
 
-const FormularioEdicionBodega : FC<IFormEnvasesProps> = ({ refresh, setOpen, guia, lote }) => {
+const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia, lote }) => {
   const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
-	const { isDarkTheme } = useDarkMode();
+  const { isDarkTheme } = useDarkMode();
 
   const { data: patio_exterior } = useAuthenticatedFetch<TPatioExterior>(
     authTokens,
     validate,
-    `/api/patio-techado-ex/${lote?.guiarecepcion}`
+    `/api/patio-techado-ex/${lote?.id}`
   )
+
+  console.log(patio_exterior)
 
   const updateEstadoLote = async (id: number, estado: string) => {
     console.log(estado);
@@ -38,7 +40,7 @@ const FormularioEdicionBodega : FC<IFormEnvasesProps> = ({ refresh, setOpen, gui
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({  
+      body: JSON.stringify({
         estado_recepcion: estado
       })
     });
@@ -54,7 +56,7 @@ const FormularioEdicionBodega : FC<IFormEnvasesProps> = ({ refresh, setOpen, gui
   useEffect(() => {
     let isMounted = true
 
-    if (isMounted && patio_exterior){
+    if (isMounted && patio_exterior) {
       formik.setValues({
         id_recepcion: patio_exterior?.id_recepcion,
         ubicacion: patio_exterior.ubicacion,
@@ -105,7 +107,7 @@ const FormularioEdicionBodega : FC<IFormEnvasesProps> = ({ refresh, setOpen, gui
     }
   })
 
-  
+
 
   const ubicaciones = UBICACION_PATIO_TECHADO_EXT?.map((ubicacion) => ({
     value: ubicacion.value,
@@ -115,29 +117,29 @@ const FormularioEdicionBodega : FC<IFormEnvasesProps> = ({ refresh, setOpen, gui
   const options: TSelectOptions | [] = ubicaciones
 
   return (
-    
-      <form 
-        onSubmit={formik.handleSubmit}
-        className={`
+
+    <form
+      onSubmit={formik.handleSubmit}
+      className={`
           flex flex-col 
           md:grid md:grid-cols-6 gap-x-4 gap-y-8 mt-10 
-          relative p-4 ${ isDarkTheme ? oneDark : oneLight} rounded-md`}
-        >
-        <div className='md:col-span-6 md:flex-col items-center'>
-          <label htmlFor="ubicacion">Ubicación: </label>
-            <SelectReact
-                options={options}
-                id='ubicacion'
-                placeholder='Selecciona una ubicación'
-                name='ubicacion'
-                className='h-12 py-2'
-                onChange={(value: any) => {
-                  formik.setFieldValue('ubicacion', value.value)
-                }}
-              />
-        </div>
+          relative p-4 ${isDarkTheme ? oneDark : oneLight} rounded-md`}
+    >
+      <div className='md:col-span-6 md:flex-col items-center'>
+        <label htmlFor="ubicacion">Ubicación: </label>
+        <SelectReact
+          options={options}
+          id='ubicacion'
+          placeholder='Selecciona una ubicación'
+          name='ubicacion'
+          className='h-12 py-2'
+          onChange={(value: any) => {
+            formik.setFieldValue('ubicacion', value.value)
+          }}
+        />
+      </div>
 
-        {/* <div className='md:col-span-3 md:col-start-4 md:flex-col items-center'>
+      {/* <div className='md:col-span-3 md:col-start-4 md:flex-col items-center'>
           <label htmlFor="peso">Peso: </label>
           <Input
             type='number' 
@@ -159,14 +161,14 @@ const FormularioEdicionBodega : FC<IFormEnvasesProps> = ({ refresh, setOpen, gui
           />
         </div> */}
 
-      
 
-        <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-          <button className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
-            Registrar Envase
-          </button>
-        </div>
-      </form>
+
+      <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
+        <button className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
+          Registrar Envase
+        </button>
+      </div>
+    </form>
   )
 }
 

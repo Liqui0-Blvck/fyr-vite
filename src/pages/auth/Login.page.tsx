@@ -9,7 +9,7 @@ import Input from '../../components/form/Input';
 import FieldWrap from '../../components/form/FieldWrap';
 import Icon from '../../components/icon/Icon';
 import Validation from '../../components/form/Validation';
-import {useAuthenticatedFetch} from '../../hooks/useAxiosFunction';
+import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction';
 import { authPages } from '../../config/pages.config';
 
 type TValues = {
@@ -117,7 +117,7 @@ const LoginPage = () => {
 						</div>
 						<div>
 							<Button
-								isDisable = {touched}
+
 								size='lg'
 								variant='solid'
 								className='w-full font-semibold'
@@ -140,7 +140,7 @@ const LoginPage = () => {
 							</Link>
 						</span>
 					</div>
-						
+
 					<div>
 						<span className='flex gap-2 text-sm'>
 							<span className='text-zinc-400 dark:text-zinc-600'>

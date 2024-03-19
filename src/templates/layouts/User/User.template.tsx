@@ -16,28 +16,22 @@ interface IUser {
 }
 
 const UserTemplate = () => {
-	const { userID, authTokens, validate, onLogout } = useAuth();
-	const { data: userData, loading } = useAuthenticatedFetch<IUser>(
-		authTokens,
-		validate,
-		`/api/users/${userID?.user_id}`
-	)
-
-
+	const { perfilData, onLogout } = useAuth();
 
 
 	return (
 		<User
-			isLoading={loading}
-			name={userData && userData?.username}
-			nameSuffix={userData && userData?.email}
-			position={''}
+			isLoading={false}
+			name={perfilData?.user.first_name}
+			nameSuffix={perfilData?.user.username}
+			position={perfilData?.area}
 			src={''}
-			suffix={
-				<Badge color='amber' variant='solid' className='text-xs font-bold'>
-					PRO
-				</Badge>
-			}>
+		// suffix={
+		// 	<Badge color='amber' variant='solid' className='text-xs font-bold'>
+		// 		PRO
+		// 	</Badge>
+		// }
+		>
 			<NavSeparator />
 			<NavItem {...authPages.profilePage} />
 			<NavItem text='Logout' icon='HeroArrowRightOnRectangle' onClick={() => onLogout()} />

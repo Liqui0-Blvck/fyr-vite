@@ -71,17 +71,13 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 	const columns = [
 		columnHelper.accessor('nombre', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold '>{`${info.row.original.nombre}`}</div>
-				</Link>
+				<div className='font-bold '>{`${info.row.original.nombre}`}</div>
 			),
 			header: 'Nombre',
 		}),
 		columnHelper.accessor('peso', {
 			cell: (info) => (
-				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold'>{`${info.row.original.peso}`}</div>
-				</Link>
+				<div className='font-bold'>{`${info.row.original.peso}`}</div>
 			),
 			header: 'Peso',
 		}),
@@ -93,14 +89,14 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
 
 				return (
-					<div className='h-full w-full flex justify-around gap-2'>
+					<div className='h-full w-full flex justify-around gap-10'>
 						<ModalRegistro
 							open={detalleModalStatus}
 							setOpen={setDetalleModalStatus}
 							textTool='Detalle'
 							title='Detalle Comercializador'
 							size={900}
-							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-4/12 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
 							{/* <DetalleComercializador id={id} /> */}
@@ -113,7 +109,7 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 							title='Edición Comercializador'
 							textTool='Editar'
 							size={900}
-							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-4/12 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroPencilSquare style={{ fontSize: 25 }}
 							/>}
 						>
@@ -122,7 +118,7 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 						</ModalRegistro>
 
 						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-4/12 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 								<HeroXMark style={{ fontSize: 25 }} />
 							</button>
 						</Tooltip>

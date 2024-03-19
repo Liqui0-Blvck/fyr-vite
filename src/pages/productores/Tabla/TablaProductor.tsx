@@ -69,10 +69,6 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 	}
 
 
-
-	const editLinkProductor = `/app/productor/`
-	const createLinkProductor = `/app/registro-productor/`
-
 	const columns = [
 		columnHelper.accessor('rut_productor', {
 			cell: (info) => (
@@ -109,7 +105,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 		}),
 		columnHelper.accessor('direccion', {
 			cell: (info) => (
-				<div className='font-bold'>
+				<div className='font-bold truncate'>
 					{`${info.row.original.direccion}`}
 				</div>
 			),
@@ -131,7 +127,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
 
 				return (
-					<div className='h-full w-full flex justify-around gap-2'>
+					<div className='h-full w-full flex justify-around gap-5 '>
 
 						<ModalRegistro
 							open={detalleModalStatus}
@@ -139,7 +135,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 							textTool='Detalle'
 							title='Detalle Productor'
 							size={900}
-							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
 							<DetalleProductor id={id} />
@@ -151,14 +147,14 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 							title='Edición Productor'
 							textTool='Editar'
 							size={900}
-							width={`w-10 md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
 						>
 							<FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
 						</ModalRegistro>
 
 						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 								<HeroXMark style={{ fontSize: 25 }} />
 							</button>
 						</Tooltip>
@@ -245,7 +241,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 						<CardHeaderChild>
 						</CardHeaderChild>
 					</CardHeader>
-					<CardBody className='overflow-auto'>
+					<CardBody className='overflow-x-auto overflow-hidden'>
 						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} />
 					</CardBody>
 					<TableCardFooterTemplate table={table} />

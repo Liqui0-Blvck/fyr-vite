@@ -10,11 +10,11 @@ import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import useDarkMode from '../../../../hooks/useDarkMode';
-import { TCamion,TControlCalidad,TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
+import { TCamion, TControlCalidad, TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
 import { ESTADOS_GUIA_MP, ESTADOS_MP, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
 import { useNavigate } from 'react-router-dom';
 import '../../../../styles/index.css'
-import { usuarioRole,  perfilesPermitidos } from '../../../../constants/select.constanst';
+import { usuarioRole, perfilesPermitidos } from '../../../../constants/select.constanst';
 import { FaIndustry } from "react-icons/fa6";
 import { FaWeight } from "react-icons/fa";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
@@ -34,7 +34,7 @@ interface Row {
 
 interface IFooterProps {
   data: TGuia,
-  refresh: Dispatch<SetStateAction<boolean>> 
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
 const FooterDetalleGuia: FC<IFooterProps> = ({ data, refresh }) => {
@@ -137,15 +137,14 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data, refresh }) => {
     label: producto.label
   })) ?? []
 
-  const { data: control_calidad} = useAuthenticatedFetch<TControlCalidad[]>(
+  const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad[]>(
     authTokens,
     validate,
-    `/api/control-calidad/recepcionmp` 
+    `/api/control-calidad/recepcionmp`
   )
 
   const camionAcoplado = camiones?.find(camion => camion?.id === Number(data?.camion))?.acoplado
 
-  console.log(data)
 
   return (
     <div>
@@ -155,11 +154,11 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data, refresh }) => {
         <TableContainer className='table-container'>
           <Table className='table' aria-label="simple table">
             <TableHead className='table-header'>
-              <TableRow className='table-row' sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`}}>
-                <TableCell className='table-cell-1' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10}}>N° Lote</TableCell>
-                <TableCell className='table-cell-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Kilos Brutos Camión</TableCell>
-                {camionAcoplado ? <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10}}>Kilos Brutos Acoplado</TableCell> : null}
-                <TableCell className='table-cell-4' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Tipo Envase</TableCell>
+              <TableRow className='table-row' sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+                <TableCell className='table-cell-1' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10 }}>N° Lote</TableCell>
+                <TableCell className='table-cell-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10, }}>Kilos Brutos Camión</TableCell>
+                {camionAcoplado ? <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10 }}>Kilos Brutos Acoplado</TableCell> : null}
+                <TableCell className='table-cell-4' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10, }}>Tipo Envase</TableCell>
                 <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, }}>Variedad</TableCell>
                 <TableCell className='table-cell-6' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, }}>Tipo Producto</TableCell>
                 <TableCell className='table-cell-7' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}` }}>Acciones</TableCell>
@@ -170,25 +169,25 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data, refresh }) => {
                 return (
                   <TableRow key={row.id} className='table-row-body'>
                     {
-                      row.estado_recepcion < '7' 
+                      row.estado_recepcion < '7'
                         ? <LoteFila
-                            lote={row}
-                            guia={data}
-                            acoplado={camionAcoplado!}
-                            envases={envases}
-                            filtro_variedad={variedadFilter}
-                            filtro_productos={tipoFrutaFilter}
-                            openModalRows={openModalRows}
-                            setOpenModalRows={setOpenModalRows}
-                            openModalEdicion={openModalEdicion}
-                            setOpenModalEdicion={setOpenModalEdicion}
-                            openModalConfirmacion={openModalConfirmacion}
-                            setOpenModalConfirmacion={setOpenModalConfirmacion}
-                            estadoActivo={estadoActivo}
-                            setEstadoActivo={setEstadoActivo}
-                            refresh={refresh}
-                            />
-                        : null 
+                          lote={row}
+                          guia={data}
+                          acoplado={camionAcoplado!}
+                          envases={envases}
+                          filtro_variedad={variedadFilter}
+                          filtro_productos={tipoFrutaFilter}
+                          openModalRows={openModalRows}
+                          setOpenModalRows={setOpenModalRows}
+                          openModalEdicion={openModalEdicion}
+                          setOpenModalEdicion={setOpenModalEdicion}
+                          openModalConfirmacion={openModalConfirmacion}
+                          setOpenModalConfirmacion={setOpenModalConfirmacion}
+                          estadoActivo={estadoActivo}
+                          setEstadoActivo={setEstadoActivo}
+                          refresh={refresh}
+                        />
+                        : null
                     }
                   </TableRow>
 

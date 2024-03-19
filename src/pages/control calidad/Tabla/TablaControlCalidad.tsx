@@ -71,7 +71,7 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 		columnHelper.accessor('humedad', {
 			cell: (info) => (
 				<Link to={`${editLinkProductor}${info.row.original.id}`}>
-					<div className='font-bold '>{`${info.row.original.humedad}`}</div>
+					<div className='font-bold '>{`${info.row.original.humedad} %`}</div>
 				</Link>
 			),
 			header: 'Nivel Humedad',
