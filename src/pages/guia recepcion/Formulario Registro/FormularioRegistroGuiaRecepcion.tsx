@@ -13,6 +13,11 @@ import { ACTIVO } from '../../../constants/select.constanst'
 import FooterFormularioRegistro from './FooterFormularioRegistroGuiaRecepcion'
 
 import Radio, { RadioGroup } from '../../../components/form/Radio'
+import Validation from '../../../components/form/Validation'
+import Icon from '../../../components/icon/Icon'
+import FieldWrap from '../../../components/form/FieldWrap'
+import { headerGuiaRegistroSchema } from '../../../services/Validator'
+import Label from '../../../components/form/Label'
 
 const FormularioRegistroGuiaRecepcion = () => {
   const { authTokens, validate, userID } = useAuth()
@@ -51,8 +56,8 @@ const FormularioRegistroGuiaRecepcion = () => {
   )
 
   const optionsRadio = [
-    { id: 1, value: true, label: 'Si'},
-    { id: 2, value: false, label: 'No'}
+    { id: 1, value: true, label: 'Si' },
+    { id: 2, value: false, label: 'No' }
   ];
 
 
@@ -73,7 +78,9 @@ const FormularioRegistroGuiaRecepcion = () => {
       camionero: null,
       camion: null
     },
+    validationSchema: headerGuiaRegistroSchema,
     onSubmit: async (values: any) => {
+
       try {
         const res = await fetch(`${base_url}/api/recepcionmp/`, {
           method: 'POST',
@@ -142,106 +149,162 @@ const FormularioRegistroGuiaRecepcion = () => {
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
       <form
         onSubmit={formik.handleSubmit}
+        noValidate
         className={`flex flex-col md:grid md:grid-cols-6 gap-x-3
       gap-y-10 mt-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6 
       rounded-md`}
       >
 
-        <div className='border border-gray-300 rounded-md col-span-6'>
+        <div className={`${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-100'} rounded-md col-span-6`}>
           <h1 className='text-center text-2xl p-4'>Guía Recepción Materia Prima</h1>
-          <h4>{datosGuia?.estado_recepcion}</h4>
+          <h4>{datosGuia?.estado_recepcion_label}</h4>
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
-          <label htmlFor="productor">Productor: </label>
-          <SelectReact
-            options={optionsProductor}
-            id='productor'
-            name='productor'
-            placeholder='Selecciona un productor'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('productor', value.value)
-            }}
-          />
-          
+          <Label htmlFor='productor'>Productor: </Label>
+
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.productor ? true : undefined}
+            invalidFeedback={formik.errors.productor ? String(formik.errors.productor) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionsProductor}
+                id='productor'
+                name='productor'
+                placeholder='Selecciona un productor'
+                className='h-14'
+                onBlur={formik.handleBlur}
+                onChange={(value: any) => {
+                  formik.setFieldValue('productor', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
+
+
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
-          <label htmlFor="camionero">Chofer: </label>
-          <SelectReact
-            options={optionsConductor}
-            id='camionero'
-            name='camionero'
-            placeholder='Selecciona un chofer'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('camionero', value.value)
-            }}
-          />
-          
+          <Label htmlFor='camionero'>Chofer: </Label>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.camionero ? true : undefined}
+            invalidFeedback={formik.errors.camionero ? String(formik.errors.camionero) : undefined}
+
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionsConductor}
+                id='camionero'
+                name='camionero'
+                placeholder='Selecciona un chofer'
+                className='h-14'
+                onBlur={formik.handleBlur}
+                onChange={(value: any) => {
+                  formik.setFieldValue('camionero', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
+
+
         </div>
 
         <div className='md:row.start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
-          <label htmlFor="camion">Camion: </label>
-          <SelectReact
-            options={optionsCamion}
-            id='camion'
-            name='camion'
-            placeholder='Selecciona un camión'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('camion', value.value)
-            }}
-          />
+          <Label htmlFor='camion'>Camión: </Label>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.camion ? true : undefined}
+            invalidFeedback={formik.errors.camionero ? String(formik.errors.camion) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionsCamion}
+                id='camion'
+                name='camion'
+                placeholder='Selecciona un camión'
+                className='h-14'
+                onBlur={formik.handleBlur}
+                onChange={(value: any) => {
+                  formik.setFieldValue('camion', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
+
         </div>
 
         <div className='md:row-start-3 md:col-span-2 md:flex-col items-center'>
-          <label htmlFor="comercializador">Comercializador: </label>
-          <SelectReact
-            options={optionsComercializador}
-            id='comercializador'
-            name='comercializador'
-            placeholder='Selecciona una opción'
-            className='h-14'
-            onChange={(value: any) => {
-              formik.setFieldValue('comercializador', value.value)
-            }}
-          />
+          <Label htmlFor='comercializador'>Comercializador: </Label>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.comercializador ? true : undefined}
+            invalidFeedback={formik.errors.comercializador ? String(formik.errors.comercializador) : undefined}
+
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionsComercializador}
+                id='comercializador'
+                name='comercializador'
+                placeholder='Selecciona una opción'
+                className='h-14'
+                onBlur={formik.handleBlur}
+
+                onChange={(value: any) => {
+                  formik.setFieldValue('comercializador', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
+
         </div>
 
         <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center justify-center'>
-          <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
+          <Label htmlFor='mezcla_variedades'>Comercializador: </Label>
 
-          <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100' } rounded-md flex items-center justify-center relative`}>
-          <RadioGroup isInline>
-            {optionsRadio.map(({ id, value, label }) => {
-              return (
-                <Radio
-                  key={id}
-                  label={label}
-                  name='mezcla_variedades'
-                  value={label} // Asignar el valor correcto de cada botón de radio
-                  checked={formik.values.mezcla_variedades === value} // Comprobar si este botón de radio está seleccionado
-                  onChange={(e) => {
-                    formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
-                  } } 
-                  selectedValue={undefined} />
-              );
-            })}
-          </RadioGroup>
+
+          <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
+            <RadioGroup isInline>
+              {optionsRadio.map(({ id, value, label }) => {
+                return (
+                  <Radio
+                    key={id}
+                    label={label}
+                    name='mezcla_variedades'
+                    value={label} // Asignar el valor correcto de cada botón de radio
+                    checked={formik.values.mezcla_variedades === value} // Comprobar si este botón de radio está seleccionado
+                    onChange={(e) => {
+                      formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
+                    }}
+                    selectedValue={undefined} />
+                );
+              })}
+            </RadioGroup>
           </div>
         </div>
 
         <div className='md:col-span-2  md:col-start-5 md:flex-col items-center'>
-          <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
-          <Input
-            type='text'
-            name='numero_guia_productor'
-            onChange={formik.handleChange}
-            className='py-3'
-            value={formik.values.numero_guia_productor!}
-          />
+          <Label htmlFor='numero_guia_productor'>N° Guía Productor: </Label>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.numero_guia_productor ? true : undefined}
+            invalidFeedback={formik.errors.numero_guia_productor ? String(formik.errors.numero_guia_productor) : undefined}
+
+            validFeedback='Good'>
+            <FieldWrap>
+              <Input
+                type='text'
+                name='numero_guia_productor'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className='py-3'
+                value={formik.values.numero_guia_productor!}
+              />
+            </FieldWrap>
+          </Validation>
         </div>
 
 
@@ -262,21 +325,21 @@ const FormularioRegistroGuiaRecepcion = () => {
         (guiaGenerada && !variedad)
           ? (
             <FooterFormularioRegistro data={datosGuia!} variedad={variedad} />
-            )
+          )
           : (guiaGenerada && activo)
+            ? (
+              <FooterFormularioRegistro data={datosGuia!} variedad={variedad} />
+            )
+            : guiaGenerada
               ? (
-                  <FooterFormularioRegistro data={datosGuia!} variedad={variedad} />
-              )
-              : guiaGenerada
-                  ? (
-                    <button
-                      type='submit'
-                      className={`${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
+                <button
+                  type='submit'
+                  className={`${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
                       ml-10 mt-10 px-6 py-3 rounded-md font-semibold text-md
                       `}
-                      onClick={() => setActivo(prev => !prev)}>Agregar Lotes</button>
-                    )
-                  : null
+                  onClick={() => setActivo(prev => !prev)}>Agregar Lotes</button>
+              )
+              : null
       }
 
     </div>

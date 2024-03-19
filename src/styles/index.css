@@ -12,18 +12,18 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: #acacac;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #000000;
+  background: #27272A;
   border-radius: 2px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #232222;
+  background: #27272A;
 }
 
 @layer base {
@@ -434,4 +434,19 @@
 }
 
 
+.table-container-registro {
+	z-index: 10;
+	height: 350px;
+}
 
+.light {
+	color: white !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	transition: ease-in 0.3s
+}
+
+.dark {
+	color: black !important;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	transition: ease-out 0.4s
+}

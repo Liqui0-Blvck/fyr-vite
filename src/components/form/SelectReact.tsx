@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { TBorderWidth } from '../../types/borderWidth.type';
 import themeConfig from '../../config/theme.config';
 import { TRounded } from '../../types/rounded.type';
-import { TColors } from '../../types/colors.type';
+import { TColorFlat, TColors } from '../../types/colors.type';
 import { TColorIntensity } from '../../types/colorIntensities.type';
 import useColorIntensity from '../../hooks/useColorIntensity';
 import useRoundedSize from '../../hooks/useRoundedSize';
@@ -16,11 +16,11 @@ export type TSelectDimension = 'sm' | 'default' | 'lg' | 'xl';
 
 type TSelectOption =
 	| {
-			value: string;
-			label: string;
-			isFixed?: boolean;
-			isDisabled?: boolean;
-	  }
+		value: string;
+		label: string;
+		isFixed?: boolean;
+		isDisabled?: boolean;
+	}
 	| undefined;
 export type TSelectOptions = TSelectOption[];
 export type TSelectGroups = GroupBase<TSelectOption>[];
@@ -32,7 +32,7 @@ type TReactSelect = Partial<
 interface ISelectReactProps extends TReactSelect, Partial<IValidationBaseProps> {
 	borderWidth?: TBorderWidth;
 	className?: string;
-	color?: TColors;
+	color?: TColors | TColorFlat;
 	colorIntensity?: TColorIntensity;
 	name: string;
 	rounded?: TRounded;
@@ -85,9 +85,9 @@ const SelectReact: FC<ISelectReactProps> = (props) => {
 			),
 			controlFocus: classNames(
 				{
-					'!border-zinc-300 dark:!border-zinc-800': isValid,
+					'!border-zinc-300 dark:!border-white': isValid,
 				},
-				'!bg-transparent dark:!bg-transparent',
+				'!bg-transparent dark:!bg-transparent text-white',
 			),
 			validation: classNames({
 				'!border-red-500 ring-4 ring-red-500/30': !isValid && isTouched && invalidFeedback,
@@ -140,10 +140,10 @@ const SelectReact: FC<ISelectReactProps> = (props) => {
 						[`bg-${color as TColors}-${colorIntensity as TColorIntensity}`]:
 							state.isFocused,
 						[`${textColor}`]: state.isFocused,
-						'opacity-50': state?.data?.isDisabled,
+						'opacity-100': state?.data?.isDisabled,
 					}),
 				menu: () =>
-					classNames('bg-white dark:bg-black overflow-hidden shadow-lg', [
+					classNames(`bg-white dark:bg-zinc-900 text-black dark:text-white overflow-hidden shadow-lg`, [
 						`${rounded as TRounded}`,
 					]),
 				group: () => classNames('border-zinc-500/25', '[&:not(:last-child)]:border-b'),

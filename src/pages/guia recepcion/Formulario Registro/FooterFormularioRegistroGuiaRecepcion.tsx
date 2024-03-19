@@ -98,7 +98,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
         creado_por: data.creado_por,
       }]
       formData.append('lotes', JSON.stringify(lotesData))
-      
+
       const envasesData = rows.map((row) => ({
         envase: row.envase,
         variedad: row.variedad,
@@ -130,7 +130,6 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
 
   const numeroLote: string = generarNumeroLote();
 
-  console.log(numeroLote)
 
 
   const agregarFila = () => {
@@ -152,13 +151,13 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     envases?.map(envase => ({
       value: String(envase.id),
       label: envase.nombre
-    })) ?? []:
-    envases?.filter(envase => 
+    })) ?? [] :
+    envases?.filter(envase =>
       !rows.some(row => row.envase === String(envase.id)))
-    .map((envase) => ({
-      value: String(envase.id),
-      label: envase.nombre
-    })) ?? []
+      .map((envase) => ({
+        value: String(envase.id),
+        label: envase.nombre
+      })) ?? []
 
   const variedadFilter = (rows.length <= 1) ?
     VARIEDADES_MP.map(variedad => ({
@@ -171,7 +170,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
       value: String(variedad.value),
       label: variedad.label
     })) ?? []
-  
+
 
   const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
     value: String(producto.value),
@@ -187,24 +186,26 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     <div>
       <form
         onSubmit={formik.handleSubmit}
-        className='relative flex flex-col'>
-        <div className='w-full mb-5 flex px-5 justify-between'>
-          <div className={`grid grid-cols-4 gap-2 items-center justify-center ${camionAcoplado ? 'w-full' : 'w-[90%]'}`}>
+        className='relative flex flex-col px-5'>
+        <div className='w-full mb-5 grid grid-cols-4 px-5 justify-between'>
+          <div className={`gap-2 items-center justify-center ${camionAcoplado ? 'w-full' : 'w-[90%] col-start-2 col-span-2'}`}>
             <label
               htmlFor="kilos_brutos_1"
               className='col-span-3'
             >Kilos Brutos</label>
-            <Input
-              type='number'
-              name='kilos_brutos_1'
-              className='py-3 row-start-2 col-span-3 w-56'
-              value={formik.values.kilos_brutos_1}
-              onChange={formik.handleChange}
-              disabled={iotBruto ? true : false}
-            />
-            <Switch
-              className='row-start-2 col-start-4 w-16 bg-slate-300'
-              onChange={() => setIotBruto(prev => !prev)} />
+            <div className='row-start-2 flex gap-2 items-center'>
+              <Input
+                type='number'
+                name='kilos_brutos_1'
+                className='py-3  col-span-3 w-56'
+                value={formik.values.kilos_brutos_1}
+                onChange={formik.handleChange}
+                disabled={iotBruto ? true : false}
+              />
+              <Switch
+                className='row-start-2 col-start-4 w-16 bg-slate-300'
+                onChange={() => setIotBruto(prev => !prev)} />
+            </div>
           </div>
 
           {
@@ -232,7 +233,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               : null
           }
         </div>
-        <TableContainer sx={{ height: 350, overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
+        <TableContainer className='table-container-registro' sx={{ overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
           <Table sx={{ minWidth: 750, background: `${isDarkTheme ? '#09090B' : 'white'}` }} aria-label="simple table">
             <TableHead >
               <TableRow>
@@ -248,13 +249,14 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
                 return (
                   <TableRow key={index} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative' }}>
 
-                    <TableCell style={{ zIndex: 1, maxWidth: 150, minWidth: 150 }}>
+                    <TableCell style={{ maxWidth: 150, minWidth: 150, }}>
                       <SelectReact
                         options={optionEnvases}
                         id='camion'
                         name='camion'
+                        variant='solid'
                         placeholder='Selecciona un envase'
-                        className='h-14 w-full absolute'
+                        className='h-14 w-full background'
                         onChange={(value: any) => {
                           handleChangeRow(row.id, 'envase', value.value)
                         }}
@@ -334,18 +336,18 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
             : null
         }
 
-        <div className='flex bg-gray-300 w-full flex-row-reverse mt-12 md:mt-10 lg:mt-10'>
+        <div className={`flex w-full ${isDarkTheme ? 'transparent' : 'bg-gray-300 '} flex-row-reverse mt-12 md:mt-10 lg:mt-10`}>
           <button
             type='submit'
             className='lg:relative lg:px-6 lg:py-4 lg:right-5 lg:bottom-0 lg:top-0
               md:relative md:px-6 md:py-4 md:right-5 md:bottom-0 md:top-0
-              px-6 py-4 w-full
-              bg-[#2732FF] rounded-md text-white'>
+              px-6 py-4 w-72
+              bg-[#2732FF] rounded-md text-white hover:scale-105'>
             Registrar Guia de Recepción
           </button>
         </div>
       </form>
-    </div>
+    </div >
   );
 };
 

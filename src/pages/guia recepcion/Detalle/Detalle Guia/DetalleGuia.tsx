@@ -198,7 +198,7 @@ const DetalleGuia = () => {
       rounded-md`}
       >
 
-        <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} rounded-md col-span-6 bg-[#F4F4F5]`}>
+        <div className={`${isDarkTheme ? 'bg-zinc-800' : 'bg-[#F4F4F5] '} rounded-md col-span-6 bg-[#F4F4F5]`}>
           <h1 className='text-center text-2xl p-2'>Guía Recepción Materia Prima</h1>
           <h5 className='text-center text-xl p-2'>Estado: {guia_recepcion?.estado_recepcion_label}</h5>
         </div>
@@ -322,12 +322,12 @@ const DetalleGuia = () => {
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Lotes Pendientes" {...a11yProps(0)} />
-                    <Tab label="Lotes Aprobados" {...a11yProps(1)} />
-                    <Tab label="Lote Rechazado" {...a11yProps(2)} />
+                    <Tab label="Lotes Pendientes" {...a11yProps(0)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
+                    <Tab label="Lotes Aprobados" {...a11yProps(1)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
+                    <Tab label="Lote Rechazado" {...a11yProps(2)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
                   </Tabs>
                 </Box>
-                <CustomTabPanel value={value} index={0}>
+                <CustomTabPanel value={value} index={0} >
                   <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>

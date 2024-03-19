@@ -227,7 +227,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 				</SubheaderRight>
 			</Subheader>
 			<Container>
-				<Card className='h-full'>
+				<Card className='h-full w-full'>
 					<CardHeader>
 						<CardHeaderChild>
 							<CardTitle>Productores</CardTitle>
