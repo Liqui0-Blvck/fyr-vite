@@ -88,34 +88,37 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
       creado_por: null,
     },
     onSubmit: async (values: any) => {
-      const formData = new FormData()
-      const lotesData = [{
-        numero_lote: data.id,
-        kilos_brutos_1: values.kilos_brutos_1,
-        kilos_brutos_2: values.kilos_brutos_2,
-        kilos_tara_1: values.kilos_brutos_1,
-        kilos_tara_2: values.kilos_brutos_2,
-        estado_recepcion: '1',
-        guiarecepcion: data.id,
-        creado_por: data.creado_por,
-      }]
-      formData.append('lotes', JSON.stringify(lotesData))
       const envasesData = rows.map((row) => ({
         envase: row.envase,
         variedad: row.variedad,
         tipo_producto: row.tipo_producto,
         cantidad_envases: row.cantidad_envases,
       }));
-      formData.append('envases', JSON.stringify(envasesData));
+
+      const lotesData = {
+        numero_lote: 0,
+        kilos_brutos_1: values.kilos_brutos_1,
+        kilos_brutos_2: values.kilos_brutos_2,
+        kilos_tara_1: 0,
+        kilos_tara_2: 0,
+        estado_recepcion: '1',
+        guiarecepcion: data.id,
+        creado_por: data.creado_por,
+        envases: JSON.stringify(envasesData)
+      }
 
 
       try {
         const res = await fetch(`${base_url}/api/recepcionmp/${data.id}/lotes/`, {
           method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${authTokens?.access}`
           },
-          body: formData
+          body: JSON.stringify({
+            ...lotesData,
+            envases: envasesData
+          })
         })
         if (res.ok) {
           toast.success("la guia de recepción fue registrado exitosamente!!")
@@ -178,45 +181,53 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
       <form
         onSubmit={formik.handleSubmit}
         className='relative'>
-        <div className='w-full mb-5 flex px-5 justify-between'>
-          <div className={`grid grid-cols-4 gap-2 items-center justify-center ${camionAcoplado ? 'w-full' : 'w-[90%]'}`}>
+        <div className='w-full mb-5 grid grid-cols-4 px-5 justify-between items-center gap-x-2'>
+          <div className={`gap-2${camionAcoplado ? 'w-full col-start-1 col-span-2' : 'w-[90%] col-start-2 col-span-2'}`}>
             <label
               htmlFor="kilos_brutos_1"
               className='col-span-3'
             >Kilos Brutos</label>
-            <Input
-              type='number'
-              name='kilos_brutos_1'
-              className='py-3 row-start-2 col-span-3 w-56'
-              value={formik.values.kilos_brutos_1}
-              onChange={formik.handleChange}
-              disabled={iotBruto ? true : false}
-            />
-            <Switch
-              className='row-start-2 col-start-4 w-16 bg-slate-300'
-              onChange={() => setIotBruto(prev => !prev)} />
+            <div className='row-start-2 flex gap-2 items-center'>
+              <Input
+                type='number'
+                name='kilos_brutos_1'
+                className='py-3  col-span-3 w-56'
+                value={formik.values.kilos_brutos_1}
+                onChange={formik.handleChange}
+                disabled={iotBruto ? true : false}
+              />
+              <Switch
+                className='row-start-2 col-start-4 w-16 bg-slate-300'
+                onChange={() => setIotBruto(prev => !prev)} />
+            </div>
           </div>
 
           {
             camionAcoplado
               ? (
-                <div className='grid grid-cols-4 gap-2 items-center justify-center w-full'>
-                  <label
-                    htmlFor="kilos_brutos_2"
-                    className='col-span-3'
-                  >Kilos Brutos Acoplado</label>
-                  <Input
-                    type='number'
-                    name='kilos_brutos_2'
-                    className='py-3 row-start-2 col-span-3 w-56'
-                    value={formik.values.kilos_brutos_2}
-                    onChange={formik.handleChange}
-                    disabled={iotBrutoAcoplado ? true : false}
+                <div className='grid grid-cols-4 gap-2 items-center justify-center w-full  col-span-2'>
+                   <div className={'w-full col-start-1 col-span-4'}>
+                    <label
+                      htmlFor="kilos_brutos_2"
+                      className='col-span-3'
+                    >Kilos Brutos Acoplado</label>
+                    <div className='row-start-2 flex gap-2 items-center'>
+                      <Input
+                        type='number'
+                        name='kilos_brutos_2'
+                        className='py-3 row-start-2 col-span-3 w-56'
+                        value={formik.values.kilos_brutos_2}
+                        onChange={formik.handleChange}
+                        disabled={iotBrutoAcoplado ? true : false}
 
-                  />
-                  <Switch
-                    className='row-start-2 col-start-4 w-16 bg-slate-300'
-                    onChange={() => setIotBrutoAcoplado(prev => !prev)} />
+                      />
+                      <Switch
+                        className='row-start-2 col-start-4 w-16 bg-slate-300'
+                        onChange={() => setIotBrutoAcoplado(prev => !prev)} 
+                        />
+                    </div>
+                    
+                    </div>
                 </div>
               )
               : null
@@ -325,13 +336,13 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
             : null
         }
 
-        <div className='flex bg-gray-300 w-full flex-row-reverse mt-12 md:mt-10 lg:mt-10'>
+        <div className={`flex w-full ${isDarkTheme ? 'transparent' : 'bg-white '} flex-row-reverse mt-12 md:mt-10 lg:mt-10`}>
           <button
             type='submit'
             className='lg:relative lg:px-6 lg:py-4 lg:right-5 lg:bottom-0 lg:top-0
               md:relative md:px-6 md:py-4 md:right-5 md:bottom-0 md:top-0
-              px-6 py-4 w-full
-              bg-[#2732FF] rounded-md text-white'>
+              px-6 py-4 w-72
+              bg-[#2732FF] rounded-md text-white hover:scale-105'>
             Registrar Guia de Recepción
           </button>
         </div>

@@ -23,7 +23,6 @@ interface IFormCC {
 const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_lote, updateEstado }) => {
   
 
-  console.log(id_lote)
   const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
@@ -72,7 +71,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
         })
         if (res.ok) {
           toast.success("El control de calidad fue registrado exitosamente!!")
-          updateEstado(id_lote,'3')
+          // updateEstado(id_lote,'3')
           setOpen(false)
           refresh(true)
 

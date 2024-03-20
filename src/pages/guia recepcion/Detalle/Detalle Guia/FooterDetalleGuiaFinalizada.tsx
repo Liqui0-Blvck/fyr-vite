@@ -67,15 +67,6 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
     label: producto.label
   })) ?? []
 
-  const estadoRecepcion = ESTADOS_MP?.map((estado) => ({
-    value: String(estado.value),
-    label: estado.label
-  })) ?? []
-
-  const estadoGuiaMP = ESTADOS_GUIA_MP?.map((estado) => ({
-    value: String(estado.value),
-    label: estado.label
-  })) ?? []
 
   const camionAcoplado = camiones?.find(camion => camion?.id === Number(data?.camion))?.acoplado
 
@@ -85,7 +76,6 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
     `/api/control-calidad/recepcionmp` 
   )
 
-  console.log(data)
 
   return (
     <div>
@@ -100,6 +90,8 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
                 
                 {camionAcoplado ? <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10}}>Kilos Brutos Acoplado</TableCell> : null}
                 <TableCell className='table-cell-final-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Kilos Tara</TableCell>
+                {camionAcoplado ? <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10}}>Kilos Tara Acoplado</TableCell> : null}
+
                 <TableCell className='table-cell-final-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Kilos Envase</TableCell>
                 <TableCell className='table-cell-final-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Kilos Fruta Neto</TableCell>
 
@@ -121,9 +113,7 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
                   return envaseTotal; // Retornar el peso total de envases
                   }).reduce((acumulador, pesoTotal) => acumulador! + pesoTotal!, 0);
 
-                  console.log(row.kilos_tara_1)
                   const kilos_netos_fruta = row.kilos_brutos_1 + row.kilos_brutos_2 - row?.kilos_tara_1 - row?.kilos_tara_2 - kilos_total_envases!;
-                  console.log(kilos_netos_fruta)
 
                 return (
                   <TableRow key={row.id} className='table-row-body'>

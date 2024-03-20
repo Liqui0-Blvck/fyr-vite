@@ -73,7 +73,6 @@ const LoteFila: FC<ILoteCompletadoProps> = (
     cargoLabels.includes('CDC Jefatura')  ? <HiOutlineClipboardDocumentList className='text-3xl'/>: '' ) : ''
     
 
-    console.log(row?.estado_recepcion === '5')
 
 
   return (
@@ -184,7 +183,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
 
               <>
                 {
-                  checkCargoPerfil(perfilData.cargos) && row?.estado_recepcion! <= '2'
+                  cargoLabels.includes('CDC Jefatura') && row?.estado_recepcion! <= '2'
                     ? (
                       <ModalRegistro
                         open={openModalConfirmacion[row?.id!] || false}
@@ -210,7 +209,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                         }
                       </ModalRegistro>
                     )
-                    : checkCargoPerfil(perfilData.cargos) && row?.estado_recepcion! === '5'
+                    : cargoLabels.includes('RecepcionMP') && row?.estado_recepcion! === '5'
                       ? (
                         <ModalRegistro
                           open={openModalConfirmacion[row?.id!] || false}
@@ -229,7 +228,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                           }
                         </ModalRegistro>
                       )
-                      : checkCargoPerfil(perfilData?.cargos) && row?.estado_recepcion !== '5' && row?.estado_recepcion === '3'
+                      : cargoLabels.includes('Bodega Patio Exterior') && row?.estado_recepcion !== '5' && row?.estado_recepcion === '3'
                         ? (
                           <ModalRegistro
                             open={openModalConfirmacion[row?.id!] || false}

@@ -73,7 +73,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
       Cookies.set('token', JSON.stringify(data), { expires: 2 });
       Cookies.set('user', JSON.stringify(data.access), { expires: 2 })
 
-      navigate(`../${appPages.mainAppPages.to}`, { replace: true });
+      // navigate(`../${appPages.mainAppPages.to}`, { replace: true });
+      window.location.href = `${appPages.mainAppPages.to}`
     } else if (res.status === 401) {
       toast.error('Error al ingresar, volver a intentar');
     }

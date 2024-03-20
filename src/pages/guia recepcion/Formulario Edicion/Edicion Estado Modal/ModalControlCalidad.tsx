@@ -21,8 +21,6 @@ const ModalControlCalidad: FC<IModalProps> = ({ id, estadoActivo, setOpen, numer
   const base_url = process.env.VITE_BASE_URL_DEV;
   const { isDarkTheme } = useDarkMode()
 
-  console.log(guia_id)
-
 
 
   const variedadFilter = VARIEDADES_MP?.map((producto) => ({
@@ -134,7 +132,7 @@ const ModalControlCalidad: FC<IModalProps> = ({ id, estadoActivo, setOpen, numer
                 : (
                     <div className={`${isDarkTheme ? 'bg-gray-50' : 'bg-gray-700'}w-full h-full  flex flex-col justify-center items-center`}>
                       <GoQuestion className='text-9xl text-yellow-500' />
-                      <h1 className='text-center'>Estas seguro de querer avanzar?</h1>
+                      <h1 className='text-center'>¿Estas seguro de querer registrar la humedad?</h1>
 
                     </div>
                   )

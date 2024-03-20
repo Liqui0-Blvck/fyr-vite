@@ -186,13 +186,13 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
 
   return (
-    <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
+    <div className={`${isDarkTheme ? oneDark : 'bg-white'}w-full  h-full`}>
       <form
         onSubmit={formik.handleSubmit}
-        className={`flex flex-col md:grid md:grid-cols-6 gap-x-3
-      gap-y-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6 
-      rounded-md`}
-      >
+        className={`flex flex-col md:grid md:grid-cols-6 gap-x-5
+          gap-y-10  relative px-5 py-6 w-full
+          rounded-md`}
+          >
 
         <div className='rounded-md col-span-6'>
           {/* <h1 className='text-center text-xl p-4'>Registro Guía Recepción Para Materias Primas Origen</h1> */}
@@ -200,7 +200,7 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="productor">Productor: </label>
-          <div className=' h-full w-full flex items-center justify-center'>
+          <div className={`rounded-md px-3 h-14 w-full flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
             <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_productor}</span>
           </div>
 
@@ -208,7 +208,7 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
           <label htmlFor="camionero">Chofer: </label>
-          <div className=' h-full w-full flex items-center justify-center'>
+          <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
             <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camionero}</span>
           </div>
 
@@ -216,14 +216,14 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
           <label htmlFor="camion">Camion: </label>
-          <div className=' h-full w-full flex items-center justify-center'>
+          <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
             <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camion}</span>
           </div>
         </div>
 
         <div className='md:row-start-3 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="comercializador">Comercializador: </label>
-          <div className=' h-full w-full flex items-center justify-center'>
+          <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
             <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_comercializador}</span>
           </div>
         </div>
@@ -231,7 +231,7 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
         <div className='md:rw-start-3 md:col-span-2 md:col-start-3 md:flex-col items-center justify-center'>
           <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
 
-          <div className={`w-full h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
+          <div className={`w-fullrounded-md h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
             <RadioGroup isInline>
               {optionsRadio.map(({ id, value, label }) => {
                 return (
@@ -255,7 +255,7 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
 
         <div className='md:row-start-3 md:col-span-2  md:col-start-5 md:flex-col items-center'>
           <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
-          <div className=' h-full w-full flex items-center justify-center'>
+          <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
             <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.numero_guia_productor}</span>
           </div>
         </div>
@@ -276,13 +276,13 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
           camionAcoplado
             ? (
               <div className='md:row-start-4 md:col-span-3 md:col-start-4 md:flex-col items-center'>
-                <label htmlFor="tara_camion_">Tara Camión Acoplado: </label>
+                <label htmlFor="kilos_tara_2">Tara Camión Acoplado: </label>
                 <Input
                   type='text'
-                  name='tara_camion_2'
+                  name='kilos_tara_2'
                   onChange={formik.handleChange}
                   className='py-3'
-                  value={formik.values.tara_camion_2!}
+                  value={formik.values.kilos_tara_2!}
                   
                 />
               </div>

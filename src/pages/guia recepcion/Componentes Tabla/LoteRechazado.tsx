@@ -45,6 +45,9 @@ const LoteRechazadoFila: FC<ILoteCompletadoProps> = ({ lote: row, refresh }) => 
     updateResultado(e, row?.id!)
   }
 
+  const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
+
+
 
 
 
@@ -61,7 +64,7 @@ const LoteRechazadoFila: FC<ILoteCompletadoProps> = ({ lote: row, refresh }) => 
         </div>
       </TableCell>
       {
-        checkCargoPerfil(perfilData.cargos)
+        cargoLabels.includes('CDC Jefatura')
           ? (
             <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
               <SelectReact

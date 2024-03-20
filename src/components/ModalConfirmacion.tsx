@@ -2,6 +2,7 @@ import { Dispatch, FC, SetStateAction } from "react";
 import useDarkMode from "../hooks/useDarkMode";
 import { TLoteGuia } from "../types/registros types/registros.types";
 import toast from "react-hot-toast";
+import { GoQuestion } from "react-icons/go";
 
 
 interface IModalProps {
@@ -18,6 +19,7 @@ const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, lote, confir
   const base_url = process.env.VITE_BASE_URL_DEV;
   const { isDarkTheme } = useDarkMode()
 
+  console.log(confirmacion)
   // const estado_guia_update = async (id: any) => {
   //   const res = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
   //     method: 'PATCH',
@@ -46,19 +48,9 @@ const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, lote, confir
       ) : (
         <>
           {!confirmacion && (
-            <div className='py-10'>
-              {
-                lote?.envases.map((lotes: any) => {
-                  console.log(lotes)
-                  return (
-                    <>
-                      <li className={`font-semibold text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>Producto: ''</li>
-                      <li className={`font-semibold text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>Variedad: ''</li>
-                    </>
-                  )
-                })
-              }
-                
+            <div className='py-10 w-full h-full  flex flex-col justify-center items-center'>
+              <GoQuestion className='text-9xl text-yellow-500' />
+              <h1 className="text-lg mt-5">¿Estas seguro de finalizar la Guía ?</h1>
             </div>
           )}
   
@@ -72,7 +64,7 @@ const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, lote, confir
                   setConfirmacion(false);
                 }}}
             > 
-              {confirmacion ? 'Sí' : 'Confirmar'}
+              {confirmacion ? 'Sí' : 'Sí'}
             </button>
             <button 
               className='w-48 py-3 px-6 rounded-md bg-red-600 text-white'
@@ -85,7 +77,7 @@ const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, lote, confir
                 }
               }}
             > 
-              {confirmacion ? 'No' : 'Cancelar'}
+              {confirmacion ? 'No' : 'No'}
             </button>
           </div>
         </>

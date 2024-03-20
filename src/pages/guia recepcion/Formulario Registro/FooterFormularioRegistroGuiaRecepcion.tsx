@@ -182,14 +182,14 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
   const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
-  console.log(optionEnvases)
+
   return (
     <div>
       <form
         onSubmit={formik.handleSubmit}
         className='relative flex flex-col px-5'>
-        <div className='w-full mb-5 grid grid-cols-4 px-5 justify-between'>
-          <div className={`gap-2 items-center justify-center ${camionAcoplado ? 'w-full' : 'w-[90%] col-start-2 col-span-2'}`}>
+        <div className='w-full mb-5 grid grid-cols-4 px-5 justify-between items-center gap-x-2'>
+          <div className={`gap-2${camionAcoplado ? 'w-full col-start-1 col-span-2' : 'w-[90%] col-start-2 col-span-2'}`}>
             <label
               htmlFor="kilos_brutos_1"
               className='col-span-3'
@@ -212,23 +212,29 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
           {
             camionAcoplado
               ? (
-                <div className='grid grid-cols-4 gap-2 items-center justify-center w-full'>
-                  <label
-                    htmlFor="kilos_brutos_2"
-                    className='col-span-3'
-                  >Kilos Brutos Acoplado</label>
-                  <Input
-                    type='number'
-                    name='kilos_brutos_2'
-                    className='py-3 row-start-2 col-span-3 w-56'
-                    value={formik.values.kilos_brutos_2}
-                    onChange={formik.handleChange}
-                    disabled={iotBrutoAcoplado ? true : false}
+                <div className='grid grid-cols-4 gap-2 items-center justify-center w-full  col-span-2'>
+                   <div className={'w-full col-start-1 col-span-4'}>
+                    <label
+                      htmlFor="kilos_brutos_2"
+                      className='col-span-3'
+                    >Kilos Brutos Acoplado</label>
+                    <div className='row-start-2 flex gap-2 items-center'>
+                      <Input
+                        type='number'
+                        name='kilos_brutos_2'
+                        className='py-3 row-start-2 col-span-3 w-56'
+                        value={formik.values.kilos_brutos_2}
+                        onChange={formik.handleChange}
+                        disabled={iotBrutoAcoplado ? true : false}
 
-                  />
-                  <Switch
-                    className='row-start-2 col-start-4 w-16 bg-slate-300'
-                    onChange={() => setIotBrutoAcoplado(prev => !prev)} />
+                      />
+                      <Switch
+                        className='row-start-2 col-start-4 w-16 bg-slate-300'
+                        onChange={() => setIotBrutoAcoplado(prev => !prev)} 
+                        />
+                    </div>
+                    
+                    </div>
                 </div>
               )
               : null

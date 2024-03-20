@@ -80,13 +80,13 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
       <div
         className='relative'>
         <TableContainer sx={{ height: 350, overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
-          <Table sx={{ minWidth: 750, background: `${isDarkTheme ? '#09090B' : 'white'}` }} aria-label="simple table">
-            <TableHead className='bg-[#f1eeeeb0] flex'>
+          <Table sx={{ minWidth: 750, borderRadius: 5, background: `${isDarkTheme ? '#18181b' : 'white'}` }} aria-label="simple table">
+            <TableHead className='bg-[#18181b] flex rounded-md'>
               <TableRow className='flex flex-wrap'>
-                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Envase</TableCell>
-                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Cantidad Envases</TableCell>
-                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Variedad</TableCell>
-                <TableCell align="center" className={`w-10 ${isDarkTheme ? 'white' : 'black'}`}>Producto</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Envase</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Cantidad Envases</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Variedad</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Producto</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -96,29 +96,29 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
                 const nombre_producto = tipoFrutaFilter.find(producto => producto.value === row.tipo_producto)?.label
 
                 return (
-                  <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#09090B' : 'white'}`, position: 'relative',}}>
+                  <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#18181b' : 'white'}`, position: 'relative',}}>
                     
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1}}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1}}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center'>{nombre_envase}</span>
+                        <span className='text-xl text-center text-white'>{nombre_envase}</span>
                       </div>
                     </TableCell>
 
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center' >{row.cantidad_envases!}</span>
+                        <span className='text-xl text-center text-white' >{row.cantidad_envases!}</span>
                       </div>
                     </TableCell>
 
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center'>{nombre_variedad}</span>
+                        <span className='text-xl text-center text-white'>{nombre_variedad}</span>
                       </div>
                     </TableCell>
                     
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#f1eeeeb0' : '#F4F4F5'}`, paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1 }}>
                     <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center'>{nombre_producto}</span>
+                        <span className='text-xl text-center text-white'>{nombre_producto}</span>
                       </div>
                     </TableCell>
 

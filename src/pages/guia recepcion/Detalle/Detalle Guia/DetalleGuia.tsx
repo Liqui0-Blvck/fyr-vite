@@ -67,6 +67,7 @@ const DetalleGuia = () => {
   const [guiaID, setGuiaID] = useState<number | null>(null)
   const [variedad, setVariedad] = useState<boolean>(false)
   const [datosGuia, setDatosGuia] = useState<TGuia | null>(null)
+  const [confirmacionCierre, setConfirmacionCierre] = useState<boolean>(false)
   const [confirmacion, setConfirmacion] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const base_url = process.env.VITE_BASE_URL_DEV
@@ -181,12 +182,25 @@ const DetalleGuia = () => {
     }
   }, [guia_recepcion])
 
+  useEffect(() => {
+    if (confirmacionCierre){
+      estado_guia_update(guia_recepcion?.id)
+    }
+  }, [confirmacionCierre])
+
 
 
   const [value, setValue] = useState(0);
+  const [valueConditional, setValueConditional] = useState(1)
+  const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
+
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    const lote_rechazado = guia_recepcion?.estado_recepcion === '4'
+    lote_rechazado 
+      ? setValueConditional(newValue)
+      : setValue(newValue);
+    
   };
 
   const controles = guia_recepcion?.lotesrecepcionmp.some((lote: TGuia) => {
@@ -276,7 +290,7 @@ const DetalleGuia = () => {
       {
         nuevoLote
           ? null
-          : guia_recepcion?.mezcla_variedades && guia_recepcion?.estado_recepcion !== '4' && perfilData?.area === 'Recepcion'
+          : guia_recepcion?.mezcla_variedades && guia_recepcion?.estado_recepcion !== '4' && cargoLabels.includes('RecepcionMP')
             ? (
               <div className='w-full flex ml-6 gap-5'>
                 {
@@ -294,7 +308,7 @@ const DetalleGuia = () => {
 
 
                 {
-                  (controles && perfilData?.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4')
+                  (controles && cargoLabels.includes('RecepcionMP')  && guia_recepcion?.estado_recepcion !== '4')
                     ? (
                       // <div
                       //   onClick={() => estado_guia_update(id)}
@@ -307,13 +321,14 @@ const DetalleGuia = () => {
                         title={'Finalizar Guía'}
                         textTool='Detalle'
                         size={450}
-                        width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-                        icon={<IoCheckmarkDoneSharp />}
+                        width={`w-52 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                        textButton='Finalizar Guía'
+                        
                       >
                         <ModalConfirmacion 
                           id={id[0]}
-                          confirmacion={confirmacion}
-                          setConfirmacion={setConfirmacion}
+                          confirmacion={confirmacionCierre}
+                          setConfirmacion={setConfirmacionCierre}
                           setOpen={setOpen}
                           refresh={setRefresh} />
                       </ModalRegistro>
@@ -324,7 +339,7 @@ const DetalleGuia = () => {
 
               </div>
             )
-            : controles && perfilData?.area === 'Recepcion' && guia_recepcion?.estado_recepcion !== '4'
+            : controles && cargoLabels.includes('RecepcionMP') && guia_recepcion?.estado_recepcion !== '4'
               ? (
                 <ModalRegistro
                   open={open || false}
@@ -332,13 +347,13 @@ const DetalleGuia = () => {
                   title={'Finalizar Guía'}
                   textTool='Detalle'
                   size={450}
-                  width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-                  icon={<IoCheckmarkDoneSharp />}
+                  width={`w-52 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                  textButton='Finalizar Guía'
                 >
                   <ModalConfirmacion 
                     id={id[0]}
-                    confirmacion={confirmacion}
-                    setConfirmacion={setConfirmacion}
+                    confirmacion={confirmacionCierre}
+                    setConfirmacion={setConfirmacionCierre}
                     setOpen={setOpen}
                     refresh={setRefresh} />
                 </ModalRegistro>
@@ -362,19 +377,25 @@ const DetalleGuia = () => {
             <div className='mt-10'>
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Lotes Pendientes" {...a11yProps(0)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
+                  <Tabs value={guia_recepcion?.estado_recepcion === '4' ? valueConditional : value}  onChange={handleChange} aria-label="basic tabs example">
+                    { guia_recepcion?.estado_recepcion !== '4' ? <Tab label="Lotes Pendientes" {...a11yProps(0)} className={`${isDarkTheme ? 'light' : 'dark'}`} /> : null}
                     <Tab label="Lotes Aprobados" {...a11yProps(1)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
                     <Tab label="Lote Rechazado" {...a11yProps(2)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
                   </Tabs>
                 </Box>
-                <CustomTabPanel value={value} index={0} >
-                  <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh} />
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={1}>
+                {
+                  guia_recepcion?.estado_recepcion !== '4'
+                    ? (
+                      <CustomTabPanel value={value} index={0} >
+                        <FooterDetalleGuia data={guia_recepcion!} refresh={setRefresh} />
+                      </CustomTabPanel>
+                      )
+                    : null
+                }
+                <CustomTabPanel value={guia_recepcion?.estado_recepcion === '4' ? valueConditional : value} index={guia_recepcion?.estado_recepcion === '4' ? 0 : 1}>
                   <FooterDetalleGuiaFinalizada data={guia_recepcion!} refresh={setRefresh} />
                 </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
+                <CustomTabPanel value={guia_recepcion?.estado_recepcion === '4' ? valueConditional : value} index={guia_recepcion?.estado_recepcion === '4' ? 1 : 2}>
                   <FooterDetalleRechazado data={guia_recepcion!} refresh={setRefresh}/>
                 </CustomTabPanel>
               </Box>

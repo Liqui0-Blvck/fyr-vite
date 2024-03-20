@@ -169,7 +169,7 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data, refresh }) => {
                 return (
                   <TableRow key={row.id} className='table-row-body'>
                     {
-                      row.estado_recepcion < '7'
+                      row.estado_recepcion < '7' && row.estado_recepcion !== '4'
                         ? <LoteFila
                           lote={row}
                           guia={data}

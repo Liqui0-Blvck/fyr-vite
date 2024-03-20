@@ -13,7 +13,7 @@ interface IUserProps extends HTMLAttributes<HTMLDivElement> {
 	name: string;
 	namePrefix?: ReactNode;
 	nameSuffix?: ReactNode;
-	position: string;
+	position: string[];
 	suffix?: ReactNode;
 	isLoading?: boolean;
 }
@@ -79,7 +79,11 @@ const User: FC<IUserProps> = (props) => {
 							<span className='truncate font-semibold'>{name}</span>
 							{nameSuffix && <span>{nameSuffix}</span>}
 						</div>
-						<div className='basis-full truncate text-xs'>{position}</div>
+						<div className='basis-full flex items-center truncate text-xs'>
+								{position.map((pos, index) => (
+									<p key={index} className='mt-2 ml-2 '>{pos}</p>
+								))}
+						</div>
 					</div>
 					{suffix && <div className='flex items-center'>{suffix}</div>}
 				</div>

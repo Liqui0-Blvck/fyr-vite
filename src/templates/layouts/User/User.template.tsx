@@ -7,6 +7,8 @@ import User from '../../../components/layouts/User/User';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { jwtDecode } from 'jwt-decode';
+import { TCargo } from '../../../types/registros types/registros.types';
+import { CARGOS_PERFILES } from '../../../constants/select.constanst';
 
 interface IUser {
 	first_name: string,
@@ -18,13 +20,14 @@ interface IUser {
 const UserTemplate = () => {
 	const { perfilData, onLogout } = useAuth();
 
+	const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
 
 	return (
 		<User
 			isLoading={false}
 			name={perfilData?.user.first_name}
 			nameSuffix={perfilData?.user.username}
-			position={perfilData?.area}
+			position={cargoLabels}
 			src={''}
 		// suffix={
 		// 	<Badge color='amber' variant='solid' className='text-xs font-bold'>
