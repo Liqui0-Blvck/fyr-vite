@@ -11,6 +11,7 @@ import { useAuth } from '../../../context/authContext'
 import Radio, { RadioGroup } from '../../../components/form/Radio'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TControlCalidad, TLoteGuia } from '../../../types/registros types/registros.types'
+import { optionsRadio } from '../../../constants/options.constants'
 
 interface IFormCC {
   refresh: Dispatch<SetStateAction<boolean | null>>
@@ -32,8 +33,6 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
     `/api/control-calidad/recepcionmp/?search=${id_lote}`
   ) 
 
-  console.log(userID)
-
   useEffect(() => {
     let isMounted = true
 
@@ -49,10 +48,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
       isMounted = false
     } 
   }, [control_calidad])
-
-  
-
-  
+ 
 
   const formik = useFormik({
     initialValues: {
@@ -94,10 +90,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
 
   
 
-  const optionsRadio = [
-    { id: 1, value: true, label: 'Si'},
-    { id: 2, value: false, label: 'No'}
-  ];
+  
 
 
 

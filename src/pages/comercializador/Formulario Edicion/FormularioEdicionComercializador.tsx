@@ -83,8 +83,7 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
     }
   }, [comercializador])
 
-  console.log(formik.values)
-
+  
   return (
     <form
       onSubmit={formik.handleSubmit}

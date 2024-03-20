@@ -8,6 +8,7 @@ import Textarea from '../../../components/form/Textarea'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
+import { optionsAcoplado } from '../../../constants/options.constants'
 
 
 
@@ -53,13 +54,6 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
     }
   })
 
-  const acoplados = TIPO_ACOPLADO?.map((acoplado) => ({
-    value: acoplado.values,
-    label: acoplado.label
-  })) ?? []
-
-  const options: TSelectOptions | [] = acoplados
-  
 
   return (
     <form
@@ -81,7 +75,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
         <div className='md:col-span-2 md:col-start-3 md:flex-col flex'>
           <label htmlFor="acoplado">Acoplado: </label>
           <SelectReact
-              options={options}
+              options={optionsAcoplado}
               id='acoplado'
               placeholder='Selecciona un opción'
               name='acoplado'

@@ -4,7 +4,7 @@ import { authPages, appPages } from '../config/pages.config';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { TUsuario } from '../types/registros types/registros.types';
+import { TPerfil, TUsuario } from '../types/registros types/registros.types';
 import { useAuthenticatedFetch } from '../hooks/useAxiosFunction';
 
 
@@ -25,27 +25,6 @@ interface IAuthContext {
 interface TokenPayload {
   user_id: number;
   // Otros campos según la estructura de tu token JWT
-}
-
-type TPerfil = {
-  id: number,
-  fecha_creacion: string,
-  fecha_modificacion: string,
-  sexo: string,
-  direccion: string,
-  comuna: string,
-  celular: string,
-  fnacimiento: string,
-  valoracion: number,
-  fotoperfil: string,
-  area: string,
-  user: {
-    id: number,
-    first_name: string,
-    last_name: string,
-    email: string,
-    username: string
-  }
 }
 
 

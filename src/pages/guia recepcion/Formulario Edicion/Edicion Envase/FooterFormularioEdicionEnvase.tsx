@@ -45,9 +45,6 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
   const [iotBrutoAcoplado, setIotBrutoAcoplado] = useState<boolean>(false)
 
 
-  
-
-
   const initialRows = [
     {
       id: 1,
@@ -85,11 +82,15 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
 
   const formik = useFormik({
     initialValues: {
-      id: id_lote
+      id: id_lote,
+      kilos_brutos_1: 0,
+      kilos_brutos_2: 0
     },
     onSubmit: async (values: any) => {
       const formData = new FormData()
       const envasesData = rows.map((row) => ({
+        kilos_brutos_1: values.kilos_brutos_1,
+        kilos_brutos_2: values.kilos_brutos_2,
         envase: row.envase,
         variedad: row.variedad,
         tipo_producto: row.tipo_producto,
@@ -165,12 +166,24 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
   const camionAcoplado = camiones?.find(camion => camion.id === Number(guia_recepcion?.camion))?.acoplado
 
   useEffect(() => {
-    guia_recepcion?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-      return setRows(lote.envases);
-    })
-  }, [guia_recepcion])
+    let isMounted = true;
+  
+    if (isMounted && guia_recepcion) {
+      guia_recepcion.lotesrecepcionmp.forEach((lote: TLoteGuia) => {
 
-
+        setRows(lote.envases)
+        
+        formik.setValues({
+          kilos_brutos_1: lote.kilos_brutos_1,
+          kilos_brutos_2: lote.kilos_brutos_2 
+        });
+      });
+    }
+  
+    return () => {
+      isMounted = false;
+    };
+  }, [guia_recepcion]);
 
   return (
     <div>

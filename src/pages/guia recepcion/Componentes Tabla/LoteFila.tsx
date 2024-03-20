@@ -11,8 +11,8 @@ import { Dispatch, FC, SetStateAction } from 'react'
 import ModalBodega from '../Formulario Edicion/Edicion Estado Modal/ModalBodega'
 import ModalRecepcion from '../Formulario Edicion/Edicion Estado Modal/ModalRecepcion'
 import ModalControlCalidad from '../Formulario Edicion/Edicion Estado Modal/ModalControlCalidad'
-import { TEnvaseEnGuia, TEnvases, TGuia, TLoteGuia } from '../../../types/registros types/registros.types'
-import { ESTADOS_MP, perfilesPermitidos } from '../../../constants/select.constanst'
+import { TCargo, TEnvaseEnGuia, TEnvases, TGuia, TLoteGuia } from '../../../types/registros types/registros.types'
+import { CARGOS_PERFILES, ESTADOS_MP, checkCargoPerfil, perfilesPermitidos } from '../../../constants/select.constanst'
 import { FaIndustry } from 'react-icons/fa6'
 import { FaWeight } from 'react-icons/fa'
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2'
@@ -61,33 +61,19 @@ const LoteFila: FC<ILoteCompletadoProps> = (
   const estadoActivoCoincide = estadoRecepcion.find((estado) => estado.value === (row?.estado_recepcion! ? row?.estado_recepcion! : '1'))
 
 
-  const modalTitle = perfilesPermitidos.includes(perfilData?.area) && (
-    perfilData?.area === 'Bodega' ?
-      'Seleccionar Bodega' :
-      perfilData?.area === 'Recepcion' ?
-        'Registrar Tara Camión' :
-        perfilData?.area === 'Control Calidad' ?
-          'Registrar Control de Calidad' :
-          ''
-  );
+  const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
+  const modalTitle = cargoLabels.some(label => CARGOS_PERFILES.includes(label)) ?
+    (cargoLabels.includes('Bodega Patio Exterior') ? 'Seleccionar Bodega' :
+    cargoLabels.includes('RecepcionMP') ? 'Registrar Tara Camión' :
+    cargoLabels.includes('CDC Jefatura') ? 'Registrar Control de Calidad' : '') : '';
 
-  const iconComponent = perfilesPermitidos.includes(perfilData?.area) && (
-    perfilData?.area === 'Bodega' ?
-      <FaIndustry className='text-2xl' /> :
-      perfilData?.area === 'Recepcion' ?
-        <FaWeight className='text-2xl' /> :
-        perfilData?.area === 'Control Calidad' ?
-          <>
-            {
-              row?.estado_recepcion! <= '3'
-                ? <HiOutlineClipboardDocumentList className='text-3xl' />
-                : null
-            }
-          </> :
-          null
-  );
+  const iconComponent = cargoLabels.some(label => CARGOS_PERFILES.includes(label)) ?
+    (cargoLabels.includes('Bodega Patio Exterior') ?  <FaIndustry className='text-2xl' /> :
+    cargoLabels.includes('RecepcionMP') && row?.estado_recepcion === '5' ? <FaWeight className='text-2xl' /> :
+    cargoLabels.includes('CDC Jefatura')  ? <HiOutlineClipboardDocumentList className='text-3xl'/>: '' ) : ''
+    
 
-
+    console.log(row?.estado_recepcion === '5')
 
 
   return (
@@ -182,7 +168,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                   open={openModalEdicion[row?.id!] || false}
                   setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                   title='Detalle Envases'
-                  textTool='Detalle'
+                  textTool='Edicion'
                   size={900}
                   width={`w-20 h-16 md:h-16 lg:h-11 px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                   icon={<HeroPencilSquare style={{ fontSize: 25 }}
@@ -194,24 +180,24 @@ const LoteFila: FC<ILoteCompletadoProps> = (
           }
 
           {
-            perfilesPermitidos.includes(perfilData?.area) && (
+            checkCargoPerfil(perfilData.cargos) && (
 
               <>
                 {
-                  perfilData?.area == 'Control Calidad' && row?.estado_recepcion! <= '2'
+                  checkCargoPerfil(perfilData.cargos) && row?.estado_recepcion! <= '2'
                     ? (
                       <ModalRegistro
                         open={openModalConfirmacion[row?.id!] || false}
                         setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                         title={modalTitle}
-                        textTool='Detalle'
+                        textTool='Accion'
                         size={450}
                         width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                         icon={iconComponent}
                       >
                         {
-                          perfilesPermitidos.includes(perfilData?.area) && (
-                            perfilData?.area === 'Control Calidad' ?
+                          checkCargoPerfil(perfilData.cargos)
+                            ?
                               <>
                                 {
                                   row?.estado_recepcion! <= '3'
@@ -219,49 +205,46 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                                     : null
 
                                 }
-                              </> :
-                              null
-                          )
+                              </> 
+                            : null
                         }
                       </ModalRegistro>
                     )
-                    : perfilData?.area === 'Recepcion' && row?.estado_recepcion! === '5'
+                    : checkCargoPerfil(perfilData.cargos) && row?.estado_recepcion! === '5'
                       ? (
                         <ModalRegistro
                           open={openModalConfirmacion[row?.id!] || false}
                           setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                           title={modalTitle}
-                          textTool='Detalle'
+                          textTool='Accion'
                           size={700}
                           width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                           icon={iconComponent}
                         >
                           {
-                            perfilesPermitidos.includes(perfilData.area) && (
-                              perfilData?.area === 'Recepcion'
+                            row?.estado_recepcion === '5'
                                 ? <ModalRecepcion id={row?.id!} estadoActivo={setEstadoActivo!} setOpen={setOpenModalConfirmacion!} numero_estado={`${estadoActivoCoincide?.value}`} refresh={refresh} lote={row} guia={guia!} />
                                 : null
-                            )
+                          
                           }
                         </ModalRegistro>
                       )
-                      : perfilData?.area === 'Bodega' && row?.estado_recepcion !== '5' && row?.estado_recepcion === '3'
+                      : checkCargoPerfil(perfilData?.cargos) && row?.estado_recepcion !== '5' && row?.estado_recepcion === '3'
                         ? (
                           <ModalRegistro
                             open={openModalConfirmacion[row?.id!] || false}
                             setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                             title={modalTitle}
-                            textTool='Detalle'
+                            textTool='Accion'
                             size={450}
                             width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                             icon={iconComponent}
                           >
                             {
-                              perfilesPermitidos.includes(perfilData?.area) && (
-                                perfilData?.area === 'Bodega'
+                              checkCargoPerfil(perfilData.cargos)
                                   ? <ModalBodega id={row?.id!} estadoActivo={setEstadoActivo!} setOpen={setOpenModalConfirmacion!} numero_estado={`${estadoActivoCoincide?.value}`} refresh={refresh} lote={row} />
                                   : null
-                              )
+                              
                             }
                           </ModalRegistro>
                         )

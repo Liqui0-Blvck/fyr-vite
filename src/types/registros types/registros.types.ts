@@ -154,3 +154,45 @@ export type TPatioExterior = {
   tipo_recepcion: number,
   registrado_por: number
 }
+
+export type TLoteRechazado = {
+  id: number,
+  resultado_rechazo: string
+  fecha_rechazo: string
+  fecha_modificacion: string
+  recepcionmp: number,
+  rechazado_por: boolean
+  numero_lote: number
+  resultado_rechazo_label: string
+  numero_lote_rechazado: number
+}
+
+export type TCargo = {
+  id: number;
+  cargo_label: string;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  cargo: string;
+  perfil: number;
+}
+
+export type TPerfil = {
+  id: number;
+  user: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    username: string;
+  };
+  cargos: TCargo[];
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  sexo: string;
+  direccion: string;
+  comuna: string;
+  celular: string;
+  fnacimiento: string;
+  valoracion: number;
+  fotoperfil: string;
+}

@@ -3,13 +3,13 @@ import Input from '../../../components/form/Input'
 import { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
-import { TIPO_ACOPLADO } from '../../../constants/select.constanst'
 import Textarea from '../../../components/form/Textarea'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TCamion } from '../../../types/registros types/registros.types'
+import { optionsAcoplado } from '../../../constants/options.constants'
 
 
 
@@ -76,12 +76,7 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
     }
   }, [camiones])
 
-  const acoplados = TIPO_ACOPLADO?.map((acoplado) => ({
-    value: acoplado.values,
-    label: acoplado.label
-  })) ?? []
 
-  const options: TSelectOptions | [] = acoplados
 
   return (
     <form
@@ -103,12 +98,12 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
       <div className='md:col-span-2 md:col-start-3 md:flex-col flex'>
         <label htmlFor="acoplado">Acoplado: </label>
         <SelectReact
-          options={options}
+          options={optionsAcoplado}
           id='acoplado'
           placeholder='Selecciona un opción'
           name='acoplado'
           className='h-12'
-          value={options.find(option => option?.value === String(formik.values.acoplado))}
+          value={optionsAcoplado.find(option => option?.value === String(formik.values.acoplado))}
           onChange={(value: any) => {
             formik.setFieldValue('acoplado', value.value)
           }}

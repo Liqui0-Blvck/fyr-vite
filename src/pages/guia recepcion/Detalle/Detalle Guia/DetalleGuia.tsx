@@ -22,6 +22,7 @@ import { Tabs, Typography } from '@mui/material'
 import ModalConfirmacion from '../../../../components/ModalConfirmacion'
 import ModalRegistro from '../../../../components/ModalRegistro'
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
+import FooterDetalleRechazado from './FooterDetalleRechazado'
 
 
 interface TabPanelProps {
@@ -374,7 +375,7 @@ const DetalleGuia = () => {
                   <FooterDetalleGuiaFinalizada data={guia_recepcion!} refresh={setRefresh} />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                  Item Three
+                  <FooterDetalleRechazado data={guia_recepcion!} refresh={setRefresh}/>
                 </CustomTabPanel>
               </Box>
             </div>

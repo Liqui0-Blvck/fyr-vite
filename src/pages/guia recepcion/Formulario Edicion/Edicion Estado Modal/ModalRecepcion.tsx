@@ -5,6 +5,7 @@ import { GoQuestion } from "react-icons/go";
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
 import FormularioEdicionGuiaRecepcion from '../Edicion Guia/FormularioEdicionGuiaRecepcion';
+import { tipoFrutaFilter, variedadFilter } from '../../../../constants/options.constants';
 
 interface IModalProps {
   id: number;
@@ -24,15 +25,7 @@ const ModalRecepcion: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_est
   console.log(lote)
 
 
-  const variedadFilter = VARIEDADES_MP?.map((producto) => ({
-    value: String(producto.value),
-    label: producto.label
-  })) ?? []
-
-  const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
-    value: String(producto.value),
-    label: producto.label
-  })) ?? []
+  
 
   const [prevNumeroEstado, setPrevNumeroEstado] = useState<number>(0);
   const [confirmacion, setConfirmacion] = useState<boolean>(false);

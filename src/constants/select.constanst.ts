@@ -1,3 +1,5 @@
+import { TCargo } from "../types/registros types/registros.types";
+
 export const ESTADOS = [
   "Muy mal estado",
   "Mal estado",
@@ -187,3 +189,39 @@ export const usuarioRole = {
   name: "Nicolas",
   area: "Recepcion",
 };
+
+
+export const RESULTADO_RECHAZO = [
+  { value: '0', label: 'Rechazo Registrado'},
+  { value: '1', label: 'Devuelto a Productor'},
+  { value: '2', label: 'Derivado a Campo Secado'},
+]
+
+
+export const CARGOS_PERFILES = [
+  'RecepcionMP',
+  'CDC Jefatura',
+  'CDC Operario MP',
+  'Bodega Patio Exterior',
+  'Produccion',
+  'Produccion Admin',
+  'Seleccion',
+  'Seleccion Admin'
+]
+
+
+export function checkCargoPerfil(cargos: TCargo[]): boolean {
+  // Extrae los cargo_label de la lista de cargos
+  const cargoLabels: string[] = cargos.map(cargo => cargo.cargo_label);
+
+  // Comprueba si alguno de los cargo_label está en CARGOS_PERFILES
+  for (const cargoLabel of cargoLabels) {
+    if (CARGOS_PERFILES.includes(cargoLabel)) {
+      console.log(cargoLabel)
+      return true;
+    }
+  }
+
+  // Si ninguno de los cargo_label está en CARGOS_PERFILES, devuelve false
+  return false;
+}

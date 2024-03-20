@@ -138,16 +138,11 @@ const DetalleEnvase: FC<IDetalleProps> = ({ id_lote }) => {
     label: comerciante.nombre
   })) ?? []
 
-  const mezclaVariedadesFilter = ACTIVO?.map((variedad) => ({
-    value: String(variedad.values),
-    label: variedad.label
-  })) ?? []
 
   const optionsCamion: TSelectOptions | [] = camionFilter
   const optionsProductor: TSelectOptions | [] = productoresFilter
   const optionsConductor: TSelectOptions | [] = conductoresFilter
   const optionsComercializador: TSelectOptions | [] = comercializadoresFilter
-  const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
   
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>

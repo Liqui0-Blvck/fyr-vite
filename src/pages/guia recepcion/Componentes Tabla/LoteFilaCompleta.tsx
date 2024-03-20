@@ -43,13 +43,9 @@ const LoteFilaCompleta: FC<ILoteCompletadoProps> = (
     setOpenModalRows,
     kilos_total_envases,
     kilos_netos_fruta,
-    refresh
    }
   ) => {
   const { isDarkTheme } = useDarkMode()
-  const bodega_estado = 1
-
-  console.log(row?.estado_recepcion)
 
   return (
     <>

@@ -85,9 +85,15 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
       creado_por: null,
     },
     onSubmit: async (values: any) => {
-      const formData = new FormData()
 
-      const lotesData = [{
+      const envasesData = rows.map((row) => ({
+        envase: row.envase,
+        variedad: row.variedad,
+        tipo_producto: row.tipo_producto,
+        cantidad_envases: row.cantidad_envases,
+      }));
+
+      const lotesData = {
         numero_lote: 0,
         kilos_brutos_1: values.kilos_brutos_1,
         kilos_brutos_2: values.kilos_brutos_2,
@@ -96,25 +102,20 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
         estado_recepcion: '1',
         guiarecepcion: data.id,
         creado_por: data.creado_por,
-      }]
-      formData.append('lotes', JSON.stringify(lotesData))
-
-      const envasesData = rows.map((row) => ({
-        envase: row.envase,
-        variedad: row.variedad,
-        tipo_producto: row.tipo_producto,
-        cantidad_envases: row.cantidad_envases,
-      }));
-      formData.append('envases', JSON.stringify(envasesData));
-
+        envases: JSON.stringify(envasesData)
+      }
 
       try {
         const res = await fetch(`${base_url}/api/recepcionmp/${data.id}/lotes/`, {
           method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${authTokens?.access}`
           },
-          body: formData
+          body: JSON.stringify({
+            ...lotesData,
+            envases: envasesData
+          })
         })
         if (res.ok) {
           toast.success("la guia de recepción fue registrado exitosamente!!")
@@ -127,9 +128,6 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
       }
     }
   })
-
-  const numeroLote: string = generarNumeroLote();
-
 
 
   const agregarFila = () => {
