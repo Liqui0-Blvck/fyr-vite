@@ -4,6 +4,7 @@ import { TEnvaseEnGuia, TLoteGuia } from '../../../../types/registros types/regi
 import { GoQuestion } from "react-icons/go";
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
+import { useAuth } from '../../../../context/authContext';
 
 interface IModalProps {
   id: number;
@@ -20,6 +21,7 @@ interface IModalProps {
 const ModalControlCalidad: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado, refresh, lote, guia_id }) => {
   const base_url = process.env.VITE_BASE_URL_DEV;
   const { isDarkTheme } = useDarkMode()
+  const { authTokens } = useAuth()
 
 
 
@@ -56,7 +58,8 @@ const ModalControlCalidad: FC<IModalProps> = ({ id, estadoActivo, setOpen, numer
     const res = await fetch(`${base_url}/api/estado-guia-update/${id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
       },
       body: JSON.stringify({
         estado_recepcion: estado
@@ -75,7 +78,8 @@ const ModalControlCalidad: FC<IModalProps> = ({ id, estadoActivo, setOpen, numer
     const res = await fetch(`${base_url}/api/estado-update/${id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}` 
       },
       body: JSON.stringify({  
         estado_recepcion: estado

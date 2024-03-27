@@ -37,7 +37,8 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
     const res = await fetch(`${base_url}/api/estado-update/${id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
       },
       body: JSON.stringify({
         estado_recepcion: estado

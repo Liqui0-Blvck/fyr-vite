@@ -37,6 +37,7 @@ import ModalRegistro from '../../../components/ModalRegistro';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';
 import useDarkMode from '../../../hooks/useDarkMode';
+import { FaFilePdf } from 'react-icons/fa6';
 
 
 
@@ -165,6 +166,19 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 										</Tooltip>
 									</>
 									)
+						}
+						{
+							info.row.original.estado_recepcion === '4'
+								? (
+									<Link to={`/app/pdf-guia-recepcion/${info.row.original.id}`}>
+										<Tooltip title='PDF'>
+											<div className={`w-full px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+												<FaFilePdf style={{ fontSize: 25 }} />
+											</div>
+										</Tooltip>
+									</Link>
+								)
+								: null
 						}
 					</div>
 				);

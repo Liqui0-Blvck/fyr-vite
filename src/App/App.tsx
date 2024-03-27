@@ -9,6 +9,7 @@ import FooterRouter from '../components/router/FooterRouter';
 import useFontSize from '../hooks/useFontSize';
 import getOS from '../utils/getOS.util';
 import Toast, { Toaster } from 'react-hot-toast'
+import GuiaRecepcionPDF from '../pages/guia recepcion/PDF/GuiaRecepcion';
 
 const App = () => {
 	getOS();

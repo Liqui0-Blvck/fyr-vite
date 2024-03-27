@@ -1,4 +1,4 @@
-import React, { FC, useState, Dispatch, SetStateAction } from 'react';
+import React, { FC, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -29,36 +29,46 @@ import Subheader, {
 } from '../../../components/layouts/Subheader/Subheader';
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
-import { TControlCalidad, TEnvases, TProductor } from '../../../types/registros types/registros.types';
+import { TControlCalidad, TControlCalidadB, TEnvases, TProductor, TRendimientoMuestra } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
+import GuiaSalidaPDF from '../../guia recepcion/PDF/GuiaRecepcion';
+import { FaFilePdf } from "react-icons/fa6";
+import { BiCheckDouble } from 'react-icons/bi';
+import { RiErrorWarningFill } from "react-icons/ri";
+import { IoMailOutline } from "react-icons/io5";
 
 
 
-const columnHelper = createColumnHelper<TControlCalidad>();
+const columnHelper = createColumnHelper<TControlCalidadB>();
 
 
 
 
 interface IControlProps {
-	data: TControlCalidad[] | []
+	data: TControlCalidadB[] | []
 	refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
+const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const { isDarkTheme } = useDarkMode()
 	const { authTokens, validate } = useAuth()
 	const base_url = process.env.VITE_BASE_URL_DEV
+	// const [cantidad, setCantidad] = useState<number>(0)
+	const [openDetalleControl, setOpenDetalleControl] = useState<boolean>(false)
 
+	
 	console.log(data)
 
+
+	
 	
 
 	const asisteDelete = async (id: number) => {
@@ -72,9 +82,6 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 			console.log("nop no lo logre")
 		}
 	}
-
-
-	console.log(data)
 
 
 	const editLinkProductor = `/app/envases/`
@@ -94,17 +101,49 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 			},
 			header: 'Productor ',
 		}),
-		columnHelper.accessor('estado_cc_label', {
-			cell: (info) => (
-				<div className='font-bold'>{`${info.row.original.estado_cc_label}`}</div>
-			),
-			header: 'Estado',
+		columnHelper.accessor('productor', {
+			cell: (info) => {
+				const cantidad = info.row.original.control_rendimiento.length
+				return (
+					<div className='font-bold w-full'>{`${cantidad < 2 ? 'Sin muestras registradas' : cantidad}`}</div>
+				)
+			},
+			header: 'Cantidad CDC Lotes ',
 		}),
-		columnHelper.accessor('fecha_creacion', {
+		columnHelper.accessor('estado_aprobacion_cc', {
 			cell: (info) => (
-				<div className='font-bold'>{`${format(info.row.original.fecha_creacion, {date: 'long', time: 'short'}, 'es')}`}</div>
+				<div className='font-bold'>{`${info.row.original.estado_aprobacion_cc_label}`}</div>
 			),
-			header: 'Fecha Creación',
+			header: 'Estado VB Lote',
+		}),
+		columnHelper.accessor('productor', {
+			cell: (info) => {
+				const cantidad = info.row.original.control_rendimiento.length
+
+				return (
+					<>
+						{
+							cantidad >= 2
+								? (
+									<div className='flex items-center gap-5'>
+										<Link to={`/app/vb_control/${info.row.original.id}`} className={`w-full h-12 rounded-md flex items-center justify-center ${isDarkTheme ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-white'} hover:scale-105`}>
+											<HeroEye style={{ fontSize: 35}}/>
+										</Link>
+
+										<Link to={`/app/pdf-rendimiento/${info.row.original.id}`} target='_blank' className={`w-full h-12 rounded-md flex items-center justify-center ${isDarkTheme ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-red-700 hover:bg-red-600 text-white'} hover:scale-105`}>
+											<FaFilePdf className='text-2xl'/>
+										</Link>
+									</div>
+									)
+								: <span className='text-md font-semibold'>Muestras insuficientes para CR</span>
+						}
+
+							
+					</>
+					
+				)
+			},
+			header: 'Informes CDR',
 		}),
 		columnHelper.display({
 			id: 'actions',
@@ -112,35 +151,43 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 				const id = info.row.original.id;
 				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
 				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
-
+				const cantidad = info.row.original.control_rendimiento.length
+				
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
-						<Link to={`/app/control-calidad/${info.row.original.id}`}
-							className={`w-full px-1 h-12 
-								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
-								 hover:scale-105 rounded-md flex items-center justify-center`}>
-							<HeroEye style={{ fontSize: 32 }} />
-						</Link>
+						{
+							cantidad >= 2
+								? (
+									<>
+									<Tooltip title='Solicitar contramuestra'>
+											<div className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-red-600 hover:bg-red-400 text-white' : 'bg-red-600 hover:bg-red-400 text-white'} hover:scale-105`}>
+												<RiErrorWarningFill className='text-4xl'/>
+											</div>
+									</Tooltip>
+											
 
-						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
-							title='Edición Comercializador'
-							textTool='Editar'
-							size={900}
-							width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-							icon={<HeroPencilSquare style={{ fontSize: 25 }}
-							/>}
-						>
-							{/* <FormularioEdicionComercializador refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
-							hola
-						</ModalRegistro>
+										{
+											info.row.original.estado_aprobacion_cc === 1
+												? (
+													<Tooltip title='Aprobado'>
+														<div className={`w-full flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
+															<BiCheckDouble className='text-4xl'/>
+														</div>
+													</Tooltip>
+														
+													)
+												: null
+										}
 
-						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
-								<HeroXMark style={{ fontSize: 25 }} />
-							</button>
-						</Tooltip>
+										<Tooltip title='Mandar Email a proveedor'>
+											<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 md:h-10 lg:h-12 bg-blue-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+												<IoMailOutline style={{ fontSize: 25 }} />
+											</button>
+										</Tooltip>
+									</>
+								)
+								: <span className='text-md font-semibold'>Muestras insuficientes</span>
+						}
 					</div>
 				);
 			},
@@ -212,7 +259,7 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 				<Card className='h-full'>
 					<CardHeader>
 						<CardHeaderChild>
-							<CardTitle>Controles de Calidad</CardTitle>
+							<CardTitle>VB Control Rendimiento Lote</CardTitle>
 							<Badge
 								variant='outline'
 								className='border-transparent px-4'
@@ -233,4 +280,4 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 	);
 };
 
-export default TablaControlCalidad;
+export default TablaControlRendimiento;

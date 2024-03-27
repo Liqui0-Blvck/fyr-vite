@@ -93,9 +93,9 @@ export const appPages = {
 				icon: 'HeroArchiveBox',
 			},
 			lotes: {
-				id: 'lotes',
-				text: 'Lotes Internos',
-				to: '/app/lotes/',
+				id: 'vb_control_rendimiento',
+				text: 'VB Control Rendimiento',
+				to: '/app/vb_control/',
 				icon: 'HeroArchiveBox',
 			}
 		}

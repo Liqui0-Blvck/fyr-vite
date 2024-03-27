@@ -1,0 +1,176 @@
+import { TableCell } from '@mui/material'
+
+import useDarkMode from '../../../hooks/useDarkMode'
+
+import { useAuth } from '../../../context/authContext'
+import { TControlCalidad, TPerfil, TRendimientoMuestra, TUsuario } from '../../../types/registros types/registros.types'
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+
+import toast from 'react-hot-toast'
+import { format } from '@formkit/tempo'
+import ModalRegistro from '../../../components/ModalRegistro'
+import { GiTestTubes } from "react-icons/gi";
+import { FaPlus } from "react-icons/fa6";
+import { BiCheckDouble, BiPlus } from 'react-icons/bi'
+import { HeroEye, HeroXMark } from '../../../components/icon/heroicons'
+import ModalConfirmacion from '../../../components/ModalConfirmacion'
+import FormularioPepaMuestra from '../Formulario Pepa Muestra/FormularioPepaMuestra'
+import FormularioCCPepaCalibre from '../Formulario Calibres/FormularioCalibres'
+import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
+import DetalleCC from '../Detalle/DetalleCCPepa'
+
+
+interface ILoteCompletadoProps {
+  muestra: TRendimientoMuestra | null
+  refresh: Dispatch<SetStateAction<boolean>>
+  id_lote: number
+  ccLote?: TControlCalidad | null
+
+}
+
+const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, id_lote, ccLote  }) => {
+  const { authTokens, validate, perfilData, userID } = useAuth()
+  const base_url = process.env.VITE_BASE_URL_DEV
+  const { isDarkTheme } = useDarkMode()
+  const [openModalCCPepa, setOpenModalCCPepa] = useState<boolean>(false)
+  const [ccPepaConfirmacion, setccPepaConfirmacion] = useState<boolean>(false)
+  const [openDetail, setOpenDetail] = useState<boolean>(false)
+  const [openConfirmacion, setOpenConfirmacion] = useState<boolean>(false)
+  const [confirmacion, setConfirmacion] = useState<boolean>(false)
+  const [confirmacionCCPepa, setConfirmacionCCPepa] = useState<boolean>(false)
+  const [isCalibrable, setIsCalibrable] = useState<boolean>(false)
+
+
+
+  const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
+
+  const { data: userData } = useAuthenticatedFetch<TPerfil>(
+    authTokens,
+    validate,
+    `/api/registros/perfil/${row?.registrado_por}`
+  )
+
+  const deleteMuestra = async () => {
+    const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/${row?.cc_recepcionmp}/muestras/${row?.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
+      }
+    })
+
+    if (res.ok){
+      refresh(true)
+    } else {
+      console.log("Confirmame porfavor")
+    }
+  }
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (isMounted && confirmacion){
+      deleteMuestra()
+    }
+    return () => {
+      isMounted = false
+    }
+  }, [confirmacion])
+
+  console.log(row)
+
+  return (
+    <>
+      <TableCell className='table-cell-row-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+        <div className=' h-full w-full flex items-center justify-center'>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.id}</span>
+        </div>
+      </TableCell>
+      <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+        <div className=' h-full w-full flex items-center justify-center'>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{format(row?.fecha_creacion!, { date: 'long', time: 'short' }, 'es')}</span>
+        </div>
+      </TableCell>
+      <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+        <div className=' h-full w-full flex items-center justify-center gap-5'>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{userData?.user.username} |</span>
+          <h4 className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>Area{userData?.cargos.length! > 1 ? 's': ''}: </h4>
+          {userData?.cargos.map((cargo) => (
+            <>
+              <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{cargo.cargo_label}</span>
+            </>
+          ))}
+        </div>
+      </TableCell>
+      <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+        <div className=' h-full w-full flex items-center justify-center gap-10'>
+          {
+            row?.cc_ok === true
+              ? (
+                <div className={`w-full flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
+                  <BiCheckDouble className='text-4xl'/>
+                </div>
+              )
+              : (
+                <ModalRegistro
+                  open={openModalCCPepa}
+                  setOpen={setOpenModalCCPepa}
+                  title={`Muestra Control de Rendimiento del Lote N° `}
+                  textTool='CC Pepas Muestras'
+                  size={ccPepaConfirmacion ? 900 : 500}
+                  width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                  icon={<GiTestTubes className='text-4xl'/>}
+                >
+                  <ModalConfirmacion 
+                    id={row?.id!}
+                    id_lote={id_lote}
+                    mensaje='¿Quieres registrar CC Pepa?'
+                    formulario={<FormularioPepaMuestra isCalibrable={setIsCalibrable} id_lote={id_lote!} id_muestra={row?.id!} refresh={refresh} isOpen={setOpenModalCCPepa}/>}
+                    confirmacion={ccPepaConfirmacion}
+                    setConfirmacion={setccPepaConfirmacion}
+                    setOpen={setOpenModalCCPepa}
+                    refresh={() => refresh} />
+                </ModalRegistro>
+              )
+          }
+
+          <ModalRegistro
+            open={openDetail}
+            setOpen={setOpenDetail}
+            title={`Detalle Muestra N° ${row?.id}`}
+            textTool='Detalle'
+            size={900}
+            width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+            icon={<HeroEye style={{ fontSize: 32 }} />}
+
+          >
+            <DetalleCC  muestra={row}/>
+          </ModalRegistro>
+
+          <ModalRegistro
+            open={openConfirmacion}
+            setOpen={setOpenConfirmacion}
+            title={`Muestra Control de Rendimiento del Lote N° ${row?.cc_recepcionmp}`}
+            textTool='Eliminar Muestra'
+            size={500}
+            width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-red-800 hover:bg-red-700' : 'bg-red-800 hover:bg-red-700 text-white'} hover:scale-105`}
+            icon={<HeroXMark style={{ fontSize: 25 }} />}
+
+          >
+            <ModalConfirmacion 
+              id={row?.id!}
+              mensaje='¿Estas seguro de eliminar esta muestra?'
+              confirmacion={confirmacion}
+              setConfirmacion={setConfirmacion}
+              setOpen={setOpenConfirmacion}
+              refresh={refresh} />
+          </ModalRegistro>
+        </div>
+      </TableCell>
+      
+    </>
+
+  )
+}
+
+export default FilaControlMuestra

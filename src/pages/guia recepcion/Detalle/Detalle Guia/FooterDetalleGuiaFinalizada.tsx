@@ -90,8 +90,6 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
                 
                 {camionAcoplado ? <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10}}>Kilos Brutos Acoplado</TableCell> : null}
                 <TableCell className='table-cell-final-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Kilos Tara</TableCell>
-                {camionAcoplado ? <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10}}>Kilos Tara Acoplado</TableCell> : null}
-
                 <TableCell className='table-cell-final-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Kilos Envase</TableCell>
                 <TableCell className='table-cell-final-2' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`, padding: 10,}}>Kilos Fruta Neto</TableCell>
 

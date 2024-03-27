@@ -1,56 +1,39 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, ReactNode, SetStateAction } from "react";
 import useDarkMode from "../hooks/useDarkMode";
-import { TLoteGuia } from "../types/registros types/registros.types";
+import { TControlCalidad, TLoteGuia } from "../types/registros types/registros.types";
 import toast from "react-hot-toast";
 import { GoQuestion } from "react-icons/go";
+import FormularioPepaMuestra from "../pages/control calidad/Formulario Pepa Muestra/FormularioPepaMuestra";
 
 
 interface IModalProps {
-  id: number;
+  id?: number;
   confirmacion: boolean
   setConfirmacion: Dispatch<SetStateAction<boolean>>
-  estadoActivo: Dispatch<SetStateAction<string | null>>;
+  estadoActivo?: Dispatch<SetStateAction<string | null>>;
   setOpen: Dispatch<SetStateAction<boolean | null>>;
-  refresh: Dispatch<SetStateAction<boolean | null>>
-  lote: TLoteGuia | null,
+  refresh: Dispatch<SetStateAction<boolean>>
+  lote?: TLoteGuia | null,
+  mensaje?: string
+  CClote?: TControlCalidad
+  id_lote?: number
+  formulario?: ReactNode
 }
 
-const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, lote, confirmacion, setConfirmacion }) => {
-  const base_url = process.env.VITE_BASE_URL_DEV;
-  const { isDarkTheme } = useDarkMode()
-
-  console.log(confirmacion)
-  // const estado_guia_update = async (id: any) => {
-  //   const res = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       estado_recepcion: 4
-  //     })
-  //   })
-
-  //   if (res.ok) {
-  //     toast.success('Guia Finalizada')
-  //     refresh(true)
-  //   } else {
-  //     toast.error('No se pudo finalizar la guia')
-  //   }
-  // }
+const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, id_lote, confirmacion, setConfirmacion, mensaje, formulario, CClote }) => {
 
   return (
     <div className='w-full h-full flex items-center flex-col justify-between'>
       {confirmacion ? (
         <div className="py-10">
-          <p>Se cierra la guia</p>
+          {formulario}
         </div>
       ) : (
         <>
           {!confirmacion && (
             <div className='py-10 w-full h-full  flex flex-col justify-center items-center'>
               <GoQuestion className='text-9xl text-yellow-500' />
-              <h1 className="text-lg mt-5">¿Estas seguro de finalizar la Guía ?</h1>
+              <h1 className="text-2xl mt-5">{mensaje}</h1>
             </div>
           )}
   

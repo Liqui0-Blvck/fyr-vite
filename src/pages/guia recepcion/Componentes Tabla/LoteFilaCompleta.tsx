@@ -72,11 +72,11 @@ const LoteFilaCompleta: FC<ILoteCompletadoProps> = (
       }
       <TableCell className='table-cell-row-final-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`}}>
         <div className=' h-full w-full flex items-center justify-center text-center'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.kilos_tara_1}.0 kgs</span>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.kilos_tara_1 + row?.kilos_tara_2}.0 kgs</span>
         </div>
       </TableCell>
 
-      {
+      {/* {
         acoplado
           ? (
             <TableCell className='table-cell-row-final-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`}}>
@@ -86,7 +86,7 @@ const LoteFilaCompleta: FC<ILoteCompletadoProps> = (
             </TableCell>
           )
           : null
-      }
+      } */}
 
       <TableCell className='table-cell-row-final-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`}}>
         <div className=' h-full w-full flex items-center justify-center text-center'>

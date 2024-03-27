@@ -66,26 +66,6 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
     `/api/recepcionmp/${id}/lotes/${lote?.id}`
   )
 
-  console.log(loteGuia)
-
-  const updateEstadoLote = async (id: number, estado: string) => {
-    console.log(estado);
-    const res = await fetch(`${base_url}/api/estado-update/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({  
-        estado_recepcion: estado
-      })
-    });
-
-    if (res.ok) {
-      console.log('si')
-    } else {
-      console.log("Errores sobre errores");
-    }
-  }
 
 
   
@@ -111,11 +91,10 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
           body: JSON.stringify({
             ...values, 
             creado_por: userID?.user_id, 
-            estado_recepcion: 3 
+            estado_recepcion: 7
           })
         });
         if (res.ok) {
-          updateEstadoLote(lote?.id!, '7')
           toast.success("la guia de recepción fue registrado exitosamente!!")
           refresh(true)
           isOpen(false)

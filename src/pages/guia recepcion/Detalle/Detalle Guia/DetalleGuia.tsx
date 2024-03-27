@@ -189,7 +189,6 @@ const DetalleGuia = () => {
   }, [confirmacionCierre])
 
 
-
   const [value, setValue] = useState(0);
   const [valueConditional, setValueConditional] = useState(1)
   const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
@@ -203,11 +202,13 @@ const DetalleGuia = () => {
     
   };
 
+  console.log(cargoLabels)
+
   const controles = guia_recepcion?.lotesrecepcionmp.some((lote: TGuia) => {
-    const controlesAprobados = control_calidad?.filter(control => control.recepcionmp === lote.id && (control.estado_cc === '1' || control.estado_cc === '0')).length;
-    return controlesAprobados
+    return control_calidad?.filter(control => control.recepcionmp === lote.id && (control.estado_cc === '1' || control.estado_cc === '0')).length;
   })
 
+  console.log("comprobacion", controles && cargoLabels.includes('RecepcionMP') && guia_recepcion?.estado_recepcion !== '4')
 
 
   return (
@@ -308,13 +309,8 @@ const DetalleGuia = () => {
 
 
                 {
-                  (controles && cargoLabels.includes('RecepcionMP')  && guia_recepcion?.estado_recepcion !== '4')
+                  guia_recepcion.estado_recepcion !== '4' 
                     ? (
-                      // <div
-                      //   onClick={() => estado_guia_update(id)}
-                      //   className=' bg-slate-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
-                      //   <span className='text-white'>Finalizar Guia</span>
-                      // </div>
                       <ModalRegistro
                         open={open || false}
                         setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpen(prev => (!prev))}
@@ -327,45 +323,43 @@ const DetalleGuia = () => {
                       >
                         <ModalConfirmacion 
                           id={id[0]}
-                          confirmacion={confirmacionCierre}
-                          setConfirmacion={setConfirmacionCierre}
+                          confirmacion={confirmacion}
+                          setConfirmacion={setConfirmacion}
                           setOpen={setOpen}
                           refresh={setRefresh} />
                       </ModalRegistro>
                           )
+                          
+                    :  guia_recepcion.estado_recepcion === '3'  
+                    ? (
+                      <>
+                        <ModalRegistro
+                          open={open || false}
+                          setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpen(prev => (!prev))}
+                          title={'Finalizar Guía'}
+                          textTool='Detalle'
+                          size={450}
+                          width={`w-52 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                          textButton='Finalizar Guía'
+                        >
+                          <ModalConfirmacion 
+                            id={id[0]}
+                            mensaje='¿Quieres Finalizar La Guia'
+                            confirmacion={confirmacionCierre}
+                            setConfirmacion={setConfirmacionCierre}
+                            setOpen={setOpen}
+                            refresh={setRefresh} />
+                        </ModalRegistro>
+                      </>
+      
+                    )
                     : null
                 }
 
 
               </div>
             )
-            : controles && cargoLabels.includes('RecepcionMP') && guia_recepcion?.estado_recepcion !== '4'
-              ? (
-                <ModalRegistro
-                  open={open || false}
-                  setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpen(prev => (!prev))}
-                  title={'Finalizar Guía'}
-                  textTool='Detalle'
-                  size={450}
-                  width={`w-52 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-                  textButton='Finalizar Guía'
-                >
-                  <ModalConfirmacion 
-                    id={id[0]}
-                    confirmacion={confirmacionCierre}
-                    setConfirmacion={setConfirmacionCierre}
-                    setOpen={setOpen}
-                    refresh={setRefresh} />
-                </ModalRegistro>
-
-                  
-                // <div
-                //   onClick={() => estado_guia_update(id)}
-                //   className=' bg-slate-400 w-32 flex items-center ml-6 justify-center rounded-md p-2 cursor-pointer hover:scale-105'>
-                //   <span className='text-white'>Finalizar Guia</span>
-                // </div>
-              )
-              : null
+            : null
       }
 
 

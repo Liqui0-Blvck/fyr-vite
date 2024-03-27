@@ -6,6 +6,7 @@ import Container from '../layouts/Container/Container';
 import Subheader, { SubheaderLeft, SubheaderRight } from '../layouts/Subheader/Subheader';
 import Header, { HeaderLeft, HeaderRight } from '../layouts/Header/Header';
 import Card from '../ui/Card';
+import GuiaRecepcionPDF from '../../pages/guia recepcion/PDF/GuiaRecepcion';
 
 const ContentRouter = () => {
 	return (
@@ -78,6 +79,7 @@ const ContentRouter = () => {
 				</>
 			}>
 			<Routes>
+				<Route path="pdf-preview" element={<GuiaRecepcionPDF />} />
 				{contentRoutes.map((routeProps) => (
 					<Route key={routeProps.path} {...routeProps} />
 				))}

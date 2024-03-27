@@ -7,8 +7,6 @@ import MessagesPartial from '../_partial/Messages.partial';
 const DefaultHeaderRightCommon = () => {
 	return (
 		<>
-			<MessagesPartial />
-			<NotificationPartial />
 			<SettingsPartial />
 			<LanguageSelectorPartial />
 		</>

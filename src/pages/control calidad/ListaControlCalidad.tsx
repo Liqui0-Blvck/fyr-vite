@@ -13,8 +13,6 @@ const ListaControlCalidad = () => {
     `/api/control-calidad/recepcionmp`
   )
 
-  console.log(control_calidad)
-
   return (
     <div className="h-full">
       <TablaControlCalidad data={control_calidad ? control_calidad : []} refresh={setRefresh} />

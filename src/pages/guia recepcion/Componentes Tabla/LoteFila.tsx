@@ -73,6 +73,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
     cargoLabels.includes('CDC Jefatura')  ? <HiOutlineClipboardDocumentList className='text-3xl'/>: '' ) : ''
     
 
+    console.log(row?.estado_recepcion)
 
 
   return (

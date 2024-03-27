@@ -450,3 +450,65 @@
 	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	transition: ease-out 0.4s
 }
+
+
+
+
+
+ /* Table detail muestra rendimiento*/
+
+
+.table-cell-row-detail-1 {
+	width: 5%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 4px !important;
+}
+
+.table-cell-row-detail-2 {
+	width: 5%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-detail-3 {
+	width: 12%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-detail-4 {
+	width: 5%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-detail-5 {
+	width: 12%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-detail-6 {
+	width: 24%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
+
+.table-cell-row-detail-7 {
+	width: 16%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
+
+}
