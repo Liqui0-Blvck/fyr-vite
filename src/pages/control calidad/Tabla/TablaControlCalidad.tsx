@@ -36,6 +36,7 @@ import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/h
 import { Tooltip } from 'antd';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
+import { cargolabels } from '../../../utils/generalUtils';
 
 
 
@@ -50,14 +51,17 @@ interface IControlProps {
 }
 
 const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
+	const { perfilData } = useAuth()
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
+	const [detalleModalStatus, setDetalleModalStatus] = useState<boolean>(false);
+	const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
 	const { isDarkTheme } = useDarkMode()
 	const { authTokens, validate } = useAuth()
 	const base_url = process.env.VITE_BASE_URL_DEV
-
-	console.log(data)
+	
+	
 
 	
 
@@ -110,37 +114,46 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const id = info.row.original.id;
-				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
-				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+				
 
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
 						<Link to={`/app/control-calidad/${info.row.original.id}`}
-							className={`w-full px-1 h-12 
+							className={`w-24 px-1 h-12 
 								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
 								 hover:scale-105 rounded-md flex items-center justify-center`}>
 							<HeroEye style={{ fontSize: 32 }} />
 						</Link>
 
-						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
-							title='Edición Comercializador'
-							textTool='Editar'
-							size={900}
-							width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-							icon={<HeroPencilSquare style={{ fontSize: 25 }}
-							/>}
-						>
-							{/* <FormularioEdicionComercializador refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
-							hola
-						</ModalRegistro>
+						{
+							cargolabels(perfilData).includes('CDC Jefatura')
+								? (
+									<ModalRegistro
+										open={edicionModalStatus}
+										setOpen={setEdicionModalStatus}
+										title='Edición Comercializador'
+										textTool='Editar'
+										size={900}
+										width={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+										icon={<HeroPencilSquare style={{ fontSize: 25 }}
+										/>}
+									>
+									</ModalRegistro>
+									)
+								: null
+						}
 
-						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
-								<HeroXMark style={{ fontSize: 25 }} />
-							</button>
-						</Tooltip>
+						{
+							cargolabels(perfilData).includes('CDC Jefatura')
+								? (
+									<Tooltip title='Eliminar'>
+										<button onClick={async () => await asisteDelete(id)} type='button' className={`w-24 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+											<HeroXMark style={{ fontSize: 25 }} />
+										</button>
+									</Tooltip>
+									)
+								: null
+						}
 					</div>
 				);
 			},
@@ -194,19 +207,6 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
-				<SubheaderRight>
-					{/* <ModalRegistro
-						open={modalStatus}
-						setOpen={setModalStatus}
-						title='Registro Envases'
-						textButton='Agregar Envases'
-						width={`px-6 py-3 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-
-					>
-						<FormularioRegistroEnvases refresh={refresh} setOpen={setModalStatus} />
-					</ModalRegistro> */}
-					algo
-				</SubheaderRight>
 			</Subheader>
 			<Container>
 				<Card className='h-full'>

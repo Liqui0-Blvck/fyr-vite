@@ -157,8 +157,6 @@ const CCRendimiento = () => {
     `/api/control-calidad/recepcionmp/${id}`
   )
 
-  console.log(control_calidad)
-
   const { data: usuario } = useAuthenticatedFetch<TPerfil>(
     authTokens,
     validate,
@@ -176,47 +174,70 @@ const CCRendimiento = () => {
     return variedadFilter.find(variety => variety.value === envase.variedad)?.label
   }).shift()
 
-  const kilos_recepcionados = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return (lote.kilos_brutos_1 + lote.kilos_brutos_2) - (lote.kilos_tara_1 + lote.kilos_tara_2) 
-  })
 
-  const { data: cc_muestra_lote } = useAuthenticatedFetch<TCCMuestrasLoteFunction[]>(
-    authTokens,
-    validate,
-    `/api/control-calidad/recepcionmp/${id[0]}/cc_muestras_lotes`
-  );
+ 
+
+  // const muestra_lote =  ? [...cc_muestra_lote] : [];
 
 
-  const muestra_lote = cc_muestra_lote ? [...cc_muestra_lote] : [];
 
-  if (muestra_lote.length > 0) {
-    const { cc_lote, pepa_bruta, ...restoMuestraLote } = muestra_lote[0];
+  console.log(rendimientos?.cc_muestra[0])
 
-    const labels_pre = Object.keys(restoMuestraLote || {});
-    valores = Object.values(restoMuestraLote || {});
+  // if (muestra_lote.length > 0) {
+  //   const { cc_lote, pepa_bruta, ...restoMuestraLote } = muestra_lote[0];
 
-    const total = valores.reduce((acc, curr) => acc + curr, 0);
+  //   const labels_pre = Object.keys(restoMuestraLote || {});
+  //   valores = Object.values(restoMuestraLote || {});
 
-    labels = labels_pre.map((label, index) => {
+  //   const total = valores.reduce((acc: number, curr: number) => acc + curr, 0);
+
+  //   labels = labels_pre.map((label, index) => {
+  //     const porcentaje = (valores[index] / total) * 100;
+  //     return `${label}: ${porcentaje}%`;
+
+  //   });
+
+  //   console.log()
+
+  //   const entry = Object.entries(muestra_lote[0]);
+
+  //   // Filtrar las claves que no necesitas (como 'cc_lote')
+  //   const filteredEntry = entry.filter(([key]) => key !== 'cc_lote' && key !== 'pepa_bruta');
+  
+  //   // Mapear los datos filtrados al formato deseado
+    // formattedData = filteredEntry.map(([key, value]) => ({
+    //     label: key,
+    //     data: [value]
+    // }));
+  
+  // } else {
+  //   console.log('El array muestra_lote está vacío.');
+  // }
+  const rendimiento_cc = rendimientos?.cc_muestra[0] ? rendimientos.cc_muestra[0] : [];
+  const labels_pre = Object.keys(rendimiento_cc || {});
+  valores = Object.values(rendimiento_cc || {});
+
+  const entry = Object.entries(rendimiento_cc) 
+  const filteredEntry = entry.filter(([key]) => key !== 'cc_lote')
+  console.log(filteredEntry)
+  formattedData = filteredEntry.map(([key, value]) => ({
+    label: key,
+    data: [value]
+  }));
+    const total = valores.reduce((acc: number, curr: number) => acc + curr, 0);
+
+  labels = labels_pre.map((label, index) => {
+    if (label !== 'cc_lote') {
       const porcentaje = (valores[index] / total) * 100;
-      return `${label}: ${porcentaje}%`;
+      return `${label}: ${porcentaje.toFixed(1)}%`;
+    }
+    return null; // Ignorar 'cc_lote' devolviendo null
+  }).filter(label => label !== null);
 
-    });
+  console.log(formattedData)
+  console.log(labels)
 
-    const entry = Object.entries(muestra_lote[0]);
-
-    // Filtrar las claves que no necesitas (como 'cc_lote')
-    const filteredEntry = entry.filter(([key]) => key !== 'cc_lote' && key !== 'pepa_bruta');
   
-    // Mapear los datos filtrados al formato deseado
-    formattedData = filteredEntry.map(([key, value]) => ({
-        label: key,
-        data: [value]
-    }));
-  
-  } else {
-    console.log('El array muestra_lote está vacío.');
-  }
 
  
 
@@ -241,6 +262,14 @@ const CCRendimiento = () => {
     getRendimientos()
   }, [control_calidad])
 
+  const labelStyle = {
+    fontSize: 14, // Tamaño de fuente
+    fontColor: 'white', // Color de fuente
+  };
+  
+
+  console.log(formattedData)
+
   useEffect(() => {
     if (!formattedData) {
         return; // No hagas nada si formattedData es undefined
@@ -253,8 +282,10 @@ const CCRendimiento = () => {
             labels: labels,
             datasets: [{
                 data: formattedData.map((item: any) => item.data[0]),
-                backgroundColor: ['red', 'blue', 'green', 'yellow', 'orange', 'purple'],
-            }]
+                backgroundColor: ['#ffcd5c', '#5CEBAF', '#3b82f6', '#F43F5E', '#D885FF', 'D855FF'],
+                borderColor: "black",
+                color: 'black'
+            }],
         }
     }).setHeight(300).setWidth(500);
 
@@ -442,7 +473,7 @@ const CCRendimiento = () => {
                       <View style={styles.body_table_info}>
                         // 1
                         <View style={styles.body_table_rows}>
-                          <View style={{styles.boxes_table_row}}>
+                          <View style={styles.boxes_table_row}>
                             <Text style={styles.body_table_info_text}>16</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
@@ -842,48 +873,68 @@ const CCRendimiento = () => {
 
                 <View style={{
                   width: '100%',
-                  height: 190,
+                  height: `${control_calidad?.estado_aprobacion_cc === 1 ? 320 : 160}`,
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 2,
                   justifyContent: 'space-between',
                 }}>
                   <Text style={{ fontSize: 14}}>Resumen</Text>
-                  <View style={{width: '100%', height: 100, border: '1px solid green', borderRadius: 4, padding: '10px'}}>
+                  <View style={{width: '100%', height: 80, border: '1px solid green', borderRadius: 4, padding: '10px'}}>
                   
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Totales Recepcionados: </Text>
-                      <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_netos} kgs</Text>
+                      <View style={{ width: 150 }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Totales Recepcionados: </Text>
+                      </View>
+                      <View style={{ width: '50%' }}>
+                          <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_netos} kgs</Text>
+                      </View>
                     </View>
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Pepa Bruta: </Text>
-                      <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</Text>
+                      <View style={{ width: 150 }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Pepa Bruta: </Text>
+                      </View>
+                      <View style={{ width: '50%' }}>
+                        <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</Text>
+                      </View>
                     </View>
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Porcentaje Pepa Bruta: </Text>
-                      <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.por_brutos} %</Text>
+                      <View style={{ width: 150 }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Porcentaje Pepa Bruta: </Text>
+                      </View>
+                      <View style={{ width: '50%' }}>
+                        <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.por_brutos} %</Text>
+                      </View>
                     </View>
 
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
-
-                      <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable)?.toFixed(1)} kgs</Text>
+                      <View style={{ width: 150 }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
+                      </View>
+                      <View style={{ width: '50%' }}>
+                        <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable)?.toFixed(1)} kgs</Text>
+                      </View>
+                      
                     </View>
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
-
-                      <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable! / rendimientos?.cc_calculo_final.kilos_netos! * 100).toFixed(2)} %</Text>
+                      <View style={{ width: 150 }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
+                      </View>
+                      
+                      <View style={{ width: '50%' }}>
+                        <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable! / rendimientos?.cc_calculo_final.kilos_netos! * 100).toFixed(2)} %</Text>
+                      </View>
                     </View>                    
                   
                   </View>
 
                   <View style={{
                     width: '100%',
-                    height: 100,
+                    height: 60,
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 3,
@@ -994,12 +1045,37 @@ const CCRendimiento = () => {
                           </View>
                           
                         </View>
-                      </View>
+                      </View>                      
                     </View>
-                    
                   </View>
+
+                  {
+                    control_calidad?.estado_aprobacion_cc === 1
+                        ? (
+                          <View style={{ width: '100%', display: 'flex', height: 100, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'relative' }}>
+                            <Image source='/src/assets/firma_donandres.png' style={{ width: 100, height: 50}}/>
+                            <Text style={{ 
+                              borderBottom: '1px solid green',
+                              height: 15,
+                              width: '100%',
+                              fontSize: 10,
+                              textAlign: 'center'
+                            }}>
+                              CC Aprobado por Andres Hasbun
+                            </Text>
+                            <Text style={{ fontSize: 9 }}>Gerente de Operaciones</Text>
+                          </View>
+                          )
+                        : null
+                  
+                  }
+
+
+
                 </View>
               </View>
+
+              
           </View>
         </Page>
       </Document>

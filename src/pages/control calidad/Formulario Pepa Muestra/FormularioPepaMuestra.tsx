@@ -122,6 +122,8 @@ const FormularioPepaMuestra : FC<IFormCC> = ({ id_lote, refresh, isCalibrable, i
     formik.setValues(updatedValues);
   }, [formik.values.muestra_variedad, formik.values.daño_insecto, formik.values.hongo, formik.values.doble, formik.values.fuera_color, formik.values.vana_deshidratada, formik.values.punto_goma, formik.values.goma]);
 
+
+  console.log(formik.values)
   
   return (
     <form

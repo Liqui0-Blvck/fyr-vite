@@ -14,8 +14,9 @@ const LogoAndAsideTogglePart = ({ to }: ILogo ) => {
 	return (
 		<>
 			<Visible is={asideStatus}>
-				<Link to={to} aria-label='Logo'>
-					<LogoTemplate className='h-12' />
+				<Link to={to} aria-label='Logo' className='flex items-center justify-center gap-2'>
+					<img src='/src/assets/almendras.png' className='w-20'/>
+					<h1 className='relative top-2 text-lg  text-orange-900'>Prodalmen</h1>
 				</Link>
 			</Visible>
 			<button

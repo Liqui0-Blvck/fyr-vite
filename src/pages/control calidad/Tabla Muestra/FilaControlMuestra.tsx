@@ -18,6 +18,7 @@ import FormularioPepaMuestra from '../Formulario Pepa Muestra/FormularioPepaMues
 import FormularioCCPepaCalibre from '../Formulario Calibres/FormularioCalibres'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import DetalleCC from '../Detalle/DetalleCCPepa'
+import { cargolabels } from '../../../utils/generalUtils'
 
 
 interface ILoteCompletadoProps {
@@ -107,7 +108,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
           {
             row?.cc_ok === true
               ? (
-                <div className={`w-full flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
+                <div className={`w-24 flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
                   <BiCheckDouble className='text-4xl'/>
                 </div>
               )
@@ -118,7 +119,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
                   title={`Muestra Control de Rendimiento del Lote N° `}
                   textTool='CC Pepas Muestras'
                   size={ccPepaConfirmacion ? 900 : 500}
-                  width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                  width={`w-24 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                   icon={<GiTestTubes className='text-4xl'/>}
                 >
                   <ModalConfirmacion 
@@ -140,31 +141,36 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
             title={`Detalle Muestra N° ${row?.id}`}
             textTool='Detalle'
             size={900}
-            width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+            width={`w-24 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
             icon={<HeroEye style={{ fontSize: 32 }} />}
 
           >
             <DetalleCC  muestra={row}/>
           </ModalRegistro>
 
-          <ModalRegistro
-            open={openConfirmacion}
-            setOpen={setOpenConfirmacion}
-            title={`Muestra Control de Rendimiento del Lote N° ${row?.cc_recepcionmp}`}
-            textTool='Eliminar Muestra'
-            size={500}
-            width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-red-800 hover:bg-red-700' : 'bg-red-800 hover:bg-red-700 text-white'} hover:scale-105`}
-            icon={<HeroXMark style={{ fontSize: 25 }} />}
-
-          >
-            <ModalConfirmacion 
-              id={row?.id!}
-              mensaje='¿Estas seguro de eliminar esta muestra?'
-              confirmacion={confirmacion}
-              setConfirmacion={setConfirmacion}
-              setOpen={setOpenConfirmacion}
-              refresh={refresh} />
-          </ModalRegistro>
+          {
+            cargolabels(perfilData).includes('CDC Jefatura')
+              ? (
+                <ModalRegistro
+                  open={openConfirmacion}
+                  setOpen={setOpenConfirmacion}
+                  title={`Muestra Control de Rendimiento del Lote N° ${row?.cc_recepcionmp}`}
+                  textTool='Eliminar Muestra'
+                  size={500}
+                  width={`w-24 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-red-800 hover:bg-red-700' : 'bg-red-800 hover:bg-red-700 text-white'} hover:scale-105`}
+                  icon={<HeroXMark style={{ fontSize: 25 }} />}
+                >
+                  <ModalConfirmacion 
+                    id={row?.id!}
+                    mensaje='¿Estas seguro de eliminar esta muestra?'
+                    confirmacion={confirmacion}
+                    setConfirmacion={setConfirmacion}
+                    setOpen={setOpenConfirmacion}
+                    refresh={refresh} />
+                </ModalRegistro>
+                )
+              : null
+          }
         </div>
       </TableCell>
       

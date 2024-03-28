@@ -330,7 +330,7 @@ const DetalleGuia = () => {
                       </ModalRegistro>
                           )
                           
-                    :  guia_recepcion.estado_recepcion === '3'  
+                    :  guia_recepcion.estado_recepcion !== '4' 
                     ? (
                       <>
                         <ModalRegistro

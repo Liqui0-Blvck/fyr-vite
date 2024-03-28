@@ -136,8 +136,6 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
     return fotos
   })
 
-  console.log(fotitos)
-
 
   
 
@@ -202,7 +200,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
           />
         </div>
 
-        <div className='md:col-span-4 flex flex-col bg-zinc-100'>
+        <div className={`md:col-span-4 flex flex-col ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-100'} rounded-md p-5`}>
         <label htmlFor="fotos">Fotos: </label>
           <div className='flex flex-wrap w-full gap-2 mb-5'>
             {fotos.map((foto, index) => (
@@ -218,7 +216,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
             accept='image/*'
             multiple
             onChange={handleFotoChange}
-            className='py-2'
+            className='py-2 '
           />
         </div>
 

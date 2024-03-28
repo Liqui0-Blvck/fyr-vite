@@ -67,6 +67,26 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
   )
 
 
+  const updateGuiaRecepcion = async () => {
+    const res = await fetch(`${base_url}/api/estado-guia-update/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
+      },
+      body: JSON.stringify({
+        estado_recepcion: 4
+      })
+    })
+
+    if (res.ok){
+      refresh(true)
+      isOpen(false)
+    } else {
+      console.log("Todo mal")
+    }
+  }
+
 
   
 
@@ -95,6 +115,7 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
           })
         });
         if (res.ok) {
+          updateGuiaRecepcion()
           toast.success("la guia de recepción fue registrado exitosamente!!")
           refresh(true)
           isOpen(false)

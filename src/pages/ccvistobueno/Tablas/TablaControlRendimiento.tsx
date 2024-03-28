@@ -160,7 +160,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 								? (
 									<>
 									<Tooltip title='Solicitar contramuestra'>
-											<div className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-red-600 hover:bg-red-400 text-white' : 'bg-red-600 hover:bg-red-400 text-white'} hover:scale-105`}>
+											<div className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12 ${isDarkTheme ? 'bg-red-600 hover:bg-red-400 text-white' : 'bg-red-600 hover:bg-red-400 text-white'} hover:scale-105`}>
 												<RiErrorWarningFill className='text-4xl'/>
 											</div>
 									</Tooltip>
@@ -170,7 +170,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 											info.row.original.estado_aprobacion_cc === 1
 												? (
 													<Tooltip title='Aprobado'>
-														<div className={`w-full flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
+														<div className={`w-full flex items-center justify-center rounded-md px-1 h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
 															<BiCheckDouble className='text-4xl'/>
 														</div>
 													</Tooltip>
@@ -180,7 +180,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 										}
 
 										<Tooltip title='Mandar Email a proveedor'>
-											<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 md:h-10 lg:h-12 bg-blue-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+											<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 h-12 bg-blue-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 												<IoMailOutline style={{ fontSize: 25 }} />
 											</button>
 										</Tooltip>

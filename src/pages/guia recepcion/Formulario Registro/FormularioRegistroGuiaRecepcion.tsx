@@ -16,7 +16,7 @@ import Radio, { RadioGroup } from '../../../components/form/Radio'
 import Validation from '../../../components/form/Validation'
 import Icon from '../../../components/icon/Icon'
 import FieldWrap from '../../../components/form/FieldWrap'
-import { headerGuiaRegistroSchema } from '../../../services/Validator'
+import { headerGuiaRegistroSchema } from '../../../utils/Validator'
 import Label from '../../../components/form/Label'
 
 const FormularioRegistroGuiaRecepcion = () => {
@@ -182,8 +182,6 @@ const FormularioRegistroGuiaRecepcion = () => {
               />
             </FieldWrap>
           </Validation>
-
-
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>

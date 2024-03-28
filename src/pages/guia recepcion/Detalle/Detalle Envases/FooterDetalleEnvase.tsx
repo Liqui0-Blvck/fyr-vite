@@ -83,10 +83,10 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
           <Table sx={{ minWidth: 750, borderRadius: 5, background: `${isDarkTheme ? '#18181b' : 'white'}` }} aria-label="simple table">
             <TableHead className='bg-[#18181b] flex rounded-md'>
               <TableRow className='flex flex-wrap'>
-                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Envase</TableCell>
-                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Cantidad Envases</TableCell>
-                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Variedad</TableCell>
-                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`}}className={`w-10 ${isDarkTheme ? 'white' : 'bg-zinc-800'}`}>Producto</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`, fontSize: 12}} className={`w-10 ${isDarkTheme ? 'white' : 'bg-[#c0c0c6] '}`}>Envase</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`, fontSize: 12}} className={`w-10 ${isDarkTheme ? 'white' : 'bg-[#c0c0c6] '}`}>Cantidad Envases</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`, fontSize: 12}} className={`w-10 ${isDarkTheme ? 'white' : 'bg-[#c0c0c6] '}`}>Variedad</TableCell>
+                <TableCell align="center" sx={{color: `${isDarkTheme ? 'white' : 'black'}`, fontSize: 12}} className={`w-10 ${isDarkTheme ? 'white' : 'bg-[#c0c0c6] '}`}>Producto</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -96,29 +96,29 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
                 const nombre_producto = tipoFrutaFilter.find(producto => producto.value === row.tipo_producto)?.label
 
                 return (
-                  <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#18181b' : 'white'}`, position: 'relative',}}>
+                  <TableRow key={row.id} style={{ background: `${isDarkTheme ? '#18181b' : 'c0c0c6'}`, position: 'relative',}}>
                     
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1}}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1}}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center text-white'>{nombre_envase}</span>
+                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{nombre_envase}</span>
                       </div>
                     </TableCell>
 
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center text-white' >{row.cantidad_envases!}</span>
+                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{row.cantidad_envases}</span>
                       </div>
                     </TableCell>
 
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center text-white'>{nombre_variedad}</span>
+                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{nombre_variedad}</span>
                       </div>
                     </TableCell>
                     
-                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#F4F4F5'}`, paddingY: 1 }}>
+                    <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1 }}>
                     <div className=' h-full w-full flex items-center justify-center'>
-                        <span className='text-xl text-center text-white'>{nombre_producto}</span>
+                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{nombre_producto}</span>
                       </div>
                     </TableCell>
 

@@ -137,6 +137,7 @@ const contentRoutes: RouteProps[] = [
 	// { path: authPages.profilePage.to, element: <ProfilePage /> },
 	{ path: authPages.loginPage.to, element: <LoginPage /> },
 	{ path: authPages.profilePage.to, element: <ProfilePage /> },
+	{ path: 'not_found', element: <NotFoundPage />},
 
 	{ path: '*', element: <NotFoundPage /> },
 ];

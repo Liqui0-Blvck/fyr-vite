@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { authPages } from '../config/pages.config';
+import { authPages, componentsPages } from '../config/pages.config';
 
 interface IToken {
   access: string;
@@ -50,6 +50,7 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
             const fetchedData: T = await response.json();
             setData(fetchedData);
           } else if (response.status === 401) {
+            navigate(`not_found/`, { replace: true });
             setError('No estás autorizado para hacer esta petición');
           } else if (response.status === 404) {
             setError('La URL que ingresaste no tiene ninguna información');
@@ -59,8 +60,13 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
         }
       } catch (error) {
         console.error(error);
+        navigate(`not_found/`, { replace: true });
+
+
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500)
       }
     };
 

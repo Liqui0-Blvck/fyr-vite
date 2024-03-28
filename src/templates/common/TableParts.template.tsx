@@ -31,7 +31,7 @@ export const TableHeaderTemplate: FC<ITableHeaderTemplateProps> = ({ table }) =>
 									aria-hidden='true'
 									{...{
 										className: header.column.getCanSort()
-											? 'cursor-pointer select-none flex items-center w-full'
+											? 'cursor-pointer select-none flex items-center w-[90%]'
 											: '',
 										onClick: header.column.getToggleSortingHandler(),
 									}}>
@@ -71,7 +71,7 @@ export const TableBodyTemplate: FC<ITableBodyTemplateProps> = ({ table }) => {
 	return (
 		<TBody>
 			{table.getRowModel().rows.map((row) => (
-				<Tr key={row.id}>
+				<Tr key={row.id} style={{ width: 10 }}>
 					{row.getVisibleCells().map((cell) => (
 						<Td
 							key={cell.id}

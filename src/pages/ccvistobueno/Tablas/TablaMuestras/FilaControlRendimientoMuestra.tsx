@@ -7,6 +7,7 @@ import { TableCell } from "@mui/material"
 import { BiCheckDouble } from "react-icons/bi"
 import ModalRegistro from "../../../../components/ModalRegistro"
 import { format } from "@formkit/tempo"
+import useDeviceScreen from "../../../../hooks/useDeviceScreen"
 
 
 interface ILoteCompletadoProps {
@@ -21,7 +22,7 @@ const FilaControlRendimientoMuestra: FC<ILoteCompletadoProps> = ({ muestra: row 
   const { authTokens, validate, perfilData, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
-
+  
 
   const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
 
@@ -30,51 +31,48 @@ const FilaControlRendimientoMuestra: FC<ILoteCompletadoProps> = ({ muestra: row 
     validate,
     `/api/registros/perfil/${row?.registrado_por}`
   )
-
-  console.log(row)
-
   const pepaBruta = (row?.peso_muestra ?? 0) - (row?.basura ?? 0) - (row?.pelon ?? 0) - (row?.ciega ?? 0) - (row?.cascara ?? 0) - (row?.pepa_huerto ?? 0)
-  console.log()
+
 
   return (
     <>
       <TableCell className='table-cell-row-detail-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.id}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.peso_muestra)?.toFixed(1)} grs</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`, }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.basura)?.toFixed(1)} grs</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.pelon)?.toFixed(1)} grs</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.ciega)?.toFixed(1)} grs</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.cascara)?.toFixed(1)} grs</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.pepa_huerto)?.toFixed(1)} grs</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-3' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{pepaBruta.toFixed(1)} grs</span>
         </div>
       </TableCell>

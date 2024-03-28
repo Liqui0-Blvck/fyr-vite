@@ -9,7 +9,7 @@ import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/pris
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TCamion, TControlCalidad, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TProductor, TRendimientoMuestra } from '../../../types/registros types/registros.types'
+import { TCamion, TControlCalidad, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TPerfil, TProductor, TRendimientoMuestra } from '../../../types/registros types/registros.types'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
 import { format } from '@formkit/tempo'
@@ -47,11 +47,13 @@ const DetalleCC = () => {
     `/api/recepcionmp/${control_calidad?.guia_recepcion}`
   )
 
-  const { data: productor } = useAuthenticatedFetch<TProductor>(
+  const { data: userData } = useAuthenticatedFetch<TPerfil>(
     authTokens,
     validate,
-    `/api/productores/${control_calidad?.productor}`
+    `/api/registros/perfil/${control_calidad?.cc_registrado_por}`
   )
+
+  console.log(userData)
 
   const { data: envases } = useAuthenticatedFetch<TEnvases[]>(
     authTokens,
@@ -72,7 +74,6 @@ const DetalleCC = () => {
     `/api/control-calidad/recepcionmp/${control_calidad?.id!}/muestras/`
   )
 
-  console.log("no me encuentro", cc_rendimiento)
 
 
   const kilos_fruta = guia_recepcion?.lotesrecepcionmp.map((row: TLoteGuia) => {
@@ -111,9 +112,7 @@ const DetalleCC = () => {
 
   const muestra = [...(cc_rendimiento || [])];
 
-
-  console.log(ccPepasCompletas)
-  console.log(muestra)
+  console.log(cc_rendimiento)
 
 
 
@@ -130,7 +129,7 @@ const DetalleCC = () => {
       <article className={`w-full ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } w-full h-[80%] flex flex-col md:flex-row lg:flex-row justify-between gap-20 row-span-2`}>
         <div className='sm:w-full md:5/12 lg:5/12  h-full flex flex-col rounded-md'>
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} rounded-md h-full flex items-center px-2`}>
-            <span className='font-semibold text-lg'><span className='mr-4'>Productor:</span> {productor?.nombre} </span>
+            <span className='font-semibold text-lg'><span className='mr-4'>Productor:</span> {control_calidad?.productor} </span>
           </div>
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} rounded-md h-full flex items-center px-2`}>
             <span className='font-semibold text-lg'><span className='mr-4'>Estado CDC:</span> {control_calidad?.estado_cc_label}</span>
@@ -149,7 +148,7 @@ const DetalleCC = () => {
             
           </div>
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} rounded-md h-full flex items-center px-2`}>
-            <span className='font-semibold text-lg'><span className='mr-4'>Registrado Por:</span>usuario falta aun</span>
+            <span className='font-semibold text-lg'><span className='mr-4'>Registrado Por:</span>{userData?.user.username}</span>
           </div>
         </div>
       </article>
@@ -239,7 +238,7 @@ const DetalleCC = () => {
         <div className='flex items-center justify-between px-8'>
           <div className='w-72'>
             {
-              cc_rendimiento?.length! >= 0
+              cc_rendimiento?.length! < 2 
                 ? (
                     <ModalRegistro
                       open={openModalRegistro}
@@ -260,7 +259,7 @@ const DetalleCC = () => {
 
 
           {
-            cc_rendimiento?.length! >= 2 
+            cc_rendimiento?.length! >= 2  && !cc_rendimiento?.some(cc => cc.cc_calibrespepaok === true)
               ? (
                 <div className='w-72'>
                   <ModalRegistro

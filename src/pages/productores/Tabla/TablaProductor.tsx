@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -11,7 +11,6 @@ import {
 import { Link } from 'react-router-dom';
 import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper';
 import Container from '../../../components/layouts/Container/Container';
-import { appPages } from '../../../config/pages.config';
 import Card, {
 	CardBody,
 	CardHeader,
@@ -135,7 +134,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 							textTool='Detalle'
 							title='Detalle Productor'
 							size={900}
-							width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-32 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
 							<DetalleProductor id={id} />
@@ -146,15 +145,15 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 							setOpen={setEdicionModalStatus}
 							title='Edición Productor'
 							textTool='Editar'
-							size={900}
-							width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							size={1000}
+							width={`w-32 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
 						>
 							<FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
 						</ModalRegistro>
 
 						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-32 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 								<HeroXMark style={{ fontSize: 25 }} />
 							</button>
 						</Tooltip>
@@ -241,7 +240,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 						<CardHeaderChild>
 						</CardHeaderChild>
 					</CardHeader>
-					<CardBody className='overflow-x-auto overflow-hidden'>
+					<CardBody className='overflow-x-auto'>
 						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} />
 					</CardBody>
 					<TableCardFooterTemplate table={table} />

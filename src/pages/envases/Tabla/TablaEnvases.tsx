@@ -89,14 +89,14 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
 
 				return (
-					<div className='h-full w-full flex justify-around gap-10'>
+					<div className='h-full w-full flex gap-2 '>
 						<ModalRegistro
 							open={detalleModalStatus}
 							setOpen={setDetalleModalStatus}
 							textTool='Detalle'
 							title='Detalle Comercializador'
 							size={900}
-							width={`w-4/12 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-20 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
 							{/* <DetalleComercializador id={id} /> */}
@@ -109,7 +109,7 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 							title='Edición Comercializador'
 							textTool='Editar'
 							size={900}
-							width={`w-4/12 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-20 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroPencilSquare style={{ fontSize: 25 }}
 							/>}
 						>
@@ -118,7 +118,7 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 						</ModalRegistro>
 
 						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-4/12 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+							<button onClick={async () => await asisteDelete(id)} type='button' className={`w-20 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 								<HeroXMark style={{ fontSize: 25 }} />
 							</button>
 						</Tooltip>
@@ -188,7 +188,7 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>
-			<Container>
+			<Container breakpoint={''}>
 				<Card className='h-full'>
 					<CardHeader>
 						<CardHeaderChild>

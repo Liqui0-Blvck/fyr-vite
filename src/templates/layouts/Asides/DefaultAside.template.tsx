@@ -14,9 +14,12 @@ import Nav, {
 } from '../../../components/layouts/Navigation/Nav';
 import Badge from '../../../components/ui/Badge';
 import UserTemplate from '../User/User.template';
+import { useAuth } from '../../../context/authContext';
+import { cargolabels } from '../../../utils/generalUtils';
 
 const DefaultAsideTemplate = () => {
 	const navigate = useNavigate();
+	const { perfilData } = useAuth()
 
 	return (
 		<Aside>
@@ -49,7 +52,11 @@ const DefaultAsideTemplate = () => {
 						<NavItem {...appPages.recepcionAppPages.subPages.recepcionMp} />
 						<NavItem {...appPages.recepcionAppPages.subPages.envases} />
 						<NavItem {...appPages.recepcionAppPages.subPages.controlCalidad} />
-						<NavItem {...appPages.recepcionAppPages.subPages.lotes} />
+						{
+							cargolabels(perfilData).includes('CDC Jefatura')
+								? <NavItem {...appPages.recepcionAppPages.subPages.lotes} />
+								: null
+						}
 					</NavCollapse>
 
 					<NavCollapse

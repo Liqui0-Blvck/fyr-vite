@@ -73,7 +73,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
     cargoLabels.includes('CDC Jefatura')  ? <HiOutlineClipboardDocumentList className='text-3xl'/>: '' ) : ''
     
 
-    console.log(row?.estado_recepcion)
+    console.log(cargoLabels.includes('RecepcionMP'))
 
 
   return (
@@ -161,22 +161,24 @@ const LoteFila: FC<ILoteCompletadoProps> = (
           </ModalRegistro>
 
           {
-            guia?.estado_recepcion === '4'
+            checkCargoPerfil(perfilData.cargos) && row?.estado_recepcion! >= '5'
               ? null
-              : (
-                <ModalRegistro
-                  open={openModalEdicion[row?.id!] || false}
-                  setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
-                  title='Detalle Envases'
-                  textTool='Edicion'
-                  size={900}
-                  width={`w-20 h-16 md:h-16 lg:h-11 px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-                  icon={<HeroPencilSquare style={{ fontSize: 25 }}
-                  />}
-                >
-                  <FooterFormularioEdicionEnvase id_lote={row?.id!} id_guia={guia?.id!} />
-                </ModalRegistro>
-              )
+              : cargoLabels.includes('RecepcionMP')
+                ? (
+                  <ModalRegistro
+                    open={openModalEdicion[row?.id!] || false}
+                    setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
+                    title='Detalle Envases'
+                    textTool='Edicion'
+                    size={900}
+                    width={`w-20 h-16 md:h-16 lg:h-11 px-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                    icon={<HeroPencilSquare style={{ fontSize: 25 }}
+                    />}
+                  >
+                    <FooterFormularioEdicionEnvase id_lote={row?.id!} id_guia={guia?.id!} />
+                  </ModalRegistro>
+                )
+                : null
           }
 
           {
@@ -192,7 +194,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                         title={modalTitle}
                         textTool='Accion'
                         size={450}
-                        width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                        width={`w-20 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                         icon={iconComponent}
                       >
                         {
@@ -218,7 +220,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                           title={modalTitle}
                           textTool='Accion'
                           size={700}
-                          width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                          width={`w-20 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                           icon={iconComponent}
                         >
                           {
@@ -237,7 +239,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                             title={modalTitle}
                             textTool='Accion'
                             size={450}
-                            width={`w-full h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                            width={`w-20 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                             icon={iconComponent}
                           >
                             {
