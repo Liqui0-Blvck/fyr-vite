@@ -18,7 +18,6 @@ import { useAuth } from '../../../context/authContext';
 import { cargolabels } from '../../../utils/generalUtils';
 
 const DefaultAsideTemplate = () => {
-	const navigate = useNavigate();
 	const { perfilData } = useAuth()
 
 	return (

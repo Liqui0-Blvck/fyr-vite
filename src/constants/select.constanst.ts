@@ -206,7 +206,8 @@ export const CARGOS_PERFILES = [
   'Produccion',
   'Produccion Admin',
   'Seleccion',
-  'Seleccion Admin'
+  'Seleccion Admin',
+  'Administrador'
 ]
 
 

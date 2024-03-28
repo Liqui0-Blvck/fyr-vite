@@ -41,13 +41,12 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
   const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(authTokenLocalStorage);
   const [userID, setUserID] = useState<TokenPayload | null>(userLocalStorage)
-  const [perfilData, setPerfilData] = useState<TPerfil | null>()
+  const [perfilData, setPerfilData] = useState<TPerfil | null>(null)
   const [refresh, setRefresh] = useState<boolean>(false)
 
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
 
-  console.log(userID?.user_id)
 
 
 
@@ -70,8 +69,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
       toast.success('Inicio de sesión exitoso!');// Convierte a TUsuario
       setRefresh(true)
       setAuthTokens(data)
-      Cookies.set('token', JSON.stringify(data), { expires: 2 });
-      Cookies.set('user', JSON.stringify(data.access), { expires: 2 })
+      Cookies.set('token', JSON.stringify(data), { expires: 1 });
+      Cookies.set('user', JSON.stringify(data.access), { expires: 1 })
 
       // navigate(`../${appPages.mainAppPages.to}`, { replace: true });
       window.location.href = `${appPages.mainAppPages.to}`
@@ -114,34 +113,6 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
       return false;
     }
   };
-
-
-
-  console.log(userID?.user_id)
-
-  console.log(refresh)
-
-  // const getProfile = async (id: number) => {
-  //   try {
-  //     const res = await fetch(`${base_url}/api/registros/perfil/${id}`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Bearer ${authTokens?.access}`
-  //       }
-  //     });
-
-  //     if (res.ok) {
-  //       const data = await res.json();
-
-  //       setPerfilData(data);
-  //     } else {
-  //       console.log("Tenemos un problema nuevo");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error al obtener el perfil:", error);
-  //   }
-  // };
 
   useEffect(() => {
     let isMounted = true;
@@ -217,7 +188,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
   const value: IAuthContext = {
     authTokens,
-    perfilData,
+    perfilData: perfilData!,
     userID,
     validate,
     onLogin,

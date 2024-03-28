@@ -188,7 +188,7 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>
-			<Container breakpoint={''}>
+			<Container breakpoint={null}>
 				<Card className='h-full'>
 					<CardHeader>
 						<CardHeaderChild>

@@ -38,10 +38,10 @@ type TThemeConfigs = {
 };
 
 const themeConfig: TThemeConfigs = {
-	projectTitle: 'Fyr',
-	projectName: 'React TypeScript Tailwind Admin & AI Chat Template',
+	projectTitle: 'PDM',
+	projectName: 'Producción Prodalmen',
 	language: 'en',
-	theme: DARK_MODE.SYSTEM,
+	theme: DARK_MODE.LIGHT,
 	themeColor: 'blue',
 	themeColorShade: '500',
 	rounded: 'rounded-lg',

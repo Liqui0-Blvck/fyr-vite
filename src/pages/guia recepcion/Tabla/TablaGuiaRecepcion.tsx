@@ -38,6 +38,7 @@ import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/h
 import { Tooltip } from 'antd';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { FaFilePdf } from 'react-icons/fa6';
+import { cargolabels } from '../../../utils/generalUtils';
 
 
 
@@ -52,7 +53,7 @@ interface IGuiaProps {
 
 
 const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
-	const { authTokens } = useAuth()
+	const { authTokens, perfilData } = useAuth()
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const { isDarkTheme } = useDarkMode();
@@ -226,15 +227,21 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
-				<SubheaderRight>
-					<Link to={`${createLinkProductor}`}>
-						<Button variant='solid' icon='HeroPlus'>
-							Agregar Guia Recepción
-						</Button>
-					</Link>
-				</SubheaderRight>
+				{
+					cargolabels(perfilData).includes('RecepcionMP')
+						? (
+							<SubheaderRight>
+								<Link to={`${createLinkProductor}`}>
+									<Button variant='solid' icon='HeroPlus'>
+										Agregar Guia Recepción
+									</Button>
+								</Link>
+							</SubheaderRight>
+							)
+						: null
+				}
 			</Subheader>
-			<Container breakpoint={!''} className='w-full overflow-auto'>
+			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
 					<CardHeader>
 						<CardHeaderChild>
