@@ -47,7 +47,25 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
 
+  const [lastActivity, setLastActivity] = useState<number>(Date.now()); 
 
+  // const resetTimer = () => {
+  //   setLastActivity(Date.now());
+  // };
+
+  // const checkInactivity = () => {
+  //   const thirtyMinutes = 1 * 60 * 1000; // 30 minutos en milisegundos
+  //   const currentTime = Date.now();
+  //   if (currentTime - lastActivity > thirtyMinutes) {
+  //     onLogout(); // Si ha pasado más de 30 minutos, cierra la sesión automáticamente
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const interval = setInterval(checkInactivity, 2000); // Verifica la inactividad cada segundo
+
+  //   return () => clearInterval(interval);
+  // }, [lastActivity]);
 
 
   const onLogin = async (username: string, password: string) => {
@@ -71,6 +89,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
       setAuthTokens(data)
       Cookies.set('token', JSON.stringify(data), { expires: 1 });
       Cookies.set('user', JSON.stringify(data.access), { expires: 1 })
+
+      // resetTimer();
 
       // navigate(`../${appPages.mainAppPages.to}`, { replace: true });
       window.location.href = `${appPages.mainAppPages.to}`
@@ -182,6 +202,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     setPerfilData(null)
     Cookies.remove('token')
     Cookies.remove('user')
+
+    // resetTimer();
 
     navigate(`../${authPages.loginPage.to}`, { replace: true });
   };

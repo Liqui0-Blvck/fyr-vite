@@ -133,7 +133,7 @@ const FormularioPepaMuestra : FC<IFormCC> = ({ id_lote, refresh, isCalibrable, i
         rounded-md`}
       >
         <div className='md:col-start-2 md:col-span-3 md:flex-col items-center bg-green-600 p-5 rounded-md'>
-          <Label className='text-white' htmlFor='mezcla_variedad'>Pepa Bruta de la Muestra: </Label>
+          <Label className={`${isDarkTheme ? 'text-white' : 'text-zinc-100'}`} htmlFor='mezcla_variedad'>Pepa Bruta de la Muestra: </Label>
           <Validation
             isValid={formik.isValid}
             isTouched={formik.touched.pepa_muestra ? true : undefined}
@@ -143,7 +143,7 @@ const FormularioPepaMuestra : FC<IFormCC> = ({ id_lote, refresh, isCalibrable, i
               type='number'
               name='pepa_muestra'
               onChange={formik.handleChange}
-              className='py-2 w-[90%] bg-zinc-100 focus-visible:bg-zinc-100 focus:bg-zinc-200 '
+              className={`py-2 `}
               value={formik.values.pepa_muestra}
             />
             </FieldWrap>
@@ -152,7 +152,7 @@ const FormularioPepaMuestra : FC<IFormCC> = ({ id_lote, refresh, isCalibrable, i
         </div>
 
         <div className='md:col-start-5 md:col-span-3 md:flex-col items-center bg-green-600 p-5 rounded-md w-full'>
-          <Label className='text-white'  htmlFor='pepa_sana'>Pepa Sana Resultante: </Label>
+          <Label className={`${isDarkTheme ? 'text-white' : 'text-zinc-100'}`}  htmlFor='pepa_sana'>Pepa Sana Resultante: </Label>
           <Validation
             isValid={formik.isValid}
             isTouched={formik.touched.pepa_sana ? true : undefined}

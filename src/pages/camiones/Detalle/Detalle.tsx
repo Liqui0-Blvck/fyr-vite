@@ -20,6 +20,7 @@ const DetalleCamion = ({ id }: { id: number }) => {
     validate,
     `/api/registros/camiones/${id}`
   )
+  
 
   return (
     <div

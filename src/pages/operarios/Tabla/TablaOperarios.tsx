@@ -77,7 +77,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
   const columns = [
     columnHelper.accessor('rut', {
       cell: (info) => (
-        <div className='font-bold w-20'>
+        <div className='font-bold w-full'>
           {`${info.row.original.rut}`}
         </div>
       ),
@@ -115,14 +115,6 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
       ),
       header: 'Estado',
     }),
-    columnHelper.accessor('etiquetas', {
-      cell: (info) => (
-        <div className='font-bold'>
-          {`${info.row.original.etiquetas}`}
-        </div>
-      ),
-      header: 'Etiqueta',
-    }),
     columnHelper.display({
       id: 'actions',
       cell: (info) => {
@@ -139,7 +131,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
               title='Detalle Operario'
               size={900}
 
-              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              width={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
               icon={<HeroEye style={{ fontSize: 25 }} />}
             >
               <DetalleOperario id={id} />
@@ -151,7 +143,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
               title='Edición Operario'
               textTool='Editar'
               size={900}
-              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              width={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
               icon={<HeroPencilSquare style={{ fontSize: 25 }}
               />}
             >
@@ -159,7 +151,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
             </ModalRegistro>
 
             <Tooltip title='Eliminar'>
-              <button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+              <button onClick={async () => await asisteDelete(id)} type='button' className={`w-24 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
                 <HeroXMark style={{ fontSize: 25 }} />
               </button>
             </Tooltip>

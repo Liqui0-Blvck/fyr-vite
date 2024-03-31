@@ -6,7 +6,7 @@ import Button from '../../../../components/ui/Button';
 import Input from '../../../../components/form/Input';
 import FieldWrap from '../../../../components/form/FieldWrap';
 import useDomRect from '../../../../hooks/useDomRect';
-import { componentsPages } from '../../../../config/pages.config';
+import { appPages } from '../../../../config/pages.config';
 import Badge from '../../../../components/ui/Badge';
 import Modal, { ModalBody, ModalHeader } from '../../../../components/ui/Modal';
 
@@ -45,18 +45,18 @@ const SearchPartial = () => {
 	);
 
 	const list = [
-		...Object.values(componentsPages.uiPages.subPages).map((i) => ({
+		...Object.values(appPages.registroAppPages.subPages).map((i) => ({
 			...i,
 			category: 'Component',
 		})),
-		...Object.values(componentsPages.formPages.subPages).map((i) => ({
+		...Object.values(appPages.recepcionAppPages.subPages).map((i) => ({
 			...i,
 			category: 'Form',
 		})),
-		...Object.values(componentsPages.integratedPages.subPages).map((i) => ({
+		...Object.values(appPages.produccion.subPages).map((i) => ({
 			...i,
 			category: 'Other',
-		})),
+		}))
 	];
 	const result = list.filter(
 		(key) =>
@@ -97,7 +97,7 @@ const SearchPartial = () => {
 				<Input
 					ref={inputRef}
 					name='searchField'
-					placeholder='Search or type a command'
+					placeholder='Busca cualquier componente'
 					className='min-w-[22rem]'
 					value={formik.values.searchField}
 					onChange={formik.handleChange}

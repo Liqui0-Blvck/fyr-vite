@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { urlNumeros } from '../../../services/url_number';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
-import { TEnvases, TGuia, TLoteGuia, TPerfil, TProductor } from '../../../types/registros types/registros.types';
+import { TCamion, TConductor, TEnvases, TGuia, TLoteGuia, TPerfil, TProductor } from '../../../types/registros types/registros.types';
 import { TProduct } from '../../../mocks/db/products.db';
 import { variedadFilter } from '../../../constants/options.constants';
 
@@ -203,10 +203,24 @@ const GuiaRecepcionPDF = () => {
     `/api/envasesmp/`
   )
 
+  const { data: camionero } = useAuthenticatedFetch<TConductor>(
+    authTokens,
+    validate,
+    `/api/registros/choferes/${guia?.camionero}`
+  )
+
+  const { data: camion } = useAuthenticatedFetch<TCamion>(
+    authTokens,
+    validate,
+    `/api/registros/camiones/${guia?.camion}`
+  )
+
   console.log(envases)
   console.log(guia)
   console.log(usuario)
   console.log(productor)
+  console.log(camionero)
+  console.log(camion)
 
   const kilos_brutos_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
     return lote.kilos_brutos_1
@@ -221,9 +235,7 @@ const GuiaRecepcionPDF = () => {
     return lote.kilos_tara_2
   })
 
-  const kilo_fruta_neta_final = kilos_brutos_1 - kilos_brutos_2 - kilos_tara_1 - kilos_tara_2
-  console.log(kilo_fruta_neta_final)
-
+  
   const kilos_fruta = guia?.lotesrecepcionmp.map((row: TLoteGuia) => {
     const kilos_total_envases = 
       row.envases.map((envase_lote) => {
@@ -236,17 +248,14 @@ const GuiaRecepcionPDF = () => {
       return kilos_total_envases[0]
   })
   console.log(kilos_fruta)
-      
 
-  // width: '100%',
-  //   display: 'flex',
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  //   gap: 10,
-  //   border: '1px solid green',
-  //   borderRadius: 5,
-  //   height: 60
+  const kilo_fruta_neta_final = (Number(kilos_brutos_1) + Number(kilos_brutos_2)) - (Number(kilos_tara_1) + Number(kilos_tara_2)) - Number(kilos_fruta)
+  const kilos_brutos = Number(kilos_brutos_1) + Number(kilos_brutos_2)
+  const kilos_tara = Number(kilos_tara_1) + Number(kilos_tara_2) 
+  console.log(kilos_tara)
+  console.log(kilos_brutos)
+  console.log(kilo_fruta_neta_final)
+      
   return (
     <PDFViewer style={{ height: '100%'}}>
       <Document>
@@ -265,12 +274,12 @@ const GuiaRecepcionPDF = () => {
             <View style={{ width: 150, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -9 }}>
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Fecha Recepción: </Text>
-                <Text style={styles.header_date_info_text}>{format(guia?.fecha_creacion, { date: 'short'}, 'es')}</Text>
+                <Text style={styles.header_date_info_text}>{format(guia?.fecha_creacion!, { date: 'short'}, 'es')}</Text>
               </View>
 
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Hora Recepción: </Text>
-                <Text style={styles.header_date_info_text}>{format(guia?.fecha_creacion, { time: 'short'}, 'es')}</Text>
+                <Text style={styles.header_date_info_text}>{format(guia?.fecha_creacion!, { time: 'short'}, 'es')}</Text>
               </View>
 
               <View style={styles.header_date_info_box}>
@@ -308,15 +317,15 @@ const GuiaRecepcionPDF = () => {
 
 
                   <View style={styles.header_date_info_box}>
-                    <Text style={styles.header_date_info_text}>Productor: </Text>
+                    <Text style={styles.header_date_info_text}>Correo de Productor: </Text>
 
                     <Text style={styles.header_date_info_text}>{productor?.email}</Text>
                   </View>
 
                   <View style={styles.header_date_info_box}>
-                    <Text style={styles.header_date_info_text}>Comercializador: </Text>
+                    <Text style={styles.header_date_info_text}>Camión: </Text>
 
-                    <Text style={styles.header_date_info_text}>Patente  {guia?.camion}</Text>
+                    <Text style={styles.header_date_info_text}>Patente {camion?.patente}, {`${camion?.acoplado ? 'Con acoplado' : 'Sin acoplado' }`}</Text>
                   </View>
                   
                 </View>
@@ -327,7 +336,7 @@ const GuiaRecepcionPDF = () => {
                 
                   <View style={styles.header_date_info_box}>
                     <Text style={styles.header_date_info_text}>Rut Conductor: </Text>
-                    <Text style={styles.header_date_info_text}>{guia?.nombre_camionero}</Text>
+                    <Text style={styles.header_date_info_text}>{camionero?.rut}</Text>
                   </View>
 
 
@@ -367,14 +376,14 @@ const GuiaRecepcionPDF = () => {
               
                 <View style={styles.header_date_info_box}>
                   <Text style={styles.header_date_info_text}>Kilos Brutos: </Text>
-                  <Text style={styles.header_date_info_text}>{kilos_brutos_1} kgs</Text>
+                  <Text style={styles.header_date_info_text}>{kilos_brutos} kgs</Text>
                 </View>
 
 
                 <View style={styles.header_date_info_box}>
-                  <Text style={styles.header_date_info_text}>Kilos Totales Envase: </Text>
+                  <Text style={styles.header_date_info_text}>Kilos Tara: </Text>
 
-                  <Text style={styles.header_date_info_text}>{kilos_tara_1}</Text>
+                  <Text style={styles.header_date_info_text}>{kilos_tara} kgs</Text>
                 </View>
                 
               </View>
@@ -385,13 +394,13 @@ const GuiaRecepcionPDF = () => {
               <View style={styles.header_info_inferior}>
               
                 <View style={styles.header_date_info_box}>
-                  <Text style={styles.header_date_info_text}>Kilos Brutos: </Text>
-                  <Text style={styles.header_date_info_text}>{kilos_fruta}</Text>
+                  <Text style={styles.header_date_info_text}>Kilos Total Envases: </Text>
+                  <Text style={styles.header_date_info_text}>{kilos_fruta} kgs</Text>
                 </View>
 
                 <View style={styles.header_date_info_box}>
                   <Text style={styles.header_date_info_text}>Kilos Fruta Neta: </Text>
-                  <Text style={styles.header_date_info_text}>{kilo_fruta_neta_final}</Text>
+                  <Text style={styles.header_date_info_text}>{kilo_fruta_neta_final} kgs</Text>
                 </View>
                 
               </View>
@@ -440,8 +449,8 @@ const GuiaRecepcionPDF = () => {
           {
             guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
 
-              const envase_lote = lote.envases.map((envase) => {
-                return envases?.find(envase => envase.id === envase.id)
+              const envase_lote = lote.envases.map((envase: any) => {
+                return envases?.find(envase_ => envase_.id === envase.id)
               })
 
               const cantidad = lote.envases.map((lote) => {
@@ -453,7 +462,6 @@ const GuiaRecepcionPDF = () => {
               })
 
               const variedad_lote = variedadFilter.find(variety => variety.value === String(variedad))?.label
-              console.log(variedad_lote)
             
 
               const kilo_fruta_neto = (lote.kilos_brutos_1 + lote.kilos_brutos_2) - (lote.kilos_tara_1) + lote.kilos_tara_2
@@ -485,7 +493,7 @@ const GuiaRecepcionPDF = () => {
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{kilo_fruta_neto} kgs</Text>
+                   <Text style={{ fontSize: 10}}>{kilo_fruta_neta_final} kgs</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>

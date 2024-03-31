@@ -9,6 +9,10 @@ import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/pris
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { optionsAcoplado } from '../../../constants/options.constants'
+import { camionSchema } from '../../../utils/Validator'
+import Label from '../../../components/form/Label'
+import Validation from '../../../components/form/Validation'
+import FieldWrap from '../../../components/form/FieldWrap'
 
 
 
@@ -27,6 +31,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
       acoplado: false,
       observaciones: ""
     },
+    validationSchema: camionSchema,
     onSubmit: async (values) => {
       try {
         const res = await fetch(`${base_url}/api/registros/camiones/`, {
@@ -36,8 +41,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
             'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
-            ...values,
-            acoplado: Boolean(formik.values.acoplado)
+            ...values
           })
         })
         if (res.ok) {
@@ -54,6 +58,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
     }
   })
 
+  console.log(formik.values)
 
   return (
     <form
@@ -63,38 +68,67 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
         rounded-md`}
       >
         <div className='md:col-span-2 md:flex-col items-center'>
-          <label htmlFor="patente">Patente: </label>
-          <Input
-            name='patente'
-            onChange={formik.handleChange}
-            className='py-2.5'
-            value={formik.values.patente}
-          />
+          <Label htmlFor='patente'>Patente: </Label>
+
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.patente ? true : undefined}
+            invalidFeedback={formik.errors.patente ? String(formik.errors.patente) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+            <Input
+              type='text'
+              name='patente'
+              onChange={formik.handleChange}
+              className='py-3 text-black'
+              value={formik.values.patente}
+            />
+            </FieldWrap>
+          </Validation>
         </div>
 
         <div className='md:col-span-2 md:col-start-3 md:flex-col flex'>
-          <label htmlFor="acoplado">Acoplado: </label>
-          <SelectReact
-              options={optionsAcoplado}
-              id='acoplado'
-              placeholder='Selecciona un opción'
-              name='acoplado'
-              className='h-12 py-2'
-              onChange={(value: any) => {
-                formik.setFieldValue('acoplado', value.value)
-              }}
-            />
+          <Label htmlFor='acoplado'>Acoplado: </Label>
+
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.acoplado ? true : undefined}
+            invalidFeedback={formik.errors.acoplado ? String(formik.errors.acoplado) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionsAcoplado}
+                id='acoplado'
+                placeholder='Selecciona un opción'
+                name='acoplado'
+                className='h-14 py-2'
+                onChange={(value: any) => {
+                  formik.setFieldValue('acoplado', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
+
         </div>
 
         <div className='md:row-start-2 md:col-span-4  md:flex-col items-center'>
-          <label htmlFor="observaciones">Observaciones: </label>
-          <Textarea
-            rows={5}
-            cols={9}
-            name='observaciones'
-            onChange={formik.handleChange}
-            value={formik.values.observaciones}
-          />
+          <Label htmlFor='observaciones'>Observaciones: </Label>
+
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.observaciones ? true : undefined}
+            invalidFeedback={formik.errors.observaciones ? String(formik.errors.observaciones) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <Textarea
+                rows={5}
+                cols={9}
+                name='observaciones'
+                onChange={formik.handleChange}
+                value={formik.values.observaciones}
+              />
+            </FieldWrap>
+          </Validation>
         </div>
 
 

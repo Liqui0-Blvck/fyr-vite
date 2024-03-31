@@ -49,10 +49,10 @@ const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
 				// Hover
 				[`hover:border-${color as TColors}-${colorIntensity as TColorIntensity}`],
 				[`dark:hover:border-${color as TColors}-${colorIntensity as TColorIntensity}`],
-				'disabled:!border-zinc-500',
+				'disabled:!border-zinc-800',
 				// Focus
 				'focus:border-zinc-300 dark:focus:border-zinc-800',
-				'focus:bg-transparent dark:focus:bg-transparent',
+				'focus:bg-zinc-800 dark:focus:bg-zinc-600',
 			),
 			validation: classNames({
 				'!border-red-500 ring-4 ring-red-500/30': !isValid && isTouched && invalidFeedback,

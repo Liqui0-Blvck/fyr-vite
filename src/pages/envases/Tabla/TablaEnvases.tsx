@@ -35,6 +35,11 @@ import FormularioRegistroEnvases from '../Formulario Registro/FormularioRegistro
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';
+import DetalleEnvase from '../../guia recepcion/Detalle/Detalle Envases/DetalleEnvase';
+import FooterDetalleEnvase from '../../guia recepcion/Detalle/Detalle Envases/FooterDetalleEnvase';
+import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
+import { useAuth } from '../../../context/authContext';
+import DetalleEnvaseMP from '../Detalle Envase/DetalleEnvase';
 
 
 
@@ -53,6 +58,9 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const { isDarkTheme } = useDarkMode()
+	const { authTokens, validate, perfilData } = useAuth()
+
+	
 
 	const asisteDelete = async (id: number) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
@@ -65,6 +73,12 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 			console.log("nop no lo logre")
 		}
 	}
+
+	const { data: envaseEnGuia } = useAuthenticatedFetch(
+		authTokens,
+		validate,
+		`/api/`
+	)
 
 	const editLinkProductor = `/app/envases/`
 
@@ -88,19 +102,20 @@ const TablaEnvases: FC<IEnvasesProps> = ({ data, refresh }) => {
 				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
 				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
 
+				console.log(info.row)
+
 				return (
 					<div className='h-full w-full flex gap-2 '>
 						<ModalRegistro
 							open={detalleModalStatus}
 							setOpen={setDetalleModalStatus}
 							textTool='Detalle'
-							title='Detalle Comercializador'
+							title='Detalle Envase Materia Prima'
 							size={900}
 							width={`w-20 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
-							{/* <DetalleComercializador id={id} /> */}
-							hola
+							<DetalleEnvaseMP  data={info.row.original}/>
 						</ModalRegistro>
 
 						<ModalRegistro

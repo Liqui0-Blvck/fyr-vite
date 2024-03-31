@@ -7,6 +7,10 @@ import SelectReact, { TSelectOptions } from '../../../components/form/SelectReac
 import { useAuth } from '../../../context/authContext'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { comercializadorSchema } from '../../../utils/Validator'
+import Label from '../../../components/form/Label'
+import Validation from '../../../components/form/Validation'
+import FieldWrap from '../../../components/form/FieldWrap'
 
 interface IFormComercializadorProps {
   refresh: Dispatch<SetStateAction<boolean>>
@@ -29,6 +33,7 @@ const FormularioRegistroComercializador: FC<IFormComercializadorProps> = ({ refr
       zip_code: "",
       email_comercializador: ""
     },
+    validationSchema: comercializadorSchema,
     onSubmit: async (values) => {
       try {
         const res = await fetch(`${base_url}/api/comercializador/`, {
@@ -66,73 +71,129 @@ const FormularioRegistroComercializador: FC<IFormComercializadorProps> = ({ refr
       relative p-4 ${ isDarkTheme ? oneDark : oneLight} rounded-md`}
       >
       <div className='md:col-span-2 md:flex-col items-center'>
-        <label htmlFor="nombre">Nombre: </label>
-        <Input
-          type='text'
-          name='nombre'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.nombre}
-        />
+        <Label htmlFor='nombre'>Nombre: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.nombre ? true : undefined}
+          invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='nombre'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.nombre}
+          />
+          </FieldWrap>
+        </Validation>
+       
       </div>
 
       <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="razon_social">Razón Social: </label>
-        <Input
-          type='text' 
-          name='razon_social'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.razon_social}
-        />
+        <Label htmlFor='razon_social'>Razón Social: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.razon_social ? true : undefined}
+          invalidFeedback={formik.errors.razon_social ? String(formik.errors.razon_social) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='razon_social'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.razon_social}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
-        <label htmlFor="giro">Giro: </label>
-        <Input 
-          type='text'
-          name='giro'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.giro}
-        />
+        <Label htmlFor='giro'>Giro Comercial: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.giro ? true : undefined}
+          invalidFeedback={formik.errors.giro ? String(formik.errors.giro) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='giro'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.giro}
+          />
+          </FieldWrap>
+        </Validation>
+
       </div>
       
       
       <div className='md:col-span-2 md:row-start-2  md:flex-col items-center'>
-        <label htmlFor="direccion">Dirección: </label>
-        <Input 
-          type='text'
-          name='direccion'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.direccion}
-        />
+        <Label htmlFor='direccion'>Dirección: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.direccion ? true : undefined}
+          invalidFeedback={formik.errors.direccion ? String(formik.errors.direccion) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='direccion'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.direccion}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
       
 
       <div className='md:col-span-2 md:row-start-2 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="zip_code">Código de Zona (Zip Code): </label>
-        <Input
-          type='text' 
-          name='zip_code'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.zip_code}
-        />
+        <Label htmlFor='zip_code'>Código de Zona (Zip Code):  </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.zip_code ? true : undefined}
+          invalidFeedback={formik.errors.zip_code ? String(formik.errors.zip_code) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='zip_code'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.zip_code}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
       
 
       <div className='md:col-span-2 md:row-start-2 md:col-start-5 md:flex-col items-center'>
-        <label htmlFor="email_comercializador">Email Comercializador: </label>
-        <Input
-          type='email' 
-          name='email_comercializador'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.email_comercializador}
-        />
+        <Label htmlFor='email_comercializador'>Email Comercializador:  </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.email_comercializador ? true : undefined}
+          invalidFeedback={formik.errors.email_comercializador ? String(formik.errors.email_comercializador) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='email_comercializador'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.email_comercializador}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
 

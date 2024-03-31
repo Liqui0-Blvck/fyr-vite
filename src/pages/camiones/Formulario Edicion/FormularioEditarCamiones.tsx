@@ -10,6 +10,9 @@ import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TCamion } from '../../../types/registros types/registros.types'
 import { optionsAcoplado } from '../../../constants/options.constants'
+import Label from '../../../components/form/Label'
+import Validation from '../../../components/form/Validation'
+import FieldWrap from '../../../components/form/FieldWrap'
 
 
 
@@ -85,43 +88,71 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
         gap-y-5 mt-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6
         rounded-md`}
     >
-      <div className='md:col-span-2 md:flex-col items-center'>
-        <label htmlFor="patente">Patente: </label>
-        <Input
-          name='patente'
-          onChange={formik.handleChange}
-          className='py-2.5'
-          value={formik.values.patente}
-        />
-      </div>
+       <div className='md:col-span-2 md:flex-col items-center'>
+          <Label htmlFor='patente'>Patente: </Label>
 
-      <div className='md:col-span-2 md:col-start-3 md:flex-col flex'>
-        <label htmlFor="acoplado">Acoplado: </label>
-        <SelectReact
-          options={optionsAcoplado}
-          id='acoplado'
-          placeholder='Selecciona un opción'
-          name='acoplado'
-          className='h-12'
-          value={optionsAcoplado.find(option => option?.value === String(formik.values.acoplado))}
-          onChange={(value: any) => {
-            formik.setFieldValue('acoplado', value.value)
-          }}
-        />
-      </div>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.patente ? true : undefined}
+            invalidFeedback={formik.errors.patente ? String(formik.errors.patente) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+            <Input
+              type='text'
+              name='patente'
+              onChange={formik.handleChange}
+              className='py-3'
+              value={formik.values.patente}
+            />
+            </FieldWrap>
+          </Validation>
+        </div>
 
-      <div className='md:row-start-2 md:col-span-4  md:flex-col items-center'>
-        <label htmlFor="observaciones">Observaciones: </label>
-        <Textarea
-          rows={5}
-          cols={9}
-          name='observaciones'
-          onChange={formik.handleChange}
-          value={formik.values.observaciones}
-        />
-      </div>
+        <div className='md:col-span-2 md:col-start-3 md:flex-col flex'>
+          <Label htmlFor='acoplado'>Acoplado: </Label>
 
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.acoplado ? true : undefined}
+            invalidFeedback={formik.errors.acoplado ? String(formik.errors.acoplado) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionsAcoplado}
+                id='acoplado'
+                placeholder='Selecciona un opción'
+                name='acoplado'
+                className='h-14 py-2'
+                value={optionsAcoplado.find(option => option?.value === String(formik.values.acoplado))}
 
+                onChange={(value: any) => {
+                  formik.setFieldValue('acoplado', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
+
+        </div>
+
+        <div className='md:row-start-2 md:col-span-4  md:flex-col items-center'>
+          <Label htmlFor='observaciones'>Observaciones: </Label>
+
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.observaciones ? true : undefined}
+            invalidFeedback={formik.errors.observaciones ? String(formik.errors.observaciones) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <Textarea
+                rows={5}
+                cols={9}
+                name='observaciones'
+                onChange={formik.handleChange}
+                value={formik.values.observaciones}
+              />
+            </FieldWrap>
+          </Validation>
+        </div>
 
       <div className='relative w-full h-20 col-span-4'>
         <button type='submit' className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>

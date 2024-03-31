@@ -226,3 +226,10 @@ export function checkCargoPerfil(cargos: TCargo[]): boolean {
   // Si ninguno de los cargo_label está en CARGOS_PERFILES, devuelve false
   return false;
 }
+
+
+
+export const TIPO_INFORME = [
+  {value: 1, label: 'Pre Limpia'},
+  {value: 2, label: 'Descascarado/ Despelonado'}
+]

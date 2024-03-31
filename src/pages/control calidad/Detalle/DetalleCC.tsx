@@ -21,13 +21,14 @@ import FormularioCCRendimiento from '../Formulario CC Rendimiento/FormularioCCRe
 import ModalConfirmacion from '../../../components/ModalConfirmacion'
 import FormularioCCPepaCalibre from '../Formulario Calibres/FormularioCalibres'
 import { FaPlus } from 'react-icons/fa6'
+import { cargolabels } from '../../../utils/generalUtils'
 
 
 const DetalleCC = () => {
   const { isDarkTheme } = useDarkMode();
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
-  const { authTokens, validate } = useAuth()
+  const { authTokens, validate, perfilData } = useAuth()
   const [openModalRegistro, setOpenModalRegistro] = useState<boolean>(false)
   const [openModalCPepaCalibre, setOpenModalCPepaCalibre] = useState<boolean>(false)
   const [openConfirmacion, setOpenConfirmacion] = useState<boolean>(false)
@@ -238,7 +239,7 @@ const DetalleCC = () => {
         <div className='flex items-center justify-between px-8'>
           <div className='w-72'>
             {
-              cc_rendimiento?.length! < 2 
+              cc_rendimiento?.length! < 2 && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP')
                 ? (
                     <ModalRegistro
                       open={openModalRegistro}

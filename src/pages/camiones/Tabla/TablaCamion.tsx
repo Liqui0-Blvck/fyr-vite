@@ -37,6 +37,8 @@ import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/h
 import { Row, Tooltip } from 'antd';
 import DetalleCamion from '../Detalle/Detalle';
 import useDarkMode from '../../../hooks/useDarkMode';
+import { useAuth } from '../../../context/authContext';
+import { cargolabels } from '../../../utils/generalUtils';
 
 
 
@@ -53,6 +55,7 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
 	const { isDarkTheme } = useDarkMode();
+	const { perfilData } = useAuth()
 
 
 	const asisteDelete = async (id: number) => {
@@ -124,22 +127,30 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 							<DetalleCamion id={id} />
 						</ModalRegistro>
 
-						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
-							title='Edición Camiones'
-							textTool='Editar'
-							width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
-						>
-							<FormularioEditarCamiones refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
-						</ModalRegistro>
+						{
+							cargolabels(perfilData).includes('Administrador', 'RecepcionMP')
+								? (
+									<>
+										<ModalRegistro
+											open={edicionModalStatus}
+											setOpen={setEdicionModalStatus}
+											title='Edición Camiones'
+											textTool='Editar'
+											width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+											icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
+										>
+											<FormularioEditarCamiones refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+										</ModalRegistro>
 
-						<Tooltip title='Eliminar'>
-							<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
-								<HeroXMark style={{ fontSize: 25 }} />
-							</button>
-						</Tooltip>
+										<Tooltip title='Eliminar'>
+											<button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+												<HeroXMark style={{ fontSize: 25 }} />
+											</button>
+										</Tooltip>
+									</>
+									)
+								: null
+						}
 					</div>
 				);
 			},

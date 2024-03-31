@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { IChartOptions } from '../../interface/chart.interface';
 import Chart from '../Chart';
 
@@ -13,7 +13,7 @@ const PieChart: FC<IPieProps> = ({ series, labels }) => {
 		options: {
 			chart: {
 				id: 'pie_chart',
-				height: 220,
+				height: 250,
 				type: 'pie',
 				toolbar: {
 					show: false,

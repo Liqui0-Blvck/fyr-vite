@@ -10,6 +10,9 @@ import { ACTIVO, TIPOS_OPERARIO } from '../../../constants/select.constanst'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TOperarios } from '../../../types/registros types/registros.types'
+import Label from '../../../components/form/Label'
+import Validation from '../../../components/form/Validation'
+import FieldWrap from '../../../components/form/FieldWrap'
 
 interface IFormChoferes {
   refresh: Dispatch<SetStateAction<boolean>>
@@ -43,7 +46,8 @@ const FormularioEdicionOperario: FC<IFormChoferes> = ({ setOpen, refresh, id }) 
         const res = await fetch(`${base_url}/api/registros/operarios/${id}/`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values
@@ -102,85 +106,155 @@ const FormularioEdicionOperario: FC<IFormChoferes> = ({ setOpen, refresh, id }) 
           relative p-4 ${isDarkTheme ? oneDark : oneLight} rounded-md`}
     >
       <div className='md:col-span-2 md:flex-col items-center'>
-        <label htmlFor="nombre">Nombre: </label>
-        <Input
-          name='nombre'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.nombre}
-        />
-      </div>
+          <Label htmlFor='nombre'>Nombre: </Label>
 
-      <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="apellido">Apellido: </label>
-        <Input
-          name='apellido'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.apellido}
-        />
-      </div>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.nombre ? true : undefined}
+            invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+            <Input
+              type='text'
+              name='nombre'
+              onChange={formik.handleChange}
+              className='py-3'
+              value={formik.values.nombre}
+            />
+            </FieldWrap>
+          </Validation>
+        </div>
 
-      <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
-        <label htmlFor="rut">Rut: </label>
-        <Input
-          name='rut'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.rut}
-        />
-      </div>
+        <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
+          <Label htmlFor='apellido'>Apellido: </Label>
 
-      <div className='md:col-span-2 md:col-start-1 md:row-start-2 md:flex-col items-center'>
-        <label htmlFor="tipo_operario">Tipo Operario: </label>
-        <SelectReact
-          options={optionsOperario}
-          id='tipo_operario'
-          placeholder='Selecciona un opción'
-          name='tipo_operario'
-          className='h-12'
-          value={opcionOperario.find(option => option.value === formik.values.tipo_operario)}
-          onChange={(value: any) => {
-            formik.setFieldValue('tipo_operario', value.value)
-          }}
-        />
-      </div>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.apellido ? true : undefined}
+            invalidFeedback={formik.errors.apellido ? String(formik.errors.apellido) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+            <Input
+              type='text'
+              name='apellido'
+              onChange={formik.handleChange}
+              className='py-3'
+              value={formik.values.apellido}
+            />
+            </FieldWrap>
+          </Validation>
 
-      <div className='md:col-span-2 md:col-start-3 md:row-start-2 md:flex-col items-center'>
-        <label htmlFor="activo">Activo: </label>
-        <SelectReact
-          options={optionActive}
-          id='activo'
-          placeholder='Selecciona un opción'
-          name='activo'
-          className='h-12'
-          value={optionActive.find(option => (option?.value) === String(formik.values.activo))}
+        </div>
 
-          onChange={(value: any) => {
-            formik.setFieldValue('activo', value.value)
-          }}
-        />
-      </div>
+        <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
+          <Label htmlFor='rut'>Rut: </Label>
 
-      <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
-        <label htmlFor="etiquetas">etiquetas: </label>
-        <Input
-          name='etiquetas'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.etiquetas}
-        />
-      </div>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.rut ? true : undefined}
+            invalidFeedback={formik.errors.rut ? String(formik.errors.rut) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+            <Input
+              type='text'
+              name='rut'
+              onChange={formik.handleChange}
+              className='py-3'
+              value={formik.values.rut}
+            />
+            </FieldWrap>
+          </Validation>
 
-      <div className='md:row-start-3 md:col-span-2 md:col-start-1 md:flex-col items-center'>
-        <label htmlFor="pago_x_kilo">Pago por Kg: </label>
-        <Input
-          name='pago_x_kilo'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.pago_x_kilo!}
-        />
-      </div>
+        </div>
+
+        <div className='md:col-span-2 md:col-start-1 md:row-start-2 md:flex-col items-center'>
+        <Label htmlFor='tipo_operario'>Tipo Operario: </Label>
+        
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.tipo_operario ? true : undefined}
+          invalidFeedback={formik.errors.tipo_operario ? String(formik.errors.tipo_operario) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+            <SelectReact
+                options={optionsOperario}
+                id='tipo_operario'
+                placeholder='Selecciona un opción'
+                name='tipo_operario'
+                className='h-12'
+                value={opcionOperario.find(option => option.value === formik.values.tipo_operario)}
+                onChange={(value: any) => {
+                  formik.setFieldValue('tipo_operario', value.value)
+                }}
+              />
+          </FieldWrap>
+        </Validation>
+        </div>
+
+        <div className='md:col-span-2 md:col-start-3 md:row-start-2 md:flex-col items-center'>
+          <Label htmlFor='activo'>Activo: </Label>
+          
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.activo ? true : undefined}
+            invalidFeedback={formik.errors.activo ? String(formik.errors.activo) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionActive}
+                id='activo'
+                placeholder='Selecciona un opción'
+                name='activo'
+                className='h-12'
+                value={optionActive.find(option => (option?.value) === String(formik.values.activo))}
+                onChange={(value: any) => {
+                  formik.setFieldValue('activo', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
+
+        </div>
+
+        <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
+          <Label htmlFor='etiquetas'>Etiquetas: </Label>
+          
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.etiquetas ? true : undefined}
+            invalidFeedback={formik.errors.etiquetas ? String(formik.errors.etiquetas) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <Input
+                type='text'
+                name='etiquetas'
+                onChange={formik.handleChange}
+                className='py-3'
+                value={formik.values.etiquetas}
+              />
+            </FieldWrap>
+          </Validation>
+        </div>
+
+        <div className='md:row-start-3 md:col-span-2 md:col-start-1 md:flex-col items-center'>
+          <Label htmlFor='pago_x_kilo'>Dirección: </Label>
+          
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.pago_x_kilo ? true : undefined}
+            invalidFeedback={formik.errors.pago_x_kilo ? String(formik.errors.pago_x_kilo) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+               <Input
+                 type='text'
+                 name='pago_x_kilo'
+                 onChange={formik.handleChange}
+                 className='py-3'
+                 value={formik.values.pago_x_kilo}
+              />
+             </FieldWrap>
+           </Validation>
+        </div>
 
       <div className='md:row-start-3 md:col-span-2 md:col-start-5 h-12 w-full mt-7'>
         <button type='submit' className='w-full h-full bg-[#3B82F6] hover:bg-[#3b83f6c9] rounded-md text-white p-2'>

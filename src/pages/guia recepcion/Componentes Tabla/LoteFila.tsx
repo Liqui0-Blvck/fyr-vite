@@ -161,7 +161,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
           </ModalRegistro>
 
           {
-            checkCargoPerfil(perfilData.cargos) && row?.estado_recepcion! >= '5'
+            checkCargoPerfil(perfilData.cargos) && row?.estado_recepcion! >= '2'
               ? null
               : cargoLabels.includes('RecepcionMP')
                 ? (

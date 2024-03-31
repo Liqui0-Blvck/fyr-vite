@@ -107,13 +107,13 @@ export const appPages = {
 		subPages: {
 			p_produccion: {
 				id: 'programa',
-				text: 'Programa Producc',
-				to: '/app/programa-produccion/',
+				text: 'Programa Producción',
+				to: '/app/produccion/',
 				icon: 'HeroListBullet',
 			},
 			tarjas: {
 				id: 'tarjas',
-				text: 'Tarjas CC',
+				text: 'CC Tarjas',
 				to: '/app/tarjas-cc/',
 				icon: 'HeroListBullet',
 			},

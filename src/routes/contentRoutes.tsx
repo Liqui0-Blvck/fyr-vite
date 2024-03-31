@@ -64,7 +64,7 @@ const ControlCalidad = lazy(() => import('../pages/control calidad/ListaControlC
 const DetalleCC = lazy(() => import('../pages/control calidad/Detalle/DetalleCC.tsx'))
 const GuiaRecepcionPDF = lazy(() => import('../pages/guia recepcion/PDF/GuiaRecepcion.jsx'))
 const ControlRendimiento = lazy(() => import('../pages/ccvistobueno/ListaControlRendimiento.tsx'))
-const DetallCCRendimiento = lazy(() => import('../pages/ccvistobueno/Detalle/DetalleCCRendimiento.tsx'))
+const DetalleCCRendimiento = lazy(() => import('../pages/ccvistobueno/Detalle/DetalleCCRendimiento.tsx'))
 
 
 
@@ -73,6 +73,20 @@ const DetallCCRendimiento = lazy(() => import('../pages/ccvistobueno/Detalle/Det
 
 const PDFCCRendimiento = lazy(() => import ('../pages/ccvistobueno/PDF/PDFCCRendimiento.tsx'))
 
+
+// PROGRAMAS DE PRODUCCION
+
+const ListaProgramas = lazy(() => import ('../pages/programas produccion/ListaProgramas.tsx'))
+const DetallePrograma = lazy(() => import ('../pages/programas produccion/Detalle Produccion/DetalleProduccion.tsx'))
+const FormularioRegistroPrograma = lazy(() => import ('../pages/programas produccion/Formularios Produccion/Formulario Registro Programa/FormularioRegistroPrograma.tsx'))
+
+
+const PDFOperarioXKilo = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFOperarioXKilo.tsx'))
+const PDFResumidoOperario = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFResumidoOperario.tsx'))
+const PDFPreLimpia = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFPreLimpia.tsx'))
+const PDFDescascarado = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDescascarado.tsx'))
+const PDFDocumentoEntrada = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDocumentoEntrada.tsx'))
+const PDFDetalleEnvases = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDetalleEnvases.tsx'))
 /**
  * Other
  */
@@ -122,15 +136,25 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/control-calidad/', element: <ControlCalidad /> },
 	{ path: '/app/control-calidad/:id', element: <DetalleCC /> },
 	{ path: '/app/vb_control/', element:  <ControlRendimiento /> },
-	{ path: '/app/vb_control/:id', element:  <DetallCCRendimiento /> },
+	{ path: '/app/vb_control/:id', element:  <DetalleCCRendimiento /> },
 	
 	
 	{ path: '/app/pdf-rendimiento/:id', element:  <PDFCCRendimiento /> },
 	
 
+	// PROGRAMAS DE PRODUCCION
+	{ path: '/app/produccion/', element:  <ListaProgramas /> },
+	{ path: '/app/produccion/programa/:id/', element:  <DetallePrograma /> },
+	{ path: '/app/produccion/registro-programa', element: <FormularioRegistroPrograma />},
+	{ path: '/app/pdf-operario-x-kilo/', element: <PDFOperarioXKilo />},
+	{ path: '/app/pdf-operario-resumido/', element: <PDFResumidoOperario />},
+	{ path: '/app/pdf-pre-limpia/', element: <PDFPreLimpia />},
+	{ path: '/app/pdf-descascarado/', element: <PDFDescascarado />},
+	{ path: '/app/pdf-documento-entrada/', element: <PDFDocumentoEntrada />},
+	{ path: '/app/pdf-detalle-envases/', element: <PDFDetalleEnvases />},
 
 
-
+	
 
 
 

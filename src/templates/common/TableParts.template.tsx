@@ -16,22 +16,24 @@ export const TableHeaderTemplate: FC<ITableHeaderTemplateProps> = ({ table }) =>
 	return (
 		<THead>
 			{table.getHeaderGroups().map((headerGroup) => (
-				<Tr key={headerGroup.id}>
+				<Tr key={headerGroup.id} >
 					{headerGroup.headers.map((header) => (
 						<Th
 							key={header.id}
 							isColumnBorder={false}
-							className={classNames({
-								'text-left': header.id !== 'Actions',
-								'text-right': header.id === 'Actions',
-							})}>
+							className={` text-center ${
+								classNames({
+									'text-left': header.id !== 'Actions',
+									'text-right': header.id === 'Actions',
+								})
+							}`}>
 							{header.isPlaceholder ? null : (
 								<div
 									key={header.id}
 									aria-hidden='true'
 									{...{
 										className: header.column.getCanSort()
-											? 'cursor-pointer select-none flex items-center w-[90%]'
+											? 'cursor-pointer select-none flex items-center w-full justify-centere'
 											: '',
 										onClick: header.column.getToggleSortingHandler(),
 									}}>
@@ -79,7 +81,7 @@ export const TableBodyTemplate: FC<ITableBodyTemplateProps> = ({ table }) => {
 								'text-left': cell.column.id !== 'Actions',
 								'text-right': cell.column.id === 'Actions',
 
-							})} w-full`}>
+							})} `}>
 							{flexRender(cell.column.columnDef.cell, cell.getContext())}
 						</Td>
 					))}

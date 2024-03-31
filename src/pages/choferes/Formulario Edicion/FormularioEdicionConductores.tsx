@@ -8,6 +8,9 @@ import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/pris
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TConductor } from '../../../types/registros types/registros.types'
+import Label from '../../../components/form/Label'
+import Validation from '../../../components/form/Validation'
+import FieldWrap from '../../../components/form/FieldWrap'
 
 interface IFormChoferes {
   refresh: Dispatch<SetStateAction<boolean>>
@@ -84,44 +87,85 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
           relative p-4 ${isDarkTheme ? oneDark : oneLight} rounded-md`}
     >
       <div className='md:col-span-2 md:flex-col items-center'>
-        <label htmlFor="nombre">Nombre: </label>
-        <Input
-          name='nombre'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.nombre}
-        />
+        <Label htmlFor='nombre'>Nombre: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.nombre ? true : undefined}
+          invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='nombre'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.nombre}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="apellido">Apellido: </label>
-        <Input
-          name='apellido'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.apellido}
-        />
+        <Label htmlFor='apellido'>Apellido: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.apellido ? true : undefined}
+          invalidFeedback={formik.errors.apellido ? String(formik.errors.apellido) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='apellido'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.apellido}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:row-start-2 md:flex-col items-center'>
-        <label htmlFor="rut">Rut: </label>
-        <Input
-          name='rut'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.rut}
-        />
+        <Label htmlFor='rut'>Rut: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.rut ? true : undefined}
+          invalidFeedback={formik.errors.rut ? String(formik.errors.rut) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='rut'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.rut}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:col-start-3 md:row-start-2 md:flex-col items-center'>
-        <label htmlFor="telefono">Contacto: </label>
-        <Input
-          name='telefono'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.telefono}
-        />
+        <Label htmlFor='telefono'>Contacto: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.telefono ? true : undefined}
+          invalidFeedback={formik.errors.telefono ? String(formik.errors.telefono) : undefined}
+          validFeedback='Good'>
+          <FieldWrap>
+          <Input
+            type='text'
+            name='telefono'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.telefono}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
+    
 
       <div className='md:row-start-3 md:col-span-2 md:col-start-3 h-14 w-full'>
         <button className='w-full h-full bg-[#3B82F6] hover:bg-[#3b83f6c9] rounded-md text-white p-2'>Guardar Cambios</button>

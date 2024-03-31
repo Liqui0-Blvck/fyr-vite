@@ -115,7 +115,9 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
           })
         });
         if (res.ok) {
-          updateGuiaRecepcion()
+          if (!guia?.mezcla_variedades){
+            updateGuiaRecepcion()
+          }
           toast.success("la guia de recepción fue registrado exitosamente!!")
           refresh(true)
           isOpen(false)

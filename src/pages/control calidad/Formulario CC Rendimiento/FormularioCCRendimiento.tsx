@@ -2,16 +2,9 @@ import { useFormik } from 'formik'
 import Input from '../../../components/form/Input'
 import { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import toast from 'react-hot-toast'
-import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
-import { TIPO_ACOPLADO } from '../../../constants/select.constanst'
-import Textarea from '../../../components/form/Textarea'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
-import Radio, { RadioGroup } from '../../../components/form/Radio'
-import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TControlCalidad, TLoteGuia } from '../../../types/registros types/registros.types'
-import { optionsRadio } from '../../../constants/options.constants'
 import Label from '../../../components/form/Label'
 import Validation from '../../../components/form/Validation'
 import FieldWrap from '../../../components/form/FieldWrap'
@@ -94,13 +87,6 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen }) => 
     formik.setValues(updatedValues);
   }, [formik.values.peso_muestra, formik.values.basura, formik.values.ciega, formik.values.pelon, formik.values.cascara, formik.values.pepa_huerto]);
 
-
-
-  
-    
-
-  
-
   return (
     <form
         onSubmit={formik.handleSubmit}
@@ -124,7 +110,6 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen }) => 
             />
             </FieldWrap>
           </Validation>
-          
         </div>
 
         <div className='md:row-start-2 md:col-span-2  md:flex-col flex-col lg:flex-row p-5'>

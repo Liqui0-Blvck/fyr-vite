@@ -7,6 +7,10 @@ import { useAuth } from '../../../context/authContext'
 import useDarkMode from '../../../hooks/useDarkMode';
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Textarea from '../../../components/form/Textarea';
+import FieldWrap from '../../../components/form/FieldWrap';
+import Label from '../../../components/form/Label';
+import Validation from '../../../components/form/Validation';
+import { envaseSchema } from '../../../utils/Validator';
 
 
 interface IFormEnvasesProps {
@@ -22,9 +26,10 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
   const formik = useFormik({
     initialValues: {
       nombre: "",
-      peso: null,
+      peso: 0,
       descripcion: ""
     },
+    validationSchema: envaseSchema,
     onSubmit: async (values) => {
       try {
         const res = await fetch(`${base_url}/api/envasesmp/`, {
@@ -47,7 +52,7 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
       } catch (error) {
         console.log(error)
       }
-    }
+    },
   })
 
 
@@ -61,36 +66,63 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
           relative p-4 ${ isDarkTheme ? oneDark : oneLight} rounded-md`}
         >
         <div className='md:col-span-3 md:flex-col items-center'>
-          <label htmlFor="nombre">Nombre: </label>
-          <Input
-            type='text'
-            name='nombre'
-            onChange={formik.handleChange}
-            value={formik.values.nombre}
-            className='py-2'
-          />
+          <Label htmlFor='nombre'>Nombre: </Label>
+          
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.nombre ? true : undefined}
+            invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+               <Input
+                 type='text'
+                 name='nombre'
+                 onChange={formik.handleChange}
+                 className='py-3'
+                 value={formik.values.nombre}
+              />
+             </FieldWrap>
+           </Validation>
         </div>
 
         <div className='md:col-span-3 md:col-start-4 md:flex-col items-center'>
-          <label htmlFor="peso">Peso: </label>
-          <Input
-            type='number' 
-            name='peso'
-            onChange={formik.handleChange}
-            value={formik.values.peso!}  
-            className='py-2'
-          />
+          <Label htmlFor='peso'>Dirección: </Label>
+          
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.peso ? true : undefined}
+            invalidFeedback={formik.errors.peso ? String(formik.errors.peso) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+               <Input
+                 type='text'
+                 name='peso'
+                 onChange={formik.handleChange}
+                 className='py-3'
+                 value={formik.values.peso}
+              />
+             </FieldWrap>
+           </Validation>
         </div>
 
         <div className='md:row-start-2 md:col-span-6 md:flex-col items-center'>
-          <label htmlFor="descripcion">Descripción: </label>
-          <Textarea 
-            name='descripcion'
-            onChange={formik.handleChange}
-            value={formik.values.descripcion}
-            className='py-2'
-            rows={6}
-          />
+          <Label htmlFor='descripcion'>Descripción: </Label>
+          
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.descripcion ? true : undefined}
+            invalidFeedback={formik.errors.descripcion ? String(formik.errors.descripcion) : undefined}
+            validFeedback='Good'>
+            <FieldWrap>
+              <Textarea 
+                name='descripcion'
+                onChange={formik.handleChange}
+                value={formik.values.descripcion}
+                className='py-2'
+                rows={6}
+              />
+             </FieldWrap>
+           </Validation>
         </div>
 
       

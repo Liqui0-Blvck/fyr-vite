@@ -139,9 +139,8 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 						
 
 						{
-							!cargosPermitidos.includes(role.cargo)
-								? null
-								: (
+							cargolabels(perfilData).includes('RecepcionMP', 'Administrador')
+								? (
 									<>
 										<Link to={`/app/edicion-guia-recepcion/${info.row.original.id}`}
 											className={`w-14 lg:w-14 md:14 h-12 px-1
@@ -156,6 +155,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 										</Tooltip>
 									</>
 									)
+								: null
 						}
 						{
 							info.row.original.estado_recepcion === '4'

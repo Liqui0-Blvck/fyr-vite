@@ -397,3 +397,30 @@ export type TRendimiento = {
   cc_merma_porc: TMermaPorcentajeSerializer[];
   cc_calculo_final: TCalculoFinalSerializer;
 };
+
+
+export interface TEnvasePatio {
+  id: number;
+  kilos_fruta: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  variedad: string;
+  estado_envase: string;
+  numero_bin: number;
+  guia_patio: number;
+}
+
+
+export interface TPatioTechadoEx {
+  id: number;
+  envases: TEnvasePatio[];
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  id_recepcion: number;
+  ubicacion: string;
+  estado_lote: string;
+  procesado: boolean;
+  cc_guia: number;
+  tipo_recepcion: number;
+  registrado_por: number;
+}
