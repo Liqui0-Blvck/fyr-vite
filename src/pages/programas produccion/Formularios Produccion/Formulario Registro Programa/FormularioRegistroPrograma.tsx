@@ -12,17 +12,15 @@ const FormularioRegistroPrograma = () => {
     `/api/patio-techado-ex/`
   )
 
-  console.log(envases_lote)
-
   return (
-    <div className='w-full flex flex-col'>
-      <div className='w-full flex flex-col'>
-        <h1 className='text-center text-xl'>Registro de Programa Producción</h1>
-        <h2 className='text-center text-xl'>Seleccione los Lotes a Procesar en este programa desde la lista de Lotes en Patio Techado Disponibles</h2>
+    <div className='w-full flex flex-col my-10  '>
+      <div className='w-full flex flex-col gap-y-3'>
+        <h1 className='text-center text-4xl'>Registro de Programa Producción</h1>
+        <h2 className='text-center text-2xl'>Seleccione los Lotes a Procesar en este programa desde la lista de Lotes en Patio Techado Disponibles</h2>
       </div>
 
-      <div className='w-full h-full border border-black'>
-        <FooterRegistroPrograma lote={envases_lote! || []}/>
+      <div className='w-[96%] mx-auto h-full'>
+        <FooterRegistroPrograma lote={envases_lote || []}/>
       </div>
     </div>
   )

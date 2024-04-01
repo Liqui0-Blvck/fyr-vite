@@ -416,6 +416,7 @@ export interface TPatioTechadoEx {
   envases: TEnvasePatio[];
   fecha_creacion: string;
   fecha_modificacion: string;
+  variedad: string
   id_recepcion: number;
   ubicacion: string;
   estado_lote: string;

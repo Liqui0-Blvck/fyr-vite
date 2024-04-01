@@ -11,7 +11,7 @@ import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { TEnvasePatio, TPatioTechadoEx } from '../../../../types/registros types/registros.types';
 
 interface IRegistroProgramaProps {
-  lote?: TPatioTechadoEx[] | []
+  lote: TPatioTechadoEx[] | []
 }
 
 const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote }) => {
@@ -20,7 +20,7 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote }) => {
   console.log(lote)
   return (
     <div>
-      <TableContainer className='table-container-registro' sx={{ height: 510 ,overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
+      <TableContainer className='table-container-registro' sx={{ height: 450 ,overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
         <Table style={{ background: `${isDarkTheme ? '#09090B' : 'white'}` }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -37,8 +37,8 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote }) => {
               lote?.map((envase: TPatioTechadoEx) => {
                 console.log(envase)
                 return (
-                  <TableRow style={{ height: 50 }}>
-                    <FilaRegistroPrograma row={envase.envases}/>
+                  <TableRow style={{ height: 50, overflowY: 'auto' }}>
+                    <FilaRegistroPrograma row={envase.envases} id_row={envase.id} variedad={envase.variedad}/>
                   </TableRow>
                 )
               })

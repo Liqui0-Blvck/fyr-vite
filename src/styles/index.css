@@ -513,7 +513,9 @@
 
 }
 
-
-.table-cell-row-pro-1 {
-
+.row-specific {
+	width: 2%;
+	border-right: 1px solid rgba(146, 140, 140, 0.281);
+	border-bottom: 1px solid rgba(146, 140, 140, 0.281) !important;
+	padding: 5px !important;
 }
