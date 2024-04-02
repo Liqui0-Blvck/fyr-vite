@@ -9,7 +9,7 @@ interface IComponentProps {
   children: ReactNode
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  title: string | boolean
+  title?: string | boolean
   textButton?: string | null
   icon?: ReactNode
   size?: number,

@@ -13,22 +13,19 @@ import { ACTIVO } from '../../../../constants/select.constanst'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'
+import Label from '../../../../components/form/Label'
+import Validation from '../../../../components/form/Validation'
+import FieldWrap from '../../../../components/form/FieldWrap'
 
-interface IFormularioEditable {
-  refresh: Dispatch<SetStateAction<boolean | null>>
-  isOpen: Dispatch<SetStateAction<boolean | null>>
-  guia: TGuia | null
-  lote: TLoteGuia | null
-}
-
-const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isOpen, guia, lote }) => {
+const FormularioEdicionGuiaRecepcion = () => {
   const { authTokens, validate, userID } = useAuth()
   const { pathname } = useLocation()
+  const { isDarkTheme } = useDarkMode()
+  const navigate = useNavigate()
   const id = urlNumeros(pathname)
   const base_url = process.env.VITE_BASE_URL_DEV
-  const { isDarkTheme } = useDarkMode()
 
-  console.log(lote)
+
 
 
   const { data: camiones } = useAuthenticatedFetch<TCamion[]>(
@@ -60,12 +57,11 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
     { id: 2, value: false, label: 'No' }
   ];
 
-  const { data: loteGuia } = useAuthenticatedFetch<TLoteGuia>(
+  const { data: guia } = useAuthenticatedFetch<TGuia>(
     authTokens,
     validate,
-    `/api/recepcionmp/${id}/lotes/${lote?.id}`
+    `/api/recepcionmp/${id}`
   )
-
 
   const updateGuiaRecepcion = async () => {
     const res = await fetch(`${base_url}/api/estado-guia-update/${id}`, {
@@ -80,29 +76,21 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
     })
 
     if (res.ok){
-      refresh(true)
-      isOpen(false)
     } else {
       console.log("Todo mal")
     }
   }
 
 
-  
-
   const formik = useFormik({
     initialValues: {
-      kilos_brutos_1: 0,
-      kilos_brutos_2: 0,
-      kilos_tara_1: 0,
-      kilos_tara_2: 0,
-      estado_recepcion: null,
-      guiarecepcion: null,
-      creado_por: null,
+      mezcla_variedades: false,
+      numero_guia_productor: null,
+      camionero: null,
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/recepcionmp/${guia?.id}/lotes/${lote?.id}/`, {
+        const res = await fetch(`${base_url}/api/recepcionmp/${guia?.id}/`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json', 
@@ -110,17 +98,12 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
           },
           body: JSON.stringify({
             ...values, 
-            creado_por: userID?.user_id, 
-            estado_recepcion: 7
+            creado_por: userID?.user_id,
           })
         });
         if (res.ok) {
-          if (!guia?.mezcla_variedades){
-            updateGuiaRecepcion()
-          }
           toast.success("la guia de recepción fue registrado exitosamente!!")
-          refresh(true)
-          isOpen(false)
+          navigate('/app/recepcionmp/')
           
 
         } else {
@@ -163,29 +146,29 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
   const optionsComercializador: TSelectOptions | [] = comercializadoresFilter 
   
   
-
+  console.log(optionsConductor)
 
   useEffect(() => {
     let isMounted = true
-    if (loteGuia && isMounted) {
+    if (guia && isMounted) {
       formik.setValues({
-        kilos_brutos_1: loteGuia.kilos_brutos_1,
-        kilos_brutos_2: loteGuia.kilos_brutos_2,
-        estado_recepcion: loteGuia.estado_recepcion,
-        guiarecepcion: loteGuia.guiarecepcion,
-        creado_por: loteGuia.creado_por,
+        mezcla_variedades: guia.mezcla_variedades,
+        numero_guia_productor: guia.numero_guia_productor,
+        camionero: guia.camionero,
+        creado_por: guia.creado_por,
       })
 
     }
     return () => {
       isMounted = false
     }
-  }, [loteGuia])
+  }, [guia])
 
 
   const camionAcoplado = camiones?.find(camion => camion.id === Number(guia?.camion))?.acoplado
 
 
+  console.log(formik.values)
 
   return (
     <div className={`${isDarkTheme ? oneDark : 'bg-white'}w-full  h-full`}>
@@ -197,7 +180,7 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
           >
 
         <div className='rounded-md col-span-6'>
-          {/* <h1 className='text-center text-xl p-4'>Registro Guía Recepción Para Materias Primas Origen</h1> */}
+          <h1 className='text-center text-3xl p-4'>Edición Guía Recepción Para Materias Primas Origen</h1>
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
@@ -209,11 +192,28 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
-          <label htmlFor="camionero">Chofer: </label>
-          <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
-            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camionero}</span>
-          </div>
+          <label htmlFor='camionero'>Chofer: </label>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.camionero ? true : undefined}
+            invalidFeedback={formik.errors.camionero ? String(formik.errors.camionero) : undefined}
 
+            validFeedback='Good'>
+            <FieldWrap>
+              <SelectReact
+                options={optionsConductor}
+                id='camionero'
+                name='camionero'
+                placeholder='Selecciona un chofer'
+                className='h-14'
+                onBlur={formik.handleBlur}
+                value={optionsConductor.find(con => con?.value === String(formik.values.camionero))}
+                onChange={(value: any) => {
+                  formik.setFieldValue('camionero', value.value)
+                }}
+              />
+            </FieldWrap>
+          </Validation>
         </div>
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
@@ -246,8 +246,7 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
                     onChange={(e) => {
                       formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
                     }}
-                    selectedValue={undefined} 
-                    disabled
+                    selectedValue={undefined}
                     />
                 );
               })}
@@ -256,44 +255,28 @@ const FormularioEdicionGuiaRecepcion : FC<IFormularioEditable> = ({ refresh, isO
         </div>
 
         <div className='md:row-start-3 md:col-span-2  md:col-start-5 md:flex-col items-center'>
-          <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
-          <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
-            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.numero_guia_productor}</span>
-          </div>
+            <Label htmlFor='numero_guia_productor'>N° Guía Productor: </Label>
+          <Validation
+            isValid={formik.isValid}
+            isTouched={formik.touched.numero_guia_productor ? true : undefined}
+            invalidFeedback={formik.errors.numero_guia_productor ? String(formik.errors.numero_guia_productor) : undefined}
+
+            validFeedback='Good'>
+            <FieldWrap>
+              <Input
+                type='text'
+                name='numero_guia_productor'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className='py-3'
+                value={formik.values.numero_guia_productor!}
+              />
+            </FieldWrap>
+          </Validation>
         </div>
-
-        <div className={`md:row-start-4 ${!camionAcoplado ? 'md:col-start-2 md:col-span-4': 'md:col-start-1 md:col-span-3 '} md:flex-col items-center`}>
-          <label htmlFor="kilos_tara_1">Tara Camión: </label>
-          <Input
-            type='text'
-            name='kilos_tara_1'
-            onChange={formik.handleChange}
-            className='py-3'
-            value={formik.values.kilos_tara_1!}
-          />
-        </div>
-
-
-        {
-          camionAcoplado
-            ? (
-              <div className='md:row-start-4 md:col-span-3 md:col-start-4 md:flex-col items-center'>
-                <label htmlFor="kilos_tara_2">Tara Camión Acoplado: </label>
-                <Input
-                  type='text'
-                  name='kilos_tara_2'
-                  onChange={formik.handleChange}
-                  className='py-3'
-                  value={formik.values.kilos_tara_2!}
-                  
-                />
-              </div>
-            )
-            : null
-        }
 
         <div className='md:row-start-5 md:col-start-5 md:col-span-2 relative w-full'>
-          <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3'>Añadir Tara</button>
+          <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3'>Guardar Cambios</button>
         </div>
       </form>
     </div>

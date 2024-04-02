@@ -11,7 +11,7 @@ interface IModalProps {
   confirmacion: boolean
   setConfirmacion: Dispatch<SetStateAction<boolean>>
   estadoActivo?: Dispatch<SetStateAction<string | null>>;
-  setOpen: Dispatch<SetStateAction<boolean | null>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   refresh: Dispatch<SetStateAction<boolean>>
   lote?: TLoteGuia | null,
   mensaje?: string
@@ -20,7 +20,7 @@ interface IModalProps {
   formulario?: ReactNode
 }
 
-const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, id_lote, confirmacion, setConfirmacion, mensaje, formulario, CClote }) => {
+const ModalConfirmacion: FC<IModalProps> = ({ setOpen, confirmacion, setConfirmacion, mensaje, formulario }) => {
 
   return (
     <div className='w-full h-full flex items-center flex-col justify-between'>
@@ -73,18 +73,3 @@ const ModalConfirmacion: FC<IModalProps> = ({ id, setOpen, refresh, id_lote, con
 }
 
 export default ModalConfirmacion;
-
-
-// ? (
-//   <div className={`${isDarkTheme ? 'bg-gray-50' : 'bg-gray-700'}w-full h-full  flex flex-col justify-center items-center`}>
-//     <GoQuestion className='text-9xl text-yellow-500' />
-//     <h1 className='text-center'>Estas seguro de querer avanzar?</h1>
-//     <ul className='mt-10 flex flex-col items-center gap-2'>
-//       <li className={`font-semibold text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>Kilos Brutos:  {lote?.kilos_brutos_1}</li>
-//       <li className={`font-semibold text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>Cantidad Envases:  {lote?.envases.length}</li>
-      
-      
-//     </ul>
-//   </div>
-//   )
-// : ''

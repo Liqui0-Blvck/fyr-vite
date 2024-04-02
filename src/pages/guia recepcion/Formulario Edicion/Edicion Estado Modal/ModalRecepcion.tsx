@@ -4,8 +4,9 @@ import { TEnvaseEnGuia, TGuia, TLoteGuia } from '../../../../types/registros typ
 import { GoQuestion } from "react-icons/go";
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
-import FormularioEdicionGuiaRecepcion from '../Edicion Guia/FormularioEdicionGuiaRecepcion';
+import FormularioEdicionGuiaRecepcion from '../../Formulario Registro/Registro Tara/FormularioRegistroTara';
 import { tipoFrutaFilter, variedadFilter } from '../../../../constants/options.constants';
+import FormularioRegistroTara from '../../Formulario Registro/Registro Tara/FormularioRegistroTara';
 
 interface IModalProps {
   id: number;
@@ -68,7 +69,7 @@ const ModalRecepcion: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_est
   return (
     <div className='w-full h-full flex items-center flex-col justify-between'>
       {confirmacion && numero_estado === '5' ? (
-        <FormularioEdicionGuiaRecepcion refresh={refresh} isOpen={setOpen} guia={guia} lote={lote}/>
+        <FormularioRegistroTara refresh={refresh} isOpen={setOpen} guia={guia} lote={lote}/>
       ) : (
         <>  
           {!confirmacion && (

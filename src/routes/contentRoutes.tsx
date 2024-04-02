@@ -54,7 +54,7 @@ const Operarios = lazy(() => import('../pages/operarios/ListaOperarios'))
 const GuiaRecepcion = lazy(() => import('../pages/guia recepcion/ListaGuiaRecepcion'))
 const Envases = lazy(() => import('../pages/envases/ListaEnvases'))
 const RegistroGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Registro/FormularioRegistroGuiaRecepcion.tsx'))
-const EdicionGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Edicion/Edicion Guia/FormularioEdicionGuiaRecepcion.tsx'))
+const EdicionGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Formulario Edicion/Edicion Guia Recepcion/FormularioEdicionGuiaRecepcion.tsx'))
 const DetalleGuiaRecepcion = lazy(() => import('../pages/guia recepcion/Detalle/Detalle Guia/DetalleGuia.tsx'))
 const PDFGuiaRecepcion =  lazy(() => import('../pages/guia recepcion/PDF/GuiaRecepcion.tsx'))
 
@@ -62,6 +62,7 @@ const PDFGuiaRecepcion =  lazy(() => import('../pages/guia recepcion/PDF/GuiaRec
 // CONTROL CALIDAD
 const ControlCalidad = lazy(() => import('../pages/control calidad/ListaControlCalidad.tsx'))
 const DetalleCC = lazy(() => import('../pages/control calidad/Detalle/DetalleCC.tsx'))
+const DetalleCCPepa = lazy(() => import('../pages/control calidad/Detalle/DetalleCCPepa.tsx'))
 const GuiaRecepcionPDF = lazy(() => import('../pages/guia recepcion/PDF/GuiaRecepcion.jsx'))
 const ControlRendimiento = lazy(() => import('../pages/ccvistobueno/ListaControlRendimiento.tsx'))
 const DetalleCCRendimiento = lazy(() => import('../pages/ccvistobueno/Detalle/DetalleCCRendimiento.tsx'))
@@ -128,7 +129,7 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/registro-guia-recepcion', element: <RegistroGuiaRecepcion /> },
 	{ path: '/app/edicion-guia-recepcion/:id', element: <EdicionGuiaRecepcion /> },
 	{ path: '/app/pdf-guia-recepcion/:id', element: <PDFGuiaRecepcion /> },
-	{ path: '/app/recepciomp/:id', element: <DetalleGuiaRecepcion /> },
+	{ path: '/app/recepcionmp/:id', element: <DetalleGuiaRecepcion /> },
 
 
 
@@ -137,6 +138,7 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/control-calidad/:id', element: <DetalleCC /> },
 	{ path: '/app/vb_control/', element:  <ControlRendimiento /> },
 	{ path: '/app/vb_control/:id', element:  <DetalleCCRendimiento /> },
+	{ path: '/app/control-calidad/:id/muestra/:id', element:  <DetalleCCPepa /> },
 	
 	
 	{ path: '/app/pdf-rendimiento/:id', element:  <PDFCCRendimiento /> },

@@ -1,32 +1,22 @@
-import { useFormik } from 'formik'
 import Input from '../../../components/form/Input'
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
-import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
-import { TIPO_ACOPLADO } from '../../../constants/select.constanst'
+import SelectReact from '../../../components/form/SelectReact'
 import Textarea from '../../../components/form/Textarea'
-import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TCamion, TControlCalidad, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TPerfil, TProductor, TRendimientoMuestra, TUsuario } from '../../../types/registros types/registros.types'
+import { TControlCalidad, TGuia, TPepaMuestra, TPerfil, TRendimientoMuestra } from '../../../types/registros types/registros.types'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
-import { format } from '@formkit/tempo'
-import { tipoFrutaFilter, variedadFilter } from '../../../constants/options.constants'
-import { Image } from 'antd';
 import TablaMuestras from '../Tabla Muestra/TablaMuestras'
 import ModalRegistro from '../../../components/ModalRegistro'
 import FormularioCCRendimiento from '../Formulario CC Rendimiento/FormularioCCRendimiento'
 import ModalConfirmacion from '../../../components/ModalConfirmacion'
 import FormularioCCPepaCalibre from '../Formulario Calibres/FormularioCalibres'
-import { FaPlus } from 'react-icons/fa6'
 
-interface IMuestraProps {
-  muestra: TRendimientoMuestra | null
-}
 
-const DetalleCCPepa: FC<IMuestraProps> = ({ muestra }) => {
+const DetalleCCPepa = () => {
   const { isDarkTheme } = useDarkMode();
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -37,11 +27,10 @@ const DetalleCCPepa: FC<IMuestraProps> = ({ muestra }) => {
   const [confirmacion, setConfirmacion] = useState<boolean>(false)
 
 
-
   const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad>(
     authTokens,
     validate,
-    `/api/control-calidad/recepcionmp/${id}`
+    `/api/control-calidad/recepcionmp/${id[0]}`
   )
 
   const { data: guia_recepcion } = useAuthenticatedFetch<TGuia>(
@@ -50,20 +39,27 @@ const DetalleCCPepa: FC<IMuestraProps> = ({ muestra }) => {
     `/api/recepcionmp/${control_calidad?.guia_recepcion}`
   )
 
+  const { data: muestra } = useAuthenticatedFetch<TRendimientoMuestra>(
+    authTokens,
+    validate,
+    `/api/control-calidad/recepcionmp/${control_calidad?.id!}/muestras/${id[1]}`
+  )
 
   const { data: cc_rendimiento, setRefresh } = useAuthenticatedFetch<TPepaMuestra[]>(
     authTokens,
     validate,
-    `/api/control-calidad/recepcionmp/${control_calidad?.id!}/muestras/${muestra?.id}/cdcpepa/`
+    `/api/control-calidad/recepcionmp/${control_calidad?.id!}/muestras/${id[1]}/cdcpepa/`
   )
 
-  
+  const muestraa = cc_rendimiento ? [...cc_rendimiento] : []
+
 
   const muestrasCompletas = cc_rendimiento?.
     filter(cc_pepa => cc_pepa.cc_recepcionmp = control_calidad?.id!).
     every(cc_pepa => cc_pepa.cc_ok === true )
 
-  const ccPepasCompletas = cc_rendimiento?.some((cc) => cc.cc_calibrespepaok === true)
+    console.log(muestra)
+
 
   const { data: usuario } = useAuthenticatedFetch<TPerfil>(
     authTokens,
@@ -71,10 +67,7 @@ const DetalleCCPepa: FC<IMuestraProps> = ({ muestra }) => {
     `/api/registros/perfil/${muestra?.registrado_por}`
   )
 
-  console.log(cc_rendimiento)
-
   const cc_rendimiento_c = [...(cc_rendimiento || [])].shift()
-  console.log(cc_rendimiento_c)
   
 
 
@@ -93,7 +86,7 @@ const DetalleCCPepa: FC<IMuestraProps> = ({ muestra }) => {
         <div className='sm:w-full md:5/12 lg:5/12 justify-between h-20 flex rounded-md gap-x-4'>
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} w-full rounded-md h-full flex flex-col justify-center px-2`}>
             <span className='mr-4 font-semibold'>Muestra Registrada por:</span> 
-            <span className='font-semibold text-xl'>{usuario?.user.username} | {usuario?.cargos.map((cargo) => cargo.cargo_label)}</span>
+            <span className='font-semibold text-xl truncate w-40'>{usuario?.user.username} | {usuario?.cargos.map((cargo) => cargo.cargo_label)}</span>
           </div>
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} w-full  rounded-md h-full flex flex-col justify-center px-2`}>
             <span className='mr-4'>Muestra del lote:</span> 

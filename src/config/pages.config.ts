@@ -77,7 +77,7 @@ export const appPages = {
 			recepcionMp: {
 				id: 'recepcionmp',
 				text: 'Recepcion MP',
-				to: '/app/recepciomp/',
+				to: '/app/recepcionmp/',
 				icon: 'HeroListBullet',
 			},
 			envases: {

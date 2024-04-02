@@ -206,8 +206,6 @@ const FormularioRegistroGuiaRecepcion = () => {
               />
             </FieldWrap>
           </Validation>
-
-
         </div>
 
         <div className='md:row.start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>

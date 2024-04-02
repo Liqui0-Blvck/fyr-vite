@@ -128,24 +128,24 @@ export type TLoteGuia = {
 
 
 export type TPatioExterior = {
-  id: number,
-  id_recepcion: number,
-  ubicacion: string,
-  fecha_creacion: string,
-  fecha_modificacion: string,
-  estado_lote: string,
-  procesado: boolean,
-  cc_guia: number,
-  tipo_recepcion: number,
+  id: number
+  id_recepcion: number
+  ubicacion: string
+  fecha_creacion: string
+  fecha_modificacion: string
+  estado_lote: string
+  procesado: boolean
+  cc_guia: number
+  tipo_recepcion: number
   registrado_por: number
 }
 
 export type TLoteRechazado = {
-  id: number,
+  id: number
   resultado_rechazo: string
   fecha_rechazo: string
   fecha_modificacion: string
-  recepcionmp: number,
+  recepcionmp: number
   rechazado_por: boolean
   numero_lote: number
   resultado_rechazo_label: string
@@ -184,23 +184,23 @@ export type TPerfil = {
 
 export type TFotosCC = {
   id: number
-  imagen: string,
+  imagen: string
   ccrecepcionmp: number
 }
 
 
 export type TControlCalidad = {
-  id: number,
-  estado_aprobacion_cc: number,
-  estado_cc: string,
-  estado_cc_label: string,
-  presencia_insectos: boolean,
-  presencia_insectos_selected: string,
-  humedad: string,
-  observaciones: string,
-  fecha_modificacion: string,
-  fecha_creacion: string,
-  recepcionmp: number,
+  id: number
+  estado_aprobacion_cc: number
+  estado_cc: string
+  estado_cc_label: string
+  presencia_insectos: boolean
+  presencia_insectos_selected: string
+  humedad: string
+  observaciones: string
+  fecha_modificacion: string
+  fecha_creacion: string
+  recepcionmp: number
   cc_registrado_por: number
   numero_lote: number
   productor: number
@@ -210,21 +210,21 @@ export type TControlCalidad = {
 }
 
 export type TRendimientoMuestra = {
-  id: number,
-  cc_recepcionmp: number,
-  peso_muestra:number,
+  id: number
+  cc_recepcionmp: number
+  peso_muestra:number
   muestra_variedad: number
-  basura: number,
-  pelon:number,
-  cascara: number,
-  pepa_huerto: number,
-  pepa: number,
-  ciega: number,
+  basura: number
+  pelon:number
+  cascara: number
+  pepa_huerto: number
+  pepa: number
+  ciega: number
   fecha_creacion: string
   fecha_modificacion: string
-  aprobado_cc: boolean,
-  es_contramuestra: boolean,
-  esta_contramuestra: number,
+  aprobado_cc: boolean
+  es_contramuestra: boolean
+  esta_contramuestra: number
   registrado_por: null
   cc_ok: boolean
   cc_calibrespepaok: boolean
@@ -233,49 +233,51 @@ export type TRendimientoMuestra = {
 
 
 export type TPepaMuestra = {
-  pepa_muestra?: number,
-  pepa_sana?: number,
-  fecha_creacion?: string,
-  fecha_modificacion?: string,
-  muestra_variedad?: number,
-  daño_insecto?: number,
-  hongo?: number,
-  doble?: number,
-  fuera_color?: number,
-  vana_deshidratada?: number,
-  punto_goma?: number,
-  goma?: number,
-  cc_pepaok?: boolean,
-  cc_calibrespepaok?: boolean,
-  pre_calibre?: number,
-  calibre_18_20?: number,
-  calibre_20_22?: number,
-  calibre_23_25?: number,
-  calibre_25_27?: number,
-  calibre_27_30?: number,
-  calibre_30_32?: number,
-  calibre_32_34?: number,
-  calibre_34_36?: number,
-  calibre_36_40?: number,
-  calibre_40_mas?: number,
-  observaciones?: null,
+  pepa_muestra?: number
+  cc_recepcionmp: number
+  cc_ok: boolean
+  pepa_sana?: number
+  fecha_creacion?: string
+  fecha_modificacion?: string
+  muestra_variedad?: number
+  daño_insecto?: number
+  hongo?: number
+  doble?: number
+  fuera_color?: number
+  vana_deshidratada?: number
+  punto_goma?: number
+  goma?: number
+  cc_pepaok?: boolean
+  cc_calibrespepaok?: boolean
+  pre_calibre?: number
+  calibre_18_20?: number
+  calibre_20_22?: number
+  calibre_23_25?: number
+  calibre_25_27?: number
+  calibre_27_30?: number
+  calibre_30_32?: number
+  calibre_32_34?: number
+  calibre_34_36?: number
+  calibre_36_40?: number
+  calibre_40_mas?: number
+  observaciones?: null
   cc_rendimiento?: number
   peso_muestra_calibre: number
 }
 
 
 export type TControlCalidadB = {
-  id: number,
-  estado_aprobacion_cc: number,
-  estado_cc: string,
-  estado_cc_label: string,
-  presencia_insectos: boolean,
-  presencia_insectos_selected: string,
-  humedad: string,
-  observaciones: string,
-  fecha_modificacion: string,
-  fecha_creacion: string,
-  recepcionmp: number,
+  id: number
+  estado_aprobacion_cc: number
+  estado_cc: string
+  estado_cc_label: string
+  presencia_insectos: boolean
+  presencia_insectos_selected: string
+  humedad: string
+  observaciones: string
+  fecha_modificacion: string
+  fecha_creacion: string
+  recepcionmp: number
   cc_registrado_por: number
   numero_lote: number
   productor: number

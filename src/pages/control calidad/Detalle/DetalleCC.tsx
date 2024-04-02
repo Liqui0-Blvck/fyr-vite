@@ -112,6 +112,7 @@ const DetalleCC = () => {
   const ccPepasCompletas = cc_rendimiento?.some((cc) => cc.cc_calibrespepaok === true)
 
   const muestra = [...(cc_rendimiento || [])];
+  const contra_muestras_ok = cc_rendimiento?.some(cc => String(cc.esta_contramuestra) === '1')
 
   console.log(cc_rendimiento)
 
@@ -253,7 +254,21 @@ const DetalleCC = () => {
                       <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro}/>
                     </ModalRegistro>
                   )
-                : null
+                : contra_muestras_ok
+                    ? (
+                      <ModalRegistro
+                        open={openModalRegistro}
+                        setOpen={setOpenModalRegistro}
+                        title={`Contra Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote} `}
+                        textTool='Contra Muestra'
+                        size={900}
+                        width={`w-56 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-orange-700 hover:bg-orange-600' : 'bg-orange-700 text-white'} hover:scale-105`}
+                        textButton='Agregar Contra Muestra'
+                      >
+                        <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro}/>
+                      </ModalRegistro>
+                      )
+                    : null
             }
             
           </div>

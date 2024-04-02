@@ -22,11 +22,8 @@ import TablaMuestrasDetallePepa from '../Tablas/TablaCCPepa/TablaCCPepa'
 import TablaCCalibrePepa from '../Tablas/TablaCCalibrePepa/TablaCCalibre'
 import TablaDetalleDescuento from '../Tablas/TablaDetalleDescuento/TablaDetalleDescuento'
 
-interface IMuestraProps {
-  muestra: TRendimientoMuestra | null
-}
 
-const DetalleCCRendimiento: FC<IMuestraProps> = () => {
+const DetalleCCRendimiento = () => {
   const { isDarkTheme } = useDarkMode();
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)

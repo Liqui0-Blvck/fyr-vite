@@ -14,7 +14,7 @@ import { ACTIVO, ESTADO_CONTROL, usuarioRole } from '../../../../constants/selec
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'
 import FooterDetalleGuia from './FooterDetalleGuia'
-import FooterFormularioEdicionGuia from '../../Formulario Edicion/Edicion Guia/FooterFormularioEdicionGuiaRecepcion'
+import FooterFormularioEdicionGuia from '../../Formulario Registro/Registro Tara/FooterFormularioEdicionGuiaRecepcion'
 import FooterDetalleGuiaFinalizada from './FooterDetalleGuiaFinalizada'
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';

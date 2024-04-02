@@ -11,6 +11,7 @@ import { TGuia, TLoteGuia, TPatioExterior } from '../../../types/registros types
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact';
 import { UBICACION_PATIO_TECHADO_EXT } from '../../../constants/select.constanst';
+import { optionsUbicaciones } from '../../../utils/generalUtils';
 
 
 interface IFormEnvasesProps {
@@ -108,14 +109,6 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
   })
 
 
-
-  const ubicaciones = UBICACION_PATIO_TECHADO_EXT?.map((ubicacion) => ({
-    value: ubicacion.value,
-    label: ubicacion.label
-  })) ?? []
-
-  const options: TSelectOptions | [] = ubicaciones
-
   return (
 
     <form
@@ -128,7 +121,7 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
       <div className='md:col-span-6 md:flex-col items-center'>
         <label htmlFor="ubicacion">Ubicación: </label>
         <SelectReact
-          options={options}
+          options={optionsUbicaciones}
           id='ubicacion'
           placeholder='Selecciona una ubicación'
           name='ubicacion'
@@ -138,30 +131,6 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
           }}
         />
       </div>
-
-      {/* <div className='md:col-span-3 md:col-start-4 md:flex-col items-center'>
-          <label htmlFor="peso">Peso: </label>
-          <Input
-            type='number' 
-            name='peso'
-            onChange={formik.handleChange}
-            value={formik.values.peso!}  
-            className='py-2'
-          />
-        </div>
-
-        <div className='md:row-start-2 md:col-span-6 md:flex-col items-center'>
-          <label htmlFor="descripcion">Descripción: </label>
-          <Textarea 
-            name='descripcion'
-            onChange={formik.handleChange}
-            value={formik.values.descripcion}
-            className='py-2'
-            rows={6}
-          />
-        </div> */}
-
-
 
       <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
         <button className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>

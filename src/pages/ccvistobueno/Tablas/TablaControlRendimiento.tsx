@@ -41,6 +41,8 @@ import { FaFilePdf } from "react-icons/fa6";
 import { BiCheckDouble } from 'react-icons/bi';
 import { RiErrorWarningFill } from "react-icons/ri";
 import { IoMailOutline } from "react-icons/io5";
+import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import SolicitudContraMuestra from '../Detalle/SolicitudContraMuestra';
 
 
 
@@ -62,17 +64,9 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 	const { authTokens, validate } = useAuth()
 	const base_url = process.env.VITE_BASE_URL_DEV
 	// const [cantidad, setCantidad] = useState<number>(0)
-	const [openDetalleControl, setOpenDetalleControl] = useState<boolean>(false)
 
-	
-	console.log(data)
-
-
-	
-	
 
 	const asisteDelete = async (id: number) => {
-		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/envasesmp/${id}/`, {
 			method: 'DELETE',
 		})
@@ -82,6 +76,26 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 			console.log("nop no lo logre")
 		}
 	}
+
+	const handleEstadoJefatura = async (id: number, estado: string) => {
+		const response = await fetch(`${base_url}/api/estado-aprobacion-jefatura/${id}/`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${authTokens?.access}`
+			},
+			body: JSON.stringify({
+				estado_aprobacion_cc: estado
+			})
+		})
+		if (response.ok) {
+			refresh(true)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
+	
 
 
 	const editLinkProductor = `/app/envases/`
@@ -126,13 +140,17 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 							cantidad >= 2
 								? (
 									<div className='flex items-center gap-5'>
-										<Link to={`/app/vb_control/${info.row.original.id}`} className={`w-full h-12 rounded-md flex items-center justify-center ${isDarkTheme ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-white'} hover:scale-105`}>
-											<HeroEye style={{ fontSize: 35}}/>
-										</Link>
+										<Tooltip title='Detalle Informe	Control de Rendimiento'>
+											<Link to={`/app/vb_control/${info.row.original.id}`} className={`w-full h-12 rounded-md flex items-center justify-center ${isDarkTheme ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-white'} hover:scale-105`}>
+												<HeroEye style={{ fontSize: 35}}/>
+											</Link>
+										</Tooltip>
 
-										<Link to={`/app/pdf-rendimiento/${info.row.original.id}`} target='_blank' className={`w-full h-12 rounded-md flex items-center justify-center ${isDarkTheme ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-red-700 hover:bg-red-600 text-white'} hover:scale-105`}>
-											<FaFilePdf className='text-2xl'/>
-										</Link>
+										<Tooltip title='PDF CC Rendimiento '>
+											<Link to={`/app/pdf-rendimiento/${info.row.original.id}`} target='_blank' className={`w-full h-12 rounded-md flex items-center justify-center ${isDarkTheme ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-red-700 hover:bg-red-600 text-white'} hover:scale-105`}>
+												<FaFilePdf className='text-2xl'/>
+											</Link>
+										</Tooltip>
 									</div>
 									)
 								: <span className='text-md font-semibold'>Muestras insuficientes para CR</span>
@@ -149,9 +167,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const id = info.row.original.id;
-				const [detalleModalStatus, setDetalleModalStatus] = useState(false);
-				const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+				const [openContraMuestra, setOpenContraMuestra] = useState<boolean>(false)
 				const cantidad = info.row.original.control_rendimiento.length
+				const cc_rendimiento: TRendimientoMuestra[] = info.row.original.control_rendimiento
+				const estado_aprobacion = info.row.original.estado_aprobacion_cc
+				const contra_muestras_ok =  info.row.original.control_rendimiento.every(cc => String(cc.esta_contramuestra) === '1')
+				console.log("resultado contra muestras", contra_muestras_ok)
 				
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
@@ -159,31 +180,63 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 							cantidad >= 2
 								? (
 									<>
-									<Tooltip title='Solicitar contramuestra'>
-											<div className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12 ${isDarkTheme ? 'bg-red-600 hover:bg-red-400 text-white' : 'bg-red-600 hover:bg-red-400 text-white'} hover:scale-105`}>
-												<RiErrorWarningFill className='text-4xl'/>
-											</div>
-									</Tooltip>
-											
-
-										{
-											info.row.original.estado_aprobacion_cc === 1
-												? (
-													<Tooltip title='Aprobado'>
-														<div className={`w-full flex items-center justify-center rounded-md px-1 h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
-															<BiCheckDouble className='text-4xl'/>
-														</div>
+									{
+										estado_aprobacion > 0 && estado_aprobacion < 2
+											? (
+												<ModalRegistro
+													textTool={`${contra_muestras_ok ? 'Contra Muestras Solicitadas' : 'Solicitar contramuestra'}`}
+													open={openContraMuestra}
+													setOpen={setOpenContraMuestra}
+													width={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12
+													 ${isDarkTheme ? 'text-white' : 'text-white'}
+													 ${contra_muestras_ok ? 'bg-green-600 hover:bg-green-400' : 'bg-orange-600 hover:bg-orange-400'} hover:scale-105`}
+													size={950}
+													icon={<>
+													{contra_muestras_ok 
+														? <BiCheckDouble className='text-4xl'/>
+														: <RiErrorWarningFill className='text-4xl'/>}
+													</>}
+													>
+														<SolicitudContraMuestra cc_calidad={info.row.original} cc_rendimiento={cc_rendimiento} setOpen={setOpenContraMuestra} refresh={refresh}/>
+												</ModalRegistro>
+											)
+											: estado_aprobacion === 2
+												? null
+												: (
+													<Tooltip title='Aprobar CC Rendimiento Lote'>
+															<div
+																onClick={() => handleEstadoJefatura(id, '1')} 
+																className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
+																<AiFillLike className='text-4xl'/>
+															</div>
 													</Tooltip>
-														
 													)
-												: null
-										}
+												
 
-										<Tooltip title='Mandar Email a proveedor'>
-											<button onClick={async () => await asisteDelete(id)} type='button' className={`w-full px-1 h-12 bg-blue-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
-												<IoMailOutline style={{ fontSize: 25 }} />
-											</button>
-										</Tooltip>
+												
+									}
+											
+									{
+										estado_aprobacion > 0 && estado_aprobacion < 2
+											? (
+												<Tooltip title='Mandar Email a proveedor'>
+													<button type='button' className={`w-full px-1 h-12 bg-blue-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+														<IoMailOutline style={{ fontSize: 25 }} />
+													</button>
+												</Tooltip>
+
+												)
+											: (
+												<Tooltip title='Rechazar CC Rendimiento Lote'>
+														<div
+															onClick={() => handleEstadoJefatura(id, '2')} 
+															className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12 ${isDarkTheme ? 'bg-red-600 hover:bg-red-400 text-white' : 'bg-red-600 hover:bg-red-400 text-white'} hover:scale-105`}>
+															<AiFillDislike className='text-4xl'/>
+														</div>
+												</Tooltip>
+											)
+											
+										}
 									</>
 								)
 								: <span className='text-md font-semibold'>Muestras insuficientes</span>
@@ -215,7 +268,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaEnvases'>
+		<PageWrapper name='Lista Control Rendimiento'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap
@@ -241,19 +294,6 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
-				<SubheaderRight>
-					{/* <ModalRegistro
-						open={modalStatus}
-						setOpen={setModalStatus}
-						title='Registro Envases'
-						textButton='Agregar Envases'
-						width={`px-6 py-3 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-
-					>
-						<FormularioRegistroEnvases refresh={refresh} setOpen={setModalStatus} />
-					</ModalRegistro> */}
-					algo
-				</SubheaderRight>
 			</Subheader>
 			<Container>
 				<Card className='h-full'>

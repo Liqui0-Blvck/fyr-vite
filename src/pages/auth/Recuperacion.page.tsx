@@ -1,155 +1,113 @@
-import React, { useState } from 'react';
+import React, { Dispatch, FC, SetStateAction,  } from 'react';
 import { useFormik } from 'formik';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import PageWrapper from '../components/layouts/PageWrapper/PageWrapper';
-import Button from '../components/ui/Button';
-import { useAuth } from '../context/authContext';
-import Input from '../components/form/Input';
-import FieldWrap from '../components/form/FieldWrap';
-import Icon from '../components/icon/Icon';
-import Validation from '../components/form/Validation';
-import useAxiosFunction from '../hooks/useAxiosFunction';
+import PageWrapper from '../../components/layouts/PageWrapper/PageWrapper';
+import Validation from '../../components/form/Validation';
+import FieldWrap from '../../components/form/FieldWrap';
+import { Button, Input } from 'antd';
+import toast from 'react-hot-toast';
+import Label from '../../components/form/Label';
+
 
 type TValues = {
-	username: string;
-	password: string;
+	email: string;
 };
 
-const LoginPage = () => {
-	const { onLogin } = useAuth();
-	const { response } = useAxiosFunction({
-		method: 'GET',
-		url: '/api/clientes/'
-	})
+interface IRecoveryPageProps {
+	setOpen: Dispatch<SetStateAction<boolean>>
+}
 
-	console.log(response)
-
-	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
+const RecoveryPage: FC<IRecoveryPageProps> = ({ setOpen }) => {
+	const base_url = process.env.VITE_BASE_URL_DEV
 
 	const formik = useFormik({
 		initialValues: {
-			username: '',
-			password: '',
+			email: '',
 		},
 		validate: (values: TValues) => {
 			const errors: Partial<TValues> = {};
 
-			if (!values.username) {
-				errors.username = 'Required';
-			}
-
-			if (!values.password) {
-				errors.password = 'Required';
+			if (!values.email) {
+				errors.email = 'Required';
 			}
 
 			return errors;
 		},
-		onSubmit: (values: TValues, { setFieldError }) => {
-			onLogin(values.username, values.password)
-				.then(() => { })
-				.catch((e: Error) => {
-					if (e.cause === 'username') {
-						setFieldError('username', e.message);
-						setFieldError('password', e.message);
-					}
-					if (e.cause === 'password') setFieldError('password', e.message);
-				});
+		onSubmit: async (values: TValues) => {
+			try {
+				const res = await fetch(`${base_url}/auth/users/reset_password/`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						...values
+					})
+				})
+
+				if (res.ok){
+					toast.success("Email de reestablecimiento enviado con exito")
+					setOpen(false)
+				}
+			} catch (error) {
+				console.log("que mierda")
+			}	
 		},
 	});
 
 	return (
 		<PageWrapper isProtectedRoute={false} className='bg-white dark:bg-inherit' name='Sign In'>
-			<div className='container mx-auto flex h-full items-center justify-center'>
+			<div className='container mx-auto flex h-full items-center justify-center mt-10'>
 				<div className='flex max-w-sm flex-col gap-8'>
-					<div>
-						<span className='text-4xl font-semibold'>Inicia Sesión</span>
+					<div className='flex items-center justify-center'>
+						<span className='text-4xl font-semibold text-center'>Prodalmen</span>
 					</div>
-					<div className='border border-zinc-500/25 dark:border-zinc-500/50' />
 					<div>
-						<span>Ingresa con tu correo</span>
+						<span>Enviaremos un enlace de recuperación</span>
 					</div>
-					<form className='flex flex-col gap-4' noValidate>
+					<form className='flex flex-col gap-4' noValidate onSubmit={formik.handleSubmit}>
 						<div
 							className={classNames({
 								'mb-2': !formik.isValid,
 							})}>
+							<Label htmlFor='email'>Email: </Label>
 							<Validation
 								isValid={formik.isValid}
-								isTouched={formik.touched.username}
-								invalidFeedback={formik.errors.username}
+								isTouched={formik.touched.email}
+								invalidFeedback={formik.errors.email}
 								validFeedback='Good'>
-								<FieldWrap
-									firstSuffix={<Icon icon='HeroEnvelope' className='mx-2' />}>
+								<FieldWrap>
 									<Input
-										dimension='lg'
-										id='username'
-										autoComplete='username'
-										name='username'
-										placeholder='Email or username'
-										value={formik.values.username}
+										className='p-2'
+										id='email'
+										autoComplete='email'
+										name='email'
+										placeholder='Email'
+										value={formik.values.email}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 									/>
 								</FieldWrap>
 							</Validation>
 						</div>
-						<div
-							className={classNames({
-								'mb-2': !formik.isValid,
-							})}>
-							<Validation
-								isValid={formik.isValid}
-								isTouched={formik.touched.password}
-								invalidFeedback={formik.errors.password}
-								validFeedback='Good'>
-								<FieldWrap
-									firstSuffix={<Icon icon='HeroKey' className='mx-2' />}
-									lastSuffix={
-										<Icon
-											className='mx-2 cursor-pointer'
-											icon={passwordShowStatus ? 'HeroEyeSlash' : 'HeroEye'}
-											onClick={() => {
-												setPasswordShowStatus(!passwordShowStatus);
-											}}
-										/>
-									}>
-									<Input
-										dimension='lg'
-										type={passwordShowStatus ? 'text' : 'password'}
-										autoComplete='current-password'
-										id='password'
-										name='password'
-										placeholder='Password'
-										value={formik.values.password}
-										onChange={formik.handleChange}
-										onBlur={formik.handleBlur}
-									/>
-								</FieldWrap>
-							</Validation>
-						</div>
-						<div>
+					
+						<div className='flex p-2'>
 							<Button
-								size='lg'
-								variant='solid'
-								className='w-full font-semibold'
+								variant='outline'
+								className='w-full font-semibold bg-zinc-700 text-white h-12'
 								onClick={() => formik.handleSubmit()}>
-								Sign in
+								Enviar Enlace de Recuperación
 							</Button>
 						</div>
 					</form>
-					<div>
-						<span className='text-zinc-500'>
-							This site is protected by reCAPTCHA and the Google Privacy Policy.
-						</span>
-					</div>
 					<div>
 						<span className='flex gap-2 text-sm'>
 							<span className='text-zinc-400 dark:text-zinc-600'>
 								Tienes una cuenta?
 							</span>
 							<Link to='/' className='hover:text-inherit'>
-								Registrate
+								Iniciar Sesión
 							</Link>
 						</span>
 					</div>
@@ -159,4 +117,4 @@ const LoginPage = () => {
 	);
 };
 
-export default LoginPage;
+export default RecoveryPage;

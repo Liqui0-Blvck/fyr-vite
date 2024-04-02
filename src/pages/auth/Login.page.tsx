@@ -11,6 +11,8 @@ import Icon from '../../components/icon/Icon';
 import Validation from '../../components/form/Validation';
 import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction';
 import { authPages } from '../../config/pages.config';
+import ModalRegistro from '../../components/ModalRegistro';
+import RecoveryPage from './Recuperacion.page';
 
 type TValues = {
 	username: string;
@@ -21,6 +23,7 @@ const LoginPage = () => {
 	const { onLogin } = useAuth();
 	const [touched, setTouched] = useState<boolean>()
 	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
+	const [open, setOpen] = useState<boolean>(false)
 
 	const formik = useFormik({
 		initialValues: {
@@ -31,11 +34,11 @@ const LoginPage = () => {
 			const errors: Partial<TValues> = {};
 
 			if (!values.username) {
-				errors.username = 'Required';
+				errors.username = 'Requerido';
 			}
 
 			if (!values.password) {
-				errors.password = 'Required';
+				errors.password = 'Requerido';
 			}
 
 			return errors;
@@ -73,7 +76,7 @@ const LoginPage = () => {
 										id='username'
 										autoComplete='username'
 										name='username'
-										placeholder='Email or username'
+										placeholder='Email or Nombre de Usuario'
 										value={formik.values.username}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
@@ -107,7 +110,7 @@ const LoginPage = () => {
 										autoComplete='current-password'
 										id='password'
 										name='password'
-										placeholder='Password'
+										placeholder='Contraseña'
 										value={formik.values.password}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
@@ -135,22 +138,17 @@ const LoginPage = () => {
 							<span className='text-zinc-400 dark:text-zinc-600'>
 								Se te olvido la contraseña?
 							</span>
-							<Link to={`${authPages.restorePage.to}`} className='hover:text-inherit'>
-								Recuperar Cuenta
-							</Link>
+							<ModalRegistro
+								title='Restablecimiento de Contraseña'
+								open={open}
+								setOpen={setOpen}
+								size={500}
+								textButton='Recuperar cuenta'>
+								<RecoveryPage setOpen={setOpen}/>
+							</ModalRegistro>
 						</span>
 					</div>
 
-					<div>
-						<span className='flex gap-2 text-sm'>
-							<span className='text-zinc-400 dark:text-zinc-600'>
-								Tienes una cuenta?
-							</span>
-							<Link to='/' className='hover:text-inherit'>
-								Registrate
-							</Link>
-						</span>
-					</div>
 				</div>
 			</div>
 		</PageWrapper>

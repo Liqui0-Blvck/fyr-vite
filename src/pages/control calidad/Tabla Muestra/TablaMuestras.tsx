@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../../context/authContext';
 import useDarkMode from '../../../hooks/useDarkMode';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { TControlCalidad, TRendimientoMuestra } from '../../../types/registros types/registros.types';
 import FilaControlMuestra from './FilaControlMuestra';
@@ -19,19 +19,13 @@ interface IRendimientoMuestra {
   id_lote: number
   data: TRendimientoMuestra [] | []
   refresh: Dispatch<SetStateAction<boolean>>
-  ccLote?: TControlCalidad | null
+  ccLote?: TControlCalidad | null,
+  setOpen?: Dispatch<SetStateAction<boolean>>
 }
 
 
-const TablaMuestras: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote }) => {
-  const { authTokens, validate } = useAuth()
+const TablaMuestras: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote, setOpen }) => {
   const { isDarkTheme } = useDarkMode();
-  const base_url = process.env.VITE_BASE_URL_DEV
-  const navigate = useNavigate()
-  const [estadoActivo, setEstadoActivo] = useState<string | null>(null)
-  const [openModalRows, setOpenModalRows] = useState<{ [key: string]: boolean }>({});
-  const [openModalEdicion, setOpenModalEdicion] = useState<{ [key: string]: boolean }>({});
-  const [openModalConfirmacion, setOpenModalConfirmacion] = useState<{ [key: string]: boolean }>({});
 
   const initialRows = [
     {
@@ -71,6 +65,7 @@ const TablaMuestras: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote
                       id_lote={id_lote}
                       muestra={row}
                       refresh={refresh}
+                      setOpen={setOpen!}
                     />
                       
                   </TableRow>
