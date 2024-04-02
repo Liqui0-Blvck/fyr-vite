@@ -37,6 +37,8 @@ import { Tooltip } from 'antd';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { cargolabels } from '../../../utils/generalUtils';
+import FormularioRegistroControlCalidad from '../Formulario Registro/FormularioRegistroControlCalidad';
+import FormularioEdicionControlCalidad from '../Formulario Edicion/FormularioEdicionControlCalidad';
 
 
 
@@ -56,7 +58,6 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false);
 	const [detalleModalStatus, setDetalleModalStatus] = useState<boolean>(false);
-	const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
 	const { isDarkTheme } = useDarkMode()
 	const { authTokens, validate } = useAuth()
 	const base_url = process.env.VITE_BASE_URL_DEV
@@ -76,6 +77,28 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 			console.log("nop no lo logre")
 		}
 	}
+
+	const updateEstadoLote = async (id: number, estado: string, setOpen: Dispatch<SetStateAction<boolean>>) => {
+    console.log(estado);
+    const res = await fetch(`${base_url}/api/estado-update/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}` 
+      },
+      body: JSON.stringify({  
+        estado_recepcion: estado
+      })
+    });
+
+    if (res.ok) {
+			setOpen(false)
+			refresh(true)
+
+    } else {
+      console.log("Errores sobre errores");
+    }
+  }
 
 
 	console.log(data)
@@ -113,9 +136,9 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 		columnHelper.display({
 			id: 'actions',
 			cell: (info) => {
-				const id = info.row.original.id;
-				
+				const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
 
+				const id = info.row.original.id;
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
 						<Link to={`/app/control-calidad/${info.row.original.id}`}
@@ -133,11 +156,12 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 										setOpen={setEdicionModalStatus}
 										title='Edición Comercializador'
 										textTool='Editar'
-										size={900}
+										size={500}
 										width={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 										icon={<HeroPencilSquare style={{ fontSize: 25 }}
 										/>}
 									>
+										<FormularioEdicionControlCalidad  id_lote={info.row.original.id} refresh={refresh} setOpen={setEdicionModalStatus} updateEstado={updateEstadoLote}/>
 									</ModalRegistro>
 									)
 								: null
@@ -181,7 +205,7 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaEnvases'>
+		<PageWrapper name='Lista Control Calidad'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap

@@ -172,6 +172,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 				const cc_rendimiento: TRendimientoMuestra[] = info.row.original.control_rendimiento
 				const estado_aprobacion = info.row.original.estado_aprobacion_cc
 				const contra_muestras_ok =  info.row.original.control_rendimiento.every(cc => String(cc.esta_contramuestra) === '1')
+				const is_contra_muestra =  info.row.original.control_rendimiento.filter(cc => cc.es_contramuestra === true) 
 				console.log("resultado contra muestras", contra_muestras_ok)
 				
 				return (
@@ -181,7 +182,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 								? (
 									<>
 									{
-										estado_aprobacion > 0 && estado_aprobacion < 2
+										estado_aprobacion > 0 && estado_aprobacion < 2 
 											? (
 												<ModalRegistro
 													textTool={`${contra_muestras_ok ? 'Contra Muestras Solicitadas' : 'Solicitar contramuestra'}`}
@@ -200,7 +201,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 														<SolicitudContraMuestra cc_calidad={info.row.original} cc_rendimiento={cc_rendimiento} setOpen={setOpenContraMuestra} refresh={refresh}/>
 												</ModalRegistro>
 											)
-											: estado_aprobacion === 2
+											: estado_aprobacion === 2 && contra_muestras_ok && is_contra_muestra.length > 2
 												? null
 												: (
 													<Tooltip title='Aprobar CC Rendimiento Lote'>
@@ -211,13 +212,10 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 															</div>
 													</Tooltip>
 													)
-												
-
-												
 									}
 											
 									{
-										estado_aprobacion > 0 && estado_aprobacion < 2
+										estado_aprobacion > 0 && estado_aprobacion < 2 
 											? (
 												<Tooltip title='Mandar Email a proveedor'>
 													<button type='button' className={`w-full px-1 h-12 bg-blue-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>

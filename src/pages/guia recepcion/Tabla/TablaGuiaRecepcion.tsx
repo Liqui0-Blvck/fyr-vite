@@ -201,7 +201,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaProductores'>
+		<PageWrapper name='Lista Guia Recepcion Materia Prima'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap

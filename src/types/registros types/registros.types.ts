@@ -426,4 +426,5 @@ export interface TPatioTechadoEx {
   cc_guia: number;
   tipo_recepcion: number;
   registrado_por: number;
+  control_calidad: TControlCalidad
 }

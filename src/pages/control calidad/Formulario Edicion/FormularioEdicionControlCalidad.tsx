@@ -15,13 +15,13 @@ import { optionsRadio } from '../../../constants/options.constants'
 import { CheckboxGroup } from '../../../components/form/Checkbox'
 
 interface IFormCC {
-  refresh: Dispatch<SetStateAction<boolean | null>>
-  setOpen: Dispatch<SetStateAction<boolean | null>>
+  refresh: Dispatch<SetStateAction<boolean>>
+  setOpen: Dispatch<SetStateAction<boolean>>
   id_lote: number,
-  updateEstado: (id: number, estado: string) => void
+  updateEstado: (id: number, estado: string, setOpen: Dispatch<SetStateAction<boolean>>) => void
 }
 
-const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_lote }) => {
+const FormularioEdicionControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_lote }) => {
   
 
   const { authTokens, validate, userID } = useAuth()
@@ -65,16 +65,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
   };
   
   
-  
 
-  // const imagenes = fotos.map((foto) => ({
-  //   ccrecepcionmp: 2,
-  //   imagen: foto
-  // }))
-
-  // console.log(imagenes)
-
-  // console.log(JSON.stringify(imagenes))
 
   useEffect(() => {
     let isMounted = true
@@ -84,9 +75,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
         humedad: parseFloat(control_calidad[0]?.humedad),
         presencia_insectos: control_calidad[0].presencia_insectos,
         observaciones: control_calidad[0].observaciones
-      })
-
-      
+      })      
     }
 
     () => {
@@ -230,7 +219,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
   )
 }
 
-export default FormularioRegistroControlCalidad
+export default FormularioEdicionControlCalidad
 
 
 

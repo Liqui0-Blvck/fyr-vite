@@ -120,13 +120,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center gap-5'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{userData?.user.username} |</span>
-          <h4 className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>Area{userData?.cargos.length! > 1 ? 's': ''}: </h4>
-          {userData?.cargos.map((cargo) => (
-            <>
-              <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{cargo.cargo_label}</span>
-            </>
-          ))}
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{userData?.user.username} | {userData?.user.email}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
@@ -160,7 +154,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
                 {
                   row?.cc_ok === true
                     ? (
-                      <div className={`w-24 flex items-center justify-center rounded-md px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
+                      <div className={`w-24 flex items-center justify-center rounded-md px-1 lg:h-12 ${isDarkTheme ? 'bg-green-600 hover:bg-green-400 text-white' : 'bg-green-600 hover:bg-green-400 text-white'} hover:scale-105`}>
                         <BiCheckDouble className='text-4xl'/>
                       </div>
                     )
@@ -171,7 +165,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
                         title={`Muestra Control de Rendimiento del Lote N° `}
                         textTool='CC Pepas Muestras'
                         size={ccPepaConfirmacion ? 900 : 500}
-                        width={`w-24 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                        width={`w-24 px-1 :h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                         icon={<GiTestTubes className='text-4xl'/>}
                       >
                         <ModalConfirmacion 
@@ -189,9 +183,9 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
 
                   <Tooltip text='Detalle Control Calidad Pepa '>
                     <Link to={`/app/control-calidad/${id_lote}/muestra/${row?.id}`}>
-                      <div className='w-full flex items-center'>
-                        <HeroEye style={{ fontSize: 32 }} />
-                    </div>
+                      <div className='flex items-center w-24 h-12 bg-blue-700 justify-center rounded-md'>
+                        <HeroEye style={{ fontSize: 35, fontWeight: 'semibold', color: 'white' }} />
+                     </div>
                     </Link>
                   </Tooltip>
 
@@ -204,7 +198,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
                           title={`Muestra Control de Rendimiento del Lote N° ${row?.cc_recepcionmp}`}
                           textTool='Eliminar Muestra'
                           size={500}
-                          width={`w-24 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-red-800 hover:bg-red-700' : 'bg-red-800 hover:bg-red-700 text-white'} hover:scale-105`}
+                          width={`w-24 px-1  lg:h-12 ${isDarkTheme ? 'bg-red-800 hover:bg-red-700' : 'bg-red-800 hover:bg-red-700 text-white'} hover:scale-105`}
                           icon={<HeroXMark style={{ fontSize: 25 }} />}
                         >
                           <ModalConfirmacion 

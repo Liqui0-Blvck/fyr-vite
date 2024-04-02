@@ -265,7 +265,7 @@ const TablaProgramas: FC<IProductorProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaProductores'>
+		<PageWrapper name='ListaProgramas'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap

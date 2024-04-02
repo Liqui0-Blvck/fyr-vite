@@ -49,13 +49,13 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen }) => 
             'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
-            peso_muestra: values.peso_muestra,
-            basura: values.basura,
-            ciega: values.ciega,
-            pelon: values.pelon,
-            cascara: values.cascara,
-            pepa_huerto: values.pepa_huerto,
-            pepa: values.pepa,
+            peso_muestra: values.peso_muestra.toFixed(2),
+            basura: values.basura.toFixed(2),
+            ciega: values.ciega.toFixed(2),
+            pelon: values.pelon.toFixed(2),
+            cascara: values.cascara.toFixed(2),
+            pepa_huerto: values.pepa_huerto.toFixed(2),
+            pepa: values.pepa.toFixed(2),
             registrado_por: userID?.user_id
           
           })

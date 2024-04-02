@@ -17,7 +17,8 @@ interface IRegistroProgramaProps {
 const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote }) => {
   const { isDarkTheme} = useDarkMode()
 
-  console.log(lote)
+
+  
   return (
     <div>
       <TableContainer className='table-container-registro' sx={{ height: 450 ,overflow: 'hidden', overflowY: 'auto', overflowX: 'auto' }}>
@@ -34,8 +35,7 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote }) => {
           </TableHead>
           <TableBody className='table-body'>
             {
-              lote?.map((envase: TPatioTechadoEx) => {
-                console.log(envase)
+              lote?.filter(cc => String(cc.control_calidad.estado_aprobacion_cc) === '1').map((envase: TPatioTechadoEx) => {
                 return (
                   <TableRow style={{ height: 50, overflowY: 'auto' }}>
                     <FilaRegistroPrograma row={envase.envases} id_row={envase.id} variedad={envase.variedad}/>

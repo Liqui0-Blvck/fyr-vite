@@ -9,7 +9,7 @@ import { HeroEye } from '../../../../components/icon/heroicons'
 import Tooltip from '../../../../components/ui/Tooltip'
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
 import { useAuth } from '../../../../context/authContext'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface IRegistroPrograma {
   row: TEnvasePatio[]
@@ -20,6 +20,7 @@ interface IRegistroPrograma {
 const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) => {
   const { isDarkTheme } = useDarkMode()
   const { authTokens, validate, perfilData } = useAuth()
+  const navigate = useNavigate()
   const { data: cc_calidad } = useAuthenticatedFetch<TControlCalidadB>(
     authTokens,
     validate,
@@ -102,14 +103,16 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) 
       </TableCell>
 
       <TableCell className='table-cell-row-3' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
+        <div className=' h-full w-full flex items-center justify-center relative top-0'>
           <Accordion
             expanded={expanded === 1}
             onChange={handleChange(1)}
-            className="bg-zinc-800 w-full"
+            className="bg-zinc-800 w-full absolute"
             sx={{
-              height: expanded ? 'auto' : '48px', // Establece una altura fija cuando el Accordion está expandido
+              position: 'relative',
+              top: 0,
               display: 'flex',
+              overflowY: 'auto',
               flexDirection: 'column'
             }}
           >
@@ -127,7 +130,7 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) 
             {row.map((envase) => {
 
               return (
-                <AccordionDetails key={envase.id} className={`${isDarkTheme ? 'bg-zinc-400' : 'bg-zinc-100'} w-full h-14`}>
+                <AccordionDetails key={envase.id} className={`${isDarkTheme ? 'bg-zinc-400' : 'bg-zinc-100'} w-full h-full`}>
                   <div className={`${isDarkTheme ? 'bg-zinc-400' : 'bg-zinc-100'} rounded-md w-full flex items-center p-3`}>
                     <Checkbox
                       checked={isSelected(envase.id)}
@@ -145,8 +148,11 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) 
 
 
       <TableCell className='row-specific' component="th" sx={{backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-          <Tooltip  text={`Detalle del lote N° ${'algo'}`}>
-            <button className={`w-40 py-1 mx-auto flex items-center justify-center bg-blue-700 hover:bg-blue-600 rounded-md`}>
+          <Tooltip  text={`Detalle del lote N° ${id_row}`}>
+            <button
+              onClick={() => navigate(`/app/control-calidad/${id_row}`)}
+              type='button'
+              className={`w-40 py-1 mx-auto flex items-center justify-center bg-blue-700 hover:bg-blue-600 rounded-md`}>
               <HeroEye style={{ fontSize: 35, color: 'white'}} />
             </button>
           </Tooltip>
