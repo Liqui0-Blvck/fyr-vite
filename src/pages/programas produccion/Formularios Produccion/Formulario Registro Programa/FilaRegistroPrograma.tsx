@@ -1,45 +1,68 @@
 import { Accordion, AccordionDetails, AccordionSummary, TableCell } from '@mui/material'
-import React, { FC, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useState } from 'react'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { TControlCalidadB, TEnvasePatio } from '../../../../types/registros types/registros.types'
 import { MdOutlineExpandMore } from 'react-icons/md'
-import Checkbox from '../../../../components/form/Checkbox'
 import { variedadFilter } from '../../../../constants/options.constants'
 import { HeroEye } from '../../../../components/icon/heroicons'
 import Tooltip from '../../../../components/ui/Tooltip'
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
 import { useAuth } from '../../../../context/authContext'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { urlNumeros } from '../../../../services/url_number'
+import ModalRegistro from '../../../../components/ModalRegistro'
+import Checkbox from '../../../../components/form/Checkbox'
+import EnvasesEnGuiaList from './ListaEnvasesSeleccionables'
+import { preventDefault } from '@fullcalendar/core/internal'
+
 
 interface IRegistroPrograma {
   row: TEnvasePatio[]
-  id_row: number
-  variedad: string
+  id_row?: number
+  variedad?: string
+  ubicacion?: string
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) => {
+
+
+const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ubicacion, refresh }) => {
   const { isDarkTheme } = useDarkMode()
   const { authTokens, validate, perfilData } = useAuth()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const id = urlNumeros(pathname)
+  const base_url = process.env.VITE_BASE_URL_DEV
+  const [open, setOpen] = useState<boolean>(false)
+  const [selectAll, setSelectAll] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [infoExpanded, setInfoExpanded] = useState<number | false>(false)
+
   const { data: cc_calidad } = useAuthenticatedFetch<TControlCalidadB>(
     authTokens,
     validate,
     `/api/control-calidad/recepcionmp/${id_row}`
   )
 
-  console.log(cc_calidad)
 
+  // const registrarLoteAProduccion = async (id_envase: number) => {
+  //   const res = await fetch(`${base_url}/programa/${id}/`, {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${authTokens?.access}`
+  //     },
+  //     body: JSON.stringify({
+  //       produccion: id[0],
+  //       bodega_techado_ext: id_envase
+  //     })
+  //   })
+  // }
 
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [expanded, setExpanded] = useState<number | false>(false); // State para controlar la expansión del Accordion
-  const [infoExpanded, setInfoExpanded] = useState<number | false>(false)
-
-  const handleChange = (panel: number) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  
 
   const handleChangeExpanded = (panel: number) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+    event.preventDefault()
     setInfoExpanded(isExpanded ? panel : false);
   };
 
@@ -76,8 +99,9 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) 
 
   const isSelected = (itemId: number) => selectedItems.indexOf(itemId) !== -1;
 
-  console.log(row)
   const variedad_nombre = variedadFilter.find(varie => varie.value === variedad)?.label
+
+  console.log(selectedItems)
 
   return (
     <>
@@ -104,45 +128,15 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) 
 
       <TableCell className='table-cell-row-3' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center relative top-0'>
-          <Accordion
-            expanded={expanded === 1}
-            onChange={handleChange(1)}
-            className="bg-zinc-800 w-full absolute"
-            sx={{
-              position: 'relative',
-              top: 0,
-              display: 'flex',
-              overflowY: 'auto',
-              flexDirection: 'column'
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<MdOutlineExpandMore />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-              sx={{
-                backgroundColor: `${isDarkTheme ? '#838387' : '' }`
-              }}
+          <ModalRegistro
+            title='Envases en Lote'
+            open={open}
+            setOpen={setOpen}
+            width={`w-[80%] py-1 h-14 mx-auto flex items-center justify-center bg-blue-700 hover:bg-blue-600 rounded-md`}
+            textButton={`${row.filter(envase => envase.estado_envase !== '2').length} Envases en Guía`}
             >
-              {row.length} Envases en Bodega
-            </AccordionSummary>
-
-            {row.map((envase) => {
-
-              return (
-                <AccordionDetails key={envase.id} className={`${isDarkTheme ? 'bg-zinc-400' : 'bg-zinc-100'} w-full h-full`}>
-                  <div className={`${isDarkTheme ? 'bg-zinc-400' : 'bg-zinc-100'} rounded-md w-full flex items-center p-3`}>
-                    <Checkbox
-                      checked={isSelected(envase.id)}
-                      onChange={() => handleToggleItem(envase.id)}
-                      className='w-10 h-4'
-                    />
-                    <span className='font-semibold text-lg'>{envase.id} {envase.guia_patio}</span>
-                  </div>
-                </AccordionDetails>
-              )
-            })}
-          </Accordion>
+            <EnvasesEnGuiaList isSelected={isSelected} handleToggleItem={handleToggleItem} row={row} ubicacion={ubicacion} refresh={refresh}/>
+          </ModalRegistro>
         </div>
       </TableCell>
 
@@ -185,11 +179,11 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({ row, id_row, variedad }) 
               <div className={`${isDarkTheme ? 'bg-zinc-400' : 'bg-zinc-100'} rounded-md w-full flex items-center justify-between  p-3`}>
                 <div className='flex flex-col items-center gap-y-2'>
                   <label className='text-md font-semibold'>Humedad</label>
-                  <span className='text-lg'>{cc_calidad?.humedad} %</span>
+                  {/* <span className='text-lg'>{cc_calidad?.humedad} %</span> */}
                 </div>
                 <div className='flex flex-col items-center gap-y-2'>
                   <label className='text-md font-semibold'>Muestras CC</label>
-                  <span className='text-lg'>{cc_calidad?.control_rendimiento.length}</span>
+                  {/* <span className='text-lg'>{cc_calidad?.control_rendimiento.length}</span> */}
                 </div>
                 <div className='flex flex-col items-center gap-y-2'>
                   <label className='text-md font-semibold'>CDR</label>

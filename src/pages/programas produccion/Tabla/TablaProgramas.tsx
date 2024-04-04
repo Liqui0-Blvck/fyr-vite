@@ -8,7 +8,7 @@ import {
 	SortingState,
 	useReactTable,
 } from '@tanstack/react-table';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper';
 import Container from '../../../components/layouts/Container/Container';
 import Card, {
@@ -31,7 +31,7 @@ import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
 import ModalRegistro from '../../../components/ModalRegistro';
 // import FormularioRegistroProductores from '../Formulario Registro/FormularioRegistroProductores';
-import { TProductor } from '../../../types/registros types/registros.types';
+import { TProduccion, TProductor } from '../../../types/registros types/registros.types';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';
@@ -51,38 +51,40 @@ import {
 import FormularioInformeProduccion from '../Formularios Produccion/Formulario Informe/FormularioInformeProduccion';
 import FormularioKilosOperarios from '../Formularios Produccion/Formulario Kilos Operarios/FormularioKilosOperarios';
 import FormularioResumen from '../Formularios Produccion/Formulario Resumen/FormularioResumenOperario';
+import toast from 'react-hot-toast';
 
 
-interface IProductorProps {
-	data: TProductor[] | []
+interface IProduccionProps {
+	data: TProduccion[] | []
 	refresh: Dispatch<SetStateAction<boolean>>
 }
 
 
-type PorMientras = {
+const estados = [
+	{value: '0',label: 'Pausa' },
+	{value: '2',label: 'En Curso'},
+	{value: '5',label: 'Terminado'}
+]
 
-}
-
-const columnHelper = createColumnHelper<TProductor>();
+const columnHelper = createColumnHelper<TProduccion>();
 
 
 
-const TablaProgramas: FC<IProductorProps> = ({ data, refresh }) => {
+const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
+	const { perfilData, authTokens, userID } = useAuth()
+	const { isDarkTheme } = useDarkMode();
+	const navigate = useNavigate()
+	const [id_programa, setIDPrograma] = useState<number>(0)
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
-	const [modalStatus, setModalStatus] = useState<boolean>(false)
-	const { isDarkTheme } = useDarkMode();
-	const { perfilData, authTokens } = useAuth()
-	const [detalleModalStatus, setDetalleModalStatus] = useState<boolean>(false);
 	const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
 	const [informePro, setInformePro] = useState<boolean>(false)
 	const [informeKgOp, setInformeinformeKgOp] = useState<boolean>(false)
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
-	const [adicionUser, setAdicionUser] = useState<boolean>(false)
-	const [contrato, setContrato] = useState<boolean>(false)
+	const base_url = process.env.VITE_BASE_URL_DEV
+
 
 	const asisteDelete = async (id: number) => {
-		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/productores/${id}/`, {
 			method: 'DELETE',
 			headers: {
@@ -96,58 +98,105 @@ const TablaProgramas: FC<IProductorProps> = ({ data, refresh }) => {
 		}
 	}
 
+	const actualizarEstadoProduccion = async (id: number, estado: string) => {
+		const response = await fetch(`${base_url}/api/produccion/${id}/`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${authTokens?.access}`
+			},
+			body: JSON.stringify({
+				estado: estado,
+				registrado_por: userID?.user_id
+			})
+		})
+		if (response.ok) {
+			const data: TProduccion = await response.json()
+			toast.success(`El programa esta en ${estados.find(est => est.value === data.estado)?.label}`)
+			refresh(true)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
+	const registroProgramaProduccion = async () => {
+		const response = await fetch(`${base_url}/api/produccion/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${authTokens?.access}`
+			},
+			body: JSON.stringify({
+				registrado_por: userID?.user_id
+			})
+		})
+		if (response.ok) {
+			const data: TProduccion = await response.json()
+			toast.success(`El programa fue creado exitosamente`)
+			navigate(`/app/produccion/registro-programa/${data.id}`)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
 
 	const columns = [
-		columnHelper.accessor('rut_productor', {
+		columnHelper.accessor('id', {
 			cell: (info) => (
 				<div className='font-bold truncate'>
-					{/* {`${info.row.original.rut_productor}`} */}
-					1
+					{`${info.row.original.id}`}
 				</div>
 			),
 			header: 'N° Programa',
 		}),
-		columnHelper.accessor('nombre', {
+		columnHelper.accessor('lotes', {
 			cell: (info) => (
 				<div className='font-bold '>
-					{/* {`${info.row.original.nombre}`} */}
-					69 Envases
+					{`${info.row.original.lotes.length}`}
 				</div>
 			),
 			header: 'N° Envases',
 		}),
-		columnHelper.accessor('email', {
-			cell: (info) => (
-				<div className='font-bold'>
-					{/* {`${info.row.original.email}`} */}
-					<p className='text-center'>0 Envases x Procesar</p>
-				</div>
-			),
+		columnHelper.accessor('lotes', {
+			cell: (info) => {
+				const total_lotes = info.row.original.lotes.length
+				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_ingresado === true).length * total_lotes) / 100).toFixed(1)
+				
+				return (
+					<div className='font-bold'>
+						<p className='text-center'>{lotes_procesados} % Envases x Procesar</p>
+					</div>
+				)
+			},
 			header: 'Envases en Proc.',
 		}),
-		columnHelper.accessor('telefono', {
-			cell: (info) => (
-				<div className='font-bold'>
-					{/* {`${info.row.original.telefono}`} */}
-					<p className='text-center'>69 Envases procesados</p>
-					<p className=''>= 100.0 % del total</p>
-				</div>
-
-			),
-			header: 'Envases Procesados',
+		columnHelper.accessor('lotes', {
+			cell: (info) => {
+				const total_lotes = info.row.original.lotes.length
+				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_procesado === true).length * total_lotes) / 100).toFixed(1)
+				
+				return (
+					<div className='font-bold'>
+						<p className='text-center'>{lotes_procesados} % Envases Procesados</p>
+					</div>
+				)
+			},
+			header: 'Envases en Proc.',
 		}),
-		columnHelper.accessor('telefono', {
-			cell: (info) => (
-				<div className='font-bold w-full flex items-center justify-center flex-wrap'>
-					{/* {`${info.row.original.telefono}`} */}
-					<p className='text-center'>Producción Pausada</p>
-					<FaStop />
-				</div>
-
-			),
+		columnHelper.accessor('estado', {
+			cell: (info) => {
+				const estado = info.row.original.estado_label
+				return  (
+					<div className='font-bold w-full flex items-center flex-wrap'>
+						<p className='text-center'>{estado}</p>
+					</div>
+	
+				)
+			},
 			header: 'Estado',
 		}),
-		columnHelper.accessor('telefono', {
+		columnHelper.display({
+			id:'actions',
 			cell: (info) => (
 				<div className='font-bold truncate'>
 					{/* {`${info.row.original.telefono}`} */}
@@ -165,27 +214,55 @@ const TablaProgramas: FC<IProductorProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const id = info.row.original.id;
-			
+				const estado = info.row.original.estado
+				
 				return (
 					<div className='h-full w-full flex justify-center gap-5 flex-wrap md:flex-wrap'>
 
-					<Tooltip title='Iniciar Producción'>
-						<button className='w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105'>
-							<FaPlay style={{ fontSize: 25 }}/>
-						</button>
-					</Tooltip>
+					{
+						estado === '0' || estado === '1' && estado <= '2'
+							? (
+								<Tooltip title='Iniciar Producción'>
+									<button
+										type='button'
+										onClick={() => actualizarEstadoProduccion(id, '2')}
+										className='w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105'>
+										<FaPlay style={{ fontSize: 25 }}/>
+									</button>
+								</Tooltip>
+								)
+							: null
+					}
 
-					<Tooltip title='Pausar Producción'>
-						<button className='w-16 rounded-md h-12 bg-blue-500 flex items-center justify-center p-2 hover:scale-105'>
-							<FaPause style={{ fontSize: 25 }}/>
-						</button>
-					</Tooltip>
+					{
+						estado === '2'
+							? (
+								<Tooltip title='Pausar Producción'>
+									<button
+										type='button'
+										onClick={() => actualizarEstadoProduccion(id, '0')}
+										className='w-16 rounded-md h-12 bg-blue-500 flex items-center justify-center p-2 hover:scale-105'>
+										<FaPause style={{ fontSize: 25 }}/>
+									</button>
+								</Tooltip>
+								)
+							: null
+					}
 
-					<Tooltip title='Terminar Producción'>
-						<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
-							<FaStop style={{ fontSize: 25 }}/>
-						</button>
-					</Tooltip>
+					{
+						estado === '4'
+							? (
+								<Tooltip title='Terminar Producción'>
+									<button
+										type='button'
+										onClick={() => actualizarEstadoProduccion(id, '5')}
+										className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
+										<FaStop style={{ fontSize: 25 }}/>
+									</button>
+								</Tooltip>
+								)
+							: null
+					}
 					</div>
 				);
 			},
@@ -292,13 +369,14 @@ const TablaProgramas: FC<IProductorProps> = ({ data, refresh }) => {
 					</FieldWrap>
 				</SubheaderLeft>
 				<SubheaderRight>
-					<Link to='/app/produccion/registro-programa/'>
-						<Tooltip title='Detalle envases del lote en Programa'>
-							<button className='w-full rounded-md h-12 bg-blue-800 flex items-center justify-center p-2 hover:scale-105 px-2'>
+						<Tooltip title='Registro Programa de produccion'>
+							<button
+								type='button'
+								onClick={() => registroProgramaProduccion()}
+								className='w-full rounded-md h-12 bg-blue-800 flex items-center justify-center p-2 hover:scale-105 px-2'>
 								<span className='text-lg '>Registrar Programa de Producción</span>
 							</button>
 						</Tooltip>
-					</Link>
 				</SubheaderRight>
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>

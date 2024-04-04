@@ -6,10 +6,10 @@ import { TPatioTechadoEx } from '../../../../types/registros types/registros.typ
 
 const FormularioRegistroPrograma = () => {
   const { authTokens, validate, perfilData } = useAuth()
-  const { data: lotes } = useAuthenticatedFetch<TPatioTechadoEx[]>(
+  const { data: lotes, setRefresh } = useAuthenticatedFetch<TPatioTechadoEx[]>(
     authTokens,
     validate,
-    `/api/patio-techado-ex/`
+    `/api/patio-exterior/`
   )
 
   return (
@@ -20,7 +20,7 @@ const FormularioRegistroPrograma = () => {
       </div>
 
       <div className='w-[96%] mx-auto h-full'>
-        <FooterRegistroPrograma lote={lotes || []}/>
+        <FooterRegistroPrograma lote={lotes || []} refresh={setRefresh}/>
       </div>
     </div>
   )

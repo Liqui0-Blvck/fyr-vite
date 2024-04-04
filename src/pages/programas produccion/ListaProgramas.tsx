@@ -1,6 +1,6 @@
 import { useAuth } from '../../context/authContext'
 import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction'
-import { TProductor } from '../../types/registros types/registros.types'
+import { TProduccion, TProductor } from '../../types/registros types/registros.types'
 import TablaProductor from './Tabla/TablaProgramas'
 
 
@@ -8,15 +8,14 @@ import TablaProductor from './Tabla/TablaProgramas'
 
 const ListaProgramas = () => {
   const { authTokens, validate } = useAuth()
-  const { data: productores, setData, loading, setRefresh } = useAuthenticatedFetch<TProductor[]>(
+  const { data: programas_produccion , setData, loading, setRefresh } = useAuthenticatedFetch<TProduccion[]>(
     authTokens,
     validate,
-    `/api/productores/`
+    `/api/produccion/`
   )
-
   return (
     <div className='h-full'>
-      <TablaProductor data={productores ? productores : []} refresh={() => setRefresh} />
+      <TablaProductor data={programas_produccion ? programas_produccion : []} refresh={setRefresh} />
     </div>
   )
 }

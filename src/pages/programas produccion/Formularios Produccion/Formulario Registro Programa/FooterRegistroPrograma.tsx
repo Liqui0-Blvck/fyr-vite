@@ -4,18 +4,18 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import React, { FC } from 'react'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import FilaRegistroPrograma from './FilaRegistroPrograma'
 import { TPatioTechadoEx } from '../../../../types/registros types/registros.types';
 
 interface IRegistroProgramaProps {
   lote: TPatioTechadoEx[] | []
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote }) => {
+const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote, refresh }) => {
   const { isDarkTheme} = useDarkMode()
-
 
   
   return (
@@ -34,10 +34,10 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote }) => {
           </TableHead>
           <TableBody className='table-body'>
             {
-              lote?.filter(cc => String(cc.control_calidad.estado_aprobacion_cc) === '1').map((envase: TPatioTechadoEx) => {
+              lote?.map((envase: TPatioTechadoEx) => {
                 return (
                   <TableRow style={{ height: 50, overflowY: 'auto' }}>
-                    <FilaRegistroPrograma row={envase.envases} id_row={envase.id} variedad={envase.variedad}/>
+                    <FilaRegistroPrograma ubicacion={envase.ubicacion_label} row={envase.envases} id_row={envase.id} variedad={envase.variedad} refresh={refresh}/>
                   </TableRow>
                 )
               })

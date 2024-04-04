@@ -430,7 +430,82 @@ export interface TPatioTechadoEx {
   cc_guia: number;
   tipo_recepcion: number;
   registrado_por: number;
-  control_calidad: TControlCalidad
+  // control_calidad: TControlCalidad
   estado_lote_label: string
   ubicacion_label: string
+}
+
+
+
+export type TLoteProduccion = {
+  id: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  bin_ingresado: boolean;
+  bin_procesado: boolean;
+  fecha_procesado: string;
+  produccion: number;
+  bodega_techado_ext: number;
+  procesado_por: string;
+  envases?: TEnvasesPrograma[]
+}
+
+export type TOperarioProduccion = {
+  id: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  kilos: number;
+  dia: string;
+  produccion: number;
+  operario: number;
+}
+
+export type TTarjaResultante = {
+  id: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  tipo_resultante: string;
+  peso: number;
+  tipo_patineta: number;
+  cc_tarja: boolean;
+  fecha_cc_tarja: string;
+  ubicacion: string;
+  codigo_tarja: string;
+  calle_bodega: string;
+  produccion: number;
+  registrado_por: string;
+}
+
+export type TProduccion = {
+  id: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  estado: string;
+  estado_label: string,
+  fecha_inicio_reproceso: string | null;
+  fecha_termino_reproceso: string | null;
+  fecha_cierre_proceso: string | null;  
+  fecha_termino_proceso: string | null;
+  fecha_pausa_proceso: string | null;
+  fecha_finpausa_proceso: string | null;
+  registrado_por: number;
+  lotes: TLoteProduccion[]
+  operarios: TOperarioProduccion[]
+  tarjas_resultantes: TTarjaResultante[]
+}
+
+export type TEnvasesPrograma = {
+  id: number;
+  numero_lote: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  bin_ingresado: boolean;
+  bin_procesado: boolean;
+  fecha_procesado: string;
+  produccion: number;
+  bodega_techado_ext: number;
+  procesado_por: number;
+  guia_patio: number
+  numero_bin: number
+  kilos_fruta: number
 }

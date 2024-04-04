@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TCamion, TControlCalidad, TControlCalidadB, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TPerfil, TProductor, TRendimiento, TRendimientoMuestra, TUsuario } from '../../../types/registros types/registros.types'
+import { TCamion, TControlCalidad, TControlCalidadB, TEnvaseEnGuia, TEnvases, TEnvasesPrograma, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TPerfil, TProductor, TRendimiento, TRendimientoMuestra, TUsuario } from '../../../types/registros types/registros.types'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
 import { format } from '@formkit/tempo'
@@ -42,33 +42,24 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
     authTokens,
     validate,
     `/api/registros/perfil/${control_calidad?.control_rendimiento[0].registrado_por}`
-    
   )
 
+  const { data: envases_produccion } = useAuthenticatedFetch<TEnvasesPrograma[]>(
+    authTokens,
+    validate,
+    `/api/produccion/${id}/lotes_en_programa/`
+  ) 
 
-  useEffect(() => {
-    const getRendimientos = async () => {
-      const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/rendimiento_lotes/${control_calidad?.recepcionmp}/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authTokens?.access}`
-        }
-      })
+  const kilos_totales = envases_produccion?.reduce((acc, envase) => envase.kilos_fruta + acc, 0)
+  const kilos_totales_procesados = envases_produccion?.
+    filter(envase => envase.bin_procesado === true).
+    reduce((acc, envase) => envase.kilos_fruta + acc, 0)
   
-      if (res.ok){
-        setRendimientos(await res.json())
-      } else {
-        console.log("Tuve problemas")
-      }
-    }
-  
-    getRendimientos()
-  }, [control_calidad])
+  console.log(kilos_totales)
+  console.log(kilos_totales_procesados)
 
-  const cc_rendimiento = control_calidad && control_calidad.control_rendimiento && control_calidad.control_rendimiento.length > 0
-  ? [...control_calidad.control_rendimiento].shift()
-  : [];
+
+
 
 
   const { labels, valores } = chartData(rendimientos?.cc_muestra || [])
@@ -98,7 +89,7 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
                       <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
                     </div>
                     <div className='w-full flex flex-col justify-center  mt-4 lg:mt-0'> {/* Ajusta el margen superior y las clases de posicionamiento */}
-                      <TablaEnvasesLotes data={control_calidad?.control_rendimiento || []}/>
+                      <TablaEnvasesLotes data={envases_produccion || []}/>
                     </div>
                   </div>
                 </div>

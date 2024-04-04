@@ -159,7 +159,7 @@ const contentRoutes: RouteProps[] = [
 	// PROGRAMAS DE PRODUCCION
 	{ path: '/app/produccion/', element:  <ListaProgramas /> },
 	{ path: '/app/produccion/programa/:id/', element:  <DetallePrograma /> },
-	{ path: '/app/produccion/registro-programa', element: <FormularioRegistroPrograma />},
+	{ path: '/app/produccion/registro-programa/:id', element: <FormularioRegistroPrograma />},
 	{ path: '/app/pdf-operario-x-kilo/', element: <PDFOperarioXKilo />},
 	{ path: '/app/pdf-operario-resumido/', element: <PDFResumidoOperario />},
 	{ path: '/app/pdf-pre-limpia/', element: <PDFPreLimpia />},

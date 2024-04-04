@@ -11,18 +11,20 @@ import { useAuth } from '../../../../context/authContext';
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
-import { TControlCalidad, TRendimientoMuestra } from '../../../../types/registros types/registros.types';
+import { TControlCalidad, TEnvasesPrograma, TProduccion, TRendimientoMuestra } from '../../../../types/registros types/registros.types';
+import FilaEnvaseLote from './FilaEnvaseLoteProduccion';
+import LoteFila from '../../../guia recepcion/Componentes Tabla/LoteFila';
 
 
-interface IRendimientoMuestra {
+interface IProduccionProps {
   id_lote?: number
-  data?: TRendimientoMuestra[] | []
+  data?: TEnvasesPrograma[] | []
   refresh?: Dispatch<SetStateAction<boolean>>
-  ccLote?: TControlCalidad | null
+  produccion?: TProduccion | null
 }
 
 
-const TablaEnvasesLotes: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote }) => {
+const TablaEnvasesLotes: FC<IProduccionProps> = ({ data, refresh, id_lote, produccion }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
 
@@ -43,11 +45,10 @@ const TablaEnvasesLotes: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, cc
               </TableRow>
             </TableHead>
             <TableBody className='table-body' >
-              {data?.map((row: TRendimientoMuestra) => {
+              {data?.map((row: TEnvasesPrograma) => {
                 return (
-                  <TableRow key={row.id} className='table-row-body' style={{ overflowX: 'auto', height: 500}}>
-                    
-                      
+                  <TableRow key={row.id} className='table-row-body' style={{ overflowX: 'auto', height: 40 }}>
+                    <FilaEnvaseLote envase={row} refresh={refresh!} setOpen={() => {}} produccion={produccion!}/>
                   </TableRow>
                 )
               })}

@@ -64,7 +64,6 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 	const { isDarkTheme } = useDarkMode()
 	const { authTokens, validate } = useAuth()
 	const base_url = process.env.VITE_BASE_URL_DEV
-	// const [cantidad, setCantidad] = useState<number>(0)
 
 
 	const asisteDelete = async (id: number) => {
@@ -96,7 +95,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 		}
 	}
 
-	const handleContramuestra = async (id: number, estado: string) => {
+	const handleContramuestra = async (id: number, estado: string,  setPosted: Dispatch<SetStateAction<boolean>>) => {
 		const response = await fetch(`${base_url}/api/estado-contramuestra/${id}/`, {
 			method: 'PATCH',
 			headers: {
@@ -109,6 +108,8 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 		})
 		if (response.ok) {
 			refresh(true)
+			setPosted(true)
+
 		} else {
 			console.log("nop no lo logre")
 		}
@@ -186,14 +187,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const id = info.row.original.id;
-				const [openContraMuestra, setOpenContraMuestra] = useState<boolean>(false)
+				const [posted, setPosted] = useState<boolean>(false)
 				const cantidad = info.row.original.control_rendimiento.length
-				const cc_rendimiento: TRendimientoMuestra[] = info.row.original.control_rendimiento
 				const estado_aprobacion = info.row.original.estado_aprobacion_cc
 				const contra_muestras_estado =  info.row.original.esta_contramuestra 
-				console.log(contra_muestras_estado)
-				// const is_contra_muestra =  info.row.original.control_rendimiento.filter(cc => cc.es_contramuestra === true) 
-				// console.log("resultado contra muestras", contra_muestras_estado)
+
+				console.log(posted)
 				
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
@@ -205,8 +204,11 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 										estado_aprobacion > 0 && estado_aprobacion < 2 
 											? (
 												<Tooltip title={contra_muestras_estado === '1' ? 'Contra Muestra Solicitada' : 'Solicitar Contra Muestra'}>
-													<div
-														onClick={() => handleContramuestra(id, '1')}
+													<button
+														type='button'
+														onClick={() => {
+															posted ? null : handleContramuestra(id, '1', setPosted)
+														}}
 														className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12
 															${isDarkTheme ? 'text-white' : 'text-white'}
 															${contra_muestras_estado === '1' ? 'bg-green-600 hover:bg-green-400' : 'bg-orange-600 hover:bg-orange-400'} hover:scale-105`}>
@@ -215,7 +217,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 																? <ImSpinner2  className='text-4xl transition-all delay-200 animate-spin'/>
 																: <RiErrorWarningFill className='text-4xl'/>
 														}
-													</div>
+													</button>
 												</Tooltip>
 											)
 											: estado_aprobacion === 2 && contra_muestras_estado === '1'
