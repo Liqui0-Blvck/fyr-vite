@@ -11,7 +11,7 @@ import { useAuth } from '../../../context/authContext';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
-import { TControlCalidad, TRendimientoMuestra } from '../../../types/registros types/registros.types';
+import { TControlCalidad, TControlCalidadB, TRendimientoMuestra } from '../../../types/registros types/registros.types';
 import FilaControlMuestra from './FilaControlMuestra';
 
 
@@ -21,10 +21,11 @@ interface IRendimientoMuestra {
   refresh: Dispatch<SetStateAction<boolean>>
   ccLote?: TControlCalidad | null,
   setOpen?: Dispatch<SetStateAction<boolean>>
+  control_calidad: TControlCalidadB
 }
 
 
-const TablaMuestras: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote, setOpen }) => {
+const TablaMuestras: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote, setOpen, control_calidad }) => {
   const { isDarkTheme } = useDarkMode();
 
   const initialRows = [
@@ -39,6 +40,7 @@ const TablaMuestras: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote
   const [rows, setRows] = useState(
     initialRows.map((row, index) => ({ ...row, id: index }))
   );
+
 
 
 
@@ -66,6 +68,7 @@ const TablaMuestras: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote
                       muestra={row}
                       refresh={refresh}
                       setOpen={setOpen!}
+                      control_calidad={control_calidad!}
                     />
                       
                   </TableRow>

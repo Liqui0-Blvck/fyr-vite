@@ -209,7 +209,30 @@ export type TControlCalidad = {
   estado_aprobacion_cc_label  : string
 }
 
-export type TRendimientoMuestra = {
+export type TControlCalidadB = {
+  id: number
+  estado_aprobacion_cc: number
+  estado_cc: string
+  estado_cc_label: string
+  presencia_insectos: boolean
+  presencia_insectos_selected: string
+  humedad: string
+  observaciones: string
+  fecha_modificacion: string
+  fecha_creacion: string
+  recepcionmp: number
+  cc_registrado_por: number
+  numero_lote: number
+  productor: number
+  guia_recepcion: number
+  estado_guia: string
+  estado_aprobacion_cc_label  : string
+  control_rendimiento: TRendimientoMuestra[]
+  esta_contramuestra: string
+}
+
+
+export type TRendimientoMuestra = { 
   id: number
   cc_recepcionmp: number
   peso_muestra:number
@@ -266,26 +289,6 @@ export type TPepaMuestra = {
 }
 
 
-export type TControlCalidadB = {
-  id: number
-  estado_aprobacion_cc: number
-  estado_cc: string
-  estado_cc_label: string
-  presencia_insectos: boolean
-  presencia_insectos_selected: string
-  humedad: string
-  observaciones: string
-  fecha_modificacion: string
-  fecha_creacion: string
-  recepcionmp: number
-  cc_registrado_por: number
-  numero_lote: number
-  productor: number
-  guia_recepcion: number
-  estado_guia: string
-  estado_aprobacion_cc_label  : string
-  control_rendimiento: TRendimientoMuestra[]
-}
 
 
 
@@ -410,6 +413,7 @@ export interface TEnvasePatio {
   estado_envase: string;
   numero_bin: number;
   guia_patio: number;
+  estado_envase_label: string
 }
 
 
@@ -427,4 +431,6 @@ export interface TPatioTechadoEx {
   tipo_recepcion: number;
   registrado_por: number;
   control_calidad: TControlCalidad
+  estado_lote_label: string
+  ubicacion_label: string
 }

@@ -9,7 +9,7 @@ import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/pris
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TCamion, TControlCalidad, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TPerfil, TProductor, TRendimientoMuestra } from '../../../types/registros types/registros.types'
+import { TCamion, TControlCalidad, TControlCalidadB, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPerfil, TProductor, TRendimientoMuestra } from '../../../types/registros types/registros.types'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
 import { format } from '@formkit/tempo'
@@ -36,7 +36,7 @@ const DetalleCC = () => {
 
 
 
-  const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad>(
+  const { data: control_calidad } = useAuthenticatedFetch<TControlCalidadB>(
     authTokens,
     validate,
     `/api/control-calidad/recepcionmp/${id}`
@@ -53,8 +53,6 @@ const DetalleCC = () => {
     validate,
     `/api/registros/perfil/${control_calidad?.cc_registrado_por}`
   )
-
-  console.log(userData)
 
   const { data: envases } = useAuthenticatedFetch<TEnvases[]>(
     authTokens,
@@ -112,9 +110,15 @@ const DetalleCC = () => {
   const ccPepasCompletas = cc_rendimiento?.some((cc) => cc.cc_calibrespepaok === true)
 
   const muestra = [...(cc_rendimiento || [])];
-  const contra_muestras_ok = cc_rendimiento?.some(cc => String(cc.esta_contramuestra) === '1')
+  const contra_muestras_limit = cc_rendimiento?.filter(cc => cc.es_contramuestra === true).length
+  const contra_muestra_ok = cc_rendimiento?.some(cc => cc.cc_ok === true && cc.es_contramuestra === true)
+  const contra_muestra_calibre_ok = cc_rendimiento?.some(cc => cc.cc_calibrespepaok === true && cc.es_contramuestra === true)
+  console.log(contra_muestras_limit)
+  console.log("Si soy una contra muestra completada", contra_muestra_ok)
+  console.log("Si soy una contra muestra calibrada", contra_muestra_calibre_ok)
+  
 
-  console.log(cc_rendimiento)
+  // console.log(cc_rendimiento)
 
 
 
@@ -176,7 +180,7 @@ const DetalleCC = () => {
             </div>
 
             <div className='h-full'>
-              <label htmlFor="rut_productor">Variedad: </label>
+              <label htmlFor="rut_productor">Tipo Producto: </label>
               <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
                 <span className='text-xl'>{tipo_producto}</span>
               </div>
@@ -190,44 +194,45 @@ const DetalleCC = () => {
             <div className='h-full'>
               <label htmlFor="rut_productor">Kilos Fruta: </label>
               <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center justify-center h-12 rounded-md`}>
-                <span className='text-xl'>{control_calidad?.humedad}.0 %</span>
+                <span className='text-xl'>{control_calidad?.humedad} %</span>
               </div>
             </div>
-            
             <div className='h-full'>
-              <label htmlFor="rut_productor">Variedad: </label>
-              <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
-                <span>{variedad}</span>
-              </div>
-            </div>
-
-            <div className='h-full'></div>
-
-          </div>
-
-          <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col gap-5 rounded-md py-1`}>
-
-            <span className='text-lg h-10'>Observaciones</span>
-            <div className='h-4/6'>
               <label htmlFor="rut_productor">Observación: </label>
               <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex h-4/6 rounded-md`}>
                 <span className='text-lg'>{control_calidad?.observaciones}</span>
               </div>
             </div>
+
+
+          </div>
+
+          <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col gap-5 rounded-md py-1`}>
+
+            <span className='text-lg h-10'>Imagenes</span>
+            
             
             <div className='h-full flex flex-col'>
-              <label htmlFor="rut_productor">Fotos Control Calidad: </label>
-              <Image.PreviewGroup
-                  items={
-                    fotoscc?.flatMap(fotos => fotos.imagen)
-                  }
-                >
-                  <Image
-                      width={100}
-                      height={100}
-                      src={fotoscc?.flatMap(fotos => fotos.imagen)[0]}
-                    />
-                </Image.PreviewGroup>
+              <div className='flex justify-between items-center'>
+                <label htmlFor="rut_productor">Fotos Control Calidad: </label>
+                <span>Fotos registradas {fotoscc?.length}</span>
+              </div>
+
+              <div className='flex items-center justify-center h-full'>
+
+                <Image.PreviewGroup
+                    items={
+                      fotoscc?.flatMap(fotos => fotos.imagen)
+                    }
+                  >
+                    <Image
+                        width={200}
+                        height={170}
+                        src={fotoscc?.flatMap(fotos => fotos.imagen)[0]}
+                      />
+                  </Image.PreviewGroup>
+              </div>
+              
               
             </div>
 
@@ -248,13 +253,13 @@ const DetalleCC = () => {
                       title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote} `}
                       textTool='Editar'
                       size={900}
-                      width={`w-40 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                      width={`w-40 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                       textButton='Agregar Muestra'
                     >
-                      <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro}/>
+                      <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro} control_calidad={control_calidad!}/>
                     </ModalRegistro>
                   )
-                : contra_muestras_ok
+                : control_calidad?.esta_contramuestra === '1' && contra_muestras_limit! < 1
                     ? (
                       <ModalRegistro
                         open={openModalRegistro}
@@ -262,10 +267,10 @@ const DetalleCC = () => {
                         title={`Contra Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote} `}
                         textTool='Contra Muestra'
                         size={900}
-                        width={`w-56 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-orange-700 hover:bg-orange-600' : 'bg-orange-700 text-white'} hover:scale-105`}
+                        width={`w-56 px-1 h-12 ${isDarkTheme ? 'bg-orange-700 hover:bg-orange-600' : 'bg-orange-700 text-white'} hover:scale-105`}
                         textButton='Agregar Contra Muestra'
                       >
-                        <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro}/>
+                        <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro} control_calidad={control_calidad!}/>
                       </ModalRegistro>
                       )
                     : null
@@ -283,13 +288,13 @@ const DetalleCC = () => {
                     setOpen={setOpenModalCPepaCalibre}
                     title={`Muestra Control de Rendimiento del Lote N° `}
                     textTool='CC Pepas Muestras'
-                    size={900}
-                    width={`w-full px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                    size={800}
+                    width={`w-full px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                     textButton='Calibrar Muestras'
                   >
                     <ModalConfirmacion 
                       formulario={<FormularioCCPepaCalibre  refresh={setRefresh} id_muestra={muestra.shift()?.id} isOpen={setOpenModalCPepaCalibre}/>}
-                      mensaje='¿Estas seguro de querer borrar la muestra?'
+                      mensaje='¿Estas seguro de querer calibrar las muestras?'
                       confirmacion={openConfirmacion}
                       setConfirmacion={setOpenConfirmacion}
                       setOpen={setOpenModalCPepaCalibre}
@@ -299,10 +304,36 @@ const DetalleCC = () => {
               )
               : null
           }
+
+          {
+            control_calidad?.esta_contramuestra === '1' && contra_muestras_limit! > 0 && contra_muestra_ok && !contra_muestra_calibre_ok
+            ?  (
+              <div className='w-72 h-12'>
+                <ModalRegistro
+                  open={openModalCPepaCalibre}
+                  setOpen={setOpenModalCPepaCalibre}
+                  title={`Muestra Control de Rendimiento del Lote N° `}
+                  textTool='CC Pepas Muestras'
+                  size={800}
+                  width={`w-full px-1 h-12 ${isDarkTheme ? 'bg-orange-600 hover:bg-orange-500' : 'bg-orange-600 text-white'} hover:scale-105`}
+                  textButton='Calibrar Contra Muestra'
+                >
+                  <ModalConfirmacion 
+                    formulario={<FormularioCCPepaCalibre  refresh={setRefresh} id_muestra={muestra.shift()?.id} isOpen={setOpenModalCPepaCalibre}/>}
+                    mensaje='¿Estas seguro de querer calibrar las muestras?'
+                    confirmacion={openConfirmacion}
+                    setConfirmacion={setOpenConfirmacion}
+                    setOpen={setOpenModalCPepaCalibre}
+                    refresh={setRefresh} />
+                </ModalRegistro>
+              </div>
+            )
+            : null
+          }
         </div>
 
 
-        <TablaMuestras id_lote={control_calidad?.id!} data={cc_rendimiento!} refresh={setRefresh} />
+        <TablaMuestras id_lote={control_calidad?.id!} data={cc_rendimiento!} refresh={setRefresh} control_calidad={control_calidad!} />
       </article>
 
 

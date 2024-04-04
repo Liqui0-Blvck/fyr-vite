@@ -13,6 +13,7 @@ import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction';
 import { authPages } from '../../config/pages.config';
 import ModalRegistro from '../../components/ModalRegistro';
 import RecoveryPage from './Recuperacion.page';
+import DarkModeSwitcherPart from '../../templates/layouts/Asides/_parts/DarkModeSwitcher.part';
 
 type TValues = {
 	username: string;
@@ -52,13 +53,16 @@ const LoginPage = () => {
 		<PageWrapper isProtectedRoute={false} className='bg-white dark:bg-inherit' name='Sign In'>
 			<div className='container mx-auto flex h-full items-center justify-center'>
 				<div className='flex max-w-sm flex-col gap-8'>
-					<div>
-						<span className='text-4xl font-semibold'>Inicia Sesión</span>
+					<div className='h-full flex flex-col items-center gap-y-5'>
+						<img src="/src/assets/prodalmen_foto.png" alt="" className='h-56 w-full object-cover rounded-md'/>
+						<span className='text-2xl font-semibold text-center'>Iniciar Sesión para continuar</span>
 					</div>
 					<div className='border border-zinc-500/25 dark:border-zinc-500/50' />
 					<div>
-						<span>Ingresa con tu correo</span>
+						<DarkModeSwitcherPart />
 					</div>
+
+
 					<form className='flex flex-col gap-4' noValidate>
 						<div
 							className={classNames({
@@ -76,7 +80,7 @@ const LoginPage = () => {
 										id='username'
 										autoComplete='username'
 										name='username'
-										placeholder='Email or Nombre de Usuario'
+										placeholder='Nombre de Usuario'
 										value={formik.values.username}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
@@ -128,22 +132,22 @@ const LoginPage = () => {
 									formik.handleSubmit()
 									setTouched(true)
 								}}>
-								Sign in
+								Ingresar
 							</Button>
 						</div>
 					</form>
 
 					<div>
 						<span className='flex gap-2 text-sm'>
-							<span className='text-zinc-400 dark:text-zinc-600'>
-								Se te olvido la contraseña?
+							<span className='text-zinc-400 dark:text-zinc-600 text-md'>
+								¿Olvido su contraseña?
 							</span>
 							<ModalRegistro
 								title='Restablecimiento de Contraseña'
 								open={open}
 								setOpen={setOpen}
 								size={500}
-								textButton='Recuperar cuenta'>
+								textButton='Restablecer contraseña'>
 								<RecoveryPage setOpen={setOpen}/>
 							</ModalRegistro>
 						</span>

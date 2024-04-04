@@ -88,6 +88,18 @@ const PDFPreLimpia = lazy(() => import ('../pages/programas produccion/PDF Progr
 const PDFDescascarado = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDescascarado.tsx'))
 const PDFDocumentoEntrada = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDocumentoEntrada.tsx'))
 const PDFDetalleEnvases = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDetalleEnvases.tsx'))
+
+
+// ADMINISTRADOR
+
+const FormularioRegistroPerfil = lazy(() => import ('../pages/usuarios/Formulario Usuario/FormularioRegistroPerfil.tsx'))
+
+
+
+// BODEGA
+const ListaBodega = lazy(() => import ('../pages/bodega/ListaBodega.tsx'))
+const DetalleBodega = lazy(() => import ('../pages/bodega/Detalle Bodega/DetalleGuia.tsx'))
+
 /**
  * Other
  */
@@ -154,6 +166,22 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/pdf-descascarado/', element: <PDFDescascarado />},
 	{ path: '/app/pdf-documento-entrada/', element: <PDFDocumentoEntrada />},
 	{ path: '/app/pdf-detalle-envases/', element: <PDFDetalleEnvases />},
+
+
+
+	// ADMINISTRADOR
+	{ path: '/app/registro-usuarios/', element: <FormularioRegistroPerfil />},
+
+
+	// BODEGA
+	{ path: '/app/bodega/', element: <ListaBodega />},
+	{ path: '/app/bodega/:id', element: <DetalleBodega />},
+
+
+
+
+
+
 
 
 	

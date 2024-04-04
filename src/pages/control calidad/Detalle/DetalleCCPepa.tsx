@@ -58,7 +58,6 @@ const DetalleCCPepa = () => {
     filter(cc_pepa => cc_pepa.cc_recepcionmp = control_calidad?.id!).
     every(cc_pepa => cc_pepa.cc_ok === true )
 
-    console.log(muestra)
 
 
   const { data: usuario } = useAuthenticatedFetch<TPerfil>(
@@ -68,6 +67,9 @@ const DetalleCCPepa = () => {
   )
 
   const cc_rendimiento_c = [...(cc_rendimiento || [])].shift()
+
+
+  console.log("Soy la muestra que buscas", muestra)
   
 
 
@@ -152,7 +154,15 @@ const DetalleCCPepa = () => {
 
           <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col rounded-md py-1`}>
 
-            <span className='text-xl h-12'>Control de Pepa</span>
+            <div className='flex justify-between items-center'>
+              <span className='text-xl h-12 w-full '>Control de Pepa</span>
+              <div className='w-full h-20 flex flex-col '>
+                <label htmlFor="rut_productor">Pepa Bruta: </label>
+                <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+                  <span className='text-xl'>{muestra?.pepa} grs</span>
+                </div>
+              </div>
+            </div>
             {
               muestra?.cc_ok === true
                 ? (
@@ -191,28 +201,28 @@ const DetalleCCPepa = () => {
                   <div className='w-full flex gap-2'>
                     
                     <div className='w-full h-full flex flex-col '>
-                      <label htmlFor="rut_productor">Cascara: </label>
+                      <label htmlFor="rut_productor">Color: </label>
                       <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
                         <span className='text-xl'>{cc_rendimiento_c?.fuera_color} = {`${(cc_rendimiento_c?.fuera_color! / muestra?.pepa! * 100).toFixed(2)} %`}</span>
                       </div>
                     </div>
 
                     <div className='w-full h-full flex flex-col '>
-                      <label htmlFor="rut_productor">Cascara: </label>
+                      <label htmlFor="rut_productor">Vana Deshidratada: </label>
                       <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
                         <span className='text-xl'>{cc_rendimiento_c?.vana_deshidratada} = {`${(cc_rendimiento_c?.vana_deshidratada! / muestra?.pepa! * 100).toFixed(2)} %`}</span>
                       </div>
                     </div>
 
                     <div className='w-full h-full flex flex-col '>
-                      <label htmlFor="rut_productor">Cascara: </label>
+                      <label htmlFor="rut_productor">Punto Goma: </label>
                       <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
                         <span className='text-xl'>{cc_rendimiento_c?.punto_goma} = {`${(cc_rendimiento_c?.punto_goma! / muestra?.pepa! * 100).toFixed(2)} %`}</span>
                       </div>
                     </div>
                     
                     <div className='w-full h-full'>
-                      <label htmlFor="rut_productor">Pepa Huerto: </label>
+                      <label htmlFor="rut_productor">Goma: </label>
                       <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
                         <span className='text-xl'>{cc_rendimiento_c?.goma} = {`${(cc_rendimiento_c?.goma! / muestra?.pepa! * 100).toFixed(2)} %`}</span>
                       </div>
@@ -234,7 +244,7 @@ const DetalleCCPepa = () => {
                   <div className='w-full h-20 flex flex-col '>
                       <label htmlFor="rut_productor">Peso Muestra Calibrar: </label>
                       <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
-                        <span className='text-xl'>{cc_rendimiento_c?.peso_muestra_calibre} </span>
+                        <span className='text-xl'>{cc_rendimiento_c?.peso_muestra_calibre} grs</span>
                       </div>
                     </div>
                   ) 

@@ -102,3 +102,19 @@ export const envaseSchema = Yup.object().shape({
   peso: Yup.number().nullable().min(0, 'El peso debe ser mayor o igual a cero'),
   descripcion: Yup.string(),
 });
+
+
+export const calibracionSchema = Yup.object().shape({
+  pre_calibre: Yup.number().required('El pre calibre es requerido'),
+  calibre_18_20: Yup.number().required('El calibre 18-20 es requerido'),
+  calibre_20_22: Yup.number().required('El calibre 20-22 es requerido'),
+  calibre_23_25: Yup.number().required('El calibre 23-25 es requerido'),
+  calibre_25_27: Yup.number().required('El calibre 25-27 es requerido'),
+  calibre_27_30: Yup.number().required('El calibre 27-30 es requerido'),
+  calibre_30_32: Yup.number().required('El calibre 30-32 es requerido'),
+  calibre_32_34: Yup.number().required('El calibre 32-34 es requerido'),
+  calibre_34_36: Yup.number().required('El calibre 34-36 es requerido'),
+  calibre_36_40: Yup.number().required('El calibre 36-40 es requerido'),
+  calibre_40_mas: Yup.number().required('El calibre 40+ es requerido'),
+  peso_muestra_calibre: Yup.number().required('El peso de muestra de calibre es requerido')
+});

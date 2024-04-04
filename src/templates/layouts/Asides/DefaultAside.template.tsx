@@ -68,6 +68,21 @@ const DefaultAsideTemplate = () => {
 						<NavItem {...appPages.produccion.subPages.reproceso} />
 						<NavItem {...appPages.produccion.subPages.tarja_seleccion} />
 					</NavCollapse>
+
+				{
+					cargolabels(perfilData).includes('Bodega Patio Exterior')
+						? (
+							<NavCollapse
+								text={appPages.bodega.text}
+								to={'bodega'}
+								icon={appPages.bodega.icon}
+								>
+								<NavItem {...appPages.bodega.subPages.bodega} />
+							</NavCollapse>
+						)
+						: null
+				}
+					
 				</Nav>
 			</AsideBody>
 			<AsideFooter>

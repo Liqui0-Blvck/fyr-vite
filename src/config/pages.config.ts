@@ -137,6 +137,50 @@ export const appPages = {
 			}
 		}
 	},
+	bodega: {
+		id: 'bodega',
+		text: 'Bodega',
+		icon: 'DuoBook',
+		subPages: {
+			bodega: {
+				id: 'bodega',
+				text: 'Bodega',
+				to: '/app/bodega/',
+				icon: 'HeroListBullet',
+			},
+			// admin: {
+			// 	id: 'admin',
+			// 	text: 'Admin',
+			// 	to: `${process.env.VITE_BASE_URL_DEV}/admin/`,
+			// 	icon: 'HeroListBullet',
+			// },
+		}
+	},
+	adminAppPages: {
+		id: 'administrador',
+		text: 'Administrador',
+		icon: 'DuoBook',
+		subPages: {
+			registroUsuarios: {
+				id: 'registro_usuarios',
+				text: 'Registro Usuarios',
+				to: '/app/registro-usuarios/',
+				icon: 'HeroListBullet',
+			},
+			admin: {
+				id: 'admin',
+				text: 'Admin',
+				to: `${process.env.VITE_BASE_URL_DEV}/admin/`,
+				icon: 'HeroListBullet',
+			},
+			// reproceso: {
+			// 	id: 'reproceso',
+			// 	text: 'Programa Reproceso',
+			// 	to: '/app/programa-reproceso/',
+			// 	icon: 'HeroListBullet',
+			// }
+		}
+	},
 	aiAppPages: {
 		id: 'aiApp',
 		to: '/ai',

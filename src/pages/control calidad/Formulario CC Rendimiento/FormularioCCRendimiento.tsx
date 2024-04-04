@@ -8,27 +8,23 @@ import { useAuth } from '../../../context/authContext'
 import Label from '../../../components/form/Label'
 import Validation from '../../../components/form/Validation'
 import FieldWrap from '../../../components/form/FieldWrap'
+import { TControlCalidadB } from '../../../types/registros types/registros.types';
 
 interface IFormCC {
   id_lote: number
   refresh: Dispatch<SetStateAction<boolean>>
   isOpen: Dispatch<SetStateAction<boolean>>
+  control_calidad: TControlCalidadB
 }
 
-interface IInitialValues {
-  pepa: number,
-  peso_muestra: number,
-  basura: number,
-  pelon: number,
-  cascara: number,
-  ciega: number
-  pepa_huerto: number
-}
 
-const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen }) => {
+
+const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen, control_calidad }) => {
   const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
+
+
 
   const formik = useFormik({
     initialValues: {
@@ -38,9 +34,11 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen }) => 
       ciega: 0,
       pelon: 0,
       cascara: 0,
-      pepa_huerto: 0
+      pepa_huerto: 0,
+      esta_contramuestra: false
     },
-    onSubmit: async (values: IInitialValues) => {
+    
+    onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/${id_lote}/registra_muestra_lote/`, {
           method: 'POST', 
@@ -56,8 +54,8 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen }) => 
             cascara: values.cascara.toFixed(2),
             pepa_huerto: values.pepa_huerto.toFixed(2),
             pepa: values.pepa.toFixed(2),
-            registrado_por: userID?.user_id
-          
+            registrado_por: userID?.user_id,
+            es_contramuestra: control_calidad.esta_contramuestra === '1' ? true : false
           })
         })
         if (res.ok) {

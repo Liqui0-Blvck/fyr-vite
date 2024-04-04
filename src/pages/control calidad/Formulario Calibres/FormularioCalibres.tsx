@@ -17,16 +17,17 @@ import Validation from '../../../components/form/Validation'
 import FieldWrap from '../../../components/form/FieldWrap'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
+import { calibracionSchema } from '../../../utils/Validator'
 
 interface IFormCC {
   id_lote?: number
   refresh?: Dispatch<SetStateAction<boolean>>
   isOpen?: Dispatch<SetStateAction<boolean>>
-  CCLote?: TControlCalidad | null
+  CCLote?: TPepaMuestra | null
   id_muestra?: number
 }
 
-const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_muestra }) => {
+const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_muestra, CCLote }) => {
   const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
@@ -40,6 +41,8 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
 
   console.log(id)
   console.log(id_muestra)
+
+  console.log(CCLote)
 
   const pepaCCID = [...(ccPepa || [])].shift()?.id
 
@@ -61,6 +64,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
       calibre_40_mas: 0,
 
     },
+    validationSchema: calibracionSchema,
     onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/${id[0]}/muestras/${id_muestra}/cdcpepa/${pepaCCID }/`, {
@@ -160,20 +164,25 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
     formik.values.calibre_40_mas
     ]);
 
+    // const pepa_sana = 
+
   
   return (
     <form
         onSubmit={formik.handleSubmit}
-        className={`flex flex-col md:grid md:grid-cols-8 lg:grid-cols-8 gap-x-3 w-full
-        gap-y-5 mt-10 ${ isDarkTheme ? '' : 'bg-white'} p-2 
+        className={`w-[300px] md:w-full lg:w-full flex-col md:grid lg:grid lg:grid-cols-8 gap-x-3
+        gap-y-10  mt-10 ${ isDarkTheme ? 'bg-zinc-950' : 'bg-white'} p-2 
         rounded-md`}
       >
-        <div className='md:col-start-2 md:col-span-3 md:flex-col items-center bg-green-600 p-5 rounded-md'>
-          <Label className='text-white' htmlFor='mezcla_variedad'>Pepa Bruta de la Muestra: </Label>
+        <div className='md:col-start-2 md:col-span-3 md:flex-col w-full items-center bg-green-600 p-5 rounded-md mb-10 md:mb-0 lg:mb-0'>
+          
+          <Label className='text-white' htmlFor='peso_muestra_calibre'>Peso Promediado Pepa Sana: </Label>
           <Validation
             isValid={formik.isValid}
             isTouched={formik.touched.peso_muestra_calibre ? true : undefined}
-            invalidFeedback={formik.errors.peso_muestra_calibre ? String(formik.errors.peso_muestra_calibre) : undefined}>
+            invalidFeedback={formik.errors.peso_muestra_calibre ? String(formik.errors.peso_muestra_calibre) : undefined}
+            validFeedback='Bien'
+            >
             <FieldWrap>
               <Input
               type='number'
@@ -187,8 +196,8 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
           
         </div>
 
-        <div className='md:col-start-5 md:col-span-3 md:flex-col items-center bg-green-600 p-5 rounded-md w-full'>
-          <Label className='text-white'  htmlFor='gramos_x_asignar'>Pepa Sana Resultante: </Label>
+        <div className='md:col-start-5 md:col-span-3 bg-orange-500 p-5 rounded-md w-full'>
+          <Label className='text-white'  htmlFor='gramos_x_asignar'>Pepa Sana Restante Calibración: </Label>
           <Validation
             isValid={formik.isValid}
             isTouched={formik.touched.gramos_x_asignar ? true : undefined}
@@ -198,7 +207,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
               type='number'
               name='gramos_x_asignar'
               onChange={formik.handleChange}
-              className='py-2 w-[90%] bg-zinc-100 focus-visible:bg-zinc-200'
+              className='py-2 w-[100%] bg-zinc-100 focus-visible:bg-zinc-200'
               value={formik.values.gramos_x_asignar}
             />
             </FieldWrap>
@@ -206,7 +215,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
           
         </div>
 
-        <div className='md:row-start-2 md:col-span-2 md:flex-col flex-col lg:flex-row p-5 h-10 w-full'>
+        <div className='md:row-start-2 md:col-span-2 md:flex-col flex-col lg:flex-row p-5 w-full'>
           <Label htmlFor='pre_calibre'>Pre Calibre: </Label>
 
           <Validation
@@ -218,7 +227,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
               type='number'
               name='pre_calibre'
               onChange={formik.handleChange}
-              className='py-2 w-[90%] bg-zinc-100 focus-visible:bg-zinc-200'
+              className='py-2 w-[90%] bg-zinc-100 focus-visible:bg-zinc-200 mb-10'
               value={formik.values.pre_calibre}
             />
             </FieldWrap>

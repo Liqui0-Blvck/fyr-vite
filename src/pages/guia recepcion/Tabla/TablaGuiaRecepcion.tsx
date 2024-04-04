@@ -129,7 +129,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 
 				return (
 					<div className={`h-full w-full flex gap-2 ${info.row.original.estado_recepcion === '4' ? 'flex-wrap justify-center' : 'flex-nowrap justify-center'}  `}>
-						<Link to={`/app/recepciomp/${info.row.original.id}`}
+						<Link to={`/app/recepcionmp/${info.row.original.id}`}
 							className={`w-14 lg:w-14 px-1 h-12
 								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
 								 hover:scale-105 rounded-md flex items-center justify-center`}>

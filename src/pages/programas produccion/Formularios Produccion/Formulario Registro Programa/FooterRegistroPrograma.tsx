@@ -7,8 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import React, { FC } from 'react'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import FilaRegistroPrograma from './FilaRegistroPrograma'
-import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
-import { TEnvasePatio, TPatioTechadoEx } from '../../../../types/registros types/registros.types';
+import { TPatioTechadoEx } from '../../../../types/registros types/registros.types';
 
 interface IRegistroProgramaProps {
   lote: TPatioTechadoEx[] | []

@@ -43,6 +43,7 @@ import { RiErrorWarningFill } from "react-icons/ri";
 import { IoMailOutline } from "react-icons/io5";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import SolicitudContraMuestra from '../Detalle/SolicitudContraMuestra';
+import { ImSpinner2  } from "react-icons/im";
 
 
 
@@ -86,6 +87,24 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 			},
 			body: JSON.stringify({
 				estado_aprobacion_cc: estado
+			})
+		})
+		if (response.ok) {
+			refresh(true)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
+	const handleContramuestra = async (id: number, estado: string) => {
+		const response = await fetch(`${base_url}/api/estado-contramuestra/${id}/`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${authTokens?.access}`
+			},
+			body: JSON.stringify({
+				esta_contramuestra: estado
 			})
 		})
 		if (response.ok) {
@@ -171,9 +190,10 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 				const cantidad = info.row.original.control_rendimiento.length
 				const cc_rendimiento: TRendimientoMuestra[] = info.row.original.control_rendimiento
 				const estado_aprobacion = info.row.original.estado_aprobacion_cc
-				const contra_muestras_ok =  info.row.original.control_rendimiento.every(cc => String(cc.esta_contramuestra) === '1')
-				const is_contra_muestra =  info.row.original.control_rendimiento.filter(cc => cc.es_contramuestra === true) 
-				console.log("resultado contra muestras", contra_muestras_ok)
+				const contra_muestras_estado =  info.row.original.esta_contramuestra 
+				console.log(contra_muestras_estado)
+				// const is_contra_muestra =  info.row.original.control_rendimiento.filter(cc => cc.es_contramuestra === true) 
+				// console.log("resultado contra muestras", contra_muestras_estado)
 				
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
@@ -184,24 +204,21 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 									{
 										estado_aprobacion > 0 && estado_aprobacion < 2 
 											? (
-												<ModalRegistro
-													textTool={`${contra_muestras_ok ? 'Contra Muestras Solicitadas' : 'Solicitar contramuestra'}`}
-													open={openContraMuestra}
-													setOpen={setOpenContraMuestra}
-													width={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12
-													 ${isDarkTheme ? 'text-white' : 'text-white'}
-													 ${contra_muestras_ok ? 'bg-green-600 hover:bg-green-400' : 'bg-orange-600 hover:bg-orange-400'} hover:scale-105`}
-													size={950}
-													icon={<>
-													{contra_muestras_ok 
-														? <BiCheckDouble className='text-4xl'/>
-														: <RiErrorWarningFill className='text-4xl'/>}
-													</>}
-													>
-														<SolicitudContraMuestra cc_calidad={info.row.original} cc_rendimiento={cc_rendimiento} setOpen={setOpenContraMuestra} refresh={refresh}/>
-												</ModalRegistro>
+												<Tooltip title={contra_muestras_estado === '1' ? 'Contra Muestra Solicitada' : 'Solicitar Contra Muestra'}>
+													<div
+														onClick={() => handleContramuestra(id, '1')}
+														className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12
+															${isDarkTheme ? 'text-white' : 'text-white'}
+															${contra_muestras_estado === '1' ? 'bg-green-600 hover:bg-green-400' : 'bg-orange-600 hover:bg-orange-400'} hover:scale-105`}>
+														{
+															contra_muestras_estado === '1'
+																? <ImSpinner2  className='text-4xl transition-all delay-200 animate-spin'/>
+																: <RiErrorWarningFill className='text-4xl'/>
+														}
+													</div>
+												</Tooltip>
 											)
-											: estado_aprobacion === 2 && contra_muestras_ok && is_contra_muestra.length > 2
+											: estado_aprobacion === 2 && contra_muestras_estado === '1'
 												? null
 												: (
 													<Tooltip title='Aprobar CC Rendimiento Lote'>
