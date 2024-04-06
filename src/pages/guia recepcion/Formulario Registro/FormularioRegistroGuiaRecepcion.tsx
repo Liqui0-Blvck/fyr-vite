@@ -9,7 +9,7 @@ import SelectReact, { TSelectOptions } from '../../../components/form/SelectReac
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useState } from 'react'
-import { ACTIVO } from '../../../constants/select.constanst'
+import { ACTIVO } from '../../../utils/select.constanst'
 import FooterFormularioRegistro from './FooterFormularioRegistroGuiaRecepcion'
 
 import Radio, { RadioGroup } from '../../../components/form/Radio'

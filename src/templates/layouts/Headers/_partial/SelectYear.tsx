@@ -1,7 +1,7 @@
 import React from 'react'
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import { useFormik } from 'formik'
-import { Years } from '../../../../constants/select.constanst'
+import { Years } from '../../../../utils/select.constanst'
 import { optionYear } from '../../../../utils/generalUtils'
 
 const SelectYear = () => {

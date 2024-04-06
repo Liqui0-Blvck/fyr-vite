@@ -9,7 +9,7 @@ import SelectReact, { TSelectOptions } from '../../../../components/form/SelectR
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import React, { Dispatch, FC, SetStateAction, SyntheticEvent, useEffect, useState } from 'react'
-import { ACTIVO, ESTADO_CONTROL, usuarioRole } from '../../../../constants/select.constanst'
+import { ACTIVO, ESTADO_CONTROL, usuarioRole } from '../../../../utils/select.constanst'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'

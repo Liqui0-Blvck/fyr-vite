@@ -52,6 +52,7 @@ const columnHelper = createColumnHelper<TProductor>();
 
 
 const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
+	const base_url = process.env.VITE_BASE_URL_DEV
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
@@ -59,11 +60,8 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 	const { perfilData, authTokens } = useAuth()
 	const [detalleModalStatus, setDetalleModalStatus] = useState<boolean>(false);
 	const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
-	const [adicionUser, setAdicionUser] = useState<boolean>(false)
-	const [contrato, setContrato] = useState<boolean>(false)
 
 	const asisteDelete = async (id: number) => {
-		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/productores/${id}/`, {
 			method: 'DELETE',
 			headers: {

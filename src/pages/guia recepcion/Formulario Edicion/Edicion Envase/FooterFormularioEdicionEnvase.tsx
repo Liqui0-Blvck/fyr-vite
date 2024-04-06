@@ -15,7 +15,7 @@ import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TCamion, TEnvaseEnGuia, TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
-import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
+import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../utils/select.constanst';
 import { useNavigate } from 'react-router-dom';
 import { values } from 'lodash';
 import { Switch } from 'antd';

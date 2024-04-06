@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { urlNumeros } from '../../../services/url_number';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
-import { TCamion, TConductor, TEnvases, TGuia, TLoteGuia, TPerfil, TProductor } from '../../../types/registros types/registros.types';
+import { TCamion, TConductor, TEnvases, TEnvasesPrograma, TGuia, TLoteGuia, TPatioTechadoEx, TPerfil, TProduccion, TProductor } from '../../../types/registros types/registros.types';
 import { TProduct } from '../../../mocks/db/products.db';
 import { variedadFilter } from '../../../constants/options.constants';
 
@@ -177,112 +177,62 @@ const styles = StyleSheet.create({
 const PDFDocumentoEntrada = () => {
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
-  const { authTokens, validate } = useAuth()
+  const { authTokens, validate, perfilData } = useAuth()
+  const base_url = process.env.VITE_BASE_URL_DEV
+
+  const { data: programa } = useAuthenticatedFetch<TProduccion>(
+    authTokens,
+    validate,
+    `/api/produccion/${id}`
+  )
+
+  const { data: lotes_en_programa} = useAuthenticatedFetch<TEnvasesPrograma[]>(
+    authTokens,
+    validate,
+    `/api/produccion/${id}/lotes_en_programa/`
+  )
 
   const { data: guia } = useAuthenticatedFetch<TGuia>(
     authTokens,
     validate,
-    `/api/recepcionmp/${id[0]}`
+    `/api/recepcionmp/${lotes_en_programa?.[0].guia_recepcion}/`
   )
 
-  const { data: usuario } = useAuthenticatedFetch<TPerfil>(
+  const { data: guia_interna } = useAuthenticatedFetch<TPatioTechadoEx>(
     authTokens,
     validate,
-    `/api/registros/perfil/${guia?.creado_por}`
+    `/api/patio-exterior/${lotes_en_programa?.[0].guia_patio}/`
   )
 
-  const { data: productor } = useAuthenticatedFetch<TProductor>(
-    authTokens,
-    validate,
-    `/api/productores/${guia?.productor}`
-  )
-
-  const { data: envases } = useAuthenticatedFetch<TEnvases[]>(
-    authTokens,
-    validate,
-    `/api/envasesmp/`
-  )
-
-  const { data: camionero } = useAuthenticatedFetch<TConductor>(
-    authTokens,
-    validate,
-    `/api/registros/choferes/${guia?.camionero}`
-  )
-
-  const { data: camion } = useAuthenticatedFetch<TCamion>(
-    authTokens,
-    validate,
-    `/api/registros/camiones/${guia?.camion}`
-  )
-
-  console.log(envases)
-  console.log(guia)
-  console.log(usuario)
-  console.log(productor)
-  console.log(camionero)
-  console.log(camion)
-
-  const kilos_brutos_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_brutos_1
-  })
-  const kilos_brutos_2 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_brutos_2
-  })
-  const kilos_tara_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_tara_1
-  })
-  const kilos_tara_2 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_tara_2
-  })
-
-  
-  const kilos_fruta = guia?.lotesrecepcionmp.map((row: TLoteGuia) => {
-    const kilos_total_envases = 
-      row.envases.map((envase_lote) => {
-      const envaseTotal = envases?.
-      filter(envase => envase.id === envase_lote.envase).
-      reduce((acumulador, envase) => acumulador + (envase_lote.cantidad_envases * envase.peso), 0)
-      return envaseTotal;
-      })
-
-      return kilos_total_envases[0]
-  })
-  console.log(kilos_fruta)
-
-  const kilo_fruta_neta_final = (Number(kilos_brutos_1) + Number(kilos_brutos_2)) - (Number(kilos_tara_1) + Number(kilos_tara_2)) - Number(kilos_fruta)
-  const kilos_brutos = Number(kilos_brutos_1) + Number(kilos_brutos_2)
-  const kilos_tara = Number(kilos_tara_1) + Number(kilos_tara_2) 
-  console.log(kilos_tara)
-  console.log(kilos_brutos)
-  console.log(kilo_fruta_neta_final)
+  const total_fruta_programa = lotes_en_programa?.reduce((acc, lote) => lote.kilos_fruta + acc, 0)
       
   return (
     <PDFViewer style={{ height: '100%'}}>
       <Document>
         <Page>
         <View style={styles.header}>
-          <View style={styles.header_superior}>
+        <View style={styles.header_superior}>
             <View style={{ position: 'relative', top: -9 }}>
               <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100}}/>
             </View>
 
             <Text style={{ width: 240, textAlign: 'center', fontSize: 14, position: 'relative', left: 10, top: 10}}>
-              Documento de Entrada a
-              Programa Produccion N° 43
+              Lista de Lotes y Envases a Procesar
+              En Programa Produccion N° {programa?.id}
             </Text>
 
 
             <View style={{ width: 150, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -10 }}>
 
               <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Generado el {}</Text>
+                <Text style={styles.header_date_info_text}>Generado el {format(new Date(), { date: 'medium', time: 'short'}, 'es')}</Text>
                 <Text style={styles.header_date_info_text}>{}</Text>
               </View>
 
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Creado Por: </Text>
 
-                <Text style={styles.header_date_info_text}>{usuario?.user.username}</Text>
+                <Text style={styles.header_date_info_text}>{perfilData.user.username}</Text>
               </View>
             </View>
           </View>
@@ -300,13 +250,13 @@ const PDFDocumentoEntrada = () => {
             
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Comercializador: </Text>
-                <Text style={styles.header_date_info_text}>486836 Kgs</Text>
+                <Text style={styles.header_date_info_text}>{guia?.nombre_comercializador} </Text>
               </View>
 
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Total Kilos en programa: </Text>
-                <Text style={styles.header_date_info_text}>486836 Kgs</Text>
-              </View>
+                <Text style={styles.header_date_info_text}>{total_fruta_programa}</Text>
+              </View> 
 
         
             </View>
@@ -318,12 +268,12 @@ const PDFDocumentoEntrada = () => {
             
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Productor : </Text>
-                <Text style={styles.header_date_info_text}>486836 Kgs</Text>
+                <Text style={styles.header_date_info_text}>{guia?.nombre_productor} Kgs</Text>
               </View>
 
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Fecha de Inicio Programa Produccion: </Text>
-                <Text style={styles.header_date_info_text}>486836 Kgs</Text>
+                <Text style={styles.header_date_info_text}>{format(programa?.fecha_creacion!, { date: 'short', time: 'short'}, 'es')}</Text>
               </View>
 
             </View>
@@ -367,10 +317,48 @@ const PDFDocumentoEntrada = () => {
           </View>
 
           {
+            lotes_en_programa?.map((lote: TEnvasesPrograma) => {
+              console.log(lote)
+              return (
+                <View style={{ 
+                  width: '100%',
+                  height: 30,
+                  borderRadius: '1px', 
+                  display: 'flex',
+                  flexDirection: 'row',
+                  }}>
+      
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10}}>{lote.numero_lote}</Text>
+                  </View>
+      
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10}}>{lotes_en_programa  ?.length}</Text>
+                  </View>
+
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10}}>{guia?.nombre_productor}</Text>
+                  </View>
+      
+                  <View style={styles.header_info_box_superior}>
+                   <Text style={{ fontSize: 10}}>{variedadFilter.find(variety => variety.value === lote.variedad)?.label}</Text>
+                  </View>
+      
+                  
+      
+                  <View style={styles.header_info_box_superior}>
+                   <Text style={{ fontSize: 10}}>{guia_interna?.ubicacion_label}</Text>
+                  </View>
+                </View>
+              )
+            })
+          }
+
+          {/* {
             guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
 
               const envase_lote = lote.envases.map((envase: any) => {
-                return envases?.find(envase_ => envase_.id === envase.id)
+                // return envases?.find(envase_ => envase_.id === envase.id)
               })
 
               const cantidad = lote.envases.map((lote) => {
@@ -422,7 +410,7 @@ const PDFDocumentoEntrada = () => {
                 </View>
               )
             })
-          }
+          } */}
 
         </View> 
         </Page>

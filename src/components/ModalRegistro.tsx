@@ -18,7 +18,7 @@ interface IComponentProps {
   height?: string 
 }
 
-const ModalRegistro: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool, width, height }) => {
+const ModalForm: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool, width, height }) => {
   const { isDarkTheme } = useDarkMode()
   return (
     <>
@@ -43,4 +43,4 @@ const ModalRegistro: FC<IComponentProps> = ({ children, open, setOpen, title, te
   )
 }
 
-export default ModalRegistro
+export default ModalForm

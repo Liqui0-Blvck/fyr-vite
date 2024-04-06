@@ -3,7 +3,7 @@ import FormularioRegistroControlCalidad from '../../../control calidad/Formulari
 import { TEnvaseEnGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
 import { GoQuestion } from "react-icons/go";
 import useDarkMode from '../../../../hooks/useDarkMode';
-import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
+import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../utils/select.constanst';
 import { useAuth } from '../../../../context/authContext';
 
 interface IModalProps {

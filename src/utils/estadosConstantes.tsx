@@ -1,4 +1,4 @@
-import { ESTADOS_MP, TIPO_INFORME } from "../constants/select.constanst";
+import { ESTADOS_MP, TIPO_INFORME } from "./select.constanst";
 
 export const estadoRecepcion = ESTADOS_MP?.map((estado) => ({
   value: String(estado.value),

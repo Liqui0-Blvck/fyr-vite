@@ -25,6 +25,7 @@ const FilaControlDetalleDescuento_1: FC<ILoteCompletadoProps> = ({ muestra: row,
 
   console.log(rendimiento)
 
+  console.log(ccLote?.recepcionmp)
   useEffect(() => {
     const getRendimientos = async () => {
       const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/rendimiento_lotes/${ccLote?.recepcionmp}/`, {

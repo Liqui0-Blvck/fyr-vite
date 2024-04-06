@@ -6,7 +6,7 @@ import { useAuth } from '../../../context/authContext'
 import { TLoteRechazado } from '../../../types/registros types/registros.types'
 import { Dispatch, FC, SetStateAction } from 'react'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
-import { RESULTADO_RECHAZO, checkCargoPerfil } from '../../../constants/select.constanst'
+import { RESULTADO_RECHAZO, checkCargoPerfil } from '../../../utils/select.constanst'
 import toast from 'react-hot-toast'
 import { optionResultados } from '../../../constants/options.constants'
 

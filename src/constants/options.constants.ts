@@ -1,6 +1,6 @@
 import { TSelectOptions } from "../components/form/SelectReact"
 import { TCamion } from "../types/registros types/registros.types"
-import { RESULTADO_RECHAZO, TIPO_ACOPLADO, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from "./select.constanst"
+import { RESULTADO_RECHAZO, TIPO_ACOPLADO, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from "../utils/select.constanst"
 
 const acoplados = TIPO_ACOPLADO?.map((acoplado) => ({
   value: acoplado.values,

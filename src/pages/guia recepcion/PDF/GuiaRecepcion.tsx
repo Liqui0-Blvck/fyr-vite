@@ -215,13 +215,6 @@ const GuiaRecepcionPDF = () => {
     `/api/registros/camiones/${guia?.camion}`
   )
 
-  console.log(envases)
-  console.log(guia)
-  console.log(usuario)
-  console.log(productor)
-  console.log(camionero)
-  console.log(camion)
-
   const kilos_brutos_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
     return lote.kilos_brutos_1
   })

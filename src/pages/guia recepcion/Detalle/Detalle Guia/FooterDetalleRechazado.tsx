@@ -11,10 +11,10 @@ import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TCamion, TControlCalidad, TEnvases, TGuia, TLoteGuia, TLoteRechazado } from '../../../../types/registros types/registros.types';
-import { ESTADOS_GUIA_MP, ESTADOS_MP, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
+import { ESTADOS_GUIA_MP, ESTADOS_MP, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../utils/select.constanst';
 import { useNavigate } from 'react-router-dom';
 import '../../../../styles/index.css'
-import { usuarioRole, perfilesPermitidos } from '../../../../constants/select.constanst';
+import { usuarioRole, perfilesPermitidos } from '../../../../utils/select.constanst';
 import { FaIndustry } from "react-icons/fa6";
 import { FaWeight } from "react-icons/fa";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";

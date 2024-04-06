@@ -3,7 +3,7 @@ import Input from '../../../components/form/Input'
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
-import { TIPO_ACOPLADO } from '../../../constants/select.constanst'
+import { TIPO_ACOPLADO } from '../../../utils/select.constanst'
 import Textarea from '../../../components/form/Textarea'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import useDarkMode from '../../../hooks/useDarkMode'

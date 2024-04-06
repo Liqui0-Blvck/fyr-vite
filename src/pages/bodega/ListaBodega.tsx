@@ -8,7 +8,7 @@ const ListaCamiones = () => {
   const { data: patio_techado, setData, setRefresh } = useAuthenticatedFetch<TPatioTechadoEx[]>(
     authTokens,
     validate,
-    `/api/patio-techado-ex/`
+    `/api/patio-exterior/`
   )
 
 

@@ -30,7 +30,7 @@ const TablaOperariosPrograma: FC<IRendimientoMuestra> = ({ data, refresh, id_lot
     <div>
       <div
           className='relative left-[0px] lg:left-0 p-5 '>
-        <TableContainer sx={{ height: 600, borderRadius: 3 }}>
+        <TableContainer sx={{ height: 320, borderRadius: 3 }}>
           <Table className='table' aria-label="simple table">
             <TableHead className='table-header'>
               <TableRow className='table-row' sx={{ borderRadius: 5, backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>

@@ -10,7 +10,7 @@ import Textarea from '../../../components/form/Textarea';
 import { TGuia, TLoteGuia, TPatioExterior } from '../../../types/registros types/registros.types';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact';
-import { UBICACION_PATIO_TECHADO_EXT } from '../../../constants/select.constanst';
+import { UBICACION_PATIO_TECHADO_EXT } from '../../../utils/select.constanst';
 import { optionsUbicaciones } from '../../../utils/generalUtils';
 
 
@@ -29,7 +29,7 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
   const { data: patio_exterior } = useAuthenticatedFetch<TPatioExterior>(
     authTokens,
     validate,
-    `/api/patio-techado-ex/${lote?.id}`
+    `/api/patio-exterior/${lote?.id}`
   )
 
 
@@ -82,7 +82,7 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/patio-techado-ex-id/${patio_exterior?.id}/`, {
+        const res = await fetch(`${base_url}/api/patio-exterior/${patio_exterior?.id}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

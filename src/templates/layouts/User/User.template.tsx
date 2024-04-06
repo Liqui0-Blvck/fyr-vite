@@ -8,7 +8,7 @@ import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { jwtDecode } from 'jwt-decode';
 import { TCargo } from '../../../types/registros types/registros.types';
-import { CARGOS_PERFILES } from '../../../constants/select.constanst';
+import { CARGOS_PERFILES } from '../../../utils/select.constanst';
 
 interface IUser {
 	first_name: string,

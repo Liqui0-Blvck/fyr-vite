@@ -15,7 +15,7 @@ import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { TCamion, TEnvases, TGuia } from '../../../types/registros types/registros.types';
-import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../constants/select.constanst';
+import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../utils/select.constanst';
 import { useNavigate } from 'react-router-dom';
 import { Switch } from 'antd';
 import { generarNumeroLote } from '../../../utils/numberLote';
@@ -119,7 +119,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
         })
         if (res.ok) {
           toast.success("la guia de recepción fue registrado exitosamente!!")
-          navigate(`/app/recepciomp`)
+          navigate(`/app/recepcionmp`)
         } else {
           toast.error("No se pudo registrar la guia de recepción volver a intentar")
         }

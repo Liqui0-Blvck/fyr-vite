@@ -242,3 +242,36 @@ export const Years = [
   {value: 4, label: '2021'},
   {value: 5, label: '2020'},
 ]
+
+
+export const TIPO_RESULTANTE = [
+  { value: '1', label: 'Borrel'},
+  { value: '2', label: 'Residuo Solido'},
+  { value: '3', label: 'Pepa Calibrada'},   
+]
+
+export const CALLE_BODEGA = [
+  { value: '-', label: 'Seleccione Calle'},
+  { value: 'F', label: 'Calle de Fumigado'},
+  { value: '1', label: 'Calle 1'},
+  { value: '2', label: 'Calle 2'},
+  { value: '3', label: 'Calle 3'},
+  { value: '4', label: 'Calle 4'},
+  { value: '5', label: 'Calle 5'},
+  { value: '6', label: 'Calle 6'},
+  { value: '7', label: 'Calle 7'},
+  { value: '8', label: 'Calle 8'},
+  { value: '9', label: 'Calle 9'},
+  { value: '10',label:  'Calle 10'},
+  { value: '11',label:  'Calle 11'},
+  { value: '12',label:  'Calle 12'},
+]
+
+
+export const TIPOS_BIN = [
+    { value: 40,  label: 'Patineta Negra'},
+    { value: 43.5, label: 'Patineta Blanca'},
+    { value: 44.6, label: 'UPC'}
+]
+
+

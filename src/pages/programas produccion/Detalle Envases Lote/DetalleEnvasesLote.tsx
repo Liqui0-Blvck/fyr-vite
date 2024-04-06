@@ -24,7 +24,7 @@ interface IMuestraProps {
   muestra?: TRendimientoMuestra | null
 }
 
-const DetalleTarjaResultante: FC<IMuestraProps> = () => {
+const DetalleEnvasesLote: FC<IMuestraProps> = () => {
   const { isDarkTheme } = useDarkMode();
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -32,64 +32,55 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const [rendimientos, setRendimientos] = useState<TRendimiento | null>(null)
 
-  const { data: control_calidad, loading, setRefresh } = useAuthenticatedFetch<TControlCalidadB>(
+  console.log(id)
+
+  const { data: control_calidad, loading } = useAuthenticatedFetch<TControlCalidadB>(
     authTokens,
     validate,
     `/api/control-calidad/recepcionmp/${id}`
   ) 
 
-  const { data: usuario } = useAuthenticatedFetch<TPerfil>(
-    authTokens,
-    validate,
-    `/api/registros/perfil/${control_calidad?.control_rendimiento[0].registrado_por}`
-  )
-
-  const { data: envases_produccion } = useAuthenticatedFetch<TEnvasesPrograma[]>(
+  const { data: envases_produccion, setRefresh } = useAuthenticatedFetch<TEnvasesPrograma[]>(
     authTokens,
     validate,
     `/api/produccion/${id}/lotes_en_programa/`
   ) 
 
-  const kilos_totales = envases_produccion?.reduce((acc, envase) => envase.kilos_fruta + acc, 0)
-  const kilos_totales_procesados = envases_produccion?.
-    filter(envase => envase.bin_procesado === true).
-    reduce((acc, envase) => envase.kilos_fruta + acc, 0)
+
+
+  const labels = ['Envases procesados', 'Envases Por Procesar']
+  const totalEnvases = envases_produccion?.length;
+  const envasesProcesados = envases_produccion?.filter(envase => envase.bin_procesado === true).length;
+  const envasesPorProcesar = totalEnvases! - envasesProcesados!;
   
-  console.log(kilos_totales)
-  console.log(kilos_totales_procesados)
-
-
-
-
-
-  const { labels, valores } = chartData(rendimientos?.cc_muestra || [])
-  const { labels: labels_cc_pepa, valores: valores_cc_pepa } = chartData(rendimientos?.cc_pepa || [])
-  const { labels: labels_cc_calibre, valores: valores_cc_calibre } = chartData(rendimientos?.cc_pepa_calibre || [])
-
+  const porcentajeProcesados = ((envasesProcesados! / totalEnvases!) * 100)
+  const porcentajePorProcesar = ((envasesPorProcesar / totalEnvases!) * 100)
+  
+  const valores = [porcentajeProcesados, porcentajePorProcesar];
 
   return (
-    <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full mx-auto
+    <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full
          ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-50' } relative px-5
-        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 pb-40 w-full overflow-auto
+        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 w-full overflow-auto
         rounded-md`}
     >
       <div className={`w-full col-span-3 ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } h-full flex items-center justify-center rounded-md`}>
         <h1 className='text-3xl'>Envases de Lotes x procesar {control_calidad?.recepcionmp}</h1>
       </div>
 
-      <article className={`row-start-4 row-span-4 col-span-3 w-full h-full ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } flex flex-col lg:flex-col  justify-between `}>
+      <article className={`row-start-4 row-span-4 col-span-3 w-full h-full ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } flex flex-col lg:flex-col justify-between pb-10`}>
         {
             loading
-              ? <Skeleton variant="rectengular" width='100%' height={200}/>
+              ? <Skeleton variant="rectengular" width='100%' height={320}/>
               : (
                 <div className='flex flex-col md:flex-col w-full h-full'>
                   <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col lg:flex-row items-center justify-center rounded-md py-1`}>
-                    <div className='w-7/12 relative -top-[180px]'>
+                    <div className='w-7/12 ]'>
                       <PieChart series={valores! || []} labels={labels! || []}/>
                       <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
                     </div>
                     <div className='w-full flex flex-col justify-center  mt-4 lg:mt-0'> {/* Ajusta el margen superior y las clases de posicionamiento */}
-                      <TablaEnvasesLotes data={envases_produccion || []}/>
+                      <TablaEnvasesLotes data={envases_produccion || []} refresh={setRefresh}/>
                     </div>
                   </div>
                 </div>
@@ -101,4 +92,4 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
   )
 }
 
-export default DetalleTarjaResultante
+export default DetalleEnvasesLote

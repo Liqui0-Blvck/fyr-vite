@@ -1,5 +1,5 @@
 import { TSelectOptions } from "../components/form/SelectReact";
-import { UBICACION_PATIO_TECHADO_EXT, Years } from "../constants/select.constanst";
+import { CALLE_BODEGA, TIPOS_BIN, TIPO_RESULTANTE, UBICACION_PATIO_TECHADO_EXT, Years } from "./select.constanst";
 
 export const cargolabels = (perfilData: any) => {
   if (!perfilData) {
@@ -21,5 +21,23 @@ export const optionsUbicaciones: TSelectOptions | []  = UBICACION_PATIO_TECHADO_
   value: ubicacion.value,
   label: ubicacion.label
 })) ?? []
+
+export const optionTipoResultante: TSelectOptions | [] = TIPO_RESULTANTE?.map((tipo) => ({
+  value: String(tipo.value),
+  label: tipo.label
+})) ?? []
+
+export const optionCalleBodega: TSelectOptions | [] = CALLE_BODEGA?.map((calle) => ({
+  value: String(calle.value),
+  label: calle.label
+})) ?? []
+
+export const optionTipoPatineta: TSelectOptions | [] = TIPOS_BIN?.map((patineta) => ({
+  value: String(patineta.value),
+  label: patineta.label
+})) ?? []
+
+
+
 
 

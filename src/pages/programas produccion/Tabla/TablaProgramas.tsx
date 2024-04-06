@@ -139,6 +139,8 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 		}
 	}
 
+	console.log(data)
+
 
 	const columns = [
 		columnHelper.accessor('id', {
@@ -160,11 +162,11 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 		columnHelper.accessor('lotes', {
 			cell: (info) => {
 				const total_lotes = info.row.original.lotes.length
-				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_ingresado === true).length * total_lotes) / 100).toFixed(1)
+				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_procesado !== true).length / total_lotes) * 100).toFixed(1)
 				
 				return (
 					<div className='font-bold'>
-						<p className='text-center'>{lotes_procesados} % Envases x Procesar</p>
+						<p className='text-center'>{isNaN(Number(lotes_procesados)) ? 0 : lotes_procesados} % Envases x Procesar</p>
 					</div>
 				)
 			},
@@ -173,11 +175,11 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 		columnHelper.accessor('lotes', {
 			cell: (info) => {
 				const total_lotes = info.row.original.lotes.length
-				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_procesado === true).length * total_lotes) / 100).toFixed(1)
+				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_procesado === true).length / total_lotes) * 100).toFixed(1)
 				
 				return (
 					<div className='font-bold'>
-						<p className='text-center'>{lotes_procesados} % Envases Procesados</p>
+						<p className='text-center'>{isNaN(Number(lotes_procesados)) ? 0 : lotes_procesados} % Envases Procesados</p>
 					</div>
 				)
 			},
@@ -250,12 +252,14 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 					}
 
 					{
-						estado === '4'
+						info.row.original.lotes.every(lote => lote.bin_procesado === true) && info.row.original.lotes.length > 1
 							? (
 								<Tooltip title='Terminar Producción'>
 									<button
 										type='button'
-										onClick={() => actualizarEstadoProduccion(id, '5')}
+										onClick={() => {
+											estado === '5' ? {} : actualizarEstadoProduccion(id, '5')
+										}}
 										className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
 										<FaStop style={{ fontSize: 25 }}/>
 									</button>
@@ -299,17 +303,29 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 							{/* <FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
 						</ModalRegistro>
 
-						<Tooltip title='Detalle envases del lote en Programa'>
-							<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
-								<FaFilePdf style={{ fontSize: 25 }} />
-							</button>
-						</Tooltip>
+						{
+							info.row.original.lotes.length > 0
+								? (
+									<>
+										<Tooltip title='Detalle envases del lote en Programa'>
+											<Link to={`/app/pdf-detalle-envases/${id}`}>
+												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
+													<FaFilePdf style={{ fontSize: 25 }} />
+												</button>
+											</Link>
+										</Tooltip>
 
-						<Tooltip title='Documento de entrada a proceso'>
-							<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
-								<FaFilePdf style={{ fontSize: 25 }} />
-							</button>
-						</Tooltip>
+										<Tooltip title='Documento de entrada a proceso'>
+											<Link to={`/app/pdf-documento-entrada/${id}`}>
+												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
+													<FaFilePdf style={{ fontSize: 25 }} />
+												</button>
+											</Link>
+										</Tooltip>
+									</>
+									)	
+								: null
+						}
 
 					</div>
 				);
@@ -342,7 +358,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaProgramas'>
+		<PageWrapper name='Lista Programas'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap
@@ -362,29 +378,52 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 						<Input
 							id='search'
 							name='search'
-							placeholder='Busca al productor...'
+							placeholder='Busca programa...'
 							value={globalFilter ?? ''}
 							onChange={(e) => setGlobalFilter(e.target.value)}
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
-				<SubheaderRight>
-						<Tooltip title='Registro Programa de produccion'>
-							<button
-								type='button'
-								onClick={() => registroProgramaProduccion()}
-								className='w-full rounded-md h-12 bg-blue-800 flex items-center justify-center p-2 hover:scale-105 px-2'>
-								<span className='text-lg '>Registrar Programa de Producción</span>
-							</button>
-						</Tooltip>
-				</SubheaderRight>
+				{
+					data.length >= 1 
+						? null
+						: (
+							<SubheaderRight>
+								<Tooltip title='Registro Programa de produccion'>
+									<button
+										type='button'
+										onClick={() => registroProgramaProduccion()}
+										className='w-full rounded-md h-12 bg-blue-800 flex items-center justify-center p-2 hover:scale-105 px-2'>
+										<span className='text-lg '>Registrar Programa de Producción</span>
+									</button>
+								</Tooltip>
+							</SubheaderRight>
+						)
+				}
+
+				{
+					data.every(programa => programa.estado === '5') || data.some(programa => programa.estado === '2') && data.some(programa => programa.tarjas_resultantes.length !== 0)
+						? null
+							: (
+								<SubheaderRight>
+									<Tooltip title='Registro Programa de produccion'>
+										<button
+											type='button'
+											onClick={() => registroProgramaProduccion()}
+											className='w-full rounded-md h-12 bg-blue-800 flex items-center justify-center p-2 hover:scale-105 px-2'>
+											<span className='text-lg '>Registrar Programa de Producción</span>
+										</button>
+									</Tooltip>
+								</SubheaderRight>
+							)
+				}
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
 					<CardHeader>
 
 						<CardHeaderChild>
-							<CardTitle>Productores</CardTitle>
+							<CardTitle>Programas</CardTitle>
 							<Badge
 								variant='outline'
 								className='border-transparent px-4'
@@ -393,60 +432,58 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 							</Badge>
 						</CardHeaderChild>
 
-						<CardHeaderChild className='w-[20rem]'>
-							<ModalRegistro
-								open={informePro}
-								setOpen={setInformePro}
-								title='Informe de Producción'
-								icon={
-								<div className='flex items-center gap-1.5'>
-									<FaFilePdf style={{ fontSize: 20}}/>
-									<span className='text-md font-semibold'>Generar Informe de Producción</span>
-								</div>
-								}
-								width={`w-full md:w-full px-4 py-3 ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-								size={800}
-							>
-								<FormularioInformeProduccion setOpen={setInformePro}/>
-							</ModalRegistro>
-						</CardHeaderChild>
+						<CardHeaderChild className='lg:w-[70%] sm:w-full md:w-full'>
+							<div className='flex items-center gap-3 '>
+								<ModalRegistro
+									open={informePro}
+									setOpen={setInformePro}
+									title='Informe de Producción'
+									icon={
+									<div className='flex items-center gap-1.5'>
+										<FaFilePdf style={{ fontSize: 20}}/>
+										<span className='text-md font-semibold'>Generar Informe de Producción</span>
+									</div>
+									}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-3 ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+									size={800}
+								>
+									<FormularioInformeProduccion setOpen={setInformePro}/>
+								</ModalRegistro>
 
-						<CardHeaderChild className='w-[23.5rem]'>
-							<ModalRegistro
-								open={informeKgOp}
-								setOpen={setInformeinformeKgOp}
-								title='Informe de Kilos por Operario'
-								icon={
-								<div className='flex items-center gap-1.5'>
-									<FaFilePdf style={{ fontSize: 20}}/>
-									<span className='text-md font-semibold'>Generar Informe de Kilos por Operario</span>
-								</div>
-								}
-								width={`w-full md:w-full px-4 py-3 ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-								size={700}
-							>
-								<FormularioKilosOperarios setOpen={setInformePro}/>
-							</ModalRegistro>
-						</CardHeaderChild>
+								<ModalRegistro
+									open={informeKgOp}
+									setOpen={setInformeinformeKgOp}
+									title='Informe de Kilos por Operario'
+									icon={
+									<div className='flex items-center gap-1.5'>
+										<FaFilePdf style={{ fontSize: 20}}/>
+										<span className='text-md font-semibold'>Generar Informe de Kilos por Operario</span>
+									</div>
+									}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+									size={700}
+								>
+									<FormularioKilosOperarios setOpen={setInformePro}/>
+								</ModalRegistro>
 
-						<CardHeaderChild className='w-[24rem]'>
-							<ModalRegistro
-								open={informeResOp}
-								setOpen={setInformeinformeResOp}
-								title='Informe de Operarios Resumido'
-								icon={
-								<div className='flex items-center gap-1.5'>
-									<FaFilePdf style={{ fontSize: 20}}/>
-									<span className='text-md font-semibold'>Generar Informe de Operarios Resumido</span>
-								</div>
-								}
-								width={`w-full md:w-full px-4 py-3 ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-								size={500}
-							>
-								<FormularioResumen setOpen={setInformePro}/>
-							</ModalRegistro>
+								<ModalRegistro
+									open={informeResOp}
+									setOpen={setInformeinformeResOp}
+									title='Informe de Operarios Resumido'
+									icon={
+									<div className='flex items-center gap-1.5'>
+										<FaFilePdf style={{ fontSize: 20}}/>
+										<span className='text-md font-semibold'>Generar Informe de Operarios Resumido</span>
+									</div>
+									}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0  ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+									size={500}
+								>
+									<FormularioResumen setOpen={setInformePro}/>
+								</ModalRegistro>
+
+							</div>
 						</CardHeaderChild>
-						
 					</CardHeader>
 					<CardBody className='overflow-x-auto'>
 						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} />

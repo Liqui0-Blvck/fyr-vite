@@ -508,4 +508,30 @@ export type TEnvasesPrograma = {
   guia_patio: number
   numero_bin: number
   kilos_fruta: number
+  variedad: string
+  guia_recepcion: number
+}
+
+export type TControlCalidadTarja = {
+  id: number;
+  estado_cc: string;
+  variedad: string;
+  calibre: string;
+  cantidad_muestra: number | null;
+  trozo: number;
+  picada: number;
+  hongo: number;
+  daño_insecto: number;
+  dobles: number;
+  goma: number;
+  basura: number;
+  mezcla_variedad: number;
+  pepa_sana: number;
+  fuera_color: number;
+  punto_goma: number;
+  vana_deshidratada: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  tarja: number;
+  cc_registrado_por: string | null;
 }

@@ -83,8 +83,9 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen, contr
   useEffect(() => {
     const updatedValues = { ...formik.values, pepa: calcularPepaBruta() };
     formik.setValues(updatedValues);
-  }, [formik.values.peso_muestra, formik.values.basura, formik.values.ciega, formik.values.pelon, formik.values.cascara, formik.values.pepa_huerto]);
+  }, [formik.values.peso_muestra, formik.values.basura, formik.values.ciega, formik.values.pelon, formik.values.cascara, formik.values.pepa_huerto])
 
+  console.log(formik.values)
   return (
     <form
         onSubmit={formik.handleSubmit}

@@ -9,7 +9,7 @@ import { useAuth } from '../../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { TCamion,TControlCalidad,TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
-import { ESTADOS_GUIA_MP, ESTADOS_MP, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../constants/select.constanst';
+import { ESTADOS_GUIA_MP, ESTADOS_MP, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../utils/select.constanst';
 import Dropdown, { DropdownToggle, DropdownMenu, DropdownItem } from '../../../../components/ui/Dropdown'
 import Button from '../../../../components/ui/Button';
 import { HeroEye, HeroPencilSquare } from '../../../../components/icon/heroicons';

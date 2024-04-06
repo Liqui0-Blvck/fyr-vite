@@ -6,6 +6,7 @@ import LoginPage from '../pages/auth/Login.page';
 import FormularioRegistroProductores from '../pages/productores/Formulario Registro/FormularioRegistroProductores';
 import ListaCamiones from '../pages/camiones/ListaCamiones';
 import CCRendimiento from '../pages/ccvistobueno/PDF/PDFCCRendimiento.tsx';
+import DashboardProduccion from '../pages/programas produccion/Detalle Produccion/DashboardProduccion.tsx';
 
 
 
@@ -100,6 +101,10 @@ const FormularioRegistroPerfil = lazy(() => import ('../pages/usuarios/Formulari
 const ListaBodega = lazy(() => import ('../pages/bodega/ListaBodega.tsx'))
 const DetalleBodega = lazy(() => import ('../pages/bodega/Detalle Bodega/DetalleGuia.tsx'))
 
+
+
+// CC TARJA 
+const ListaCCTarja = lazy(() => import ('../pages/control calidad tarjas/ListaControlCalidadTarja.tsx'))
 /**
  * Other
  */
@@ -158,14 +163,15 @@ const contentRoutes: RouteProps[] = [
 
 	// PROGRAMAS DE PRODUCCION
 	{ path: '/app/produccion/', element:  <ListaProgramas /> },
-	{ path: '/app/produccion/programa/:id/', element:  <DetallePrograma /> },
+	{ path: '/app/produccion/programa/:id/', element: <DashboardProduccion />},
 	{ path: '/app/produccion/registro-programa/:id', element: <FormularioRegistroPrograma />},
 	{ path: '/app/pdf-operario-x-kilo/', element: <PDFOperarioXKilo />},
 	{ path: '/app/pdf-operario-resumido/', element: <PDFResumidoOperario />},
 	{ path: '/app/pdf-pre-limpia/', element: <PDFPreLimpia />},
 	{ path: '/app/pdf-descascarado/', element: <PDFDescascarado />},
-	{ path: '/app/pdf-documento-entrada/', element: <PDFDocumentoEntrada />},
-	{ path: '/app/pdf-detalle-envases/', element: <PDFDetalleEnvases />},
+	{ path: '/app/pdf-documento-entrada/:id', element: <PDFDocumentoEntrada />},
+	{ path: '/app/pdf-detalle-envases/:id', element: <PDFDetalleEnvases />},
+
 
 
 
@@ -180,9 +186,8 @@ const contentRoutes: RouteProps[] = [
 
 
 
-
-
-
+	// TARJAS CC
+	{ path: '/app/tarjas-cc/', element: <ListaCCTarja />},
 
 	
 
