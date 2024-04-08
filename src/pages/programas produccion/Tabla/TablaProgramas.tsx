@@ -229,7 +229,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										type='button'
 										onClick={() => actualizarEstadoProduccion(id, '2')}
 										className='w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105'>
-										<FaPlay style={{ fontSize: 25 }}/>
+										<FaPlay style={{ fontSize: 25, color: 'white' }}/>
 									</button>
 								</Tooltip>
 								)
@@ -244,7 +244,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										type='button'
 										onClick={() => actualizarEstadoProduccion(id, '0')}
 										className='w-16 rounded-md h-12 bg-blue-500 flex items-center justify-center p-2 hover:scale-105'>
-										<FaPause style={{ fontSize: 25 }}/>
+										<FaPause style={{ fontSize: 25, color: 'white' }}/>
 									</button>
 								</Tooltip>
 								)
@@ -261,7 +261,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 											estado === '5' ? {} : actualizarEstadoProduccion(id, '5')
 										}}
 										className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
-										<FaStop style={{ fontSize: 25 }}/>
+										<FaStop style={{ fontSize: 25, color: 'white' }}/>
 									</button>
 								</Tooltip>
 								)
@@ -284,7 +284,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 						<Link to={`${`/app/produccion/programa/${id}/`}`}>
 							<Tooltip title='Terminar Producción'>
 								<button className='w-16 rounded-md h-12 bg-[#40be75] hover:bg-[#49bb78] flex items-center justify-center p-2 hover:scale-105'>
-									<HeroEye style={{ fontSize: 35 }}/>
+									<HeroEye style={{ fontSize: 35, color: 'white' }}/>
 								</button>
 							</Tooltip>
 						</Link>
@@ -393,8 +393,8 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 									<button
 										type='button'
 										onClick={() => registroProgramaProduccion()}
-										className='w-full rounded-md h-12 bg-blue-800 flex items-center justify-center p-2 hover:scale-105 px-2'>
-										<span className='text-lg '>Registrar Programa de Producción</span>
+										className='w-full rounded-md h-12 bg-blue-700 flex items-center justify-center p-2 hover:scale-105 px-2'>
+										<span className='text-lg text-white'>Registrar Programa de Producción</span>
 									</button>
 								</Tooltip>
 							</SubheaderRight>
@@ -410,8 +410,8 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										<button
 											type='button'
 											onClick={() => registroProgramaProduccion()}
-											className='w-full rounded-md h-12 bg-blue-800 flex items-center justify-center p-2 hover:scale-105 px-2'>
-											<span className='text-lg '>Registrar Programa de Producción</span>
+											className='w-full rounded-md h-12 bg-blue-700 flex items-center justify-center p-2 hover:scale-105 px-2'>
+											<span className='text-lg text-white'>Registrar Programa de Producción</span>
 										</button>
 									</Tooltip>
 								</SubheaderRight>
@@ -444,7 +444,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										<span className='text-md font-semibold'>Generar Informe de Producción</span>
 									</div>
 									}
-									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-3 ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105`}
 									size={800}
 								>
 									<FormularioInformeProduccion setOpen={setInformePro}/>
@@ -460,7 +460,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										<span className='text-md font-semibold'>Generar Informe de Kilos por Operario</span>
 									</div>
 									}
-									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105`}
 									size={700}
 								>
 									<FormularioKilosOperarios setOpen={setInformePro}/>
@@ -476,7 +476,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										<span className='text-md font-semibold'>Generar Informe de Operarios Resumido</span>
 									</div>
 									}
-									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0  ${isDarkTheme ? 'bg-red-700 hover:bg-red-600' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105`}
 									size={500}
 								>
 									<FormularioResumen setOpen={setInformePro}/>

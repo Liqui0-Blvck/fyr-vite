@@ -54,7 +54,7 @@ const FormularioRegistroComercializador: FC<IFormComercializadorProps> = ({ refr
           navigate('/app/comercializadores')
 
         } else {
-          toast.error("No se pudo registrar el camión volver a intentar")
+          toast.error("No se pudo registrar el comercializador volver a intentar")
         }
       } catch (error) {
         console.log(error)

@@ -51,7 +51,7 @@ const FormularioRegistroChoferes: FC<IFormChoferes> = ({ setOpen, refresh }) => 
           navigate('/app/conductores')
 
         } else {
-          toast.error("No se pudo registrar el camión volver a intentar")
+          toast.error("No se pudo registrar el conductor volver a intentar")
         }
       } catch (error) {
         console.log(error)

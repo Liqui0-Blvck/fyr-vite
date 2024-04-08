@@ -21,6 +21,8 @@ import Tooltip from '../../../../components/ui/Tooltip';
 import { FaForward } from "react-icons/fa6";
 import { urlNumeros } from '../../../../services/url_number';
 import { HeroXMark } from '../../../../components/icon/heroicons';
+import ModalForm from '../../../../components/ModalRegistro';
+import FormularioControlCalidadTarja from '../../Formularios Produccion/Formulario Control Calidad Tarja/FormularioControlCalidadTarja';
 
 
 interface ILoteCompletadoProps {
@@ -38,19 +40,8 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
   const { isDarkTheme } = useDarkMode()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
-  const [openModalCCPepa, setOpenModalCCPepa] = useState<boolean>(false)
-  const [ccPepaConfirmacion, setccPepaConfirmacion] = useState<boolean>(false)
-  const [openDetail, setOpenDetail] = useState<boolean>(false)
-  const [openConfirmacion, setOpenConfirmacion] = useState<boolean>(false)
-  const [confirmacion, setConfirmacion] = useState<boolean>(false)
-  const [confirmacionCCPepa, setConfirmacionCCPepa] = useState<boolean>(false)
-  const [isCalibrable, setIsCalibrable] = useState<boolean>(false)
+  const [openModalCCTarja, setOpenModalCCTarja] = useState<boolean>(false)
 
-  // const { data: patio_exterior } = useAuthenticatedFetch<TPatioTechadoEx>(
-  //   authTokens,
-  //   validate,
-  //   `/api/patio-exterior/${row?.guia_patio}`
-  // )
 
   const eliminarTarja = async (id_lote: number) => {
     const res = await fetch(`${base_url}/api/produccion/${id}/tarjas_resultantes/${id_lote}/`, {
@@ -89,6 +80,8 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
       toast.error("No se pudo procesar la tarja, vuelve a intentarlo")
     }
   }
+
+  console.log(row)
 
   return (
     <>
@@ -132,15 +125,17 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
                 </Tooltip>
                 )
               : (
-                <Tooltip text='Envase a Procesar'>
-                  <button
-                    type='button'
-                    onClick={() => actualizarEstadoTarja(row?.id!)}
-                    className='w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105'
-                    >
-                      <RiErrorWarningFill style={{ fontSize: 35 }}/>
-                  </button>
-                </Tooltip>
+                <ModalForm
+                  open={openModalCCTarja}
+                  setOpen={setOpenModalCCTarja}
+                  textTool='CC Tarja Resultante'
+                  title='Control Calidad Tarja Resultante'
+                  icon={<RiErrorWarningFill style={{ fontSize: 35 }}/>}
+                  size={900}
+                  width={`w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105`}
+                  >
+                    <FormularioControlCalidadTarja id_lote={row?.id}/>
+                </ModalForm>
                 )
           }
           <Tooltip text='Envase a Procesar'>

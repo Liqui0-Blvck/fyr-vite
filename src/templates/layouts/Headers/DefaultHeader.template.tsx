@@ -6,7 +6,7 @@ import SelectYear from './_partial/SelectYear';
 
 const DefaultHeaderTemplate = () => {
 	return (
-		<Header>
+		<Header className='h-16'>
 			<HeaderLeft>
 				<SearchPartial />
 			</HeaderLeft>

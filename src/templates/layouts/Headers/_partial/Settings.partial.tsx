@@ -48,11 +48,6 @@ const SettingsPartial = () => {
 							onClick={() => setDarkModeStatus(DARK_MODE.LIGHT)}
 							isActive={darkModeStatus === DARK_MODE.LIGHT}
 						/>
-						<Button
-							icon='HeroComputerDesktop'
-							onClick={() => setDarkModeStatus(DARK_MODE.SYSTEM)}
-							isActive={darkModeStatus === DARK_MODE.SYSTEM}
-						/>
 					</ButtonGroup>
 				</DropdownItem>
 			</DropdownMenu>

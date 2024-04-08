@@ -75,7 +75,7 @@ export const conductorSchema = Yup.object().shape({
   nombre: Yup.string().required('El nombre es requerido'),
   apellido: Yup.string().required('El apellido es requerido'),
   rut: Yup.string().required('El RUT es requerido'),
-  telefono: Yup.string().required('El teléfono es requerido'),
+  telefono: Yup.string(),
 });
 
 export const comercializadorSchema = Yup.object().shape({
@@ -89,7 +89,7 @@ export const comercializadorSchema = Yup.object().shape({
 
 export const operarioSchema = Yup.object().shape({
   nombre: Yup.string().required('El nombre es requerido'),
-  apellido: Yup.string().required('El apellido es requerido'),
+  apellido: Yup.string(),
   rut: Yup.string().required('El RUT es requerido'),
   tipo_operario: Yup.string().required('El tipo de operario es requerido'),
   activo: Yup.boolean().required('El estado activo/inactivo es requerido'),

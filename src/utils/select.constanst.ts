@@ -1,78 +1,5 @@
 import { TCargo } from "../types/registros types/registros.types";
 
-export const ESTADOS = [
-  "Muy mal estado",
-  "Mal estado",
-  "Regular",
-  "Buen estado",
-  "Muy buen estado",
-  "Nuevo",
-];
-
-export const ESTADO_OC = [
-  { value: 1, label: "Creada" },
-  { value: 2, label: "Aprobada" },
-  { value: 3, label: "Rechazada" },
-  { value: 4, label: "Pendiente" },
-  { value: 5, label: "Procesada" },
-];
-
-export const TIPO_PROCESADOR = [
-  "Intel i3",
-  "Intel i5",
-  "Intel i7",
-  "Intel i9",
-  "Ryzen 3",
-  "Ryzen 5",
-  "Ryzen 7",
-  "Ryzen 9",
-];
-
-export const CANTIDAD_RAM = [
-  "2 GB",
-  "4 GB",
-  "6 GB",
-  "8 GB",
-  "10 GB",
-  "12 GB",
-  "14 GB",
-  "16 GB",
-];
-
-export const TIPO_LICENCIA = [
-  "Windows 10",
-  "Windows 10 Pro",
-  "Windows 11",
-  "Windows 11 Pro",
-];
-
-export const DEPARTAMENTO = [
-  "Departamento de Abogacía",
-  "Departamento de Comunicaciones",
-  "Departamento de Desarrollo de Programas",
-  "Departamento de Finanzas y Control",
-  "Departamento de Padrinazgo",
-  "Departamento de Recaudación de Fondos",
-  "Departamento de Recursos Humanos & DO",
-  "Departamento de TIC",
-  "Dirección Nacional",
-  "Interárea",
-];
-
-export const TIPO_DISCO = [
-  "Sin especificar",
-  "Disco Duro",
-  "SSD",
-];
-
-export const CAPACIDAD_DISCO = [
-  "Sin especificar",
-  "250 GB",
-  "500 GB",
-  "1 TB",
-  "2 TB",
-];
-
 export const TIPO_CLIENTE = [
   { value: 1, label: "Empresa" },
   { value: 2, label: "Fundacion" },
@@ -275,3 +202,44 @@ export const TIPOS_BIN = [
 ]
 
 
+
+
+export const CALIBRES = [
+  {
+    name: 'Categoria 1',
+    calibres: [
+      { id: '0', name: 'Sin Calibre' },
+      { id: '1', name: 'PreCalibre' },
+      { id: '2', name: '18/20' },
+      { id: '3', name: '20/22' },
+      { id: '4', name: '23/25' },
+      { id: '5', name: '25/27' },
+      { id: '6', name: '27/30' },
+      { id: '7', name: '30/32' },
+      { id: '8', name: '32/34' },
+      { id: '9', name: '34/36' },
+      { id: '10', name: '36/40' },
+      { id: '11', name: '40+' },
+    ],
+  },
+  {
+    name: 'Elaborados',
+    calibres: [
+      { id: '12', name: '3x5mm' },
+      { id: '13', name: '2x4mm' },
+      { id: '14', name: '4x6mm' },
+      { id: '15', name: '3x5mm' },
+      { id: '16', name: '2x4mm' },
+      { id: '17', name: '4x6mm' },
+      { id: '18', name: '+2mm' },
+      { id: '19', name: '-2mm' },
+      { id: '20', name: '+2mm' },
+      { id: '21', name: '-2mm' },
+    ],
+  },
+];
+
+export const CANTIDAD_MUESTRA_PRODUCCION = [
+  { value: 250, label: '250 Gramos' },
+  { value: 500, label: '500 Gramos' },
+]

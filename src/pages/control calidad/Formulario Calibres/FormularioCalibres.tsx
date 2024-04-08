@@ -114,7 +114,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
            calibre_20_22,
            calibre_22_24,
            calibre_23_25,
-           calibre_26_28,
+           calibre_25_27,
            calibre_27_30,
            calibre_30_32,
            calibre_32_34,
@@ -131,7 +131,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
       + parseFloat(calibre_20_22 ?? 0) 
       + parseFloat(calibre_22_24 ?? 0) 
       + parseFloat(calibre_23_25 ?? 0) 
-      + parseFloat(calibre_26_28 ?? 0) 
+      + parseFloat(calibre_25_27 ?? 0) 
       + parseFloat(calibre_27_30 ?? 0) 
       + parseFloat(calibre_30_32 ?? 0)
       + parseFloat(calibre_32_34 ?? 0)
@@ -155,7 +155,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
     formik.values.calibre_18_20,
     formik.values.calibre_20_22,
     formik.values.calibre_23_25,
-    formik.values.calibre_26_28,
+    formik.values.calibre_25_27,
     formik.values.calibre_27_30,
     formik.values.calibre_30_32,
     formik.values.calibre_32_34,

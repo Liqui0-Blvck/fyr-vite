@@ -534,4 +534,5 @@ export type TControlCalidadTarja = {
   fecha_modificacion: string;
   tarja: number;
   cc_registrado_por: string | null;
+  estado_cc_label: string
 }

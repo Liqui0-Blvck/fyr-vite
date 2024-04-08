@@ -105,6 +105,7 @@ const DetalleBodega = lazy(() => import ('../pages/bodega/Detalle Bodega/Detalle
 
 // CC TARJA 
 const ListaCCTarja = lazy(() => import ('../pages/control calidad tarjas/ListaControlCalidadTarja.tsx'))
+const DetalleCCTarja = lazy(() => import ('../pages/control calidad tarjas/Detalle Control Calidad Tarja/DetalleCCTarja.tsx'))
 /**
  * Other
  */
@@ -188,6 +189,7 @@ const contentRoutes: RouteProps[] = [
 
 	// TARJAS CC
 	{ path: '/app/tarjas-cc/', element: <ListaCCTarja />},
+	{ path: '/app/tarjas-cc/:id', element: <DetalleCCTarja />},
 
 	
 

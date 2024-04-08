@@ -45,12 +45,12 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
           })
         })
         if (res.ok) {
-          toast.success("El envase fue registrado exitosamente!!")
+          toast.success("El Camion fue registrado exitosamente!!")
           refresh(true)
           setOpen(false)
 
         } else {
-          toast.error("No se pudo registrar el envase, volver a intentar")
+          toast.error("No se pudo registrar el camion, volver a intentar")
         }
       } catch (error) {
         console.log(error)

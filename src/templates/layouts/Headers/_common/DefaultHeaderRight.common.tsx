@@ -8,7 +8,7 @@ const DefaultHeaderRightCommon = () => {
 	return (
 		<>
 			<SettingsPartial />
-			<LanguageSelectorPartial />
+			{/* <LanguageSelectorPartial /> */}
 		</>
 	);
 };

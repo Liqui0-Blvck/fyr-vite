@@ -133,13 +133,13 @@ const DashboardProduccion = () => {
               activeTab.text === 'General'
                 ? (
                   <>
-                    <div className='col-span-12 sm:col-span-4 lg:col-span-4'>
+                    <div className='col-span-12 '>
                       <Balance1Partial activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!}/>
                     </div>
-                    <div className='col-span-12 sm:col-span-4 lg:col-span-4'>
+                    <div className='row-start-2 col-span-12 '>
                       <Balance2Partial activeTab={activeTab} programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!}/>
                     </div>
-                    <div className='col-span-12 sm:col-span-4 lg:col-span-4'>
+                    <div className='col-span-12 '>
                       <Balance3Partial activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!} tarjas_resultantes={tarjas_resultantes!}/>
                     </div>
                     </>
@@ -160,27 +160,27 @@ const DashboardProduccion = () => {
                         : null
               }
 						</div>
-						{
+						{/* {
               activeTab.text === 'General'
                 ? (
                   <>
                     <div className='col-span-12 2xl:col-span-4'>
-                      {/* <CommentPartial /> */}
+                      <CommentPartial />
                     </div>
 
                     <div className='col-span-12 2xl:col-span-8'>
                       <Card className='h-full'>
-                        {/* <TablePartial /> */}
-                        hola
+                        <TablePartial />
+                        
                       </Card>
                     </div>
                     <div className='col-span-12 2xl:col-span-4'>
-                      {/* <TimelinePartial /> */}
+                      <TimelinePartial />
                     </div>
                   </>
                   )
                 : null
-            }
+            } */}
 
 					</div>
 				</Container>

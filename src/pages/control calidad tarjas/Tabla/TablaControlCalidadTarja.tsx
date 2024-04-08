@@ -37,6 +37,7 @@ import { Tooltip } from 'antd';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { cargolabels } from '../../../utils/generalUtils';
+import { variedadFilter } from '../../../constants/options.constants';
 
 
 const columnHelper = createColumnHelper<TControlCalidadTarja>();
@@ -101,26 +102,24 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 
 
 	const columns = [
-		columnHelper.accessor('numero_lote', {
+		columnHelper.accessor('tarja', {
 			cell: (info) => (
-				<div></div>
-				// <div className='font-bold '>{`${info.row.original.numero_lote}`}</div>
+				<div className='font-bold '>{`${info.row.original.tarja}`}</div>
 			),
-			header: 'N° Lote',
+			header: 'N° Tarja',
 		}),
-		columnHelper.accessor('productor', {
+		columnHelper.accessor('variedad', {
 			cell: (info) => {
+				const variedad = info.row.original.variedad
 				return (
-					<div></div>
-					// <div className='font-bold'>{`${info.row.original.productor}`}</div>
+					<div className='font-bold'>{`${variedad ? variedadFilter.find(variety => variety.value === variedad)?.label : 'Aun sin datos' }`}</div>
 				)
 			},
-			header: 'Productor ',
+			header: 'Variedad',
 		}),
 		columnHelper.accessor('estado_cc_label', {
 			cell: (info) => (
-				<div></div>
-				// <div className='font-bold'>{`${info.row.original.estado_cc_label}`}</div>
+				<div className='font-bold'>{`${info.row.original.estado_cc_label}`}</div>
 			),
 			header: 'Estado',
 		}),
@@ -134,11 +133,12 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
-
 				const id = info.row.original.id;
+
+
 				return (
 					<div className='h-full w-full flex justify-around gap-2'>
-						<Link to={`/app/control-calidad/${info.row.original.id}`}
+						<Link to={`/app/tarjas-cc/${info.row.original.tarja}`}
 							className={`w-24 px-1 h-12 
 								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
 								 hover:scale-105 rounded-md flex items-center justify-center`}>
