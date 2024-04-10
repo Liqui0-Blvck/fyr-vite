@@ -39,6 +39,7 @@ import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/h
 import { Tooltip } from 'antd';
 import FormularioEdicionComercializador from '../Formulario Edicion/FormularioEdicionComercializador';
 import DetalleComercializador from '../Detalle/Detalle';
+import toast from 'react-hot-toast';
 
 
 
@@ -65,8 +66,9 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
     })
     if (response.ok) {
       refresh(true)
+      toast.success('Se ha eliminado correctamente el comercializador')
     } else {
-      console.log("nop no lo logre")
+      toast.error('No se ha logrado eliminar el comercializador')
     }
   }
 
@@ -192,7 +194,7 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
   });
 
   return (
-    <PageWrapper name='ListaComercializadores'>
+    <PageWrapper name='Lista Comercializadores'>
       <Subheader>
         <SubheaderLeft>
           <FieldWrap

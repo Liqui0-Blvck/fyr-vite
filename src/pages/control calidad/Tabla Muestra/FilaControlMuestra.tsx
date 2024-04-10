@@ -158,7 +158,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
             </Tooltip>
 
             {
-              cargolabels(perfilData).includes('CDC Jefatura') && row?.es_contramuestra
+              cargolabels(perfilData).includes('CDC Jefatura', 'Administrador') && row?.es_contramuestra
                 ? (
                   <ModalRegistro
                     open={openConfirmacion}

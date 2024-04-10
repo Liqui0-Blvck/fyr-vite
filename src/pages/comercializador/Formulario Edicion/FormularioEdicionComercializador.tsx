@@ -53,13 +53,13 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
           })
         })
         if (res.ok) {
-          toast.success("El comercializador fue registrado exitosamente!!")
+          toast.success("El comercializador fue editado exitosamente!!")
           refresh(true)
           setOpen(false)
           navigate('/app/comercializadores')
 
         } else {
-          toast.error("No se pudo registrar el camión volver a intentar")
+          toast.error("No se pudo editado el camión volver a intentar")
         }
       } catch (error) {
         console.log(error)

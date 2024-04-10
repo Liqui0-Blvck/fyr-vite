@@ -30,6 +30,11 @@ const TablaEnvasesLotes: FC<IProduccionProps> = ({ data, refresh, id_lote, produ
   const { isDarkTheme } = useDarkMode();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [search, setSearch]: [string, (search: string) => void] = useState("");
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
 
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
@@ -45,6 +50,10 @@ const TablaEnvasesLotes: FC<IProduccionProps> = ({ data, refresh, id_lote, produ
     <div>
       <div
           className='relative left-[0px] lg:left-0 p-5 '>
+        <div className='w-full h-full mb-5 flex gap-5 items-center'>
+          <span>Buscar Tarja de Producción MP: </span>
+          <input type="text" onChange={handleChange} className='dark:bg-zinc-600 bg-zinc-300 px-4 py-2 rounded-md '/>
+        </div>
         <TableContainer sx={{ height: 345, borderRadius: 3 }}>
           <Table className='table' aria-label="simple table">
             <TableHead className='table-header'>
@@ -57,7 +66,12 @@ const TablaEnvasesLotes: FC<IProduccionProps> = ({ data, refresh, id_lote, produ
               </TableRow>
             </TableHead>
             <TableBody className='table-body' >
-              {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: TEnvasesPrograma) => {
+              {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).
+                filter((row) => 
+                  row.numero_lote.toString().toLocaleLowerCase().includes(search) ||
+                  row.variedad.toString().toLocaleLowerCase().includes(search)
+              ).
+                map((row: TEnvasesPrograma) => {
                 return (
                   <TableRow key={row.id} className='table-row-body' style={{ overflowX: 'auto', height: 40 }}>
                     <FilaEnvaseLote envase={row} refresh={refresh} setOpen={() => {}} produccion={produccion!}/>

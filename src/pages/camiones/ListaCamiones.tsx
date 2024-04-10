@@ -11,7 +11,6 @@ const ListaCamiones = () => {
     `/api/registros/camiones/`
   )
 
-
   return (
     <div className="h-full">
       <TablaCamion data={camiones ? camiones : []} refresh={setRefresh} />

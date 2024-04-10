@@ -71,9 +71,7 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 		localStorage.setItem('theme', darkModeStatus as string);
 
 		if (
-			localStorage.getItem('theme') === DARK_MODE.DARK ||
-			(localStorage.getItem('theme') === DARK_MODE.SYSTEM &&
-				window.matchMedia(`(prefers-color-scheme: ${DARK_MODE.DARK})`).matches)
+			localStorage.getItem('theme') === DARK_MODE.DARK
 		) {
 			document.documentElement.classList.add(DARK_MODE.DARK);
 			setIsDarkTheme(true);

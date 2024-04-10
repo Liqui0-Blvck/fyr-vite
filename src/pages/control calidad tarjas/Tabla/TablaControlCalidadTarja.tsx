@@ -146,7 +146,7 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 						</Link>
 
 						{
-							cargolabels(perfilData).includes('CDC Jefatura')
+							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
 								? (
 									<ModalRegistro
 										open={edicionModalStatus}
@@ -166,7 +166,7 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 						}
 
 						{
-							cargolabels(perfilData).includes('CDC Jefatura')
+							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
 								? (
 									<Tooltip title='Eliminar'>
 										<button onClick={async () => await asisteDelete(id)} type='button' className={`w-24 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>

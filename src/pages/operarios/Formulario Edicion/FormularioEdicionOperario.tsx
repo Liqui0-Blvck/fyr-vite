@@ -54,13 +54,13 @@ const FormularioEdicionOperario: FC<IFormChoferes> = ({ setOpen, refresh, id }) 
           })
         })
         if (res.ok) {
-          toast.success("El operario fue registrado exitosamente!!")
+          toast.success("El operario fue editado exitosamente!!")
           setOpen(false)
           refresh(true)
           navigate('/app/operarios')
 
         } else {
-          toast.error("No se pudo registrar el operario volver a intentar")
+          toast.error("No se pudo editar el operario volver a intentar")
         }
       } catch (error) {
         console.log(error)

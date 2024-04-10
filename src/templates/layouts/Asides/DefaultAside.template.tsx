@@ -52,12 +52,12 @@ const DefaultAsideTemplate = () => {
 						<NavItem {...appPages.recepcionAppPages.subPages.envases} />
 						<NavItem {...appPages.recepcionAppPages.subPages.controlCalidad} />
 						{
-							cargolabels(perfilData).includes('CDC Jefatura')
+							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
 								? <NavItem {...appPages.recepcionAppPages.subPages.control_calidad_vb} />
 								: null
 						}
 						{
-							cargolabels(perfilData).includes('CDC Jefatura')
+							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
 								? <NavItem {...appPages.recepcionAppPages.subPages.proyeccion} />
 								: null
 						}
@@ -75,7 +75,7 @@ const DefaultAsideTemplate = () => {
 					</NavCollapse>
 
 				{
-					cargolabels(perfilData).includes('Bodega Patio Exterior')
+					cargolabels(perfilData).includes('Bodega Patio Exterior', 'Administrador')
 						? (
 							<NavCollapse
 								text={appPages.bodega.text}

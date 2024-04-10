@@ -245,7 +245,7 @@ const DetalleCC = () => {
         <div className='flex items-center justify-between px-8'>
           <div className='w-72'>
             {
-              cc_rendimiento?.length! < 2 && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP')
+              cc_rendimiento?.length! < 2 && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP', 'Administrador')
                 ? (
                     <ModalRegistro
                       open={openModalRegistro}

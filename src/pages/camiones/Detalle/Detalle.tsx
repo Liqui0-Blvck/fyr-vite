@@ -36,14 +36,14 @@ const DetalleCamion = ({ id }: { id: number }) => {
       </div>
 
       <div className='md:col-span-2 md:flex-col md:cols-start-2 items-center'>
-        <label htmlFor="rut_productor">Rut Productor: </label>
+        <label htmlFor="rut_productor">Acoplado: </label>
         <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
           <span>{camiones?.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}</span>
         </div>
       </div>
 
       <div className='md:col-span-4 md:flex-col md:cols-start-2 items-center'>
-        <label htmlFor="rut_productor">Rut Productor: </label>
+        <label htmlFor="rut_productor">Observaciones: </label>
         <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex h-32 rounded-md`}>
           <span>{camiones?.observaciones}</span>
         </div>

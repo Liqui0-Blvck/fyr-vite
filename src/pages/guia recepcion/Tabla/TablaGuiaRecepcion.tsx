@@ -228,7 +228,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 					</FieldWrap>
 				</SubheaderLeft>
 				{
-					cargolabels(perfilData).includes('RecepcionMP')
+					cargolabels(perfilData).includes('RecepcionMP', 'Administrador')
 						? (
 							<SubheaderRight>
 								<Link to={`${createLinkProductor}`}>

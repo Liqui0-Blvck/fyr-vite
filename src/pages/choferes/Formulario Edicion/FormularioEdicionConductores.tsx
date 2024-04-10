@@ -51,13 +51,13 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
           })
         })
         if (res.ok) {
-          toast.success("El conductor fue registrado exitosamente!!")
+          toast.success("El conductor fue editadoo exitosamente!!")
           setOpen(false)
           refresh(true)
           navigate('/app/conductores')
 
         } else {
-          toast.error("No se pudo registrar el camión volver a intentar")
+          toast.error("No se pudo editar el conductor volver a intentar")
         }
       } catch (error) {
         console.log(error)

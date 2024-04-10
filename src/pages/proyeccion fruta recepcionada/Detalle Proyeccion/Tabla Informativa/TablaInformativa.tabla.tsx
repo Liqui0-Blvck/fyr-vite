@@ -32,13 +32,9 @@ const TablaInformativa: FC<IRendimientoMuestra> = ({ data }) => {
   const { isDarkTheme } = useDarkMode();
   const [search, setSearch]: [string, (search: string) => void] = useState("");
 
-  console.log(data)
-
-  const handleChange = (e: { target: { value: string; }; }) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
-
-  console.log(search)
 
   return (
     <div>
@@ -62,7 +58,11 @@ const TablaInformativa: FC<IRendimientoMuestra> = ({ data }) => {
             </TableHead>
             <TableBody className='table-body' >
               {
-                data?.map((row: TControlCalidadB) => {
+                data?.filter(row => 
+                  row.numero_lote.toString().includes(search) ||
+                  row.kilos_totales_recepcion.toString().includes(search) ||
+                  row.variedad.toString().includes(search)
+                ).map((row: TControlCalidadB) => {
                   return (
                     <TableRow>
                       <FilaTablaInformativa muestra={row}/>

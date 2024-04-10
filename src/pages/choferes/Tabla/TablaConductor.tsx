@@ -46,6 +46,7 @@ import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/h
 import FormularioEdicionConductores from '../Formulario Edicion/FormularioEdicionConductores';
 import { Tooltip } from 'antd';
 import DetalleConductor from '../Detalle/DetalleConductor';
+import toast from 'react-hot-toast';
 
 
 const columnHelper = createColumnHelper<TConductor>();
@@ -63,16 +64,21 @@ const TablaConductor: FC<IConductorProps> = ({ data, refresh }) => {
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
 	const { isDarkTheme } = useDarkMode();
+	const { authTokens } = useAuth()
 
 	const asisteDelete = async (id: number) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/registros/choferes/${id}/`, {
 			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${authTokens?.access}`
+			}
 		})
 		if (response.ok) {
 			refresh(true)
+			toast.success('El conductor fue eliminado exitosamente!')
 		} else {
-			console.log("nop no lo logre")
+			toast.error('Error al eliminar el conductor')
 		}
 	}
 

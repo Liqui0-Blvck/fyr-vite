@@ -39,6 +39,8 @@ import { Tooltip } from 'antd';
 import useDarkMode from '../../../hooks/useDarkMode';
 import FormularioEdicionOperario from '../Formulario Edicion/FormularioEdicionOperario';
 import DetalleOperario from '../Detalle/Detalle';
+import { useAuth } from '../../../context/authContext';
+import toast from 'react-hot-toast';
 
 
 
@@ -57,22 +59,26 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
   const [globalFilter, setGlobalFilter] = useState<string>('')
   const [modalStatus, setModalStatus] = useState<boolean>(false)
   const { isDarkTheme } = useDarkMode();
+  const { authTokens, validate, perfilData } = useAuth()
 
 
   const asisteDelete = async (id: number) => {
     const base_url = process.env.VITE_BASE_URL_DEV
-    const response = await fetch(`${base_url}/api/comercializador/${id}/`, {
+    const response = await fetch(`${base_url}/api/registros/operarios/${id}/`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authTokens?.access}`
+      }
     })
     if (response.ok) {
       refresh(true)
+      toast.success('Se ha eliminado correctamente el operario')
     } else {
-      console.log("nop no lo logre")
+      toast.error('No se ha logrado eliminar el operario')
     }
   }
 
-  const editLinkProductor = `/app/productor/`
-  const createLinkProductor = `/app/registro-productor/`
+
 
   const columns = [
     columnHelper.accessor('rut', {
@@ -186,7 +192,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
   });
 
   return (
-    <PageWrapper name='ListaProductores'>
+    <PageWrapper name='Lista Productores'>
       <Subheader>
         <SubheaderLeft>
           <FieldWrap

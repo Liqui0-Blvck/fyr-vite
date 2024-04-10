@@ -39,6 +39,7 @@ import DetalleCamion from '../Detalle/Detalle';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useAuth } from '../../../context/authContext';
 import { cargolabels } from '../../../utils/generalUtils';
+import toast from 'react-hot-toast';
 
 
 
@@ -55,18 +56,22 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
 	const { isDarkTheme } = useDarkMode();
-	const { perfilData } = useAuth()
+	const { perfilData, authTokens } = useAuth()
 
 
 	const asisteDelete = async (id: number) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/registros/camiones/${id}/`, {
 			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${authTokens?.access}`
+			}
 		})
 		if (response.ok) {
 			refresh(true)
+			toast.success('Se ha eliminado correctamente el camión')
 		} else {
-			console.log("nop no lo logre")
+			toast.error('No se ha logrado eliminar el camión')	
 		}
 	}
 
@@ -187,7 +192,7 @@ const TablaCamion: FC<ICamionProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaCamiones'>
+		<PageWrapper name='Lista Camiones'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap

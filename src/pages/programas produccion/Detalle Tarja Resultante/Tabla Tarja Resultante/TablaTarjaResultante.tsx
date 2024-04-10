@@ -31,6 +31,12 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, id_lote,
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [search, setSearch]: [string, (search: string) => void] = useState("");
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
   };
@@ -40,10 +46,16 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, id_lote,
     setPage(0);
   };
 
+  
+
   return (
     <div>
       <div
           className='relative left-[0px] lg:left-0 p-5 '>
+        <div className='w-full h-full mb-5 flex gap-5 items-center'>
+          <span>Buscar Tarja de Producción MP: </span>
+          <input type="text" onChange={handleChange} className='dark:bg-zinc-600 bg-zinc-300 px-4 py-2 rounded-md '/>
+        </div>
         <TableContainer sx={{ height: 320, borderRadius: 3 }}>
           <Table className='table' aria-label="simple table">
             <TableHead className='table-header'>
@@ -56,7 +68,12 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, id_lote,
               </TableRow>
             </TableHead>
             <TableBody className='table-body' >
-              {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: TTarjaResultante) => {
+              {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).
+                filter((row) => 
+                  row.codigo_tarja.toString().toLowerCase().includes(search) ||
+                  row.tipo_patineta.toString().includes(search)
+                ).
+                map((row: TTarjaResultante) => {
                 return (
                   <TableRow key={row.id} className='table-row-body' style={{ overflowX: 'auto', height: 40}}>
                     <FilaTarjaResultante envase={row || []} refresh={refresh} setOpen={() => {}}/>
