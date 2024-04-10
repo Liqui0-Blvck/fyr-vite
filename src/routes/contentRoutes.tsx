@@ -80,6 +80,9 @@ const PDFDocumentoEntrada = lazy(() => import ('../pages/programas produccion/PD
 const PDFDetalleEnvases = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDetalleEnvases.tsx'))
 
 
+const ListaProgramasReproceso = lazy(() => import ('../pages/programa reproceso/ListaProgramasReproceso.tsx'))
+
+
 // ADMINISTRADOR
 
 const FormularioRegistroPerfil = lazy(() => import ('../pages/usuarios/Formulario Usuario/FormularioRegistroPerfil.tsx'))
@@ -163,6 +166,7 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/pdf-documento-entrada/:id', element: <PDFDocumentoEntrada />},
 	{ path: '/app/pdf-detalle-envases/:id', element: <PDFDetalleEnvases />},
 	{ path: '/app/proyeccion-rendimiento/:id', element: <DetalleControlRendimiento />},
+	{ path: '/app/programa-reproceso/', element: <ListaProgramasReproceso />},
 	
 
 

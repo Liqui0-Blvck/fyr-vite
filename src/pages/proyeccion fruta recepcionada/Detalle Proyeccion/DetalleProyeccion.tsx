@@ -57,7 +57,6 @@ const DetalleProyeccion = () => {
   )
 
   const lista_controles = control_calidad?.map(lote => lote.recepcionmp)
-  console.log(lista_controles)
   const controles_calidad = lista_controles ? lista_controles.join(",") : "";
 
   useEffect(() => {

@@ -16,6 +16,7 @@ import { TablePagination } from '@mui/material';
 import FilaTablaInformativa from './FilaTablaInformativa.fila';
 import Search from 'antd/es/input/Search';
 import SearchPartial from '../../../../templates/layouts/Headers/_partial/Search.partial';
+import Input from '../../../../components/form/Input';
 
 
 interface IRendimientoMuestra {
@@ -29,19 +30,23 @@ interface IRendimientoMuestra {
 const TablaInformativa: FC<IRendimientoMuestra> = ({ data }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
-  const [filtro, setFiltro]
+  const [search, setSearch]: [string, (search: string) => void] = useState("");
 
   console.log(data)
 
+  const handleChange = (e: { target: { value: string; }; }) => {
+    setSearch(e.target.value);
+  };
+
+  console.log(search)
 
   return (
     <div>
       <div
           className='relative left-[0px] lg:left-0 p-5 '>
-        <div className='h-full'>
-          <input
-            type='text'
-            />
+        <div className='w-full h-full mb-5 flex gap-5 items-center'>
+          <span>Buscar Lote de Recepción MP: </span>
+          <input type="text" onChange={handleChange} className='dark:bg-zinc-800 bg-zinc-300 px-4 py-2 rounded-md'/>
         </div>
         <TableContainer sx={{ height: 450 }}>
           <Table className='table' aria-label="simple table">
@@ -58,7 +63,6 @@ const TablaInformativa: FC<IRendimientoMuestra> = ({ data }) => {
             <TableBody className='table-body' >
               {
                 data?.map((row: TControlCalidadB) => {
-                  console.log(row)
                   return (
                     <TableRow>
                       <FilaTablaInformativa muestra={row}/>
