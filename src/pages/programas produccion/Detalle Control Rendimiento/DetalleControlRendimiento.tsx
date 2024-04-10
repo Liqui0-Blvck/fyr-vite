@@ -86,7 +86,7 @@ const DetalleControlRendimiento = () => {
         <h2 className='mt-10'>Proyección CDC de Programa Producción N° {id}</h2>
       </div>
       <div className='flex flex-col md:flex-row lg:flex-row w-full h-full py-10 mx-auto gap-5'>
-        <div className='w-full border border-black bg-zinc-800 rounded-md py-2'>
+        <div className='w-full dark:bg-zinc-800 bg-zinc-200 rounded-md py-2'>
           <h3 className='text-center'>Proyección de Kilos de Fruta Recepcionada</h3>
           <div className='w-full flex items-center justify-around py-3'>
             <div className='flex flex-col items-center justify-center'>
@@ -102,7 +102,7 @@ const DetalleControlRendimiento = () => {
           <TablaProyeccionRecepcionado data={cc_rendimiento_proyectado!}/>
         </div>
 
-        <div className='w-full border border-black bg-zinc-800 rounded-md py-2'>
+        <div className='w-full dark:bg-zinc-800 bg-zinc-200 rounded-md py-2'>
           <h3 className='text-center'>Rendimiento del Programa Produccion N° {id}</h3>
           <div className='w-full flex items-center justify-center py-3 gap-10'>
             <div className='flex flex-col items-center justify-center'>

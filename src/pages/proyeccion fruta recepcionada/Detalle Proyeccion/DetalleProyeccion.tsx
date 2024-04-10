@@ -92,18 +92,18 @@ const DetalleProyeccion = () => {
           <SubheaderRight>
             <div className='flex gap-2'>
               <div className='bg-blue-800 px-3 rounded-3xl flex flex-col items-center'>
-                <span className='text-lg font-semibold'>{rendimientos?.cc_calculo_final.kilos_netos} kgs</span>
-                <label htmlFor="" className='font-semibold'>Total Kilos Neto Recepcionados</label>
+                <span className='text-lg font-semibold text-white'>{rendimientos?.cc_calculo_final.kilos_netos} kgs</span>
+                <label htmlFor="" className='font-semibold text-white'>Total Kilos Neto Recepcionados</label>
               </div>
 
               <div className='bg-blue-800 px-3 rounded-3xl flex flex-col items-center'>
-                <span className='text-lg font-semibold'>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</span>
-                <label htmlFor="" className='font-semibold'>Total Kilos Pepa Bruta</label>
+                <span className='text-lg font-semibold text-white'>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</span>
+                <label htmlFor="" className='font-semibold text-white'>Total Kilos Pepa Bruta</label>
               </div>
 
               <div className='bg-blue-800 px-3 rounded-3xl flex flex-col items-center'>
-                <span className='text-lg font-semibold'>{rendimientos?.cc_calculo_final.final_exp} kgs</span>
-                <label htmlFor="" className='font-semibold'>Total Kilos Pepa Exportable</label>
+                <span className='text-lg font-semibold text-white'>{rendimientos?.cc_calculo_final.final_exp} kgs</span>
+                <label htmlFor="" className='font-semibold text-white'>Total Kilos Pepa Exportable</label>
               </div>
 
             </div>

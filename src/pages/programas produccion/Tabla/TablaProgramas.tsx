@@ -309,7 +309,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										<Tooltip title='Detalle envases del lote en Programa'>
 											<Link to={`/app/pdf-detalle-envases/${id}`}>
 												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
-													<FaFilePdf style={{ fontSize: 25 }} />
+													<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
 												</button>
 											</Link>
 										</Tooltip>
@@ -317,7 +317,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										<Tooltip title='Documento de entrada a proceso'>
 											<Link to={`/app/pdf-documento-entrada/${id}`}>
 												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
-													<FaFilePdf style={{ fontSize: 25 }} />
+													<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
 												</button>
 											</Link>
 										</Tooltip>
@@ -439,7 +439,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 									title='Informe de Producción'
 									icon={
 									<div className='flex items-center gap-1.5'>
-										<FaFilePdf style={{ fontSize: 20}}/>
+											<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
 										<span className='text-md font-semibold'>Generar Informe de Producción</span>
 									</div>
 									}
@@ -455,7 +455,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 									title='Informe de Kilos por Operario'
 									icon={
 									<div className='flex items-center gap-1.5'>
-										<FaFilePdf style={{ fontSize: 20}}/>
+										<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
 										<span className='text-md font-semibold'>Generar Informe de Kilos por Operario</span>
 									</div>
 									}

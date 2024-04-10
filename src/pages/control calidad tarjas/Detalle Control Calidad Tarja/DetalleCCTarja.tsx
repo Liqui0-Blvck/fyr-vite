@@ -60,9 +60,8 @@ const DetalleCCTarja = () => {
     }
 
   return (
-    <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full w-[90%] mx-auto
-         ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-50' } relative px-5 py-2
-        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-6  w-full overflow-auto
+    <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full w-[90%] mx-auto dark:bg-zinc-800 bg-zinc-100 relative px-5 py-2
+        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-6 overflow-auto
         rounded-md`}
     >
       <div className={`w-full col-span-3 ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } h-16 flex items-center justify-center rounded-md`}>
