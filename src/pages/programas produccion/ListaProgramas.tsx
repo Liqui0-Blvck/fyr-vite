@@ -13,6 +13,8 @@ const ListaProgramas = () => {
     validate,
     `/api/produccion/`
   )
+
+
   return (
     <div className='h-full'>
       <TablaProductor data={programas_produccion ? programas_produccion : []} refresh={setRefresh} />

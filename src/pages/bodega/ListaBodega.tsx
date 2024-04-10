@@ -11,7 +11,6 @@ const ListaCamiones = () => {
     `/api/patio-exterior/`
   )
 
-
   return (
     <div className="h-full">
       <TablaBodega data={patio_techado ? patio_techado : []} refresh={setRefresh} />

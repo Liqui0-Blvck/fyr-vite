@@ -65,11 +65,6 @@ const DetalleCCRendimiento = () => {
     getRendimientos()
   }, [control_calidad])
 
-  const cc_rendimiento = control_calidad && control_calidad.control_rendimiento && control_calidad.control_rendimiento.length > 0
-  ? [...control_calidad.control_rendimiento].shift()
-  : [];
-
-
   const { labels, valores } = chartData(rendimientos?.cc_muestra || [])
   const { labels: labels_cc_pepa, valores: valores_cc_pepa } = chartData(rendimientos?.cc_pepa || [])
   const { labels: labels_cc_calibre, valores: valores_cc_calibre } = chartData(rendimientos?.cc_pepa_calibre || [])
@@ -98,7 +93,7 @@ const DetalleCCRendimiento = () => {
           </div>
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} w-full  rounded-md h-full flex flex-col justify-center px-2`}>
             <span className='mr-4'>Peso Total de Muestra:</span>
-            <span className='font-semibold text-xl'>{cc_rendimiento?.peso_muestra} grs</span>
+            {/* <span className='font-semibold text-xl'>{cc_rendimiento?.peso_muestra} grs</span> */}
           </div>
         </div>
       </article>

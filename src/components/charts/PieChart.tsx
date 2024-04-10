@@ -5,6 +5,7 @@ import Chart from '../Chart';
 interface IPieProps {
 	series: number[] 
 	labels: string[]
+	height?: number
 }
 
 const PieChart: FC<IPieProps> = ({ series, labels }) => {

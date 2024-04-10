@@ -14,7 +14,6 @@ const ListaControlRendimiento = () => {
     `/api/control-calidad/recepcionmp/`
   )
 
-  console.log("control_Calidad", control_calidad)
 
   return (
     <div className="h-full">

@@ -24,18 +24,15 @@ const DetalleCamion = () => {
   const { data: guia } = useAuthenticatedFetch<TPatioTechadoEx>(
     authTokens,
     validate,
-    `/api/patio-techado-ex/${id}`
+    `/api/patio-exterior/${id}`
   )
 
   const envasesPatio: TEnvasePatio[] = guia?.envases!
 
-  
-  
-
   return (
     <div
       className={`flex flex-col md:grid md:grid-cols-4 gap-x-3
-        gap-y-5 mt-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6 h-full
+        gap-y-5 mt-5 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-4 h-full
         rounded-md`}
     >
       <div className='w-full md:col-span-4 flex items-center justify-center'>

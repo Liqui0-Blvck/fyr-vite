@@ -27,7 +27,7 @@ interface IFormCC {
   id_muestra?: number
 }
 
-const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_muestra, CCLote }) => {
+const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CCLote }) => {
   const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
@@ -51,7 +51,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_mu
     initialValues: {
       peso_muestra_calibre: 0,
       gramos_x_asignar: 0,
-      pre_calibre: 0,
+      pre_calibre: 0, 
       calibre_18_20: 0,
       calibre_20_22: 0,
       calibre_23_25: 0,

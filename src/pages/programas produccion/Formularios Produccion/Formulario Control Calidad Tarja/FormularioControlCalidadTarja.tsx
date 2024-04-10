@@ -18,8 +18,8 @@ import { optionsVariedad, optionsCalibres, optionsCantidadMuestra } from "../../
 
 interface IFormCC {
   id_lote?: number
-  refresh?: Dispatch<SetStateAction<boolean>>
-  isOpen?: Dispatch<SetStateAction<boolean>>
+  refresh: Dispatch<SetStateAction<boolean>>
+  isOpen: Dispatch<SetStateAction<boolean>>
   // CCLote?: TPepaMuestra | null
   id_muestra?: number
 }
@@ -31,8 +31,28 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
   const {pathname} = useLocation()
   const id = urlNumeros(pathname)
 
+  const actualizarEstadoTarja = async (id_lote: number) => {
+    const res = await fetch(`${base_url}/api/produccion/${id}/tarjas_resultantes/${id_lote}/`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
+      },
+      body: JSON.stringify({
+        cc_tarja: true,
+        produccion: id[0]
+      })
+    })
+  }
 
-  console.log("id de algo", id_lote)
+  console.log(id_lote)
+
+
+  // const { data: algo } = useAuthenticatedFetch(
+  //   authTokens,
+  //   validate,
+  //   `/api/`
+  // )
 
   
 
@@ -65,13 +85,16 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
             'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
-            ...values
+            ...values,
+            estado_cc: '3'
           })
         })
         if (res.ok) {
+          const data = await res.json()
           toast.success("El control de calidad de la tarja fue registrado exitosamente!!")
-          refresh!(true)
-          isOpen!(false)
+          refresh(true)
+          isOpen(false)
+          actualizarEstadoTarja(id_lote!)
 
         } else {
           toast.error("No se pudo registrar el control de calidad de la tarja, volver a intentar")

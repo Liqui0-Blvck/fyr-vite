@@ -53,7 +53,12 @@ const DefaultAsideTemplate = () => {
 						<NavItem {...appPages.recepcionAppPages.subPages.controlCalidad} />
 						{
 							cargolabels(perfilData).includes('CDC Jefatura')
-								? <NavItem {...appPages.recepcionAppPages.subPages.lotes} />
+								? <NavItem {...appPages.recepcionAppPages.subPages.control_calidad_vb} />
+								: null
+						}
+						{
+							cargolabels(perfilData).includes('CDC Jefatura')
+								? <NavItem {...appPages.recepcionAppPages.subPages.proyeccion} />
 								: null
 						}
 					</NavCollapse>

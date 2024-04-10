@@ -139,8 +139,6 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 		}
 	}
 
-	console.log(data)
-
 
 	const columns = [
 		columnHelper.accessor('id', {
@@ -201,11 +199,12 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 			id:'actions',
 			cell: (info) => (
 				<div className='font-bold truncate'>
-					{/* {`${info.row.original.telefono}`} */}
 					<Tooltip title='Rendimiento CDC'>
-						<button className='w-full rounded-md h-12 bg-zinc-300 flex items-center justify-center p-2'>
-							<p className='text-black m-0'>Rendimiento CDC</p>
-						</button>
+						<Link to={`/app/proyeccion-rendimiento/${info.row.original.id}/`}>
+							<button className='w-full rounded-md h-12 bg-zinc-300 flex items-center justify-center p-2'>
+								<p className='text-black m-0'>Rendimiento CDC</p>
+							</button>
+						</Link>
 					</Tooltip>
 				</div>
 
@@ -444,7 +443,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										<span className='text-md font-semibold'>Generar Informe de Producción</span>
 									</div>
 									}
-									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105`}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-auto text-white bg-red-700 hover:bg-red-600 hover:scale-105`}
 									size={800}
 								>
 									<FormularioInformeProduccion setOpen={setInformePro}/>

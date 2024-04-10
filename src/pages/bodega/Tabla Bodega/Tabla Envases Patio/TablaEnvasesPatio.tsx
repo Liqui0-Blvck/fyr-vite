@@ -28,8 +28,6 @@ const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
 
-  console.log(data)
-
   return (
     <div>
       <div

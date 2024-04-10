@@ -16,6 +16,8 @@ import ModalConfirmacion from '../../../components/ModalConfirmacion'
 import FormularioCCPepaCalibre from '../../control calidad/Formulario Calibres/FormularioCalibres'
 import { FaPlus } from 'react-icons/fa6'
 import PieChart from '../../../components/charts/PieChart'
+import Label from '../../../components/form/Label'
+import { optionsCalibres } from '../../../utils/generalUtils'
 
 const DetalleCCTarja = () => {
   const { isDarkTheme } = useDarkMode();
@@ -29,145 +31,165 @@ const DetalleCCTarja = () => {
     authTokens,
     validate,
     `/api/produccion/cdc-tarjaresultante/${id}`
-  ) 
+  )
 
-  console.log(control_calidad)
-
-  // const { data: usuario } = useAuthenticatedFetch<TPerfil>(
-  //   authTokens,
-  //   validate,
-  //   `/api/registros/perfil/${control_calidad?.control_rendimiento[0].registrado_por}`
-    
-  // )
-
-
-  // useEffect(() => {
-  //   const getRendimientos = async () => {
-  //     const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/rendimiento_lotes/${control_calidad?.recepcionmp}/`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Bearer ${authTokens?.access}`
-  //       }
-  //     })
+    const clavesDeseadas = [
+      'trozo',
+      'picada',
+      'hongo',
+      'daño_insecto',
+      'dobles',
+      'goma',
+      'basura',
+      'mezcla_variedad',
+      'pepa_sana',
+      'fuera_color',
+      'punto_goma',
+      'vana_deshidratada',
+    ];
   
-  //     if (res.ok){
-  //       setRendimientos(await res.json())
-  //     } else {
-  //       console.log("Tuve problemas")
-  //     }
-  //   }
+    const totalMuestra = control_calidad?.cantidad_muestra;
+    const labels: string[] = [];
+    const valores: number[] = [];
   
-  //   getRendimientos()
-  // }, [control_calidad])
-
-  // const cc_rendimiento = control_calidad && control_calidad.control_rendimiento && control_calidad.control_rendimiento.length > 0
-  // ? [...control_calidad.control_rendimiento].shift()
-  // : [];
-
-
-  // const { labels, valores } = chartData(rendimientos?.cc_muestra || [])
-  // const { labels: labels_cc_pepa, valores: valores_cc_pepa } = chartData(rendimientos?.cc_pepa || [])
-  // const { labels: labels_cc_calibre, valores: valores_cc_calibre } = chartData(rendimientos?.cc_pepa_calibre || [])
-
+    if (control_calidad){
+      clavesDeseadas.forEach((key) => {
+        labels.push(key); // Agregar la etiqueta
+        valores.push(control_calidad[key]); // Calcular y agregar el valor
+      });
+    }
 
   return (
     <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full w-[90%] mx-auto
          ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-50' } relative px-5 py-2
-        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-10 pb-40 w-full overflow-auto
+        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-6  w-full overflow-auto
         rounded-md`}
     >
-      <div className={`w-full col-span-3 ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } h-20 flex items-center justify-center rounded-md`}>
-        <h1 className='text-3xl'>Control de rendimiento para el Lote N° {control_calidad?.id}</h1>
+      <div className={`w-full col-span-3 ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } h-16 flex items-center justify-center rounded-md`}>
+        <h1 className='text-3xl'>Detalle de Control de Calidad Tarja Resultante N° {control_calidad?.codigo_tarja}</h1>
       </div>
 
       <article className={`row-start-2 col-span-3 ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } w-full h-full flex md:flex-row lg:flex-row justify-between items-center gap-x-10 mx-auto`}>
         <div className='w-full md:5/12 lg:5/12 justify-between lg:h-20 flex flex-col lg:flex-row rounded-md lg:gap-x-4 gap-y-4 p-2'>
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} w-full rounded-md h-full flex flex-col justify-center px-2`}>
-            <span className='mr-4 font-semibold'>Muestra Registrada por:</span> 
-            {/* <span className='font-semibold text-xl'>{usuario?.user.username} | {usuario?.cargos.map((cargo) => cargo.cargo_label)}</span> */}
+            <span className='mr-4 font-semibold'>Código Tarja: grs</span> 
+            <span className='font-semibold text-xl'>{control_calidad?.codigo_tarja}</span>
           </div>
           
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} w-full  rounded-md h-full flex flex-col justify-center px-2`}>
-            <span className='mr-4'>Muestra del lote:</span> 
-            {/* <span className='font-semibold text-xl ml-2'>N° {control_calidad?.recepcionmp}</span> */}
+            <span className='mr-4 font-semibold'>Estado:</span> 
+            <span className='font-semibold text-xl'>{control_calidad?.estado_cc_label}</span>
           </div>
+
           <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} w-full  rounded-md h-full flex flex-col justify-center px-2`}>
-            <span className='mr-4'>Peso Total de Muestra:</span>
-            {/* <span className='font-semibold text-xl'>{cc_rendimiento?.peso_muestra} grs</span> */}
+            <span className='mr-4 font-semibold'>Calibre:</span>
+            <span className='font-semibold text-xl'>{optionsCalibres.find(calibre => calibre.value === control_calidad?.calibre)?.label}</span>
+          </div>
+
+          <div className={`border ${isDarkTheme ? 'border-zinc-700' : ' '} w-full  rounded-md h-full flex flex-col justify-center px-2`}>
+            <span className='mr-4'>Cantidad Muestra:</span>
+            <span className='font-semibold text-xl'>{control_calidad?.cantidad_muestra} grs</span>
           </div>
         </div>
       </article>
 
-      <article className={`row-start-4 row-span-4 col-span-3 w-full h-full ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } flex flex-col lg:flex-col  justify-between `}>
+      <article className={`row-start-4 row-span-4 col-span-3 w-full h-full ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } flex flex-col lg:flex-col justify-between `}>
         <div className='flex flex-col gap-5 w-full'>
-
           {
             loading
               ? <Skeleton variant="rectengular" width='100%' height={200}/>
               : (
-                <div className='flex flex-col md:flex-col w-full h-full '>
-                  <h1 className='text-3xl text-center text-gray-700'>Resultados Kilos</h1>
-                  <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col lg:flex-row items-center justify-center rounded-md py-1`}>
-                    <div className='lg:w-7/12 relative -top-2'>
-                      {/* <PieChart series={valores! || []} labels={labels! || []}/> */}
-                      <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
+                <div className='flex flex-row-reverse'>
+                  <div className='flex flex-col md:flex-col w-full h-full '>
+                    <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col lg:flex-row items-center justify-center rounded-md py-1`}>
+                      <div className='lg:w-full'>
+                        <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
+                        <PieChart series={valores! || []} labels={labels! || []}/>
+                      </div>
+                      <div className='w-full flex flex-col justify-center mt-4 lg:mt-0'> 
+                        <h1 className='text-2xl text-center mb-5'>Detalle CC Pepa Bruta</h1>
+                        <div className='grid grid-cols-4 gap-x-5 gap-y-2'>
+                          <div className='md:col-span-2'>
+                            <Label htmlFor='' className='text-center'>Trozo</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.trozo!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:col-start-3 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Picada</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.picada!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-2 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Hongo</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.hongo!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-2 md:col-start-3 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Daño Insecto</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.daño_insecto!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-3 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Dobles</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.dobles!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-3 md:col-start-3 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Vana Deshidratada</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.vana_deshidratada!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-4 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Mezcla Variedad</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.mezcla_variedad!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-4 md:col-start-3 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Fuera Color</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.fuera_color!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-5 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Goma</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.goma!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-5 md:col-start-3 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Punto Goma</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{(control_calidad?.punto_goma!).toFixed(1)} grs</span>
+                            </div>
+                          </div>
+
+                          <div className='md:row-start-6 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Basura</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{control_calidad?.basura.toFixed(1)} grs</span>
+                            </div>
+                          </div>
+                          <div className='md:row-start-6 md:col-start-3 md:col-span-2 '>
+                            <Label htmlFor='' className='text-center'>Pepa Sana</Label>
+                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                              <span>{control_calidad?.pepa_sana.toFixed(1)} grs</span>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
                     </div>
-                    {/* <div className='w-full flex flex-col justify-center  mt-4 lg:mt-0'> 
-                      <h1 className='text-2xl text-center lg:text-left'>Detalle CC Pepa Bruta</h1> 
-                      <TablaMuestrasDetalle data={control_calidad?.control_rendimiento || []}/>
-                    </div> */}
                   </div>
                 </div>
                     )
           }
-          
-          {/* {
-            loading
-              ? <Skeleton variant="rectengular" width='100%' height={200}/>
-              : (
-                <div className='flex flex-col h-full '>
-                  <h1 className='text-3xl text-center text-gray-700'>Control de Calidad Pepa Bruta </h1>
-                  <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col lg:flex-row items-center justify-center rounded-md py-1`}>
-                    <div className='w-full lg:w-7/12 relative lg:-top-2'>
-                      <PieChart  series={valores_cc_pepa || []} labels={labels_cc_pepa || []}/>
-                      <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
-                    </div>
-                    <div className='w-full flex flex-col justify-center '>
-                      <h1 className='text-2xl text-center'>Detalle CC Pepa Bruta</h1>
-                      <TablaMuestrasDetallePepa data={control_calidad?.control_rendimiento! || []}/>
-                    </div>
-                  </div>
-                </div>
-                )
-          }
-          
-          {
-            loading
-              ? <Skeleton variant="rectengular" width='100%' height={400}/>
-              : (
-                  <div className='flex flex-col h-full'>
-                    <h1 className='text-3xl text-center text-gray-700'>Control de Calidad Calibres Pepa</h1>
-                    <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col items-center justify-center rounded-md py-2 gap-y-5`}>
-                      <div className='w-full h-full flex flex-col lg:flex-row gap-y-10 py-10'>
-                        <div className='lg:w-7/12 flex flex-col'>
-                          <PieChart series={valores_cc_calibre || []} labels={labels_cc_calibre || []}/>
-                          <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
-                        </div>
-                        <div className='w-full h-full flex flex-col items-center overflow-x-auto'>
-                          <h1 className='text-2xl'>Calculo Descuento</h1>
-                          <TablaDetalleDescuento data={control_calidad?.control_rendimiento! || []} ccLote={control_calidad}/>
-                        </div>
-                      </div>
-                      <div className='w-full flex flex-col h-full justify-center py-10'>
-                        <h1 className='text-2xl text-center'>Detalle Calibres Pepa</h1>
-                        <TablaCCalibrePepa data={control_calidad?.control_rendimiento! || []} ccLote={control_calidad}/>
-                      </div>
-                    </div>
-                  </div>
-                )
-          } */}
-          
         </div>
       </article>
     </div>

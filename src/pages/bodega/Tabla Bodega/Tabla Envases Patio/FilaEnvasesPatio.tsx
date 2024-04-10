@@ -24,17 +24,7 @@ const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row }) => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
   
-
-  const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
-
-  // const { data: userData } = useAuthenticatedFetch<TPerfil>(
-  //   authTokens,
-  //   validate,
-  //   `/api/registros/perfil/${row?.registrado_por}`
-  // )
-  // const pepaBruta = (row?.peso_muestra ?? 0) - (row?.basura ?? 0) - (row?.pelon ?? 0) - (row?.ciega ?? 0) - (row?.cascara ?? 0) - (row?.pepa_huerto ?? 0)
-
-  console.log(row)
+  console.log(row?.estado_envase_label)
 
   return (
     <>

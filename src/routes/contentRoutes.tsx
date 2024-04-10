@@ -3,20 +3,7 @@ import { RouteProps } from 'react-router-dom';
 import { appPages, authPages, examplePages } from '../config/pages.config';
 import NotFoundPage from '../pages/NotFound.page';
 import LoginPage from '../pages/auth/Login.page';
-import FormularioRegistroProductores from '../pages/productores/Formulario Registro/FormularioRegistroProductores';
-import ListaCamiones from '../pages/camiones/ListaCamiones';
-import CCRendimiento from '../pages/ccvistobueno/PDF/PDFCCRendimiento.tsx';
 import DashboardProduccion from '../pages/programas produccion/Detalle Produccion/DashboardProduccion.tsx';
-
-
-
-
-
-
-// const ProjectDashboardPage = lazy(
-// 	() => import('../pages/project/ProjectDashboardPage/ProjectDashboard.page'),
-// );
-// const ProjectBoardPage = lazy(() => import('../pages/project/ProjectBoardPage/ProjectBoard.page'));
 
 
 const ProfilePage = lazy(() => import('../pages/Profile.page'));
@@ -67,6 +54,7 @@ const DetalleCCPepa = lazy(() => import('../pages/control calidad/Detalle/Detall
 const GuiaRecepcionPDF = lazy(() => import('../pages/guia recepcion/PDF/GuiaRecepcion.jsx'))
 const ControlRendimiento = lazy(() => import('../pages/ccvistobueno/ListaControlRendimiento.tsx'))
 const DetalleCCRendimiento = lazy(() => import('../pages/ccvistobueno/Detalle/DetalleCCRendimiento.tsx'))
+const DetalleProyeccion = lazy(() => import ('../pages/proyeccion fruta recepcionada/Detalle Proyeccion/DetalleProyeccion.tsx'))
 
 
 
@@ -79,7 +67,8 @@ const PDFCCRendimiento = lazy(() => import ('../pages/ccvistobueno/PDF/PDFCCRend
 // PROGRAMAS DE PRODUCCION
 
 const ListaProgramas = lazy(() => import ('../pages/programas produccion/ListaProgramas.tsx'))
-const DetallePrograma = lazy(() => import ('../pages/programas produccion/Detalle Produccion/DetalleProduccion.tsx'))
+const DetalleControlRendimiento = lazy(() => import ('../pages/programas produccion/Detalle Control Rendimiento/DetalleControlRendimiento.tsx'))
+const DetallePrograma = lazy(() => import ('../pages/programas produccion/Detalle Produccion/DashboardProduccion.tsx'))
 const FormularioRegistroPrograma = lazy(() => import ('../pages/programas produccion/Formularios Produccion/Formulario Registro Programa/FormularioRegistroPrograma.tsx'))
 
 
@@ -157,6 +146,7 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/vb_control/', element:  <ControlRendimiento /> },
 	{ path: '/app/vb_control/:id', element:  <DetalleCCRendimiento /> },
 	{ path: '/app/control-calidad/:id/muestra/:id', element:  <DetalleCCPepa /> },
+	{ path: '/app/proyeccion-fruta', element:  <DetalleProyeccion /> },
 	
 	
 	{ path: '/app/pdf-rendimiento/:id', element:  <PDFCCRendimiento /> },
@@ -164,7 +154,7 @@ const contentRoutes: RouteProps[] = [
 
 	// PROGRAMAS DE PRODUCCION
 	{ path: '/app/produccion/', element:  <ListaProgramas /> },
-	{ path: '/app/produccion/programa/:id/', element: <DashboardProduccion />},
+	{ path: '/app/produccion/programa/:id/', element: <DetallePrograma />},
 	{ path: '/app/produccion/registro-programa/:id', element: <FormularioRegistroPrograma />},
 	{ path: '/app/pdf-operario-x-kilo/', element: <PDFOperarioXKilo />},
 	{ path: '/app/pdf-operario-resumido/', element: <PDFResumidoOperario />},
@@ -172,6 +162,8 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/pdf-descascarado/', element: <PDFDescascarado />},
 	{ path: '/app/pdf-documento-entrada/:id', element: <PDFDocumentoEntrada />},
 	{ path: '/app/pdf-detalle-envases/:id', element: <PDFDetalleEnvases />},
+	{ path: '/app/proyeccion-rendimiento/:id', element: <DetalleControlRendimiento />},
+	
 
 
 
@@ -190,6 +182,7 @@ const contentRoutes: RouteProps[] = [
 	// TARJAS CC
 	{ path: '/app/tarjas-cc/', element: <ListaCCTarja />},
 	{ path: '/app/tarjas-cc/:id', element: <DetalleCCTarja />},
+	{ path: '/app/control-rendimiento/:id', element: <DetalleCCTarja />},
 
 	
 

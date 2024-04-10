@@ -34,7 +34,7 @@ interface ILoteCompletadoProps {
 
 }
 
-const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion, refresh }) => {
+const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion, refresh, setOpen }) => {
   const { authTokens, validate, perfilData, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
@@ -60,26 +60,7 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
   }
 
 
-  const actualizarEstadoTarja = async (id_lote: number) => {
-    const res = await fetch(`${base_url}/api/produccion/${id}/tarjas_resultantes/${id_lote}/`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authTokens?.access}`
-      },
-      body: JSON.stringify({
-        cc_tarja: true,
-        produccion: id[0]
-      })
-    })
-
-    if (res.ok){
-      toast.success("Tarja Procesada Correctamente")
-      refresh(true)
-    } else {
-      toast.error("No se pudo procesar la tarja, vuelve a intentarlo")
-    }
-  }
+  
 
   console.log(row)
 
@@ -134,7 +115,7 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
                   size={900}
                   width={`w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105`}
                   >
-                    <FormularioControlCalidadTarja id_lote={row?.id}/>
+                    <FormularioControlCalidadTarja id_lote={row?.id} refresh={refresh} isOpen={setOpenModalCCTarja}/>
                 </ModalForm>
                 )
           }

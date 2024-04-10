@@ -92,10 +92,16 @@ export const appPages = {
 				to: '/app/control-calidad/',
 				icon: 'HeroArchiveBox',
 			},
-			lotes: {
+			control_calidad_vb: {
 				id: 'vb_control_rendimiento',
 				text: 'VB Control Rendimiento',
 				to: '/app/vb_control/',
+				icon: 'HeroArchiveBox',
+			},
+			proyeccion: {
+				id: 'proyeccion-furta',
+				text: 'Proyeccion Fruta',
+				to: '/app/proyeccion-fruta/',
 				icon: 'HeroArchiveBox',
 			}
 		}

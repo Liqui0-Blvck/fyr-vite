@@ -138,6 +138,7 @@ export type TPatioExterior = {
   cc_guia: number
   tipo_recepcion: number
   registrado_por: number
+  estado_lote_label: number
 }
 
 export type TLoteRechazado = {
@@ -229,6 +230,8 @@ export type TControlCalidadB = {
   estado_aprobacion_cc_label  : string
   control_rendimiento: TRendimientoMuestra[]
   esta_contramuestra: string
+  kilos_totales_recepcion: number
+  variedad: number
 }
 
 
@@ -335,6 +338,40 @@ export type TCalibresSerializer = {
   calibre_40_mas: number;
 };
 
+export type TCCPromedioPorcentajeMuestras = {
+  basura: number;
+  pelon: number;
+  ciega: number;
+  cascara: number;
+  pepa_huerto: number;
+  pepa_bruta: number;
+};
+
+export type TPorcentajeCCPepaSerializer = {
+  mezcla: number;
+  insecto: number;
+  hongo: number;
+  dobles: number;
+  color: number;
+  vana: number;
+  pgoma: number;
+  goma: number;
+};
+
+export type TPorcentajeCalibresSerializer = {
+  precalibre: number;
+  calibre_18_20: number;
+  calibre_20_22: number;
+  calibre_23_25: number;
+  calibre_25_27: number;
+  calibre_27_30: number;
+  calibre_30_32: number;
+  calibre_32_34: number;
+  calibre_34_36: number;
+  calibre_36_40: number;
+  calibre_40_mas: number;
+};
+
 export type TDescuentosSerializer = {
   cc_lote: number;
   pepa_exp: number;
@@ -401,6 +438,10 @@ export type TRendimiento = {
   cc_kilos_des_merma: TKilosMermaSerializer[];
   cc_merma_porc: TMermaPorcentajeSerializer[];
   cc_calculo_final: TCalculoFinalSerializer;
+
+  cc_promedio_porcentaje_muestras: TCCPromedioPorcentajeMuestras
+  cc_promedio_porcentaje_cc_pepa: TPorcentajeCCPepaSerializer
+  cc_promedio_porcentaje_cc_pepa_calibradas: TPorcentajeCalibresSerializer
 };
 
 
@@ -510,6 +551,7 @@ export type TEnvasesPrograma = {
   kilos_fruta: number
   variedad: string
   guia_recepcion: number
+  control_calidad: number
 }
 
 export type TControlCalidadTarja = {
@@ -535,4 +577,29 @@ export type TControlCalidadTarja = {
   tarja: number;
   cc_registrado_por: string | null;
   estado_cc_label: string
+  codigo_tarja: string
 }
+
+export type TCalibreTarja = {
+  sincalibre: number
+  precalibre: number;
+  calibre_18_20: number;
+  calibre_20_22: number;
+  calibre_23_25: number;
+  calibre_25_27: number;
+  calibre_27_30: number;
+  calibre_30_32: number;
+  calibre_32_34: number;
+  calibre_34_36: number;
+  calibre_36_40: number;
+  calibre_40_mas: number;
+};
+
+
+
+export type TRendimientoActual = {
+  cc_pepa_calibre: TCalibreTarja;
+}
+
+
+

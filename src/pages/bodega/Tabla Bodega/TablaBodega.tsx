@@ -33,15 +33,10 @@ import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
 import { TOperarios, TPatioTechadoEx } from '../../../types/registros types/registros.types';
 import ModalRegistro from '../../../components/ModalRegistro';
-// import FormularioRegistroOperario from '../Formularios Registro/FormularioRegistroOperario';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { variedadFilter } from '../../../constants/options.constants';
 import Tooltip from '../../../components/ui/Tooltip';
-// import FormularioEdicionOperario from '../Formulario Edicion/FormularioEdicionOperario';
-// import DetalleOperario from '../Detalle/Detalle';
-
-
 
 
 const columnHelper = createColumnHelper<TPatioTechadoEx>();
