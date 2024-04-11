@@ -220,7 +220,11 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
             })
         }
 
-        const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}`)
+        const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}`, configLogin)
+        if (responseLogin.ok) {
+            const dataTokens = await responseLogin.json()
+            
+        }
     }
 
 
