@@ -17,9 +17,9 @@ interface IAuthContext {
   authTokens: IAuthTokens | null;
   userID: TokenPayload | null
   perfilData: TPerfil
-  validate: (token: IAuthTokens | null) => Promise<boolean>;
-  onLogin: (username: string, password: string) => Promise<void>;
-  onLogout: () => void;
+  // validate: (token: IAuthTokens | null) => Promise<boolean>;
+  // onLogin: (username: string, password: string) => Promise<void>;
+  // onLogout: () => void;
 }
 
 interface TokenPayload {
@@ -68,111 +68,111 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   // }, [lastActivity]);
 
 
-  const onLogin = async (username: string, password: string) => {
-    const body = JSON.stringify({
-      username: username,
-      password: password
-    });
+  // const onLogin = async (username: string, password: string) => {
+  //   const body = JSON.stringify({
+  //     username: username,
+  //     password: password
+  //   });
 
-    const res = await fetch(`${base_url}/api/token/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: body
-    });
+  //   const res = await fetch(`${base_url}/api/token/`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: body
+  //   });
 
-    if (res.ok) {
-      const data = await res.json();
-      toast.success('Inicio de sesión exitoso!');// Convierte a TUsuario
-      setRefresh(true)
-      setAuthTokens(data)
-      Cookies.set('token', JSON.stringify(data), { expires: 1 });
-      Cookies.set('user', JSON.stringify(data.access), { expires: 1 })
+  //   if (res.ok) {
+  //     const data = await res.json();
+  //     toast.success('Inicio de sesión exitoso!');// Convierte a TUsuario
+  //     setRefresh(true)
+  //     setAuthTokens(data)
+  //     Cookies.set('token', JSON.stringify(data), { expires: 1 });
+  //     Cookies.set('user', JSON.stringify(data.access), { expires: 1 })
 
-      // resetTimer();
+  //     // resetTimer();
 
-      // navigate(`../${appPages.mainAppPages.to}`, { replace: true });
-      window.location.href = `${appPages.mainAppPages.to}`
-    } else if (res.status === 401) {
-      toast.error('Error al ingresar, volver a intentar');
-    }
-  };
-
-
-
-  const validate = async (token: IAuthTokens | null): Promise<boolean> => {
-    const response = await fetch(`${base_url}/api/token/verify/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 'token': token?.access })
-    });
-
-    return response.status === 200 ? true : response.status === 401 ? await updateToken() : false;
-  }
-
-  const updateToken = async () => {
-    const response = await fetch(`${base_url}/api/token/refresh/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 'refresh': authTokens?.access })
-    });
+  //     // navigate(`../${appPages.mainAppPages.to}`, { replace: true });
+  //     window.location.href = `${appPages.mainAppPages.to}`
+  //   } else if (res.status === 401) {
+  //     toast.error('Error al ingresar, volver a intentar');
+  //   }
+  // };
 
 
-    if (response.status === 200) {
-      const data = await response.json();
-      console.log(data)
-      setAuthTokens(data);
-      Cookies.set('user', JSON.stringify(data));
-      return true;
-    } else {
-      return false;
-    }
-  };
 
-  useEffect(() => {
-    let isMounted = true;
+  // const validate = async (token: IAuthTokens | null): Promise<boolean> => {
+  //   const response = await fetch(`${base_url}/api/token/verify/`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ 'token': token?.access })
+  //   });
 
-    const fetchProfile = async () => {
-      try {
-        if (authTokens && userID && isMounted) {
-          const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${authTokens.access}`
-            }
-          });
+  //   return response.status === 200 ? true : response.status === 401 ? await updateToken() : false;
+  // }
 
-          if (res.ok) {
-            const data = await res.json();
-            if (isMounted) {
-              setPerfilData(data);
-            }
-          } else {
-            console.log("Tenemos un problema nuevo");
-          }
-        }
-      } catch (error) {
-        console.error("Error al obtener el perfil:", error);
-      }
-    };
+  // const updateToken = async () => {
+  //   const response = await fetch(`${base_url}/api/token/refresh/`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ 'refresh': authTokens?.access })
+  //   });
 
-    if (refresh) {
-      fetchProfile();
-    }
 
-    fetchProfile();
+  //   if (response.status === 200) {
+  //     const data = await response.json();
+  //     console.log(data)
+  //     setAuthTokens(data);
+  //     Cookies.set('user', JSON.stringify(data));
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
-    return () => {
-      isMounted = false;
-      setRefresh(false);
-    };
-  }, [authTokens, userID, refresh]);
+  // useEffect(() => {
+  //   let isMounted = true;
+
+  //   const fetchProfile = async () => {
+  //     try {
+  //       if (authTokens && userID && isMounted) {
+  //         const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
+  //           method: 'GET',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //             'Authorization': `Bearer ${authTokens.access}`
+  //           }
+  //         });
+
+  //         if (res.ok) {
+  //           const data = await res.json();
+  //           if (isMounted) {
+  //             setPerfilData(data);
+  //           }
+  //         } else {
+  //           console.log("Tenemos un problema nuevo");
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error al obtener el perfil:", error);
+  //     }
+  //   };
+
+  //   if (refresh) {
+  //     fetchProfile();
+  //   }
+
+  //   fetchProfile();
+
+  //   return () => {
+  //     isMounted = false;
+  //     setRefresh(false);
+  //   };
+  // }, [authTokens, userID, refresh]);
 
 
 
@@ -197,24 +197,41 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
 
   // Función para cerrar sesión
-  const onLogout = async () => {
-    setAuthTokens(null);
-    setPerfilData(null)
-    Cookies.remove('token')
-    Cookies.remove('user')
+  // const onLogout = async () => {
+  //   setAuthTokens(null);
+  //   setPerfilData(null)
+  //   Cookies.remove('token')
+  //   Cookies.remove('user')
 
-    // resetTimer();
+  //   // resetTimer();
 
-    navigate(`../${authPages.loginPage.to}`, { replace: true });
-  };
+  //   navigate(`../${authPages.loginPage.to}`, { replace: true });
+  // };
+
+    async function login(username:string, password: string) {
+        const configLogin = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        }
+
+        const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}`)
+    }
+
+
 
   const value: IAuthContext = {
     authTokens,
     perfilData: perfilData!,
     userID,
-    validate,
-    onLogin,
-    onLogout,
+    // validate,
+    // onLogin,
+    // onLogout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

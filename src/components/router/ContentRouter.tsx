@@ -79,7 +79,7 @@ const ContentRouter = () => {
 				</>
 			}>
 			<Routes>
-				<Route path="pdf-preview" element={<GuiaRecepcionPDF />} />
+				<Route key="guia-recepcion-pdf" path="pdf-preview" element={<GuiaRecepcionPDF />} />
 				{contentRoutes.map((routeProps) => (
 					<Route key={routeProps.path} {...routeProps} />
 				))}
