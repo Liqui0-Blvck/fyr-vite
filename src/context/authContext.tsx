@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useNavigation } from 'react-router-dom';
 import { authPages, appPages } from '../config/pages.config';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
@@ -17,9 +17,11 @@ interface IAuthContext {
   authTokens: IAuthTokens | null;
   userID: TokenPayload | null
   perfilData: TPerfil
-  // validate: (token: IAuthTokens | null) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<void>
+  refreshToken: () => Promise<string | false>
+  validate: (token: IAuthTokens | null) => Promise<boolean>;
   // onLogin: (username: string, password: string) => Promise<void>;
-  // onLogout: () => void;
+  onLogout: () => void;
 }
 
 interface TokenPayload {
@@ -46,6 +48,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [lastActivity, setLastActivity] = useState<number>(Date.now()); 
 
@@ -99,80 +102,77 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   //   }
   // };
 
+  const validate = async (token: IAuthTokens | null): Promise<boolean> => {
+    const response = await fetch(`${base_url}/api/token/verify/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 'token': token?.access })
+    });
+
+    return response.status === 200 ? true : response.status === 401 ? await updateToken() : false;
+  }
+
+  const updateToken = async () => {
+    const response = await fetch(`${base_url}/api/token/refresh/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 'refresh': authTokens?.access })
+    });
 
 
-  // const validate = async (token: IAuthTokens | null): Promise<boolean> => {
-  //   const response = await fetch(`${base_url}/api/token/verify/`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({ 'token': token?.access })
-  //   });
+    if (response.status === 200) {
+      const data = await response.json();
+      setAuthTokens(data);
+      Cookies.set('user', JSON.stringify(data));
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-  //   return response.status === 200 ? true : response.status === 401 ? await updateToken() : false;
-  // }
+  useEffect(() => {
+    let isMounted = true;
 
-  // const updateToken = async () => {
-  //   const response = await fetch(`${base_url}/api/token/refresh/`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({ 'refresh': authTokens?.access })
-  //   });
+    const fetchProfile = async () => {
+      try {
+        if (authTokens && userID && isMounted) {
+          const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authTokens.access}`
+            }
+          });
 
+          if (res.ok) {
+            const data = await res.json();
+            if (isMounted) {
+              setPerfilData(data);
+            }
+          } else {
+            console.log("Tenemos un problema nuevo");
+          }
+        }
+      } catch (error) {
+        console.error("Error al obtener el perfil:", error);
+      }
+    };
 
-  //   if (response.status === 200) {
-  //     const data = await response.json();
-  //     console.log(data)
-  //     setAuthTokens(data);
-  //     Cookies.set('user', JSON.stringify(data));
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
+    if (refresh) {
+      fetchProfile();
+    }
 
-  // useEffect(() => {
-  //   let isMounted = true;
+    fetchProfile();
 
-  //   const fetchProfile = async () => {
-  //     try {
-  //       if (authTokens && userID && isMounted) {
-  //         const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //             'Authorization': `Bearer ${authTokens.access}`
-  //           }
-  //         });
-
-  //         if (res.ok) {
-  //           const data = await res.json();
-  //           if (isMounted) {
-  //             setPerfilData(data);
-  //           }
-  //         } else {
-  //           console.log("Tenemos un problema nuevo");
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error al obtener el perfil:", error);
-  //     }
-  //   };
-
-  //   if (refresh) {
-  //     fetchProfile();
-  //   }
-
-  //   fetchProfile();
-
-  //   return () => {
-  //     isMounted = false;
-  //     setRefresh(false);
-  //   };
-  // }, [authTokens, userID, refresh]);
+    return () => {
+      isMounted = false;
+      setRefresh(false);
+    };
+  }, [authTokens, userID, refresh]);
 
 
 
@@ -197,16 +197,14 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
 
   // Función para cerrar sesión
-  // const onLogout = async () => {
-  //   setAuthTokens(null);
-  //   setPerfilData(null)
-  //   Cookies.remove('token')
-  //   Cookies.remove('user')
+  const onLogout = async () => {
+    setAuthTokens(null);
+    setPerfilData(null)
+    Cookies.remove('token')
+    Cookies.remove('user')
 
-  //   // resetTimer();
-
-  //   navigate(`../${authPages.loginPage.to}`, { replace: true });
-  // };
+    navigate(`../${authPages.loginPage.to}`, { replace: true });
+  };
 
     async function login(username:string, password: string) {
         const configLogin = {
@@ -220,22 +218,80 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
             })
         }
 
-        const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}`, configLogin)
+        const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/token/`, configLogin)
         if (responseLogin.ok) {
             const dataTokens = await responseLogin.json()
-            
+            setAuthTokens(dataTokens)
+            Cookies.set('token', JSON.stringify(dataTokens), { expires: 1 });
+            Cookies.set('user', JSON.stringify(dataTokens.access), { expires: 1 })
+            navigate(`../${appPages.mainAppPages.to}`, { replace: true });
         }
     }
 
+    async function refreshToken() {
+        const configRefresh = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                refresh: authTokens?.refresh
+            })
+        }
 
+        const responseRefresh = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/token/refresh/`, configRefresh)
+        if (responseRefresh.ok) {
+            const dataRefresh: IAuthTokens = await responseRefresh.json()
+            setAuthTokens(dataRefresh)
+            Cookies.set('token', JSON.stringify(dataRefresh), { expires: 1 });
+            Cookies.set('user', JSON.stringify(dataRefresh.access), { expires: 1 })
+            return dataRefresh.access
+        } else {
+            console.log('redirigiendo a login....')
+            setAuthTokens(null)
+            Cookies.remove('token')
+            Cookies.remove('user')
+            navigate(`../${authPages.loginPage.to}`, { replace: true });
+            return false
+        }
+    }
+
+    useEffect(() => {
+        const verificar_login = async () => {
+            const token_cookie = Cookies.get('token') ? JSON.parse(Cookies.get('token')!): ''
+            // console.log('token_cookie', token_cookie)
+            if (token_cookie == '' && location.pathname != '/login') {
+                navigate(`../${authPages.loginPage.to}`, { replace: true });
+            } else {
+                const verificarToken = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/token/verify/`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: token_cookie.access})})
+                if (verificarToken.status == 401) {
+                    const access = await refreshToken()
+                    // else {
+                    //     console.log('redirigiendo a login....')
+                    //     setAuthTokens(null)
+                    //     Cookies.remove('token')
+                    //     Cookies.remove('user')
+                    //     navigate(`../${authPages.loginPage.to}`, { replace: true });
+                    // }
+                }
+            }
+        }
+        verificar_login()
+    })
+
+    // useEffect(() => {
+    //     console.log( 'authTokens',authTokens)
+    // }, [authTokens])
 
   const value: IAuthContext = {
     authTokens,
     perfilData: perfilData!,
     userID,
-    // validate,
+    login,
+    refreshToken,
+    validate,
     // onLogin,
-    // onLogout,
+    onLogout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

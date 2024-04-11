@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { authPages, componentsPages } from '../config/pages.config';
+import { useAuth } from '../context/authContext';
 
 interface IToken {
   access: string;
@@ -90,4 +91,50 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
     setRefresh
   };
 };
+
+// export interface tipo_config {
+//     method?: string
+//     headers?: {},
+//     body?: any
+// }
+
+// export const authenticatedFetch_ = async (url: string, method: string, data: any) => {
+//     const {refreshToken, authTokens} = useAuth()
+
+//     const token = authTokens?.access
+//     const config: tipo_config = {}
+//     if (method == 'PUT' || method == 'PATCH' || method == 'POST') {
+//         config.method = method
+//         config.body = data
+//         config.headers = {
+//             'Content-Type': 'application/json',
+//             'Authorization': `Bearer ${token}`
+//         }
+//     } else {
+//         config.method = method
+//         config.headers = {
+//             'Content-Type': 'application/json',
+//             'Authorization': `Bearer ${token}`
+//         }
+//     }
+//     const response = await fetch(`${process.env.VITE_BASE_URL_DEV}${url}`, config)
+//     if (response.status == 401) {
+//         const access = await refreshToken()
+//         if (access) {
+//             config.headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${access}` }
+//             const response_token_valido = await fetch(`${process.env.VITE_BASE_URL_DEV}${url}`, config)
+//             if (response_token_valido) {
+//                 const data_token_valido: [] = await response_token_valido.json()
+//                 return data_token_valido
+//             }
+//         }
+//     } else if (response.ok) {
+//         const data: [] = await response.json()
+//         return data
+//     } else {
+//         console.log('Authenticated fetch fallo...', response.status)
+//         return false
+//     }
+// }
+
 

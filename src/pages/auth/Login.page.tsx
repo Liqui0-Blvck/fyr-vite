@@ -22,6 +22,7 @@ type TValues = {
 
 const LoginPage = () => {
 	// const { onLogin } = useAuth();
+	const { login } = useAuth();
 	const [touched, setTouched] = useState<boolean>()
 	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
 	const [open, setOpen] = useState<boolean>(false)
@@ -45,7 +46,7 @@ const LoginPage = () => {
 			return errors;
 		},
 		onSubmit: (values: TValues) => {
-			// onLogin(values.username, values.password)
+			login(values.username, values.password)
 		},
 	});
 

@@ -87,7 +87,7 @@ const TAB: TTabs = {
 };
 
 const ProfilePage = () => {
-	console.log(process.env.API_URL)
+	// console.log(process.env.API_URL)
 	const { i18n } = useTranslation();
 
 	const { setDarkModeStatus } = useDarkMode();
