@@ -103,7 +103,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   // };
 
   const validate = async (token: IAuthTokens | null): Promise<boolean> => {
-    const response = await fetch(`${base_url}/api/token/verify/`, {
+    const response = await fetch(`${base_url}/auth/jwt/verify/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -115,7 +115,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   }
 
   const updateToken = async () => {
-    const response = await fetch(`${base_url}/api/token/refresh/`, {
+    const response = await fetch(`${base_url}/auth/jwt/refresh/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -218,7 +218,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
             })
         }
 
-        const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/token/`, configLogin)
+        const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/jwt/create/`, configLogin)
         if (responseLogin.ok) {
             const dataTokens = await responseLogin.json()
             setAuthTokens(dataTokens)
@@ -239,7 +239,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
             })
         }
 
-        const responseRefresh = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/token/refresh/`, configRefresh)
+        const responseRefresh = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/jwt/refresh/`, configRefresh)
         if (responseRefresh.ok) {
             const dataRefresh: IAuthTokens = await responseRefresh.json()
             setAuthTokens(dataRefresh)
@@ -263,7 +263,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
             if (token_cookie == '' && location.pathname != '/login') {
                 navigate(`../${authPages.loginPage.to}`, { replace: true });
             } else {
-                const verificarToken = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/token/verify/`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: token_cookie.access})})
+                const verificarToken = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/jwt/verify/`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: token_cookie.access})})
                 if (verificarToken.status == 401) {
                     const access = await refreshToken()
                     // else {

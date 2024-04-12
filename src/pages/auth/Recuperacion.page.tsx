@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import PageWrapper from '../../components/layouts/PageWrapper/PageWrapper';
 import Validation from '../../components/form/Validation';
 import FieldWrap from '../../components/form/FieldWrap';
-import { Button, Input } from 'antd';
+import { Input } from 'antd';
+import Button from '../../components/ui/Button';
 import toast from 'react-hot-toast';
 import Label from '../../components/form/Label';
 
@@ -29,7 +30,7 @@ const RecoveryPage: FC<IRecoveryPageProps> = ({ setOpen }) => {
 			const errors: Partial<TValues> = {};
 
 			if (!values.email) {
-				errors.email = 'Required';
+				errors.email = 'Requerido';
 			}
 
 			return errors;
@@ -94,8 +95,7 @@ const RecoveryPage: FC<IRecoveryPageProps> = ({ setOpen }) => {
 					
 						<div className='flex p-2'>
 							<Button
-								variant='outline'
-								className='w-full font-semibold bg-zinc-700 text-white h-12'
+								variant='solid'
 								onClick={() => formik.handleSubmit()}>
 								Enviar Enlace de Recuperación
 							</Button>
