@@ -32,8 +32,6 @@ const DetalleEnvasesLote: FC<IMuestraProps> = () => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const [rendimientos, setRendimientos] = useState<TRendimiento | null>(null)
 
-  console.log(id)
-
   const { data: control_calidad, loading } = useAuthenticatedFetch<TControlCalidadB>(
     authTokens,
     validate,
@@ -45,8 +43,6 @@ const DetalleEnvasesLote: FC<IMuestraProps> = () => {
     validate,
     `/api/produccion/${id}/lotes_en_programa/`
   ) 
-
-
 
   const labels = ['Envases procesados', 'Envases Por Procesar']
   const totalEnvases = envases_produccion?.length;

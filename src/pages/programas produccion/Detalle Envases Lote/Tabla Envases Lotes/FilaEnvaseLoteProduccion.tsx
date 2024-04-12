@@ -20,6 +20,7 @@ import { variedadFilter } from '../../../../constants/options.constants';
 import Tooltip from '../../../../components/ui/Tooltip';
 import { FaForward } from "react-icons/fa6";
 import { urlNumeros } from '../../../../services/url_number';
+import { HeroXMark } from '../../../../components/icon/heroicons';
 
 
 interface ILoteCompletadoProps {
@@ -71,14 +72,32 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
     }
   }
 
+  const eliminarEnvaseProduccion = async (id_lote: number) => {
+    const res = await fetch(`${base_url}/api/produccion/${id}/lotes_en_programa/${id_lote}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authTokens?.access}`
+      }
+    })
+
+    if (res.ok){
+      toast.success("Envase devuelto con exito a bodega")
+      refresh(true)
+    } else {
+      toast.error("No se pudo devolver el envase, vuelve a intentarlo")
+    }
+  }
 
 
+  console.log(row)
 
   return (
     <>
       <TableCell className='table-cell-row-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_lote}</span>
+          <Tooltip text={`${row?.bodega_techado_ext!}`}>
+            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_lote}</span>
+          </Tooltip>
         </div>
       </TableCell>
 
@@ -126,6 +145,21 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
                   </button>
                 </Tooltip>
                 )
+          }
+          {
+            row?.bin_procesado
+              ? null
+              : (
+                <Tooltip text='Envase Procesado en Producción'>
+                  <button
+                    type='button'
+                    onClick={() => eliminarEnvaseProduccion(row?.id!)}
+                    className='w-16 rounded-md h-12 bg-red-800 hover:bg-red-700 flex items-center justify-center p-2 hover:scale-105'
+                    >
+                      <HeroXMark style={{ fontSize: 35 }}/>
+                  </button>
+                </Tooltip>
+              )
           }
 
           

@@ -54,7 +54,7 @@ const DashboardProduccion = () => {
 		},
 	]);
 
-  const { data: programa_produccion } = useAuthenticatedFetch<TProduccion>(
+  const { data: programa_produccion, setRefresh  } = useAuthenticatedFetch<TProduccion>(
     authTokens,
     validate,
     `/api/produccion/${id}/`
@@ -92,7 +92,7 @@ const DashboardProduccion = () => {
               {programa_produccion?.estado_label}
             </Badge>
             {
-              programa_produccion?.estado === '5'
+              programa_produccion?.estado === '5' || programa_produccion?.estado === '3'
                 ? null
                 : (
                   <Tooltip text='Añadir Lote al Programa'>
@@ -153,35 +153,14 @@ const DashboardProduccion = () => {
                 ? <DetalleTarjaResultante />
                   : activeTab.text === 'Envases de Lotes Seleccionados'
                     ? <DetalleEnvasesLote />
-                    : activeTab.text === 'Procesar Masivamente' && programa_produccion?.lotes.every(lote => lote.bin_procesado !== true)
-                      ? <DetalleEnvasesMasivosLotes programa_produccion={programa_produccion!}/>
+                    : activeTab.text === 'Procesar Masivamente' && programa_produccion?.lotes.some(lote => lote.bin_procesado !== true)
+                      ? <DetalleEnvasesMasivosLotes programa_produccion={programa_produccion!} refresh={setRefresh}/>
                       : activeTab.text === 'Operarios en Programa'
                         ? <DetalleOperarioPrograma />
                         : null
               }
 						</div>
-						{/* {
-              activeTab.text === 'General'
-                ? (
-                  <>
-                    <div className='col-span-12 2xl:col-span-4'>
-                      <CommentPartial />
-                    </div>
-
-                    <div className='col-span-12 2xl:col-span-8'>
-                      <Card className='h-full'>
-                        <TablePartial />
-                        
-                      </Card>
-                    </div>
-                    <div className='col-span-12 2xl:col-span-4'>
-                      <TimelinePartial />
-                    </div>
-                  </>
-                  )
-                : null
-            } */}
-
+		
 					</div>
 				</Container>
 			</PageWrapper>

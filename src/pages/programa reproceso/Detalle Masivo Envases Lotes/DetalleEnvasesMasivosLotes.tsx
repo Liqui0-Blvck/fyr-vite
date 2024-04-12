@@ -2,31 +2,33 @@ import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { Checkbox, CheckboxProps } from "antd";
 import { MdOutlineExpandMore } from "react-icons/md";
 import useDarkMode from "../../../hooks/useDarkMode";
-import { TLoteProduccion, TProduccion } from "../../../types/registros types/registros.types";
+import { TLoteProduccion, TProduccion, TReprocesoProduccion } from "../../../types/registros types/registros.types";
 import { FC } from "react";
 
 interface IDetalleEnvasesMasivosLotesProps {
-  programa_produccion: TProduccion
+  programa_reproceso: TReprocesoProduccion
 }
 
-const DetalleEnvasesMasivosLotes: FC<IDetalleEnvasesMasivosLotesProps> = ({ programa_produccion }) => {
+const DetalleEnvasesMasivosLotes: FC<IDetalleEnvasesMasivosLotesProps> = ({ programa_reproceso }) => {
   const { isDarkTheme } = useDarkMode();
   const onChange: CheckboxProps['onChange'] = (e) => {
     console.log(`checked = ${e.target.checked}`);
   };
 
+  console.log(programa_reproceso)
+
 
   return (
-    <article className="w-full min-h-full gap-y-10 flex flex-col rounded-md dark:bg-zinc-700 mt-10 overflow-auto">
+    <article className="w-full min-h-full gap-y-10 py-5 px-10flex flex-col rounded-md dark:bg-zinc-700 mt-10 overflow-auto">
       {
-        programa_produccion.lotes.every(lote => lote.bin_procesado !== true)
+        programa_reproceso.bins.every(lote => lote.bin_procesado !== true)
           ? (
             <>      
               <div className="mx-auto">
                   <h1>Procesar Masivamente Envases de Lotes</h1>
                 </div>
 
-                {/* ESTO SE UTILIZARA PARA UN LOOP DE ITEMS */}
+                //  ESTO SE UTILIZARA PARA UN LOOP DE ITEMS *
                       
                 <div className="w-full h-full flex flex-col items-center py-2 gap-2 px-10 border border-zinc-700 relative">
                   <div className="flex items-center py-2 justify-between w-full">
@@ -50,10 +52,10 @@ const DetalleEnvasesMasivosLotes: FC<IDetalleEnvasesMasivosLotesProps> = ({ prog
                             backgroundColor: `${isDarkTheme ? '#838387' : '' }`
                           }}
                         >
-                          {programa_produccion.lotes.length} Envases
+                          {programa_reproceso.bins.length} Envases
                         </AccordionSummary>
                         {
-                          programa_produccion.lotes.filter(est => est.bin_procesado !== true).map((item) => (
+                          programa_reproceso.bins.filter(est => est.bin_procesado !== true).map((item) => (
                             <AccordionDetails
                               className="bg-zinc-300 h-10 !p-0 border border-zinc-400 cursor-pointer"
                               onChange={() => onChange}
@@ -70,7 +72,7 @@ const DetalleEnvasesMasivosLotes: FC<IDetalleEnvasesMasivosLotesProps> = ({ prog
                     
                   </div>
                 </div>
-                {/* FIN DEL LOOP*/}
+                //* FIN DEL LOOP*/
 
             
 

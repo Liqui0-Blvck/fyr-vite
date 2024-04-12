@@ -157,7 +157,7 @@ const DashboardProduccion = () => {
                   : activeTab.text === 'Envases de Lotes Seleccionados'
                     ? <DetalleEnvasesLote />
                     : activeTab.text === 'Procesar Masivamente' && programa_produccion?.bins.every(bin => bin.bin_procesado !== true)
-                      ? 0// ? <DetalleEnvasesMasivosLotes programa_produccion={programa_produccion!}/>
+                      ? <DetalleEnvasesMasivosLotes programa_reproceso={programa_produccion!}/>
                       : activeTab.text === 'Operarios en Programa'
                         ? <DetalleOperarioPrograma />
                         : null

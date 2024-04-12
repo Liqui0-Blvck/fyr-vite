@@ -81,7 +81,7 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ubi
   const handleToggleAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
-      const allIds = row.map(envase => envase.id);
+      const allIds = row.filter(envase => envase.estado_envase !== '2').map(envase => envase.id);
       setSelectedItems(allIds);
     } else {
       setSelectedItems([]);

@@ -7,14 +7,14 @@ import TableRow from '@mui/material/TableRow';
 import React, { Dispatch, FC, SetStateAction } from 'react'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import FilaRegistroPrograma from './FilaRegistroPrograma'
-import { TBinEnReproceso, TPatioTechadoEx } from '../../../../types/registros types/registros.types';
+import { TBinBodega, TBinEnReproceso, TPatioTechadoEx } from '../../../../types/registros types/registros.types';
 import { useLocation } from 'react-router-dom';
 import { urlNumeros } from '../../../../services/url_number';
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { useAuth } from '../../../../context/authContext';
 
 interface IRegistroProgramaProps {
-  bin: TBinEnReproceso[] | []
+  bin: TBinBodega[] | []
   refresh: Dispatch<SetStateAction<boolean>>
 }
 
@@ -24,7 +24,7 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ bin, refresh }) =>
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
 
-  const { data: bin_en_reproceso } = useAuthenticatedFetch<TBinEnReproceso[]>(
+  const { data: bin_en_reproceso, setRefresh } = useAuthenticatedFetch<TBinEnReproceso[]>(
     authTokens,
     validate,
     `/api/reproceso/${id}/bins_en_reproceso`
@@ -53,10 +53,10 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ bin, refresh }) =>
               filter(row => row.tipo_binbodega_id !== 73 &&
                row.tipo_binbodega_id !== 74 && 
               !bin_en_reproceso?.some(bin => bin.id_bin_bodega === row.id) ).
-              map((envase: TBinEnReproceso) => {
+              map((envase: TBinBodega) => {
                 return (
                   <TableRow style={{ height: 50, overflowY: 'auto' }}>
-                    <FilaRegistroPrograma row={envase} refresh={refresh}/>
+                    <FilaRegistroPrograma row={envase} refresh={setRefresh}/>
                   </TableRow>
                 )
               })

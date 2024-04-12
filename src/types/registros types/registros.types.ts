@@ -489,6 +489,7 @@ export type TLoteProduccion = {
   bodega_techado_ext: number;
   procesado_por: string;
   envases?: TEnvasesPrograma[]
+  numero_lote: number
 }
 
 export type TOperarioProduccion = {
@@ -553,6 +554,21 @@ export type TReprocesoProduccion = {
   tarjas_resultantes: TTarjaResultante[]
 }
 
+export type TBinBodega = {
+  id: number,
+  tipo_binbodega_id: number,
+  tipo_binbodega: string,
+  binbodega: string,
+  estado_binbodega: string,
+  kilos_bin: number,
+  programa_produccion: number,
+  fecha_creacion: string,
+  fecha_modificacion: string,
+  id_binbodega: number,
+  procesado: boolean,
+  procesado_por: null
+}
+
 
 export type TBinEnReproceso = {
   id: number,
@@ -562,12 +578,12 @@ export type TBinEnReproceso = {
   bin_procesado: boolean,
   fecha_procesado: string,
   reproceso: number,
-  tipo_bin_bodega: string,
+  tipo_bin_bodega: number,
   procesado_por: number
   programa_produccion: number
   binbodega: string
   kilos_bin: number
-  tipo_binbodega_id: number
+  identificador_bin_bodega: number
 }
 
 export type TEnvasesPrograma = {

@@ -28,7 +28,7 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
 		: 0;
 
 
-	const seriesData = [Number(kilosTotales), Number(kilosTotalesProcesados)]; // Cambia estos valores según tus datos reales
+	const seriesData = [Number(kilosTotales), Number(kilosTotalesProcesados)]; 
   const optionsData = {
     chart: {
       type: "bar",

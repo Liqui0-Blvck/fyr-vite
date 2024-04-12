@@ -31,35 +31,30 @@ interface ILoteCompletadoProps {
 
 }
 
-const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produccion, refresh }) => {
+const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, refresh }) => {
   const { authTokens, validate, perfilData, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
 
+  const path_bodega = row?.tipo_bin_bodega
 
-  // const { data: patio_exterior } = useAuthenticatedFetch<TPatioTechadoEx>(
-  //   authTokens,
-  //   validate,
-  //   `/api/patio-exterior/${row?.guia_patio}`
-  // )
+  console.log(path_bodega)
 
-
-  console.log(row)
-
-
-  const actualizarEstadoEnvase = async (id_lote: number, bodega_ext: number) => {
-    const res = await fetch(`${base_url}/api/reproceso/${id}/bins_en_reproceso/${id_lote}/`, {
+  const actualizacionEstadoBodega = async () => {
+    const res = await fetch(`${base_url}/api/reproceso/${id}/bins_en_reproceso/${row?.id}/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authTokens?.access}`
       },
       body: JSON.stringify({
+        tipo_bin_bodega: row?.tipo_bin_bodega,
         bin_procesado: true,
-        bodega_techado_ext: bodega_ext,
-        produccion: id[0]
+        procesado_por: userID?.user_id,
+        id_bin_bodega: row?.id_bin_bodega,
+        reproceso: id[0],
       })
     })
 
@@ -78,25 +73,31 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
     <>
       <TableCell className='table-cell-row-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center'>
-          {/* <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_lote}</span> */}
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.id_bin_bodega}</span>
         </div>
       </TableCell>
 
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center'>
-          {/* <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{patio_exterior?.ubicacion_label}</span> */}
+          <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-black'}`}>N° Programa {row?.programa_produccion}</span>
         </div>
       </TableCell>
 
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center gap-5'>
-          {/* <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_bin} / {patio_exterior?.envases.length}</span> */}
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.kilos_bin} kgs</span>
+        </div>
+      </TableCell>
+      
+      <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+        <div className=' h-full w-full flex items-center justify-center gap-5'>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>---</span>
         </div>
       </TableCell>
 
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center gap-5'>
-          {/* <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{variedadFilter.find(variety => variety.value === patio_exterior?.variedad)?.label}</span> */}
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>---</span>
         </div>
       </TableCell>
 
@@ -119,7 +120,10 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
                 <Tooltip text='Envase a Procesar'>
                   <button
                     type='button'
-                    // onClick={() => actualizarEstadoEnvase(row?.id!, row?.bodega_techado_ext!)}
+                    onClick={() => {
+                      // actualizarEstadoEnvase()
+                      actualizacionEstadoBodega() 
+                    }}
                     className='w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105'
                     >
                       <FaForward style={{ fontSize: 35 }}/>

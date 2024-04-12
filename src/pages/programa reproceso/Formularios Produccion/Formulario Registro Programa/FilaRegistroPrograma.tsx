@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, TableCell } from '@mui/material'
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import useDarkMode from '../../../../hooks/useDarkMode'
-import { TBinEnReproceso, TControlCalidadB, TEnvasePatio } from '../../../../types/registros types/registros.types'
+import { TBinBodega, TBinEnReproceso, TControlCalidadB, TEnvasePatio } from '../../../../types/registros types/registros.types'
 import { MdOutlineExpandMore } from 'react-icons/md'
 import { variedadFilter } from '../../../../constants/options.constants'
 import { HeroEye } from '../../../../components/icon/heroicons'
@@ -18,20 +18,12 @@ import toast from 'react-hot-toast'
 
 
 interface IRegistroPrograma {
-  row: TBinEnReproceso
+  row: TBinBodega
   id_row?: number
   variedad?: string
   ubicacion?: string
   refresh: Dispatch<SetStateAction<boolean>>
 }
-
-
-const bodegas = [
-  { value: 69, label: 'Bodega G1'},
-  { value: 71, label: 'Bodega G2'},
-  { value: 73, label: 'Bodega Residuos'},
-]
-
 
 
 const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, refresh }) => {
@@ -50,7 +42,7 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ref
     `/api/control-calidad/recepcionmp/${id_row}`
   )
 
-  const registrarLoteAProduccion = async (id_bin: number, tipo_bin: number) => {
+  const registrarLoteAProduccion = async (id_bin: number, tipo_bin: string) => {
     const res = await fetch(`${base_url}/api/reproceso/${id}/bins_en_reproceso/`, {
       method: 'POST',
       headers: {
@@ -75,6 +67,7 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ref
   const handleChange = () => {
     setSelectAll(!selectAll);
   }
+  
 
 
   return (
@@ -119,9 +112,11 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ref
                   ? 'Bodega G1'
                   : row.binbodega.includes('G2')
                     ? 'Bodega G2'
-                    : row.binbodega.includes('RS')
-                      ? 'Residuos Solidos Reproceso'
-                      : null
+                    : row.binbodega.includes('G1R-')
+                      ? 'Bodega G1 Reproceso'
+                      : row.binbodega.includes('G2R-')
+                        ? 'Bodega G2 Reproceso'
+                        : null
               }
             </span>
           </div>
@@ -131,14 +126,16 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ref
         <div className='flex items-center justify-center'>
           <Checkbox checked={selectAll} onChange={() => {
             handleChange
-            registrarLoteAProduccion(row?.id!, 
+            registrarLoteAProduccion(row?.id_binbodega!, 
                 row.binbodega.includes('G1')
-                  ? 69!
+                  ? 'bodegag1'
                   : row.binbodega.includes('G2')
-                    ? 71!
-                    : row.binbodega.includes('RS')
-                      ? 73!
-                      : 0
+                    ? 'bodegag2'
+                    : row.binbodega.includes('G1R')
+                      ? 'bodegag1reproceso'!
+                      : row.binbodega.includes('G2R')
+                        ? 'bodegag2reproceso'!
+                        : ''
             )
           }} />
         </div>

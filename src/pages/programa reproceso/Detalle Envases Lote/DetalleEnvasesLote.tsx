@@ -46,11 +46,6 @@ const DetalleEnvasesLote: FC<IMuestraProps> = () => {
     `/api/reproceso/${id}/bins_en_reproceso/`
   )
 
-
-  console.log(bins_en_reproceso)
-
-
-
   const labels = ['Bins procesados', 'Bins Por Procesar']
   const totalBins = bins_en_reproceso?.length;
   const binsProcesados = bins_en_reproceso?.filter(envase => envase.bin_procesado === true).length;
@@ -60,7 +55,6 @@ const DetalleEnvasesLote: FC<IMuestraProps> = () => {
   const porcentajePorProcesar = ((binsPorProcesar / totalBins!) * 100)
   
   const valores = [porcentajeProcesados, porcentajePorProcesar];
-  // const valores: number[] = []
 
   return (
     <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full
