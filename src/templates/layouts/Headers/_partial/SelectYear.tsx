@@ -19,23 +19,25 @@ const SelectYear = () => {
   const {personalizacionData} = useAuth()
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      anio: personalizacionData?.anio
+      anio: personalizacionData?.anio ? personalizacionData.anio : ''
       // anio: ''
     },
     onSubmit: async () => {
       // const personalizacion = await putPersonalizacionPerfil()
     }
   })
-
+  console.log(personalizacionData)
   return (
     <div className='w-80 grid grid-cols-12'>
       <div className="col-span-8 pr-4">
         <SelectReact
-          options={optionYear}
+          options={options} 
           id='anio'
           placeholder='Selecciona un año'
           name='año'
+          value={{value: formik.values.anio, label: formik.values.anio}}
           onChange={(value: any) => {
             formik.setFieldValue('anio', value.value)
           }}
