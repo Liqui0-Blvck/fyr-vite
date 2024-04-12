@@ -174,7 +174,7 @@ export type TPerfil = {
   cargos: TCargo[];
   fecha_creacion: string;
   fecha_modificacion: string;
-  sexo: string;
+  sexo: 'F' | 'M' | 'O';
   direccion: string;
   comuna: string;
   celular: string;

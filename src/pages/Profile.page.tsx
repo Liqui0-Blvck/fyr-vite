@@ -27,61 +27,61 @@ import RichText from '../components/RichText';
 import Radio, { RadioGroup } from '../components/form/Radio';
 import useDarkMode from '../hooks/useDarkMode';
 import { TDarkMode } from '../types/darkMode.type';
+import toast from 'react-hot-toast';
+import { putPerfil } from '../api/perfil.api';
+import { putPersonalizacionPerfil } from '../api/personalizacion-perfil.api';
+import { putUser } from '../api/user.api';
+import SelectReact, { TSelectOptions } from '../components/form/SelectReact';
+const options: TSelectOptions = [
+	{ value: '2024', label: '2024' },
+	{ value: '2023', label: '2023'},
+	{ value: '2022', label: '2022'},
+	{ value: '2021', label: '2021'}
+];
+
+// type TTab = {
+// 	text:
+// 		| 'Edit Profile'
+// 		| 'Social'
+// 		| 'Password'
+// 		| '2FA'
+// 		| 'Newsletter'
+// 		| 'Sessions'
+// 		| 'Connected'
+// 		| 'Appearance';
+// 	icon: TIcons;
+// };
+// type TTabs = {
+// 	[key in
+// 		| 'EDIT'
+// 		| 'SOCIAL'
+// 		| 'PASSWORD'
+// 		| '2FA'
+// 		| 'NEWSLETTER'
+// 		| 'SESSIONS'
+// 		| 'CONNECTED'
+// 		| 'APPEARANCE']: TTab;
+// };
 
 type TTab = {
 	text:
-		| 'Edit Profile'
-		| 'Social'
-		| 'Password'
-		| '2FA'
-		| 'Newsletter'
-		| 'Sessions'
-		| 'Connected'
-		| 'Appearance';
+		| 'Perfil'
+		| 'Personalización'
 	icon: TIcons;
 };
 type TTabs = {
 	[key in
-		| 'EDIT'
-		| 'SOCIAL'
-		| 'PASSWORD'
-		| '2FA'
-		| 'NEWSLETTER'
-		| 'SESSIONS'
-		| 'CONNECTED'
-		| 'APPEARANCE']: TTab;
+		| 'PERFIL'
+		| 'PERSONALIZACION']: TTab;
 };
+
 const TAB: TTabs = {
-	EDIT: {
-		text: 'Edit Profile',
+	PERFIL: {
+		text: 'Perfil',
 		icon: 'HeroPencil',
 	},
-	SOCIAL: {
-		text: 'Social',
-		icon: 'HeroGlobeAmericas',
-	},
-	PASSWORD: {
-		text: 'Password',
-		icon: 'HeroKey',
-	},
-	'2FA': {
-		text: '2FA',
-		icon: 'HeroShieldExclamation',
-	},
-	NEWSLETTER: {
-		text: 'Newsletter',
-		icon: 'HeroBell',
-	},
-	SESSIONS: {
-		text: 'Sessions',
-		icon: 'HeroQueueList',
-	},
-	CONNECTED: {
-		text: 'Connected',
-		icon: 'HeroLink',
-	},
-	APPEARANCE: {
-		text: 'Appearance',
+	PERSONALIZACION: {
+		text: 'Personalización',
 		icon: 'HeroSwatch',
 	},
 };
@@ -93,8 +93,9 @@ const ProfilePage = () => {
 	const { setDarkModeStatus } = useDarkMode();
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { userData, isLoading } = useAuth();
-	const [activeTab, setActiveTab] = useState<TTab>(TAB.EDIT);
+	// const { userData, isLoading } = useAuth();
+	const { perfilData, personalizacionData, authTokens, refreshToken, obtener_perfil } = useAuth()
+	const [activeTab, setActiveTab] = useState<TTab>(TAB.PERFIL);
 
 	const defaultProps: IButtonProps = {
 		color: 'zinc',
@@ -112,59 +113,74 @@ const ProfilePage = () => {
 	const formik = useFormik({
 		enableReinitialize: true,
 		initialValues: {
-			fileUpload: '',
-			username: userData?.username,
-			email: userData?.email,
-			firstName: userData?.firstName,
-			lastName: userData?.lastName,
-			position: userData?.position,
-			role: userData?.role,
-			oldPassword: '',
-			newPassword: '',
-			newPasswordConfirmation: '',
-			twitter: userData?.socialProfiles?.twitter,
-			facebook: userData?.socialProfiles?.facebook,
-			instagram: userData?.socialProfiles?.instagram,
-			github: userData?.socialProfiles?.github,
-			twoFactorAuth: userData?.twoFactorAuth,
-			weeklyNewsletter: userData?.newsletter?.weeklyNewsletter || false,
-			lifecycleEmails: userData?.newsletter?.lifecycleEmails || false,
-			promotionalEmails: userData?.newsletter?.promotionalEmails || false,
-			productUpdates: userData?.newsletter?.productUpdates || false,
-			bio: (userData?.bio && (JSON.parse(userData.bio) as Descendant[])) || [],
-			gender: 'Male',
-			theme: 'dark',
-			birth: '1987-12-21',
+			// fotoperfil: perfilData?.fotoperfil ? perfilData.fotoperfil: '',
+			username: perfilData?.user.username,
+			email: perfilData?.user.email,
+			first_name: perfilData?.user.first_name,
+			last_name: perfilData?.user.last_name,
+			sexo: perfilData?.sexo,
+			estilo: personalizacionData?.estilo,
+			fnacimiento: perfilData?.fnacimiento,
+			celular: perfilData?.celular,
+			cabecera: personalizacionData?.cabecera,
+			anio: personalizacionData?.anio,
+			direccion: perfilData?.direccion,
+			comuna: perfilData?.comuna
 		},
-		onSubmit: () => {},
+		onSubmit: async (values) => {
+			let put_valido = false
+			setIsSaving(true)
+			const put_perfil = await putPerfil(values, authTokens?.access, perfilData.user.id)
+			const put_personalizacion = await putPersonalizacionPerfil(values, authTokens?.access, perfilData.user.id)
+			const put_user = await putUser(values, authTokens?.access, perfilData.user.id)
+			if (put_perfil == true && put_personalizacion == true && put_user == true) {
+				put_valido = true
+			} else if (put_perfil == 401 || put_personalizacion == 401 || put_user == 401) {
+				const access = await refreshToken()
+				if (access) {
+					const put_perfil_v = await putPerfil(values, access, perfilData.user.id)
+					const put_personalizacion_v = await putPersonalizacionPerfil(values, access, perfilData.user.id)
+					const put_user_v = await putUser(values, access, perfilData.user.id)
+					if (put_perfil_v && put_personalizacion_v && put_user_v) {
+						put_valido = true
+					}
+				}
+			}
+			if (put_valido) {
+				toast.success('Perfil Editado')
+				location.reload()
+			} else {
+				toast.error('Error en la edición del perfil')
+			}
+			setIsSaving(false)
+		},
 	});
 
 	useEffect(() => {
-		setDarkModeStatus(formik.values.theme as TDarkMode);
+		setDarkModeStatus(formik.values.estilo as TDarkMode);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [formik.values.theme]);
+	}, [formik.values.estilo]);
 
-	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
-	const [passwordNewShowStatus, setPasswordNewShowStatus] = useState<boolean>(false);
-	const [passwordNewConfShowStatus, setPasswordNewConfShowStatus] = useState<boolean>(false);
+	// const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
+	// const [passwordNewShowStatus, setPasswordNewShowStatus] = useState<boolean>(false);
+	// const [passwordNewConfShowStatus, setPasswordNewConfShowStatus] = useState<boolean>(false);
 
 	const { saveBtnText, saveBtnColor, saveBtnDisable } = useSaveBtn({
 		isNewItem: false,
 		isSaving,
 		isDirty: formik.dirty,
 	});
-
 	return (
-		<PageWrapper name={formik.values.firstName}>
+		<PageWrapper name='pagina'>
 			<Subheader>
 				<SubheaderLeft>
-					{`${userData?.firstName} ${userData?.lastName}`}{' '}
+					
 					<Badge
 						color='blue'
 						variant='outline'
 						rounded='rounded-full'
 						className='border-transparent'>
-						Edit User
+						{`${perfilData?.user.first_name} ${perfilData?.user.last_name}`}{' '}
 					</Badge>
 				</SubheaderLeft>
 				<SubheaderRight>
@@ -202,23 +218,23 @@ const ProfilePage = () => {
 										</Button>
 									</div>
 								))}
-								<div className='border-zinc-500/25 dark:border-zinc-500/50 max-sm:border-s sm:border-t sm:pt-4'>
+								{/* <div className='border-zinc-500/25 dark:border-zinc-500/50 max-sm:border-s sm:border-t sm:pt-4'>
 									<Button icon='HeroTrash' color='red'>
 										Delete Account
 									</Button>
-								</div>
+								</div> */}
 							</div>
 							<div className='col-span-12 flex flex-col gap-4 sm:col-span-8 md:col-span-10'>
-								{activeTab === TAB.EDIT && (
+								{activeTab === TAB.PERFIL && (
 									<>
-										<div className='text-4xl font-semibold'>Edit Profile</div>
+										<div className='text-4xl font-semibold'>Perfil</div>
 										<div className='flex w-full gap-4'>
 											<div className='flex-shrink-0'>
 												<Avatar
-													src={userData?.image?.thumb}
+													// src={userData?.image?.thumb}
 													className='!w-24'
 													// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-													name={`${userData?.firstName} ${userData?.lastName}`}
+													// name={`${userData?.firstName} ${userData?.lastName}`}
 												/>
 											</div>
 											<div className='flex grow items-center'>
@@ -228,14 +244,14 @@ const ProfilePage = () => {
 															htmlFor='fileUpload'
 															className=''
 															description='At least 800x800 px recommended. JPG or PNG and GIF is allowed'>
-															Upload new image
+															Editar Imagen
 														</Label>
 														<Input
 															id='fileUpload'
 															name='fileUpload'
 															type='file'
-															onChange={formik.handleChange}
-															value={formik.values.fileUpload}
+															// onChange={formik.handleChange}
+															// value={formik.values.fileUpload}
 														/>
 													</div>
 												</div>
@@ -243,7 +259,7 @@ const ProfilePage = () => {
 										</div>
 										<div className='grid grid-cols-12 gap-4'>
 											<div className='col-span-12 lg:col-span-6'>
-												<Label htmlFor='username'>Username</Label>
+												<Label htmlFor='username'>Nombre de Usuario</Label>
 												<FieldWrap
 													firstSuffix={
 														<Icon icon='HeroUser' className='mx-2' />
@@ -251,14 +267,16 @@ const ProfilePage = () => {
 													<Input
 														id='username'
 														name='username'
-														onChange={formik.handleChange}
+														// onChange={formik.handleChange}
+														// defaultValue={formik.values.username}
 														value={formik.values.username}
 														autoComplete='username'
+														readOnly={true}
 													/>
 												</FieldWrap>
 											</div>
 											<div className='col-span-12 lg:col-span-6'>
-												<Label htmlFor='email'>Email</Label>
+												<Label htmlFor='email'>E-mail</Label>
 												<FieldWrap
 													firstSuffix={
 														<Icon
@@ -276,56 +294,108 @@ const ProfilePage = () => {
 												</FieldWrap>
 											</div>
 											<div className='col-span-12 lg:col-span-6'>
-												<Label htmlFor='firstName'>First Name</Label>
+												<Label htmlFor='first_name'>Nombre</Label>
 												<Input
-													id='firstName'
-													name='firstName'
+													id='first_name'
+													name='first_name'
 													onChange={formik.handleChange}
-													value={formik.values.firstName}
+													value={formik.values.first_name}
 													autoComplete='given-name'
 													autoCapitalize='words'
 												/>
 											</div>
 											<div className='col-span-12 lg:col-span-6'>
-												<Label htmlFor='lastName'>Last Name</Label>
+												<Label htmlFor='last_name'>Apellido</Label>
 												<Input
-													id='lastName'
-													name='lastName'
+													id='last_name'
+													name='last_name'
 													onChange={formik.handleChange}
-													value={formik.values.lastName}
+													value={formik.values.last_name}
 													autoComplete='family-name'
 													autoCapitalize='words'
 												/>
 											</div>
-
 											<div className='col-span-12 lg:col-span-6'>
-												<Label htmlFor='birth'>Last Name</Label>
+												<Label htmlFor='fnacimiento'>Fecha de Nacimiento</Label>
 												<Input
 													type='date'
-													id='birth'
-													name='birth'
+													id='fnacimiento'
+													name='fnacimiento'
 													onChange={formik.handleChange}
-													value={formik.values.birth}
+													value={formik.values.fnacimiento}
 													autoComplete='bday'
 												/>
 											</div>
 											<div className='col-span-12 lg:col-span-6'>
-												<Label htmlFor='gender'>Gender</Label>
-												<RadioGroup isInline>
-													{['Male', 'Female'].map((i) => (
+												<Label htmlFor='sexo'>Sexo</Label>
+												<RadioGroup isInline >
+													<Radio
+														label='Femenino'
+														name='sexo'
+														value='F'
+														selectedValue={formik.values?.sexo == 'F' ? formik.values?.sexo : ''}
+														onChange={formik.handleChange}
+													/>
+													<Radio
+														label='Masculino'
+														name='sexo'
+														value='M'
+														selectedValue={formik.values?.sexo == 'M' ? formik.values?.sexo : ''}
+														onChange={formik.handleChange}
+													/>
+													<Radio
+														label='No Especificado'
+														name='sexo'
+														value='O'
+														selectedValue={formik.values?.sexo == 'O' ? formik.values?.sexo : ''}
+														onChange={formik.handleChange}
+													/>
+													{/* {((i) => (
 														<Radio
 															key={i}
 															label={i}
-															name='gender'
-															value={i}
-															selectedValue={formik.values.gender}
+															name='sexo'
+															value={i == perfilData?.sexo ? perfilData?.sexo : ''}
+															selectedValue={i == perfilData?.sexo ? perfilData?.sexo : ''}
 															onChange={formik.handleChange}
 														/>
-													))}
+													))} */}
 												</RadioGroup>
+												
+											</div>
+											<div className='col-span-12 lg:col-span-12'>
+												<Label htmlFor='direccion'>Dirección</Label>
+												<Input
+													id='direccion'
+													name='direccion'
+													onChange={formik.handleChange}
+													value={formik.values.direccion}
+													autoComplete='direccion'
+												/>
+											</div>
+											<div className='col-span-12 lg:col-span-6'>
+												<Label htmlFor='comuna'>Comuna</Label>
+												<Input
+													id='comuna'
+													name='comuna'
+													onChange={formik.handleChange}
+													value={formik.values.comuna}
+													autoComplete='comuna'
+												/>
+											</div>
+											
+											<div className='col-span-12 lg:col-span-6'>
+												<Label htmlFor='celular'>Celular</Label>
+												<Input
+													id='celular'
+													name='celular'
+													onChange={formik.handleChange}
+													value={formik.values.celular}
+													autoComplete='celular'
+												/>
 											</div>
 
-											<div className='col-span-12'>
+											{/* <div className='col-span-12'>
 												<Label htmlFor='position'>Role</Label>
 												<FieldWrap
 													firstSuffix={
@@ -342,8 +412,8 @@ const ProfilePage = () => {
 													}>
 													<Select
 														name='role'
-														onChange={formik.handleChange}
-														value={formik.values.role}
+														// onChange={formik.handleChange}
+														// value={formik.values.role}
 														placeholder='Select role'>
 														{rolesDb.map((role) => (
 															<option key={role.id} value={role.id}>
@@ -366,16 +436,16 @@ const ProfilePage = () => {
 													<Input
 														id='position'
 														name='position'
-														onChange={formik.handleChange}
-														value={formik.values.position}
+														// onChange={formik.handleChange}
+														// value={formik.values.position}
 													/>
 												</FieldWrap>
-											</div>
-											<div className='col-span-12'>
+											</div> */}
+											{/* <div className='col-span-12'>
 												<Label htmlFor='bio'>Bio</Label>
 												<RichText
 													id='bio'
-													value={formik.values.bio}
+													// value={formik.values.bio}
 													handleChange={(event) => {
 														formik
 															.setFieldValue('bio', event)
@@ -383,11 +453,11 @@ const ProfilePage = () => {
 															.catch(() => {});
 													}}
 												/>
-											</div>
+											</div> */}
 										</div>
 									</>
 								)}
-								{activeTab === TAB.SOCIAL && (
+								{/* {activeTab === TAB.SOCIAL && (
 									<>
 										<div className='text-4xl font-semibold'>Social</div>
 										<div className='grid grid-cols-12 gap-4'>
@@ -854,19 +924,20 @@ const ProfilePage = () => {
 												})}
 										</div>
 									</>
-								)}
-								{activeTab === TAB.APPEARANCE && (
+								)} */}
+								{activeTab === TAB.PERSONALIZACION && (
 									<>
-										<div className='text-4xl font-semibold'>Appearance</div>
+										<div className='text-4xl font-semibold'>Personalización</div>
 										<div className='grid grid-cols-12 gap-4'>
 											<div className='col-span-12'>
-												<Label htmlFor='theme'>Theme</Label>
+												<Label htmlFor='estilo'>Tema</Label>
 												<RadioGroup isInline>
 													<Radio
-														name='theme'
+														name='estilo'
 														value='dark'
-														selectedValue={formik.values.theme}
-														onChange={formik.handleChange}>
+														selectedValue={formik.values.estilo}
+														onChange={formik.handleChange}
+														>
 														<div className='relative'>
 															<div className='flex h-2 w-full items-center gap-1 bg-zinc-500 p-1'>
 																<div className='h-1 w-1 rounded-full bg-red-500' />
@@ -883,10 +954,11 @@ const ProfilePage = () => {
 														</div>
 													</Radio>
 													<Radio
-														name='theme'
+														name='estilo'
 														value='light'
-														selectedValue={formik.values.theme}
-														onChange={formik.handleChange}>
+														selectedValue={formik.values.estilo}
+														onChange={formik.handleChange}
+														>
 														<div className='relative'>
 															<div className='flex h-2 w-full items-center gap-1 bg-zinc-500 p-1'>
 																<div className='h-1 w-1 rounded-full bg-red-500' />
@@ -904,13 +976,24 @@ const ProfilePage = () => {
 													</Radio>
 												</RadioGroup>
 											</div>
+											<div className="col-span-12">
+												<Label htmlFor='anio'>Año</Label>
+												<SelectReact
+													placeholder="Seleccione un año"
+													options={options}
+													id='anio'
+													name='anio'
+													value={{value: formik.values.anio, label: formik.values.anio}}
+													onChange={(value: any) => formik.setFieldValue('anio', value.value)}
+												/>
+											</div>
 										</div>
 									</>
 								)}
 							</div>
 						</div>
 					</CardBody>
-					<CardFooter>
+					{/* <CardFooter>
 						<CardFooterChild>
 							<div className='flex items-center gap-2'>
 								<Icon icon='HeroDocumentCheck' size='text-2xl' />
@@ -928,7 +1011,7 @@ const ProfilePage = () => {
 								{saveBtnText}
 							</Button>
 						</CardFooterChild>
-					</CardFooter>
+					</CardFooter> */}
 				</Card>
 			</Container>
 		</PageWrapper>

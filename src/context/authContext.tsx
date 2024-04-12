@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { TPerfil, TUsuario } from '../types/registros types/registros.types';
 import { useAuthenticatedFetch } from '../hooks/useAxiosFunction';
+import useDarkMode from '../hooks/useDarkMode';
 
 
 interface IAuthTokens {
@@ -17,11 +18,13 @@ interface IAuthContext {
   authTokens: IAuthTokens | null;
   userID: TokenPayload | null
   perfilData: TPerfil
+  personalizacionData: any
   login: (username: string, password: string) => Promise<void>
   refreshToken: () => Promise<string | false>
   validate: (token: IAuthTokens | null) => Promise<boolean>;
   // onLogin: (username: string, password: string) => Promise<void>;
   onLogout: () => void;
+  obtener_perfil: () => Promise<void>
 }
 
 interface TokenPayload {
@@ -44,7 +47,10 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const [authTokens, setAuthTokens] = useState<IAuthTokens | null>(authTokenLocalStorage);
   const [userID, setUserID] = useState<TokenPayload | null>(userLocalStorage)
   const [perfilData, setPerfilData] = useState<TPerfil | null>(null)
+  const [personalizacionData, setPersonalizacionData] = useState(null)
   const [refresh, setRefresh] = useState<boolean>(false)
+  const [logeado, setLogeado] = useState<boolean>(false)
+  const { setDarkModeStatus } = useDarkMode();
 
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
@@ -134,45 +140,45 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    let isMounted = true;
+  // useEffect(() => {
+  //   let isMounted = true;
 
-    const fetchProfile = async () => {
-      try {
-        if (authTokens && userID && isMounted) {
-          const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${authTokens.access}`
-            }
-          });
+  //   const fetchProfile = async () => {
+  //     try {
+  //       if (authTokens && userID && isMounted) {
+  //         const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
+  //           method: 'GET',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //             'Authorization': `Bearer ${authTokens.access}`
+  //           }
+  //         });
 
-          if (res.ok) {
-            const data = await res.json();
-            if (isMounted) {
-              setPerfilData(data);
-            }
-          } else {
-            console.log("Tenemos un problema nuevo");
-          }
-        }
-      } catch (error) {
-        console.error("Error al obtener el perfil:", error);
-      }
-    };
+  //         if (res.ok) {
+  //           const data = await res.json();
+  //           if (isMounted) {
+  //             setPerfilData(data);
+  //           }
+  //         } else {
+  //           console.log("Tenemos un problema nuevo");
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error al obtener el perfil:", error);
+  //     }
+  //   };
 
-    if (refresh) {
-      fetchProfile();
-    }
+  //   if (refresh) {
+  //     fetchProfile();
+  //   }
 
-    fetchProfile();
+  //   fetchProfile();
 
-    return () => {
-      isMounted = false;
-      setRefresh(false);
-    };
-  }, [authTokens, userID, refresh]);
+  //   return () => {
+  //     isMounted = false;
+  //     setRefresh(false);
+  //   };
+  // }, [authTokens, userID, refresh]);
 
 
 
@@ -195,16 +201,50 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   //   return () => clearInterval(interval);
   // }, [authTokens, validate, updateToken]);
 
+    useEffect(() => {
+        obtener_perfil()
+    }, [logeado])
 
-  // Función para cerrar sesión
-  const onLogout = async () => {
-    setAuthTokens(null);
-    setPerfilData(null)
-    Cookies.remove('token')
-    Cookies.remove('user')
+    const obtener_perfil = async () => {
+        const configMe = {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${authTokens?.access}`
+            }
+        }
+        const responseMe = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/users/me`, configMe)
+        if (responseMe.ok) {
+            const dataMe = await responseMe.json()
+            const configPerfil = {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authTokens?.access}`
+                }
+            }
+            const responsePersonalizacion = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/personalizacion-perfil/${dataMe.id}`, configPerfil)
+            const responsePerfil = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/perfil/${dataMe.id}`, configPerfil)
+            if (responsePerfil.ok && responsePersonalizacion.ok) {
+                const dataPersonalizacion = await responsePersonalizacion.json()
+                const dataPerfil = await responsePerfil.json()
+                setPerfilData(dataPerfil)
+                setPersonalizacionData(dataPersonalizacion)
+                setDarkModeStatus(dataPersonalizacion.estilo)
+            } else {
+                toast.error('ERROR INESPERADO PERFIL')
+            }
+        } else {
+            refreshToken()
+        }
+    }
 
-    navigate(`../${authPages.loginPage.to}`, { replace: true });
-  };
+    const onLogout = async () => {
+        setAuthTokens(null);
+        setPerfilData(null)
+        Cookies.remove('token')
+        Cookies.remove('user')
+
+        navigate(`../${authPages.loginPage.to}`, { replace: true });
+    };
 
     async function login(username:string, password: string) {
         const configLogin = {
@@ -221,10 +261,13 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
         const responseLogin = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/jwt/create/`, configLogin)
         if (responseLogin.ok) {
             const dataTokens = await responseLogin.json()
+            setLogeado(true)
             setAuthTokens(dataTokens)
             Cookies.set('token', JSON.stringify(dataTokens), { expires: 1 });
             Cookies.set('user', JSON.stringify(dataTokens.access), { expires: 1 })
             navigate(`../${appPages.mainAppPages.to}`, { replace: true });
+        } else {
+            toast.error('ERROR INESPERADO LOGIN')
         }
     }
 
@@ -266,6 +309,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
                 const verificarToken = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/jwt/verify/`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token: token_cookie.access})})
                 if (verificarToken.status == 401) {
                     const access = await refreshToken()
+                    setLogeado(true)
                     // else {
                     //     console.log('redirigiendo a login....')
                     //     setAuthTokens(null)
@@ -287,11 +331,13 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     authTokens,
     perfilData: perfilData!,
     userID,
+    personalizacionData: personalizacionData,
     login,
     refreshToken,
     validate,
     // onLogin,
     onLogout,
+    obtener_perfil,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

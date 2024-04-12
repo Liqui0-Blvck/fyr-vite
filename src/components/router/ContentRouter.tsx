@@ -80,8 +80,8 @@ const ContentRouter = () => {
 			}>
 			<Routes>
 				<Route key="guia-recepcion-pdf" path="pdf-preview" element={<GuiaRecepcionPDF />} />
-				{contentRoutes.map((routeProps) => (
-					<Route key={routeProps.path} {...routeProps} />
+				{contentRoutes.map((routeProps, index) => (
+					<Route key={routeProps.path+`${index}`} {...routeProps} />
 				))}
 			</Routes>
 		</Suspense>
