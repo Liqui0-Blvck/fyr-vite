@@ -309,7 +309,7 @@ const DetalleGuia = () => {
 
 
                 {
-                  guia_recepcion.estado_recepcion !== '4' 
+                  guia_recepcion?.lotesrecepcionmp.every(lote => lote.estado_recepcion >= '6') 
                     ? (
                       <ModalRegistro
                         open={open || false}
@@ -330,7 +330,7 @@ const DetalleGuia = () => {
                       </ModalRegistro>
                           )
                           
-                    :  guia_recepcion.estado_recepcion !== '4' 
+                    :  guia_recepcion.estado_recepcion > '2' 
                     ? (
                       <>
                         <ModalRegistro

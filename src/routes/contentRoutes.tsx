@@ -80,7 +80,25 @@ const PDFDocumentoEntrada = lazy(() => import ('../pages/programas produccion/PD
 const PDFDetalleEnvases = lazy(() => import ('../pages/programas produccion/PDF Programa Produccion/PDFDetalleEnvases.tsx'))
 
 
+
+
+
+// PROGRAMAS DE REPROCESO DE PRODUCCION
+
 const ListaProgramasReproceso = lazy(() => import ('../pages/programa reproceso/ListaProgramasReproceso.tsx'))
+const DetalleProgramaReproceso = lazy(() => import ('../pages/programa reproceso/Detalle Produccion/DashboardProduccion.tsx'))
+const FormularioRegistroProgramaReproceso = lazy(() => import ('../pages/programa reproceso/Formularios Produccion/Formulario Registro Programa/FormularioRegistroPrograma.tsx'))
+
+
+const PDFOperarioXKiloReproceso = lazy(() => import ('../pages/programa reproceso/PDF Programa Produccion/PDFOperarioXKilo.tsx'))
+const PDFResumidoOperarioReproceso = lazy(() => import ('../pages/programa reproceso/PDF Programa Produccion/PDFResumidoOperario.tsx'))
+const PDFPreLimpiaReproceso = lazy(() => import ('../pages/programa reproceso/PDF Programa Produccion/PDFPreLimpia.tsx'))
+const PDFDescascaradoReproceso = lazy(() => import ('../pages/programa reproceso/PDF Programa Produccion/PDFDescascarado.tsx'))
+const PDFDocumentoEntradaReproceso = lazy(() => import ('../pages/programa reproceso/PDF Programa Produccion/PDFDocumentoEntrada.tsx'))
+const PDFDetalleEnvasesReproceso = lazy(() => import ('../pages/programa reproceso/PDF Programa Produccion/PDFDetalleEnvases.tsx'))
+
+
+// const ListaProgramasReproceso = lazy(() => import ('../pages/programa reproceso/ListaProgramasReproceso.tsx'))
 
 
 // ADMINISTRADOR
@@ -167,7 +185,17 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/pdf-detalle-envases/:id', element: <PDFDetalleEnvases />},
 	{ path: '/app/proyeccion-rendimiento/:id', element: <DetalleControlRendimiento />},
 	{ path: '/app/programa-reproceso/', element: <ListaProgramasReproceso />},
-	
+
+	// PROGRAMAS DE PRODUCCION REPROCESO
+	{ path: '/app/programa-reproceso/', element: <ListaProgramasReproceso />},
+	{ path: '/app/produccion/programa-reproceso/:id/', element: <DetalleProgramaReproceso />},
+	{ path: '/app/produccion/registro-programa-reproceso/:id', element: <FormularioRegistroProgramaReproceso />},
+	{ path: '/app/pdf-operario-x-kilo-reproceso/', element: <PDFOperarioXKiloReproceso />},
+	{ path: '/app/pdf-operario-resumido-reproceso/', element: <PDFResumidoOperarioReproceso />},
+	{ path: '/app/pdf-pre-limpia-reproceso/', element: <PDFPreLimpiaReproceso />},
+	{ path: '/app/pdf-descascarado-reproceso/', element: <PDFDescascaradoReproceso />},
+	{ path: '/app/pdf-documento-entrada-reproceso/:id', element: <PDFDocumentoEntradaReproceso />},
+	{ path: '/app/pdf-detalle-envases-reproceso/:id', element: <PDFDetalleEnvasesReproceso />},
 
 
 

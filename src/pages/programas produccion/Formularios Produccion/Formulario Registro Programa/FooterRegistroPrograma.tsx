@@ -34,7 +34,7 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ lote, refresh }) =
           </TableHead>
           <TableBody className='table-body'>
             {
-              lote?.map((envase: TPatioTechadoEx) => {
+              lote?.filter(lote => lote.envases.length > 0 && lote.envases.some(envase => envase.estado_envase !== '2')).map((envase: TPatioTechadoEx) => {
                 return (
                   <TableRow style={{ height: 50, overflowY: 'auto' }}>
                     <FilaRegistroPrograma ubicacion={envase.ubicacion_label} row={envase.envases} id_row={envase.id} variedad={envase.variedad} refresh={refresh}/>

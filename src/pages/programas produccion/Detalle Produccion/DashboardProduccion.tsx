@@ -54,7 +54,7 @@ const DashboardProduccion = () => {
 		},
 	]);
 
-  const { data: programa_produccion } = useAuthenticatedFetch<TProduccion>(
+  const { data: programa_produccion, setRefresh  } = useAuthenticatedFetch<TProduccion>(
     authTokens,
     validate,
     `/api/produccion/${id}/`
@@ -92,14 +92,14 @@ const DashboardProduccion = () => {
               {programa_produccion?.estado_label}
             </Badge>
             {
-              programa_produccion?.estado === '5'
+              programa_produccion?.estado === '5' || programa_produccion?.estado === '3'
                 ? null
                 : (
                   <Tooltip text='Añadir Lote al Programa'>
                     <Link to={`/app/produccion/registro-programa/${id}`}>
                       <button
                         type='button' 
-                        className=' dark:bg-lime-800 rounded-md flex items-center justify-center w-full h-12 px-3 py-2'>
+                        className=' dark:bg-zinc-700 bg-zinc-700 rounded-md flex items-center justify-center w-full h-12 px-3 py-2 text-white'>
                         <span>Añadir Lote al Programa N°{id}</span>
                       </button>
                     </Link>
@@ -115,7 +115,7 @@ const DashboardProduccion = () => {
                       open={open}
                       setOpen={setOpen}
                       textButton={`Registro Tarja`}
-                      width='w-40 rounded-md h-12 bg-blue-700 flex items-center justify-center px-5 py-3 hover:scale-105'
+                      width='w-40 rounded-md h-12 bg-blue-700 flex items-center justify-center px-5 py-3 hover:scale-105 text-white'
                       >
                         <FormularioRegistroTarja tab={setActiveTab} setOpen={setOpen}/>
                     </ModalRegistro>
@@ -153,35 +153,14 @@ const DashboardProduccion = () => {
                 ? <DetalleTarjaResultante />
                   : activeTab.text === 'Envases de Lotes Seleccionados'
                     ? <DetalleEnvasesLote />
-                    : activeTab.text === 'Procesar Masivamente' && programa_produccion?.lotes.every(lote => lote.bin_procesado !== true)
-                      ? <DetalleEnvasesMasivosLotes programa_produccion={programa_produccion!}/>
+                    : activeTab.text === 'Procesar Masivamente' && programa_produccion?.lotes.some(lote => lote.bin_procesado !== true)
+                      ? <DetalleEnvasesMasivosLotes programa_produccion={programa_produccion!} refresh={setRefresh}/>
                       : activeTab.text === 'Operarios en Programa'
                         ? <DetalleOperarioPrograma />
                         : null
               }
 						</div>
-						{/* {
-              activeTab.text === 'General'
-                ? (
-                  <>
-                    <div className='col-span-12 2xl:col-span-4'>
-                      <CommentPartial />
-                    </div>
-
-                    <div className='col-span-12 2xl:col-span-8'>
-                      <Card className='h-full'>
-                        <TablePartial />
-                        
-                      </Card>
-                    </div>
-                    <div className='col-span-12 2xl:col-span-4'>
-                      <TimelinePartial />
-                    </div>
-                  </>
-                  )
-                : null
-            } */}
-
+		
 					</div>
 				</Container>
 			</PageWrapper>

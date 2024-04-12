@@ -108,6 +108,12 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 			),
 			header: 'N° Tarja',
 		}),
+		columnHelper.accessor('codigo_tarja', {
+			cell: (info) => (
+				<div className='font-bold '>{`${info.row.original.codigo_tarja}`}</div>
+			),
+			header: 'Código Tarja',
+		}),
 		columnHelper.accessor('variedad', {
 			cell: (info) => {
 				const variedad = info.row.original.variedad

@@ -32,6 +32,10 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
     `/api/patio-exterior/${lote?.id}`
   )
 
+  console.log(lote?.id)
+
+  console.log(patio_exterior)
+
 
   const updateEstadoLote = async (id: number, estado: string) => {
     console.log(estado);
@@ -82,7 +86,7 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/patio-exterior/${patio_exterior?.id}/`, {
+        const res = await fetch(`${base_url}/api/patio-exterior/${patio_exterior?.id_recepcion}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -94,13 +98,13 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
           })
         })
         if (res.ok) {
-          toast.success("El envase fue registrado exitosamente!!")
+          toast.success("fue asignado exitosamente la ubicación!!")
           updateEstadoLote(lote?.id!, '5')
           refresh(true)
           setOpen(false)
 
         } else {
-          toast.error("No se pudo registrar el envase, volver a intentar")
+          toast.error("No se pudo asignar la ubicación, volver a intentar")
         }
       } catch (error) {
         console.log(error)
@@ -113,10 +117,7 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
 
     <form
       onSubmit={formik.handleSubmit}
-      className={`
-          flex flex-col 
-          md:grid md:grid-cols-6 gap-x-4 gap-y-8 mt-10 
-          relative p-4 ${isDarkTheme ? oneDark : oneLight} rounded-md`}
+      className={` w-full flex flex-col `}
     >
       <div className='md:col-span-6 md:flex-col items-center'>
         <label htmlFor="ubicacion">Ubicación: </label>
@@ -133,8 +134,8 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ refresh, setOpen, guia
       </div>
 
       <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-        <button className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
-          Registrar Envase
+        <button className='w-full mt-6 px-5  bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
+          Registrar Ubicación
         </button>
       </div>
     </form>

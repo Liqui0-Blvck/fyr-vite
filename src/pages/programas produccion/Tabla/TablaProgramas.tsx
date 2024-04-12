@@ -52,6 +52,7 @@ import FormularioInformeProduccion from '../Formularios Produccion/Formulario In
 import FormularioKilosOperarios from '../Formularios Produccion/Formulario Kilos Operarios/FormularioKilosOperarios';
 import FormularioResumen from '../Formularios Produccion/Formulario Resumen/FormularioResumenOperario';
 import toast from 'react-hot-toast';
+import { TfiReload } from "react-icons/tfi";
 
 
 interface IProduccionProps {
@@ -116,6 +117,27 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 			refresh(true)
 		} else {
 			console.log("nop no lo logre")
+		}
+	}
+
+	const registrarReproceso = async (id: number) => {
+		const response = await fetch(`${base_url}/api/reproceso/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${authTokens?.access}`
+			},
+			body: JSON.stringify({
+				registrado_por: userID?.user_id
+			})
+		})
+		if (response.ok) {
+			const data: TProduccion = await response.json()
+			toast.success(`El programa reproceso fue creado exitosamente`)
+			actualizarEstadoProduccion(id, '3')
+			navigate(`/app/produccion/registro-programa/${data.id}`)
+		} else {
+			toast.error("Error al registrar el programa de reproceso, volver a intentar")
 		}
 	}
 
@@ -251,7 +273,9 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 					}
 
 					{
-						info.row.original.lotes.every(lote => lote.bin_procesado === true) && info.row.original.lotes.length > 1
+						(info.row.original.lotes.every(lote => lote.bin_procesado === true && info.row.original.lotes.length > 0)) && (
+							info.row.original.tarjas_resultantes.length > 0 && info.row.original.tarjas_resultantes.every(tarja => tarja.cc_tarja === true)
+						) 
 							? (
 								<Tooltip title='Terminar Producción'>
 									<button
@@ -287,20 +311,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 								</button>
 							</Tooltip>
 						</Link>
-						
-
-						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
-							title='Edición Productor'
-							textTool='Editar'
-							size={1000}
-							width={`w-16 px-1 h-12 ${isDarkTheme ? 'bg-[#c9429c] hover:bg-[#ff84d6]' : 'bg-[#c9429c] hover:bg-[#ff84d6] text-white'} hover:scale-105`}
-							icon={<HeroPencilSquare style={{ fontSize: 35 }} />}
-						>
-							Hola
-							{/* <FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
-						</ModalRegistro>
+					
 
 						{
 							info.row.original.lotes.length > 0
@@ -323,6 +334,21 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										</Tooltip>
 									</>
 									)	
+								: null
+						}
+
+						{
+							info.row.original.estado === '5'
+								? (
+									<Tooltip title='Iniciar Reproceso'>
+										<button 
+											type='button'
+											onClick={() => registrarReproceso(id)}
+											className='w-16 rounded-md h-12 bg-orange-500 flex items-center justify-center p-2 hover:scale-105'>
+											<TfiReload style={{ fontSize: 30, color: 'white', fontWeight: 'bold'}}/>
+										</button>
+									</Tooltip>
+									)
 								: null
 						}
 
@@ -384,7 +410,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 					</FieldWrap>
 				</SubheaderLeft>
 				{
-					data.length >= 1 
+					data.length >= 1
 						? null
 						: (
 							<SubheaderRight>

@@ -31,7 +31,7 @@ import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
 import ModalRegistro from '../../../components/ModalRegistro';
 // import FormularioRegistroProductores from '../Formulario Registro/FormularioRegistroProductores';
-import { TProduccion, TProductor } from '../../../types/registros types/registros.types';
+import { TProduccion, TProductor, TReprocesoProduccion } from '../../../types/registros types/registros.types';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';
@@ -55,7 +55,7 @@ import FormularioResumen from '../../programas produccion/Formularios Produccion
 
 
 interface IProduccionProps {
-	data: TProduccion[] | []
+	data: TReprocesoProduccion[] | []
 	refresh: Dispatch<SetStateAction<boolean>>
 }
 
@@ -66,7 +66,7 @@ const estados = [
 	{value: '5',label: 'Terminado'}
 ]
 
-const columnHelper = createColumnHelper<TProduccion>();
+const columnHelper = createColumnHelper<TReprocesoProduccion>();
 
 
 
@@ -99,7 +99,7 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 	}
 
 	const actualizarEstadoProduccion = async (id: number, estado: string) => {
-		const response = await fetch(`${base_url}/api/produccion/${id}/`, {
+		const response = await fetch(`${base_url}/api/reproceso/${id}/`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -119,27 +119,6 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 		}
 	}
 
-	const registroProgramaProduccion = async () => {
-		const response = await fetch(`${base_url}/api/produccion/`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${authTokens?.access}`
-			},
-			body: JSON.stringify({
-				registrado_por: userID?.user_id
-			})
-		})
-		if (response.ok) {
-			const data: TProduccion = await response.json()
-			toast.success(`El programa fue creado exitosamente`)
-			navigate(`/app/produccion/registro-programa/${data.id}`)
-		} else {
-			console.log("nop no lo logre")
-		}
-	}
-
-
 	const columns = [
 		columnHelper.accessor('id', {
 			cell: (info) => (
@@ -149,18 +128,18 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 			),
 			header: 'N° Programa',
 		}),
-		columnHelper.accessor('lotes', {
+		columnHelper.accessor('bins', {
 			cell: (info) => (
 				<div className='font-bold '>
-					{`${info.row.original.lotes.length}`}
+					{`${info.row.original.bins.length}`}
 				</div>
 			),
 			header: 'N° Envases',
 		}),
-		columnHelper.accessor('lotes', {
+		columnHelper.accessor('bins', {
 			cell: (info) => {
-				const total_lotes = info.row.original.lotes.length
-				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_procesado !== true).length / total_lotes) * 100).toFixed(1)
+				const total_lotes = info.row.original.bins.length
+				const lotes_procesados = ((info.row.original.bins.filter(lote => lote.bin_procesado !== true).length / total_lotes) * 100).toFixed(1)
 				
 				return (
 					<div className='font-bold'>
@@ -170,10 +149,10 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 			},
 			header: 'Envases en Proc.',
 		}),
-		columnHelper.accessor('lotes', {
+		columnHelper.accessor('bins', {
 			cell: (info) => {
-				const total_lotes = info.row.original.lotes.length
-				const lotes_procesados = ((info.row.original.lotes.filter(lote => lote.bin_procesado === true).length / total_lotes) * 100).toFixed(1)
+				const total_lotes = info.row.original.bins.length
+				const lotes_procesados = ((info.row.original.bins.filter(lote => lote.bin_procesado === true).length / total_lotes) * 100).toFixed(1)
 				
 				return (
 					<div className='font-bold'>
@@ -235,7 +214,7 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 					}
 
 					{
-						info.row.original.lotes.every(lote => lote.bin_procesado === true) && info.row.original.lotes.length > 1
+						info.row.original.bins.every(lote => lote.bin_procesado === true) && info.row.original.bins.length > 1
 							? (
 								<Tooltip title='Terminar Producción'>
 									<button
@@ -264,34 +243,20 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 				return (
 					<div className='h-full w-full flex justify-center gap-5 flex-wrap md:flex-wrap'>
 
-						<Link to={`${`/app/produccion/programa/${id}/`}`}>
+						<Link to={`${`/app/produccion/programa-reproceso/${id}/`}`}>
 							<Tooltip title='Terminar Producción'>
 								<button className='w-16 rounded-md h-12 bg-[#40be75] hover:bg-[#49bb78] flex items-center justify-center p-2 hover:scale-105'>
 									<HeroEye style={{ fontSize: 35, color: 'white' }}/>
 								</button>
 							</Tooltip>
 						</Link>
-						
-
-						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
-							title='Edición Productor'
-							textTool='Editar'
-							size={1000}
-							width={`w-16 px-1 h-12 ${isDarkTheme ? 'bg-[#c9429c] hover:bg-[#ff84d6]' : 'bg-[#c9429c] hover:bg-[#ff84d6] text-white'} hover:scale-105`}
-							icon={<HeroPencilSquare style={{ fontSize: 35 }} />}
-						>
-							Hola
-							{/* <FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
-						</ModalRegistro>
 
 						{
-							info.row.original.lotes.length > 0
+							info.row.original.bins.length > 0
 								? (
 									<>
 										<Tooltip title='Detalle envases del lote en Programa'>
-											<Link to={`/app/pdf-detalle-envases/${id}`}>
+											<Link to={`/app/pdf-detalle-envases-reproceso/${id}`}>
 												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
 													<FaFilePdf style={{ fontSize: 25 }} />
 												</button>
@@ -299,7 +264,7 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 										</Tooltip>
 
 										<Tooltip title='Documento de entrada a proceso'>
-											<Link to={`/app/pdf-documento-entrada/${id}`}>
+											<Link to={`/app/pdf-documento-entrada-reproceso/${id}`}>
 												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
 													<FaFilePdf style={{ fontSize: 25 }} />
 												</button>
@@ -367,46 +332,14 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
-				{
-					data.length >= 1 
-						? null
-						: (
-							<SubheaderRight>
-								<Tooltip title='Registro Programa de produccion'>
-									<button
-										type='button'
-										onClick={() => registroProgramaProduccion()}
-										className='w-full rounded-md h-12 bg-blue-700 flex items-center justify-center p-2 hover:scale-105 px-2'>
-										<span className='text-lg text-white'>Registrar Programa de Producción</span>
-									</button>
-								</Tooltip>
-							</SubheaderRight>
-						)
-				}
-
-				{
-					data.every(programa => programa.estado === '5') || data.some(programa => programa.estado === '2') && data.some(programa => programa.tarjas_resultantes.length !== 0)
-						? null
-							: (
-								<SubheaderRight>
-									<Tooltip title='Registro Programa de produccion'>
-										<button
-											type='button'
-											onClick={() => registroProgramaProduccion()}
-											className='w-full rounded-md h-12 bg-blue-700 flex items-center justify-center p-2 hover:scale-105 px-2'>
-											<span className='text-lg text-white'>Registrar Programa de Producción</span>
-										</button>
-									</Tooltip>
-								</SubheaderRight>
-							)
-				}
+				
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
 					<CardHeader>
 
 						<CardHeaderChild>
-							<CardTitle>Programas</CardTitle>
+							<CardTitle>Programas Reproceso</CardTitle>
 							<Badge
 								variant='outline'
 								className='border-transparent px-4'

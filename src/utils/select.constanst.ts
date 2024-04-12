@@ -30,7 +30,7 @@ export const ACTIVO = [
 export const VARIEDADES_MP = [
   { value: "SL", label: "Solano" },
   { value: "MO", label: "Mono" },
-  { value: "CM", label: "Carm el" },
+  { value: "CM", label: "Carmel" },
   { value: "RB", label: "Ruby" },
   { value: "PR", label: "Price" },
   { value: "WC", label: "Wood Colony" },

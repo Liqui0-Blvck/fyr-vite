@@ -32,8 +32,6 @@ const ModalBodega: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_estado
   })) ?? []
 
 
-  console.log(lote)
-
   const [prevNumeroEstado, setPrevNumeroEstado] = useState<number>(0);
   const [confirmacion, setConfirmacion] = useState<boolean>(false);
 

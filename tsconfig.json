@@ -21,6 +21,6 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"include": ["src", "./src/declaration.d.ts"],
+	"include": ["src", "./src/declaration.d.ts", "src/pages/programa reproceso/Detalle Produccion/CardMetricaRecepcion.tsx"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

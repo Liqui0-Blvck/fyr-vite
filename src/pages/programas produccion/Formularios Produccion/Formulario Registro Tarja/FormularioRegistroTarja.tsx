@@ -62,7 +62,7 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOp
       <form
         onSubmit={formik.handleSubmit}
         className={`flex flex-col md:grid md:grid-cols-4 gap-x-3
-        gap-y-5 mt-10 dark:bg-inherit bg-zinc-300 relative px-5 py-6
+        gap-y-5 mt-10 dark:bg-inherit relative px-5 py-6
         rounded-md`}
       >
         <div className='md:col-span-2 md:flex-col items-center'>
