@@ -22,9 +22,6 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
 		((envases_programa.reduce((acc, envase) => (envase?.kilos_fruta || 0) + acc, 0) / totalEnvases) * 100).toFixed(1)
 		: 0;
 
-
-	console.log(kilosTotales)
-
 	const kilosTotalesProcesados = envases_programa?.filter(envase => envase?.bin_procesado === true).length ?
 		((envases_programa.filter(envase => envase?.bin_procesado === true)
 			.reduce((acc, envase) => (envase?.kilos_fruta || 0) + acc, 0) / totalEnvases) * 100).toFixed(1)
@@ -75,7 +72,7 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
 
 	return (
 		<Card className="h-full w-full">
-			<CardBody className="w-full h-full flex flex-col md:flex-col lg:flex-row gap-y-5 lg:gap-2 border border-black">
+			<CardBody className="w-full h-full flex flex-col md:flex-col lg:flex-row gap-y-5 lg:gap-2">
 				<div className='w-full md:w-full lg:w-96 flex flex-col justify-between gap-y-2 md:gap-2 lg:gap-2 '>
 					<div className='w-full h-20 dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center py-3.5 px-2'>
 						<span>Kilos totales en producción: {0} kgs</span>

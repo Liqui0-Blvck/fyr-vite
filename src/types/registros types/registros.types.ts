@@ -1,6 +1,6 @@
 export type TGuia = {
   id: number;
-  lotesrecepcionmp: [];
+  lotesrecepcionmp: TLoteGuia[];
   camion: string;
   camionero: string;
   estado_recepcion: string;
@@ -535,6 +535,41 @@ export type TProduccion = {
   tarjas_resultantes: TTarjaResultante[]
 }
 
+export type TReprocesoProduccion = {
+  id: number;
+  fecha_creacion: string;
+  fecha_modificacion: string;
+  estado: string;
+  estado_label: string,
+  fecha_inicio_reproceso: string | null;
+  fecha_termino_reproceso: string | null;
+  fecha_cierre_proceso: string | null;  
+  fecha_termino_proceso: string | null;
+  fecha_pausa_proceso: string | null;
+  fecha_finpausa_proceso: string | null;
+  registrado_por: number;
+  bins: TBinEnReproceso[]
+  operarios: TOperarioProduccion[]
+  tarjas_resultantes: TTarjaResultante[]
+}
+
+
+export type TBinEnReproceso = {
+  id: number,
+  fecha_creacion: string,
+  fecha_modificacion: string,
+  id_bin_bodega: number,
+  bin_procesado: boolean,
+  fecha_procesado: string,
+  reproceso: number,
+  tipo_bin_bodega: string,
+  procesado_por: number
+  programa_produccion: number
+  binbodega: string
+  kilos_bin: number
+  tipo_binbodega_id: number
+}
+
 export type TEnvasesPrograma = {
   id: number;
   numero_lote: number;
@@ -598,6 +633,7 @@ export type TCalibreTarja = {
 
 
 export type TRendimientoActual = {
+  pepa_resultante: number
   cc_pepa_calibre: TCalibreTarja;
 }
 

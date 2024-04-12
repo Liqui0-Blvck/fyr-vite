@@ -23,6 +23,7 @@ import { urlNumeros } from '../../../../services/url_number';
 import { HeroXMark } from '../../../../components/icon/heroicons';
 import ModalForm from '../../../../components/ModalRegistro';
 import FormularioControlCalidadTarja from '../../Formularios Produccion/Formulario Control Calidad Tarja/FormularioControlCalidadTarja';
+import { optionTipoPatineta } from '../../../../utils/generalUtils';
 
 
 interface ILoteCompletadoProps {
@@ -60,8 +61,6 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
   }
 
 
-  
-
   console.log(row)
 
   return (
@@ -80,7 +79,7 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
 
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center gap-5'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.tipo_patineta}</span>
+          <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-black'}`}>{optionTipoPatineta.find(tipo => tipo?.value! === String(row?.tipo_patineta))?.label}</span>
         </div>
       </TableCell>
 

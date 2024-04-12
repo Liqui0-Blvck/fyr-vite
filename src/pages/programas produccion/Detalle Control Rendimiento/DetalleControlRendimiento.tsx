@@ -64,9 +64,9 @@ const DetalleControlRendimiento = () => {
   }, [lotes_en_programa])
 
 
-  const pepa_calibrada = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '3').reduce((acc, tarja) => tarja.peso + acc, 0)
-  const pepa_borrel = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '1').reduce((acc, tarja) => tarja.peso + acc, 0)
-  const residuo_solido = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '2').reduce((acc, tarja) => tarja.peso + acc, 0)
+  const pepa_calibrada = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '3').reduce((acc, tarja) => (tarja.peso - tarja.tipo_patineta) + acc, 0)
+  const pepa_borrel = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '1').reduce((acc, tarja) => (tarja.peso - tarja.tipo_patineta) + acc, 0)
+  const residuo_solido = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '2').reduce((acc, tarja) => (tarja.peso - tarja.tipo_patineta) + acc, 0)
   const pepa_resultante = pepa_borrel! + pepa_calibrada!
 
   console.log(pepa_calibrada)
@@ -120,7 +120,7 @@ const DetalleControlRendimiento = () => {
             </div>
 
             <div className='flex flex-col items-center justify-center'>
-              <span className='text-md font-semibold'>{pepa_resultante} kgs</span>
+              <span className='text-md font-semibold'>{cc_rendimiento_actual?.pepa_resultante} kgs</span>
               <span className='text-center'>Pepa Resultante</span>
             </div>
           </div>

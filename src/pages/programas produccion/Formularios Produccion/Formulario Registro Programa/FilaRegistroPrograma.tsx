@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, TableCell } from '@mui/material'
-import React, { Dispatch, FC, SetStateAction, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { TControlCalidadB, TEnvasePatio } from '../../../../types/registros types/registros.types'
 import { MdOutlineExpandMore } from 'react-icons/md'
@@ -14,6 +14,7 @@ import ModalRegistro from '../../../../components/ModalRegistro'
 import Checkbox from '../../../../components/form/Checkbox'
 import EnvasesEnGuiaList from './ListaEnvasesSeleccionables'
 import { preventDefault } from '@fullcalendar/core/internal'
+import toast from 'react-hot-toast'
 
 
 interface IRegistroPrograma {
@@ -28,7 +29,7 @@ interface IRegistroPrograma {
 
 const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ubicacion, refresh }) => {
   const { isDarkTheme } = useDarkMode()
-  const { authTokens, validate, perfilData } = useAuth()
+  const { authTokens, validate, perfilData, userID } = useAuth()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -45,20 +46,30 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ubi
   )
 
 
-  // const registrarLoteAProduccion = async (id_envase: number) => {
-  //   const res = await fetch(`${base_url}/programa/${id}/`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${authTokens?.access}`
-  //     },
-  //     body: JSON.stringify({
-  //       produccion: id[0],
-  //       bodega_techado_ext: id_envase
-  //     })
-  //   })
-  // }
+  const registrarLoteAProduccion = async (envases: string) => {
+    const res = await fetch(`${base_url}/api/produccion/${id}/lotes_en_programa/registrar_lotes/${envases}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
+      }
+    })
+    if (res.ok){
+      refresh(true)
+      toast.success('Envases agregados correctamente a producción')
+    } else {
+      toast.error("Ocurrió un error, vuelve a intentarlo")
+    }
+  }
 
+  useEffect(() => {
+    if (selectAll){
+      const lista_seleccionada = selectedItems?.map(id => id)
+      const envases = lista_seleccionada ? lista_seleccionada.join(",") : "";
+
+      registrarLoteAProduccion(envases)
+    }
+  }, [selectedItems, selectAll])
   
 
   const handleChangeExpanded = (panel: number) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
@@ -101,7 +112,7 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ubi
 
   const variedad_nombre = variedadFilter.find(varie => varie.value === variedad)?.label
 
-  console.log(selectedItems)
+  // console.log(selectedItems)  
 
   return (
     <>

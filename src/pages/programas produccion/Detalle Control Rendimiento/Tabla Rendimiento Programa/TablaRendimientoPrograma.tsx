@@ -12,9 +12,6 @@ import useDarkMode from '../../../../hooks/useDarkMode';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { TControlCalidad, TRendimientoActual, TRendimientoMuestra, TTarjaResultante } from '../../../../types/registros types/registros.types';
-import FilaTarjaResultante from './FilaRendimientoPrograma';
-import { TablePagination } from '@mui/material';
-import FilaProyeccionRecepcionado from './FilaRendimientoPrograma';
 
 
 interface IRendimientoMuestra {
@@ -27,23 +24,12 @@ interface IRendimientoMuestra {
 
 const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_resultantes }) => {
   const { authTokens, validate } = useAuth()
-  const { isDarkTheme } = useDarkMode();
+  const { isDarkTheme } = useDarkMode()
 
-  console.log(data)
-  console.log(tarjas_resultantes)
-
-  const pepa_calibrada = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '3').reduce((acc, tarja) => tarja.peso + acc, 0)
-  const pepa_borrel = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '1').reduce((acc, tarja) => tarja.peso + acc, 0)
-  const residuo_solido = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '2').reduce((acc, tarja) => tarja.peso + acc, 0)
-  const pepa_resultante = pepa_borrel! + pepa_calibrada!
-
-  console.log(pepa_calibrada)
-  console.log(pepa_borrel)
-  console.log(residuo_solido)
-  console.log(data?.cc_pepa_calibre.sincalibre)
+  const pepa_resultante = data?.pepa_resultante !== 0 ? data?.pepa_resultante : 1
 
   return (
-    <div>
+    <div> 
       <div
           className='relative left-[0px] lg:left-0 p-5 '>
         <TableContainer sx={{ height: 500, borderRadius: 3 }}>
@@ -72,7 +58,9 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.sincalibre! / pepa_resultante * 100 )?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>
+                      {(data?.cc_pepa_calibre.sincalibre! / pepa_resultante! * 100)?.toFixed(1)} %
+                    </span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -92,7 +80,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.precalibre! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.precalibre! / pepa_resultante! * 100)?.toFixed(1)} %</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -112,7 +100,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_18_20! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_18_20! / pepa_resultante! * 100)?.toFixed(1)} %</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -133,7 +121,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_20_22! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_20_22! / pepa_resultante! * 100)?.toFixed(1)} %</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -153,7 +141,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                  <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_23_25! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                  <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_23_25! / pepa_resultante! * 100)?.toFixed(1)} %</span>
 
                   </div>
                 </TableCell>
@@ -175,7 +163,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_25_27! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_25_27! / pepa_resultante! * 100)?.toFixed(1)} %</span>
 
                   </div>
                 </TableCell>
@@ -197,7 +185,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_27_30! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_27_30! / pepa_resultante! * 100)?.toFixed(1)} %</span>
 
                   </div>
                 </TableCell>
@@ -218,7 +206,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_30_32! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_30_32! / pepa_resultante! * 100)?.toFixed(1)} %</span>
 
                   </div>
                 </TableCell>
@@ -239,7 +227,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_32_34! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_32_34! / pepa_resultante! * 100)?.toFixed(1)} %</span>
 
                   </div>
                 </TableCell>
@@ -260,7 +248,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_34_36! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_34_36! / pepa_resultante! * 100)?.toFixed(1)} %</span>
 
                   </div>
                 </TableCell>
@@ -282,7 +270,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_36_40! / pepa_resultante * 100)?.toFixed(1)} %</span>
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_36_40! / pepa_resultante! * 100)?.toFixed(1)} %</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -302,8 +290,7 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
                 <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
                   <div className=' h-full w-full flex items-center justify-center gap-5'>
-                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_40_mas! / pepa_resultante * 100)?.toFixed(1)} %</span>
-
+                    <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(data?.cc_pepa_calibre.calibre_40_mas! / pepa_resultante! * 100)?.toFixed(1)} %</span>
                   </div>
                 </TableCell>
               </TableRow>

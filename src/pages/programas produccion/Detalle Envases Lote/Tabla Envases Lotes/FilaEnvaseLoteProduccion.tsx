@@ -37,13 +37,7 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
   const { isDarkTheme } = useDarkMode()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
-  const [openModalCCPepa, setOpenModalCCPepa] = useState<boolean>(false)
-  const [ccPepaConfirmacion, setccPepaConfirmacion] = useState<boolean>(false)
-  const [openDetail, setOpenDetail] = useState<boolean>(false)
-  const [openConfirmacion, setOpenConfirmacion] = useState<boolean>(false)
-  const [confirmacion, setConfirmacion] = useState<boolean>(false)
-  const [confirmacionCCPepa, setConfirmacionCCPepa] = useState<boolean>(false)
-  const [isCalibrable, setIsCalibrable] = useState<boolean>(false)
+
 
   const { data: patio_exterior } = useAuthenticatedFetch<TPatioTechadoEx>(
     authTokens,
@@ -52,7 +46,10 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
   )
 
 
-  const actualizarEstadoEnvase = async (id_lote: number) => {
+  console.log(row)
+
+
+  const actualizarEstadoEnvase = async (id_lote: number, bodega_ext: number) => {
     const res = await fetch(`${base_url}/api/produccion/${id}/lotes_en_programa/${id_lote}/`, {
       method: 'PUT',
       headers: {
@@ -61,7 +58,7 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
       },
       body: JSON.stringify({
         bin_procesado: true,
-        bodega_techado_ext: id_lote,
+        bodega_techado_ext: bodega_ext,
         produccion: id[0]
       })
     })
@@ -75,7 +72,6 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
   }
 
 
-  console.log(row)
 
 
   return (
@@ -123,7 +119,7 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, produ
                 <Tooltip text='Envase a Procesar'>
                   <button
                     type='button'
-                    onClick={() => actualizarEstadoEnvase(row?.id!)}
+                    onClick={() => actualizarEstadoEnvase(row?.id!, row?.bodega_techado_ext!)}
                     className='w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105'
                     >
                       <FaForward style={{ fontSize: 35 }}/>

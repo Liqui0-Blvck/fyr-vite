@@ -9,6 +9,7 @@ import ModalRegistro from "../../../../components/ModalRegistro"
 import { format } from "@formkit/tempo"
 import useDeviceScreen from "../../../../hooks/useDeviceScreen"
 import { variedadFilter } from "../../../../constants/options.constants"
+import Tooltip from "../../../../components/ui/Tooltip"
 
 
 interface IEnvasePatioProps {
@@ -30,7 +31,9 @@ const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row }) => {
     <>
       <TableCell className='table-cell-row-detail-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center py-2'>
-          <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_bin}</span>
+          <Tooltip text={`${row?.id!}`}>
+            <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_bin}</span>
+          </Tooltip>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>

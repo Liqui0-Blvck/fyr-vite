@@ -99,7 +99,7 @@ const DashboardProduccion = () => {
                     <Link to={`/app/produccion/registro-programa/${id}`}>
                       <button
                         type='button' 
-                        className=' dark:bg-lime-800 rounded-md flex items-center justify-center w-full h-12 px-3 py-2'>
+                        className=' dark:bg-zinc-700 bg-zinc-700 rounded-md flex items-center justify-center w-full h-12 px-3 py-2 text-white'>
                         <span>Añadir Lote al Programa N°{id}</span>
                       </button>
                     </Link>
@@ -115,7 +115,7 @@ const DashboardProduccion = () => {
                       open={open}
                       setOpen={setOpen}
                       textButton={`Registro Tarja`}
-                      width='w-40 rounded-md h-12 bg-blue-700 flex items-center justify-center px-5 py-3 hover:scale-105'
+                      width='w-40 rounded-md h-12 bg-blue-700 flex items-center justify-center px-5 py-3 hover:scale-105 text-white'
                       >
                         <FormularioRegistroTarja tab={setActiveTab} setOpen={setOpen}/>
                     </ModalRegistro>

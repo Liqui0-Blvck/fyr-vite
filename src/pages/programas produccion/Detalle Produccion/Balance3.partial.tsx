@@ -61,7 +61,7 @@ const Balance3Partial: FC<ICardFrutaCalibradaProps> = ({envases_programa, tarjas
 	};
 	return (
 		<Card className="dark:bg-zinc-800 h-full">
-			<CardBody className="w-full h-full flex flex-col md:flex-col lg:flex-row gap-y-5 lg:gap-2 border border-black">
+			<CardBody className="w-full h-full flex flex-col md:flex-col lg:flex-row gap-y-5 lg:gap-2 ">
 
 				<div className='w-full md:w-full lg:w-96 flex flex-col  gap-y-2 md:gap-2 lg:gap-2 '>
 					<div className='w-full h-16 dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center py-3.5 px-2'>
