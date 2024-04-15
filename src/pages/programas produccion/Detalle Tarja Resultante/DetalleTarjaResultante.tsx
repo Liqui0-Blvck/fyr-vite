@@ -60,7 +60,7 @@ const DetalleTarjaResultante: FC<ITarjaResultanteProps> = ({ produccion, refresh
 
   return (
     <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full w-full relative px-5
-        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 dark:bg-zinc-800 bg-zinc-200 py-10
+        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 dark:bg-zinc-800 bg-zinc-200 py-2
         rounded-md`}
     >
       <div className={`w-full col-span-3 ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } h-20 flex items-center justify-center rounded-md`}>
@@ -78,7 +78,7 @@ const DetalleTarjaResultante: FC<ITarjaResultanteProps> = ({ produccion, refresh
                       <PieChart series={valores ! || []} labels={labels! || []}/>
                       <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
                     </div>
-                    <div className='w-full h-full flex flex-col justify-center  mt-4 lg:mt-0'> 
+                    <div className='w-full h-full flex flex-col justify-center mt-2  lg:mt-0'> 
                       <TablaTarjaResultante data={tarja_resultante || []} refresh={setRefresh} produccion={produccion!}/>
                     </div>
                   </div>

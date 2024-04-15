@@ -15,7 +15,7 @@ interface ICardFrutaCalibradaProps {
 	activeTab: TTabs
 }
 
-const Balance3Partial: FC<ICardFrutaCalibradaProps> = ({envases_programa, tarjas_resultantes }) => {
+const CardFrutaProcesadaUltimaHora: FC<ICardFrutaCalibradaProps> = ({envases_programa, tarjas_resultantes }) => {
 	const now = new Date()
 
 	const kilos_totales_procesados = envases_programa?.
@@ -81,4 +81,4 @@ const Balance3Partial: FC<ICardFrutaCalibradaProps> = ({envases_programa, tarjas
 	);
 };
 
-export default Balance3Partial;
+export default CardFrutaProcesadaUltimaHora;

@@ -139,7 +139,7 @@ const LoginPage = () => {
 					</form>
 
 					<div>
-						<span className='flex gap-2 text-sm'>
+						<span className='flex w-full gap-2 text-sm'>
 							<span className='text-zinc-400 dark:text-zinc-600 text-md'>
 								¿Olvido su contraseña?
 							</span>
@@ -148,6 +148,7 @@ const LoginPage = () => {
 								open={open}
 								setOpen={setOpen}
 								size={500}
+								width='dark:text-white !text-black'
 								textButton='Restablecer contraseña'>
 								<RecoveryPage setOpen={setOpen}/>
 							</ModalRegistro>

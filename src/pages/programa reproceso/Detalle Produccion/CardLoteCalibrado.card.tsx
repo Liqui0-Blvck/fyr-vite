@@ -68,7 +68,7 @@ const CardLoteCalibrado: FC<ICardFrutaCalibradaProps>= ({ tarjas_resultantes }) 
 						<span>Kilos Fruta Borrel: {pepa_borrel} kgs</span>
 					</div>
 					<div className='w-full h-20 dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center py-3.5 px-2'>
-						<span>Kilos Fruta Borrel: {residuo_solido} kgs</span>
+						<span>Kilos Residuos Solidos: {residuo_solido} kgs</span>
 					</div>
 				</div>
 

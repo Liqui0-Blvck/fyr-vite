@@ -102,14 +102,6 @@ const RecoveryPage: FC<IRecoveryPageProps> = ({ setOpen }) => {
 						</div>
 					</form>
 					<div>
-						<span className='flex gap-2 text-sm'>
-							<span className='text-zinc-400 dark:text-zinc-600'>
-								Tienes una cuenta?
-							</span>
-							<Link to='/' className='hover:text-inherit'>
-								Iniciar Sesión
-							</Link>
-						</span>
 					</div>
 				</div>
 			</div>

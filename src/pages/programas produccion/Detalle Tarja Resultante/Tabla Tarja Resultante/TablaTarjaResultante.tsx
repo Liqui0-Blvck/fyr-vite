@@ -89,7 +89,7 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, producci
             sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`, color: `${isDarkTheme ? 'white' : 'black'}` }}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={data?.length || 0} 
+            count={data?.filter(row => row.esta_eliminado !== true).length || 0} 
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

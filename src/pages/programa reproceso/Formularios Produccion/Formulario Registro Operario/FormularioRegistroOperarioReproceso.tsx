@@ -8,7 +8,7 @@ import Validation from "../../../../components/form/Validation"
 import FieldWrap from "../../../../components/form/FieldWrap"
 import SelectReact, { TSelectOptions } from "../../../../components/form/SelectReact"
 import { useAuthenticatedFetch } from "../../../../hooks/useAxiosFunction"
-import { TOperarios } from "../../../../types/registros types/registros.types"
+import { TOperarioProduccion, TOperarios } from "../../../../types/registros types/registros.types"
 import { useLocation } from "react-router-dom"
 import { urlNumeros } from "../../../../services/url_number"
 import Input from "../../../../components/form/Input"
@@ -16,11 +16,12 @@ import { OperarioProgramaSchema } from "../../../../utils/Validator"
 
 
 interface IFormCamiones {
+  operarios: TOperarioProduccion[]
   refresh: Dispatch<SetStateAction<boolean>>
   setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const FormularioRegistroOperarioProgramaReproceso: FC<IFormCamiones> = ({ refresh, setOpen }) => {
+const FormularioRegistroOperarioProgramaReproceso: FC<IFormCamiones> = ({ refresh, setOpen, operarios: operario }) => {
   const { authTokens, validate } = useAuth()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -37,7 +38,7 @@ const FormularioRegistroOperarioProgramaReproceso: FC<IFormCamiones> = ({ refres
     label: `${operario.nombre}  ${operario.apellido}`
   })) ?? []
 
-  console.log(optionOperario)
+  console.log(operario)
 
 
   const formik = useFormik({
@@ -132,7 +133,7 @@ const FormularioRegistroOperarioProgramaReproceso: FC<IFormCamiones> = ({ refres
          <button
             type="submit" 
             className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3 font-semibold'>
-            Registrar Operario en Programa
+            Registrar Operario en Programa reproceso
           </button>
         </div>
       </form>

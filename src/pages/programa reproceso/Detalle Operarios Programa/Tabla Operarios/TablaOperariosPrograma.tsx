@@ -19,8 +19,7 @@ import { GoQuestion } from 'react-icons/go';
 import ModalForm from '../../../../components/ModalRegistro';
 import FilaOperarioPrograma from './FilaOperariosPrograma';
 import { TablePagination } from '@mui/material';
-import FormularioRegistroOperarioPrograma from '../../../programas produccion/Formularios Produccion/Formulario Registro Operario/FormularioRegistroOperario';
-import FormularioRegistroOperarioProgramaReproceso from '../../Formularios Produccion/Formulario Registro Operario/FormularioRegistroOperario';
+import FormularioRegistroOperarioProgramaReproceso from '../../Formularios Produccion/Formulario Registro Operario/FormularioRegistroOperarioReproceso';
 
 
 interface ITablaOperariosProps {
@@ -80,7 +79,7 @@ const TablaOperariosPrograma: FC<ITablaOperariosProps> = ({ operarios, refresh, 
                   open={open}
                   setOpen={setOpen}
                   width='bg-blue-800 hover:bg-blue-700 hover:scale-105 px-7 py-4 text-lg'
-                  textButton={`Registrar Operarios al programa`}
+                  textButton={`Registrar Operarios al programa reproceso`}
                   >
                   <FormularioRegistroOperarioProgramaReproceso refresh={refresh} setOpen={setOpen}/>
                 </ModalForm>
@@ -106,13 +105,13 @@ const TablaOperariosPrograma: FC<ITablaOperariosProps> = ({ operarios, refresh, 
                       : (
                         <div className=''>
                           <ModalForm
-                            title={`Registro Operario al Programa `}
+                            title={`Registro Operario al Programa Reproceso `}
                             open={open}
                             setOpen={setOpen}
                             width='bg-blue-800 hover:bg-blue-700 hover:scale-105 px-7 py-4 text-lg text-white'
-                            textButton={`Registrar Operarios al programa`}
+                            textButton={`Registrar Operarios al reproceso`}
                             >
-                            <FormularioRegistroOperarioPrograma refresh={refresh} setOpen={setOpen}/>
+                            <FormularioRegistroOperarioProgramaReproceso refresh={refresh} setOpen={setOpen} operarios={operarios}/>
                           </ModalForm>
                         </div>
                       )

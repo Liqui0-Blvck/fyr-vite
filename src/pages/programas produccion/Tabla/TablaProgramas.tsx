@@ -135,7 +135,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 			const data: TProduccion = await response.json()
 			toast.success(`El programa reproceso fue creado exitosamente`)
 			actualizarEstadoProduccion(id, '3')
-			navigate(`/app/produccion/registro-programa/${data.id}`)
+			navigate(`/app/produccion/registro-programa-reproceso/${data.id}`)
 		} else {
 			toast.error("Error al registrar el programa de reproceso, volver a intentar")
 		}
@@ -273,8 +273,8 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 					}
 
 					{
-						(info.row.original.lotes.every(lote => lote.bin_procesado === true && info.row.original.lotes.length > 0)) && (
-							info.row.original.tarjas_resultantes.length > 0 && info.row.original.tarjas_resultantes.every(tarja => tarja.cc_tarja === true)
+						(info.row.original.lotes.every(lote => lote.bin_procesado === true  && info.row.original.lotes.length > 0)) && (
+							info.row.original.tarjas_resultantes.length > 0 && info.row.original.tarjas_resultantes.filter(tarja => tarja.esta_eliminado !== true).every(tarja => tarja.cc_tarja === true )
 						) && (info.row.original.operarios.length > 0) && info.row.original.estado !== '5'
 							? (
 								<Tooltip title='Terminar Producción'>
@@ -290,21 +290,6 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 								)
 							: null
 					}
-
-					{
-							info.row.original.estado === '5'
-								? (
-									<Tooltip title='Iniciar Reproceso'>
-										<button 
-											type='button'
-											onClick={() => registrarReproceso(id)}
-											className='w-16 rounded-md h-12 bg-orange-500 flex items-center justify-center p-2 hover:scale-105'>
-											<TfiReload style={{ fontSize: 30, color: 'white', fontWeight: 'bold'}}/>
-										</button>
-									</Tooltip>
-									)
-								: null
-						}
 					</div>
 				);
 			},
