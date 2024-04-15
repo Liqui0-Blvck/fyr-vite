@@ -220,7 +220,7 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 									<button
 										type='button'
 										onClick={() => {
-											estado === '5' ? {} : actualizarEstadoProduccion(id, '5')
+											estado === '3' ? {} : actualizarEstadoProduccion(id, '3')
 										}}
 										className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
 										<FaStop style={{ fontSize: 25, color: 'white' }}/>
