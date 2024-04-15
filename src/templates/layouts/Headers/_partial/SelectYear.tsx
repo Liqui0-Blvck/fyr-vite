@@ -7,6 +7,7 @@ import { useAuth } from '../../../../context/authContext'
 import { putPersonalizacionPerfil } from '../../../../api/personalizacion-perfil.api'
 import Button from '../../../../components/ui/Button'
 import toast from 'react-hot-toast'
+
 // import { Button } ''
 const options: TSelectOptions = [
 	{ value: '2024', label: '2024'},
