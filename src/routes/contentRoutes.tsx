@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import { RouteProps } from 'react-router-dom';
-import { appPages, authPages, examplePages } from '../config/pages.config';
+import { appPages, authPages } from '../config/pages.config';
 import NotFoundPage from '../pages/NotFound.page';
 import LoginPage from '../pages/auth/Login.page';
 import DashboardProduccion from '../pages/programas produccion/Detalle Produccion/DashboardProduccion.tsx';
@@ -157,8 +157,8 @@ const contentRoutes: RouteProps[] = [
 
 
 	// RECEPCION MP
-	{ path: appPages.recepcionAppPages.subPages.recepcionMp.to, element: <GuiaRecepcion /> },
-	{ path: appPages.recepcionAppPages.subPages.envases.to, element: <Envases /> },
+	{ path: '/app/recepcionmp/', element: <GuiaRecepcion /> },
+	{ path: '/app/envases/', element: <Envases /> },
 	{ path: '/app/registro-guia-recepcion', element: <RegistroGuiaRecepcion /> },
 	{ path: '/app/edicion-guia-recepcion/:id', element: <EdicionGuiaRecepcion /> },
 	{ path: '/app/pdf-guia-recepcion/:id', element: <PDFGuiaRecepcion /> },

@@ -204,8 +204,12 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   // }, [authTokens, validate, updateToken]);
 
     useEffect(() => {
+        if (refresh){
+          obtener_perfil()
+        }
+        
         obtener_perfil()
-    }, [logeado])
+    }, [logeado, refresh])
 
     const obtener_perfil = async () => {
         const configMe = {

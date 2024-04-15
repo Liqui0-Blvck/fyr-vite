@@ -28,7 +28,7 @@ const UserTemplate = () => {
 		<User
 			isLoading={false}
 			name={perfilData?.user.first_name}
-			nameSuffix={perfilData?.user.username}
+			nameSuffix={perfilData?.user.first_name ? '' : perfilData?.user.username}
 			position={cargoLabels}
 			src={''}
 		// suffix={
