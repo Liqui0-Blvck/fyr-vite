@@ -19,13 +19,12 @@ interface IComponentProps {
 }
 
 const ModalForm: FC<IComponentProps> = ({ children, open, setOpen, title, textButton, size, icon, textTool, width, height }) => {
-  const { isDarkTheme } = useDarkMode()
   return (
     <>
       <Tooltip title={textTool}>
         <button
           type='button'
-          className={`${width} ${height} text-[14px] font-700 rounded-md flex items-center justify-center ${isDarkTheme ? 'text-white' : 'text-black' }`}
+          className={`${width} ${height} text-[14px] font-700 rounded-md flex items-center justify-center dark:text-white text-white`}
           onClick={() => setOpen(true)}>
           {textButton || icon}
         </button>

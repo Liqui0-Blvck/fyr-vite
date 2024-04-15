@@ -3,7 +3,7 @@ import Card, { CardBody } from "../../../components/ui/Card";
 import Icon from "../../../components/icon/Icon";
 import Balance from "../../../components/Balance";
 import { TTabs } from "../../../types/registros types/TabsDashboardPrograma.types";
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { TEnvasesPrograma, TProduccion, TTarjaResultante } from "../../../types/registros types/registros.types";
 import Chart, { IChartProps } from "../../../components/Chart";
 
@@ -13,9 +13,10 @@ interface ICardFrutaCalibradaProps {
 	programa: TProduccion
 	tarjas_resultantes?: TTarjaResultante[]
 	activeTab: TTabs
+	refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const Balance2Partial: FC<ICardFrutaCalibradaProps>= ({ tarjas_resultantes }) => {
+const Balance2Partial: FC<ICardFrutaCalibradaProps>= ({ tarjas_resultantes, refresh  }) => {
 	// const total_kilos_pepa = tarjas_resultantes?.reduce((acc, tarja) => tarja.peso + acc, 0)
 	const pepa_calibrada = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '3').reduce((acc, tarja) => (tarja.peso - tarja.tipo_patineta) + acc, 0)
   const pepa_borrel = tarjas_resultantes?.filter(tarja => tarja.tipo_resultante === '1').reduce((acc, tarja) => (tarja.peso - tarja.tipo_patineta) + acc, 0)
@@ -56,6 +57,18 @@ const Balance2Partial: FC<ICardFrutaCalibradaProps>= ({ tarjas_resultantes }) =>
 		width: '100%',
 		height: '240px',
 	};
+
+
+	useEffect(() => {
+		let isMounted = true
+		if (isMounted){
+			refresh(true)
+		}
+
+		return () => {
+			isMounted = false 
+		}
+	}, [refresh])
 
 	return (
 		<Card className="h-full w-full  lg:grid">

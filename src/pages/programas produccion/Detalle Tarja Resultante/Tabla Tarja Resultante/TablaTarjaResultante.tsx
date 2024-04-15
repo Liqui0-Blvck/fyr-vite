@@ -11,7 +11,7 @@ import { useAuth } from '../../../../context/authContext';
 import useDarkMode from '../../../../hooks/useDarkMode';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
-import { TControlCalidad, TRendimientoMuestra, TTarjaResultante } from '../../../../types/registros types/registros.types';
+import { TControlCalidad, TProduccion, TRendimientoMuestra, TTarjaResultante } from '../../../../types/registros types/registros.types';
 import FilaTarjaResultante from './FilaTarjaResultante';
 import { TablePagination } from '@mui/material';
 
@@ -20,11 +20,11 @@ interface IRendimientoMuestra {
   id_lote?: number
   data?: TTarjaResultante[] | []
   refresh: Dispatch<SetStateAction<boolean>>
-  ccLote?: TControlCalidad | null
+  produccion?: TProduccion
 }
 
 
-const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, ccLote }) => {
+const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, produccion }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
 
@@ -76,7 +76,7 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, id_lote,
                 map((row: TTarjaResultante) => {
                 return (
                   <TableRow key={row.id} className='table-row-body' style={{ overflowX: 'auto', height: 40}}>
-                    <FilaTarjaResultante envase={row || []} refresh={refresh} setOpen={() => {}}/>
+                    <FilaTarjaResultante envase={row || []} refresh={refresh} setOpen={() => {}} produccion={produccion}/>
                   </TableRow>
                 )
               })}

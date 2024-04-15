@@ -265,7 +265,9 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
             setAuthTokens(dataTokens)
             Cookies.set('token', JSON.stringify(dataTokens), { expires: 1 });
             Cookies.set('user', JSON.stringify(dataTokens.access), { expires: 1 })
-            navigate(`../${appPages.mainAppPages.to}`, { replace: true });
+            // navigate(`../${appPages.mainAppPages.to}`, { replace: true });
+            window.location.href = `${appPages.mainAppPages.to}`
+
         } else {
             toast.error('ERROR INESPERADO LOGIN')
         }

@@ -209,7 +209,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaProductores'>
+		<PageWrapper name='Lista Productores'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap

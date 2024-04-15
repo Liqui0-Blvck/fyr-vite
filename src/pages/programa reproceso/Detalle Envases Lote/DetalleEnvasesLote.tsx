@@ -58,7 +58,7 @@ const DetalleEnvasesLote: FC<IMuestraProps> = () => {
 
   return (
     <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full
-         ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-50' } relative px-5
+         ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-50' } relative px-5 py-5
         place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 w-full overflow-auto
         rounded-md`}
     >
@@ -69,7 +69,7 @@ const DetalleEnvasesLote: FC<IMuestraProps> = () => {
       <article className={`row-start-4 row-span-4 col-span-3 w-full h-full ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } flex flex-col lg:flex-col justify-between pb-10`}>
         {
             loading
-              ? <Skeleton variant="rectengular" width='100%' height={320}/>
+              ? <Skeleton variant="rectangular" width='100%' height={320}/>
               : (
                 <div className='flex flex-col md:flex-col w-full h-full'>
                   <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col lg:flex-row items-center justify-center rounded-md py-1`}>

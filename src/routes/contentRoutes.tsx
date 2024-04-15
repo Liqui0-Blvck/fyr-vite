@@ -116,6 +116,11 @@ const DetalleBodega = lazy(() => import ('../pages/bodega/Detalle Bodega/Detalle
 // CC TARJA 
 const ListaCCTarja = lazy(() => import ('../pages/control calidad tarjas/ListaControlCalidadTarja.tsx'))
 const DetalleCCTarja = lazy(() => import ('../pages/control calidad tarjas/Detalle Control Calidad Tarja/DetalleCCTarja.tsx'))
+// CC TARJA REPROCESO
+const ListaCCTarjaReproceso = lazy(() => import ('../pages/control calidad tarja reproceso/ListaControlCalidadTarjaReproceso.tsx'))
+const DetalleCCTarjaReproceso = lazy(() => import ('../pages/control calidad tarja reproceso/Detalle Control Calidad Tarja/DetalleCCTarjaReproceso.tsx'))
+
+
 /**
  * Other
  */
@@ -215,6 +220,11 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/tarjas-cc/', element: <ListaCCTarja />},
 	{ path: '/app/tarjas-cc/:id', element: <DetalleCCTarja />},
 	{ path: '/app/control-rendimiento/:id', element: <DetalleCCTarja />},
+	// TARJAS CC REPROCESO
+	{ path: '/app/tarjas-cc-reproceso/', element: <ListaCCTarjaReproceso />},
+	{ path: '/app/tarjas-cc-reproceso/:id', element: <DetalleCCTarjaReproceso />},
+
+
 
 	
 

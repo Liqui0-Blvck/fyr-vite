@@ -123,6 +123,12 @@ export const appPages = {
 				to: '/app/tarjas-cc/',
 				icon: 'HeroListBullet',
 			},
+			tarjas_reproceso: {
+				id: 'tarjas reproceso',
+				text: 'CC Tarjas Reproceso',
+				to: '/app/tarjas-cc-reproceso/',
+				icon: 'HeroListBullet',
+			},
 			reproceso: {
 				id: 'reproceso',
 				text: 'Programa Reproceso',

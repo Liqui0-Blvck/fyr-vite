@@ -40,31 +40,21 @@ const DashboardProduccion = () => {
   const { authTokens, validate } = useAuth()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
-  const { isDarkTheme } = useDarkMode()
-	const { i18n } = useTranslation();
 
   const [open, setOpen] = useState<boolean>(false)
 	const [activeTab, setActiveTab] = useState<TTabs>(OPTIONS.GN);
 
-	const [selectedDate, setSelectedDate] = useState<Range[]>([
-		{
-			startDate: dayjs().startOf('week').add(-1, 'week').toDate(),
-			endDate: dayjs().endOf('week').toDate(),
-			key: 'selection',
-		},
-	]);
-
-  const { data: programa_produccion, setRefresh  } = useAuthenticatedFetch<TProduccion>(
+  const { data: programa_produccion, setRefresh, loading  } = useAuthenticatedFetch<TProduccion>(
     authTokens,
     validate,
     `/api/produccion/${id}/`
   )
 
-  const { data: userData } = useAuthenticatedFetch<TPerfil>(
-    authTokens,
-    validate,
-    `/api/registros/perfil/${programa_produccion?.registrado_por}/`
-  )
+  // const { data: userData } = useAuthenticatedFetch<TPerfil>(
+  //   authTokens,
+  //   validate,
+  //   `/api/registros/perfil/${programa_produccion?.registrado_por}/`
+  // )
 
   const { data: envases_programa } = useAuthenticatedFetch<TEnvasesPrograma[]>(
     authTokens,
@@ -77,6 +67,12 @@ const DashboardProduccion = () => {
     validate,
     `/api/produccion/${id}/tarjas_resultantes/`
   )
+
+  useEffect(() => {
+    if (activeTab.text === 'General'){
+      setRefresh(true)
+    }
+  }, [activeTab])
 
 
 	return (
@@ -117,7 +113,7 @@ const DashboardProduccion = () => {
                       textButton={`Registro Tarja`}
                       width='w-40 rounded-md h-12 bg-blue-700 flex items-center justify-center px-5 py-3 hover:scale-105 text-white'
                       >
-                        <FormularioRegistroTarja tab={setActiveTab} setOpen={setOpen}/>
+                        <FormularioRegistroTarja tab={setActiveTab} setOpen={setOpen} refresh={setRefresh}/>
                     </ModalRegistro>
                     )
                   : null
@@ -127,36 +123,40 @@ const DashboardProduccion = () => {
             
           </SubheaderRight>
 				</Subheader>
-				<Container>
+				<Container breakpoint={null} className='w-full'>
 					<div className='grid grid-cols-12 gap-4'>
-						{
+
+            <div className='col-span-12 2xl:col-span-12'>
+            {
               activeTab.text === 'General'
                 ? (
                   <>
                     <div className='col-span-12 '>
-                      <Balance1Partial activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!}/>
+                      <Balance1Partial activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!} refresh={setRefresh}/>
                     </div>
                     <div className='row-start-2 col-span-12 '>
-                      <Balance2Partial activeTab={activeTab} programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!}/>
+                      <Balance2Partial activeTab={activeTab} programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!} refresh={setRefresh}/>
                     </div>
                     <div className='col-span-12 '>
                       <Balance3Partial activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!} tarjas_resultantes={tarjas_resultantes!}/>
                     </div>
-                    </>
+                  </>
                   )
                 : null
             }
+            </div>
+						
 
-						<div className='col-span-12 2xl:col-span-8'>
+						<div className='col-span-12 2xl:col-span-12'>
 							{
                 activeTab.text === 'Tarja Resultante'
-                ? <DetalleTarjaResultante />
+                ? <DetalleTarjaResultante produccion={programa_produccion} refresh={setRefresh}/>
                   : activeTab.text === 'Envases de Lotes Seleccionados'
                     ? <DetalleEnvasesLote />
-                    : activeTab.text === 'Procesar Masivamente' && programa_produccion?.lotes.some(lote => lote.bin_procesado !== true)
+                    : activeTab.text === 'Procesar Masivamente'
                       ? <DetalleEnvasesMasivosLotes programa_produccion={programa_produccion!} refresh={setRefresh}/>
                       : activeTab.text === 'Operarios en Programa'
-                        ? <DetalleOperarioPrograma />
+                        ? <DetalleOperarioPrograma programa_produccion={programa_produccion!} loading={loading} refresh={setRefresh}/>
                         : null
               }
 						</div>

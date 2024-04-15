@@ -500,6 +500,9 @@ export type TOperarioProduccion = {
   dia: string;
   produccion: number;
   operario: number;
+  nombres: string
+  rut_operario: string
+  tipo_operario: string
 }
 
 export type TTarjaResultante = {

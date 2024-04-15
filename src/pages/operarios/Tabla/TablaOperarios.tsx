@@ -192,7 +192,7 @@ const TablaOperarios: FC<IOperarioProps> = ({ data, refresh }) => {
   });
 
   return (
-    <PageWrapper name='Lista Productores'>
+    <PageWrapper name='Lista Operarios'>
       <Subheader>
         <SubheaderLeft>
           <FieldWrap

@@ -28,7 +28,7 @@ const PeriodButtonsPartial: FC<IPeriodButtonsPartialProps> = (props) => {
 		GENERAL: { text: 'General' },
 		TARJA_RESULTANTE: { text: 'Tarja Resultante' },
 		ENVASES: { text: 'Envases de Lotes Seleccionados' },
-		MASIVO: { text: 'Procesar Masivamente' },
+		// MASIVO: { text: 'Procesar Masivamente' },
 		OPERARIOS: { text: 'Operarios en Programa' },
 	};
 	

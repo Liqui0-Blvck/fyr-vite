@@ -70,6 +70,7 @@ const DefaultAsideTemplate = () => {
 						>
 						<NavItem {...appPages.produccion.subPages.p_produccion} />
 						<NavItem {...appPages.produccion.subPages.tarjas} />
+						<NavItem {...appPages.produccion.subPages.tarjas_reproceso} />
 						<NavItem {...appPages.produccion.subPages.reproceso} />
 						<NavItem {...appPages.produccion.subPages.tarja_seleccion} />
 					</NavCollapse>

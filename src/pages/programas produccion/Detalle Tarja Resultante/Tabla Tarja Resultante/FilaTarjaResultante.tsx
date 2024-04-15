@@ -35,7 +35,7 @@ interface ILoteCompletadoProps {
 
 }
 
-const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion, refresh, setOpen }) => {
+const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion, refresh }) => {
   const { authTokens, validate, perfilData, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
@@ -59,9 +59,6 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
       toast.error("No se pudo eliminar la tarja, vuelve a intentarlo")
     }
   }
-
-
-  console.log(row)
 
   return (
     <>
@@ -118,15 +115,21 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
                 </ModalForm>
                 )
           }
-          <Tooltip text='Envase a Procesar'>
-            <button
-              type='button'
-              onClick={() => eliminarTarja(row?.id!)}
-              className='w-16 rounded-md h-12 bg-red-600 flex items-center justify-center p-2 hover:scale-105'
-              >
-                <HeroXMark style={{ fontSize: 35 }}/>
-            </button>
-          </Tooltip>
+          {
+            produccion?.estado === '5'
+              ? null
+              : (
+                <Tooltip text='Envase a Procesar'>
+                  <button
+                    type='button'
+                    onClick={() => eliminarTarja(row?.id!)}
+                    className='w-16 rounded-md h-12 bg-red-600 flex items-center justify-center p-2 hover:scale-105'
+                    >
+                      <HeroXMark style={{ fontSize: 35 }}/>
+                  </button>
+                </Tooltip>
+              )
+          }
 
           
         </div>

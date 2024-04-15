@@ -42,6 +42,8 @@ const DetalleControlRendimiento = () => {
   const lista_controles = lotes_en_programa?.map(lote => lote.control_calidad)
   const controles_calidad = lista_controles ? lista_controles.join(",") : "";
 
+  console.log(cc_rendimiento_proyectado)
+
 
   useEffect(() => {
     const getRendimientos = async () => {
