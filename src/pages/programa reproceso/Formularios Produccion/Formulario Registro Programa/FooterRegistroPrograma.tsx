@@ -30,7 +30,7 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ bin, refresh }) =>
     `/api/reproceso/${id}/bins_en_reproceso`
   )
   
-  console.log(bin)
+  console.log(bin_en_reproceso)
   
   return (
     <div>
@@ -52,8 +52,9 @@ const FooterRegistroPrograma: FC<IRegistroProgramaProps> = ({ bin, refresh }) =>
               bin?.
               filter(row => row.tipo_binbodega_id !== 73 &&
                row.tipo_binbodega_id !== 74 && 
-              !bin_en_reproceso?.some(bin => bin.id_bin_bodega === row.id) ).
+              !bin_en_reproceso?.some(bin => bin.id_bin_bodega === row.id_binbodega) ).
               map((envase: TBinBodega) => {
+                console.log(envase.id_binbodega)
                 return (
                   <TableRow style={{ height: 50, overflowY: 'auto' }}>
                     <FilaRegistroPrograma row={envase} refresh={setRefresh}/>

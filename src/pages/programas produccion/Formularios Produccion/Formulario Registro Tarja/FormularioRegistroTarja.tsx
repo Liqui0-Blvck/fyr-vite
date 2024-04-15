@@ -16,9 +16,10 @@ import { OPTIONS, TTabs } from '../../../../types/registros types/TabsDashboardP
 interface IFormularioRegistroTarjaProps {
   tab: Dispatch<SetStateAction<TTabs>>
   setOpen: Dispatch<SetStateAction<boolean>>
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOpen }) => {
+const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOpen, refresh }) => {
   const { authTokens, validate, perfilData } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { pathname } = useLocation()
@@ -46,8 +47,9 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOp
 
       if (res.ok){
         toast.success("Tarja registrada exitosamente")
-        tab(OPTIONS.GN)
         setOpen(false)
+        refresh(true)
+        tab(OPTIONS.GN)
         console.log("bien hecho")
       } else {
         console.log("mal hecho")

@@ -118,3 +118,9 @@ export const calibracionSchema = Yup.object().shape({
   calibre_40_mas: Yup.number().required('El calibre 40+ es requerido'),
   peso_muestra_calibre: Yup.number().required('El peso de muestra de calibre es requerido')
 });
+
+
+export const OperarioProgramaSchema = Yup.object().shape({
+  operario: Yup.number().required('El operario es requerido'),
+  dia: Yup.string().required('El Día es requerido')
+})

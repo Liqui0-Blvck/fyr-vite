@@ -20,13 +20,15 @@ interface IUser {
 const UserTemplate = () => {
 	const { perfilData, onLogout } = useAuth();
 
+	console.log(perfilData)
+
 	const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
 
 	return (
 		<User
 			isLoading={false}
 			name={perfilData?.user.first_name}
-			nameSuffix={perfilData?.user.username}
+			nameSuffix={perfilData?.user.first_name ? '' : perfilData?.user.username}
 			position={cargoLabels}
 			src={''}
 		// suffix={

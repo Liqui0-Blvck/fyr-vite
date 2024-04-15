@@ -4,7 +4,7 @@ import Card, { CardBody } from "../../../components/ui/Card";
 import Icon from "../../../components/icon/Icon";
 import Balance from "../../../components/Balance";
 import { TEnvasesPrograma, TProduccion } from "../../../types/registros types/registros.types";
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { TTabs } from "../../../types/registros types/TabsDashboardPrograma.types";
 import Chart, { IChartProps } from "../../../components/Chart";
 
@@ -13,9 +13,11 @@ interface ICardFrutaCalibradaProps {
 	programa: TProduccion
 	envases_programa: TEnvasesPrograma[]
 	activeTab: TTabs
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, programa }) => {
+const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, programa, refresh }) => {
+
 	const totalEnvases = programa?.lotes.length || 1; 
 
 	const kilosTotales = envases_programa?.length ?
@@ -27,6 +29,16 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
 			.reduce((acc, envase) => (envase?.kilos_fruta || 0) + acc, 0) / totalEnvases) * 100).toFixed(1)
 		: 0;
 
+  useEffect(() => {
+    let isMounted = true
+    if (isMounted){
+      refresh(true)
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [refresh])
 
 	const seriesData = [Number(kilosTotales), Number(kilosTotalesProcesados)]; 
   const optionsData = {

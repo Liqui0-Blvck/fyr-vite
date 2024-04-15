@@ -1,10 +1,6 @@
 import { Dispatch, FC, ReactNode, SetStateAction } from "react";
-import useDarkMode from "../hooks/useDarkMode";
 import { TControlCalidad, TLoteGuia } from "../types/registros types/registros.types";
-import toast from "react-hot-toast";
 import { GoQuestion } from "react-icons/go";
-import FormularioPepaMuestra from "../pages/control calidad/Formulario Pepa Muestra/FormularioPepaMuestra";
-
 
 interface IModalProps {
   id?: number;

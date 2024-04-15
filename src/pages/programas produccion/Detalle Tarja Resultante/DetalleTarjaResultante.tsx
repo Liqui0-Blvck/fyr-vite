@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TCamion, TControlCalidad, TControlCalidadB, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TPerfil, TProductor, TRendimiento, TRendimientoMuestra, TTarjaResultante, TUsuario } from '../../../types/registros types/registros.types'
+import { TCamion, TControlCalidad, TControlCalidadB, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPepaMuestra, TPerfil, TProduccion, TProductor, TRendimiento, TRendimientoMuestra, TTarjaResultante, TUsuario } from '../../../types/registros types/registros.types'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
 import { format } from '@formkit/tempo'
@@ -20,11 +20,12 @@ import { chartData } from '../../../utils/ChartsData'
 import TablaMuestrasDetalle from '../../ccvistobueno/Tablas/TablaMuestras/TablaMuestrasDetalle'
 import TablaTarjaResultante from './Tabla Tarja Resultante/TablaTarjaResultante'
 
-interface IMuestraProps {
-  muestra?: TRendimientoMuestra | null
+interface ITarjaResultanteProps {
+  produccion?: TProduccion | null
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const DetalleTarjaResultante: FC<IMuestraProps> = () => {
+const DetalleTarjaResultante: FC<ITarjaResultanteProps> = ({ produccion, refresh }) => {
   const { isDarkTheme } = useDarkMode();
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -42,7 +43,11 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
     authTokens,
     validate,
     `/api/produccion/${id}/tarjas_resultantes/`
-  ) 
+  )
+
+  useEffect(() => {
+    refresh(true)
+  }, [refresh])
 
 
   const labels = ['Pepa Calibrada', 'Pepa Borrel', 'Residuos Solidos']
@@ -54,9 +59,8 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
   const valores: number[] = [pepa_calibrada!, pepa_borrel!, residuo_solido!]
 
   return (
-    <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full
-         ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-50' } relative px-5
-        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 
+    <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full w-full relative px-5
+        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 dark:bg-zinc-800 bg-zinc-200 py-10
         rounded-md`}
     >
       <div className={`w-full col-span-3 ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } h-20 flex items-center justify-center rounded-md`}>
@@ -66,7 +70,7 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
       <article className={`row-start-4 row-span-4 col-span-3 w-full h-full ${isDarkTheme ? 'bg-zinc-800' : ' bg-zinc-100' } flex flex-col lg:flex-col  justify-between pb-10 `}>
         {
             loading
-              ? <Skeleton variant="rectengular" width='100%' height={350}/>
+              ? <Skeleton variant="rectangular" width='100%' height={350}/>
               : (
                 <div className='flex flex-col md:flex-col w-full h-full'>
                   <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col lg:flex-row items-center justify-center rounded-md py-1`}>
@@ -75,7 +79,7 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
                       <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
                     </div>
                     <div className='w-full h-full flex flex-col justify-center  mt-4 lg:mt-0'> 
-                      <TablaTarjaResultante data={tarja_resultante || []} refresh={setRefresh}/>
+                      <TablaTarjaResultante data={tarja_resultante || []} refresh={setRefresh} produccion={produccion!}/>
                     </div>
                   </div>
                 </div>

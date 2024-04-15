@@ -20,7 +20,7 @@ import PeriodButtonsPartial from './PeriodButtons.partial';
 import Balance1Partial from './CardMetricaRecepcion.tsx';
 import { OPTIONS, TTabs } from '../../../types/registros types/TabsDashboardPrograma.types';
 import DetalleEnvasesLote from '../Detalle Envases Lote/DetalleEnvasesLote';
-import DetalleEnvasesMasivosLotes from '../Detalle Masivo Envases Lotes/DetalleEnvasesMasivosLotes';
+import DetalleEnvasesMasivosLotes from '../Detalle Masivo Envases Lotes/DetalleBinsMasivos.tsx';
 import DetalleOperarioPrograma from '../Detalle Operarios Programa/DetalleOperarioPrograma';
 import DetalleTarjaResultante from '../Detalle Tarja Resultante/DetalleTarjaResultante';
 import Balance3Partial from './CardUltimaHora.card.tsx';
@@ -38,26 +38,16 @@ import Tooltip from '../../../components/ui/Tooltip';
 import CardMetricaRecepcion from './CardMetricaRecepcion.tsx';
 import CardLoteCalibrado from './CardLoteCalibrado.card';
 import CardUltimaHora from './CardUltimaHora.card.tsx';
+import DetalleBinsMasivos from '../Detalle Masivo Envases Lotes/DetalleBinsMasivos.tsx';
 
 const DashboardProduccion = () => {
   const { authTokens, validate } = useAuth()
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
-  const { isDarkTheme } = useDarkMode()
-	const { i18n } = useTranslation();
-
   const [open, setOpen] = useState<boolean>(false)
 	const [activeTab, setActiveTab] = useState<TTabs>(OPTIONS.GN);
 
-	const [selectedDate, setSelectedDate] = useState<Range[]>([
-		{
-			startDate: dayjs().startOf('week').add(-1, 'week').toDate(),
-			endDate: dayjs().endOf('week').toDate(),
-			key: 'selection',
-		},
-	]);
-
-  const { data: programa_produccion } = useAuthenticatedFetch<TReprocesoProduccion>(
+  const { data: programa_produccion, loading, setRefresh } = useAuthenticatedFetch<TReprocesoProduccion>(
     authTokens,
     validate,
     `/api/reproceso/${id}/`
@@ -130,7 +120,7 @@ const DashboardProduccion = () => {
             
           </SubheaderRight>
 				</Subheader>
-				<Container>
+				<Container breakpoint={null} className='w-full'>
 					<div className='grid grid-cols-12 gap-4'>
 						{
               activeTab.text === 'General'
@@ -150,41 +140,18 @@ const DashboardProduccion = () => {
                 : null
             }
 
-						<div className='col-span-12 2xl:col-span-8'>
+						<div className='col-span-12 2xl:col-span-12'>
 							{
                 activeTab.text === 'Tarja Resultante'
                 ? <DetalleTarjaResultante />
                   : activeTab.text === 'Envases de Lotes Seleccionados'
                     ? <DetalleEnvasesLote />
-                    : activeTab.text === 'Procesar Masivamente' && programa_produccion?.bins.every(bin => bin.bin_procesado !== true)
-                      ? <DetalleEnvasesMasivosLotes programa_reproceso={programa_produccion!}/>
-                      : activeTab.text === 'Operarios en Programa'
-                        ? <DetalleOperarioPrograma />
+                    : activeTab.text === 'Operarios en Programa'
+                        ? <DetalleOperarioPrograma programa_produccion={programa_produccion} loading={loading} refresh={setRefresh}/>
                         : null
               }
 						</div>
-						{/* {
-              activeTab.text === 'General'
-                ? (
-                  <>
-                    <div className='col-span-12 2xl:col-span-4'>
-                      <CommentPartial />
-                    </div>
-
-                    <div className='col-span-12 2xl:col-span-8'>
-                      <Card className='h-full'>
-                        <TablePartial />
-                        
-                      </Card>
-                    </div>
-                    <div className='col-span-12 2xl:col-span-4'>
-                      <TimelinePartial />
-                    </div>
-                  </>
-                  )
-                : null
-            } */}
-
+					
 					</div>
 				</Container>
 			</PageWrapper>

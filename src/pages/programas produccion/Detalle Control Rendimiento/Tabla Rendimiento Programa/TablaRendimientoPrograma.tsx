@@ -28,6 +28,8 @@ const TablaRendimientoPrograma: FC<IRendimientoMuestra> = ({ data, tarjas_result
 
   const pepa_resultante = data?.pepa_resultante !== 0 ? data?.pepa_resultante : 1
 
+  console.log(pepa_resultante)
+
   return (
     <div> 
       <div

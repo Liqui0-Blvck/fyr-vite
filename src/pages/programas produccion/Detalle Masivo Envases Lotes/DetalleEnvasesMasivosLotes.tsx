@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import { urlNumeros } from "../../../services/url_number";
 import Checkbox from "../../../components/form/Checkbox";
+import { PiChecksBold } from "react-icons/pi";
 
 
 interface IDetalleEnvasesMasivosLotesProps {
@@ -130,74 +131,93 @@ const DetalleEnvasesMasivosLotes: FC<IDetalleEnvasesMasivosLotesProps> = ({ prog
     }
   }, [eliminadoMasivo])
 
-  
+  // programa_produccion?.lotes.some(lote => lote.bin_procesado !== true)
 
   return (
-    <article className="w-full min-h-full gap-y-10 px-10 py-5 flex flex-col rounded-md dark:bg-zinc-700 mt-10 overflow-auto">
-      {Object.entries(lotesPorNumeroDeLote).map(([numeroLote, lotes]) => {
-        const lotes_no_procesados = lotes.filter(lote => lote.bin_procesado !== true)
-        return (
-          <div key={numeroLote} className="w-full h-full flex flex-col items-center py-2 gap-2 px-10 border border-zinc-700 relative">
-            <div className="flex items-center py-2 justify-between w-full">
-              <div className="w-3/12 p-2 elative top-0 flex items-center gap-3">
-                <Checkbox checked={selectAll} onChange={() => handleToggleAll(lotes_no_procesados)} />
-                <span>Lote N° {numeroLote}</span>
+    <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full mx-auto
+        dark:bg-zinc-800 bg-zinc-200 relative px-5
+        place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5 w-full overflow-auto py-5
+        rounded-md`}
+    >
+      {
+        programa_produccion?.lotes.filter(lote => lote.bin_procesado !== true).length <= 0
+          ? (
+            <div className="w-full h-96 flex items-center flex-col py-10 gap-y-10">
+              <h1>No hay ningun lote pendiente</h1>
+              <div className="w-20 h-20 rounded-full bg-green-700 flex items-center justify-center">
+                <PiChecksBold style={{ fontSize: 45, color: 'white' }}/>
               </div>
-              <button
-                type="button"
-                onClick={() => setEliminadoMasivo(true)}
-                className="w-5/12 bg-red-700 hover:bg-red-500 rounded-md p-3 font-semibold hover:scale-105">
-                Eliminar lote N° {numeroLote} del programa de producción
-              </button>
             </div>
-  
-            <div className="w-full h-full">
-              <div className="bg-zinc-800">
-                <Accordion className="bg-zinc-800">
-                  <AccordionSummary
-                    expandIcon={<MdOutlineExpandMore />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                    sx={{
-                      backgroundColor: `${isDarkTheme ? '#838387' : ''}`
-                    }}
-                  >
-                    {lotes.filter(est => !est.bin_procesado).length} Envases
-                  </AccordionSummary>
-                  {
-                    lotes.filter(est => !est.bin_procesado).map((item: TLoteProduccion) => (
-                      <AccordionDetails
-                        key={item.id}
-                        className="bg-zinc-300 h-10 !p-0 border border-zinc-400 cursor-pointer"
-                        onChange={() => {}}
-                      >
-                        <div className="px-2 py-2 flex items-center gap-2">
-                          <Checkbox
-                            checked={isSelected(item.id)}
-                            onChange={() => {
-                              handleToggleItem(item.id)
-                              // registrarLoteAProduccion(item.id)
-                            }}
-                            className='w-10 h-4'
-                          />
-                          <span className="text-black ">{item.id}</span>
+            )
+          : (
+            <article className="w-full min-h-full gap-y-10 px-10 py-5 flex flex-col rounded-md dark:bg-zinc-700 mt-10 overflow-auto">
+                {Object.entries(lotesPorNumeroDeLote).map(([numeroLote, lotes]) => {
+                  const lotes_no_procesados = lotes.filter(lote => lote.bin_procesado !== true)
+                  return (
+                    <div key={numeroLote} className="w-full h-full flex flex-col items-center py-2 gap-2 px-10 border border-zinc-700 relative">
+                      <div className="flex items-center py-2 justify-between w-full">
+                        <div className="w-3/12 p-2 elative top-0 flex items-center gap-3">
+                          <Checkbox checked={selectAll} onChange={() => handleToggleAll(lotes_no_procesados)} />
+                          <span>Lote N° {numeroLote}</span>
                         </div>
-                      </AccordionDetails>
-                    ))
-                  }
-                </Accordion>
-              </div>
-            </div>
-          </div>
-        )
-      })}
-      <button
-        type="button"
-        onClick={() => setRegistroMasivo(!registroMasivo)}
-        className="w-96 bg-blue-700 hover:bg-blue-600 rounded-md p-3 font-semibold hover:scale-105">
-        Procesar Masivamente los Bins Seleccionados
-      </button>
-    </article>
+                        <button
+                          type="button"
+                          onClick={() => setEliminadoMasivo(true)}
+                          className="w-5/12 bg-red-700 hover:bg-red-500 rounded-md p-3 font-semibold hover:scale-105">
+                          Eliminar lote N° {numeroLote} del programa de producción
+                        </button>
+                      </div>
+            
+                      <div className="w-full h-full">
+                        <div className="bg-zinc-800">
+                          <Accordion className="bg-zinc-800">
+                            <AccordionSummary
+                              expandIcon={<MdOutlineExpandMore />}
+                              aria-controls="panel1-content"
+                              id="panel1-header"
+                              sx={{
+                                backgroundColor: `${isDarkTheme ? '#838387' : ''}`
+                              }}
+                            >
+                              {lotes.filter(est => !est.bin_procesado).length} Envases
+                            </AccordionSummary>
+                            {
+                              lotes.filter(est => !est.bin_procesado).map((item: TLoteProduccion) => (
+                                <AccordionDetails
+                                  key={item.id}
+                                  className="bg-zinc-300 h-10 !p-0 border border-zinc-400 cursor-pointer"
+                                  onChange={() => {}}
+                                >
+                                  <div className="px-2 py-2 flex items-center gap-2">
+                                    <Checkbox
+                                      checked={isSelected(item.id)}
+                                      onChange={() => {
+                                        handleToggleItem(item.id)
+                                        // registrarLoteAProduccion(item.id)
+                                      }}
+                                      className='w-10 h-4'
+                                    />
+                                    <span className="text-black ">{item.id}</span>
+                                  </div>
+                                </AccordionDetails>
+                              ))
+                            }
+                          </Accordion>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+                <button
+                  type="button"
+                  onClick={() => setRegistroMasivo(!registroMasivo)}
+                  className="w-96 bg-blue-700 hover:bg-blue-600 rounded-md p-3 font-semibold hover:scale-105">
+                  Procesar Masivamente los Bins Seleccionados
+                </button>
+              </article>
+          )
+      }
+    </div>
   )
 }
 

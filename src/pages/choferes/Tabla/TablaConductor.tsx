@@ -200,7 +200,7 @@ const TablaConductor: FC<IConductorProps> = ({ data, refresh }) => {
 	});
 
 	return (
-		<PageWrapper name='ListaConductores'>
+		<PageWrapper name='Lista Conductores'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap

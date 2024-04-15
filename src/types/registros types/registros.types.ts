@@ -500,6 +500,9 @@ export type TOperarioProduccion = {
   dia: string;
   produccion: number;
   operario: number;
+  nombres: string
+  rut_operario: string
+  tipo_operario: string
 }
 
 export type TTarjaResultante = {
@@ -516,6 +519,7 @@ export type TTarjaResultante = {
   calle_bodega: string;
   produccion: number;
   registrado_por: string;
+  esta_eliminado: boolean
 }
 
 export type TProduccion = {

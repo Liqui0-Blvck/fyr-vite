@@ -275,7 +275,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 					{
 						(info.row.original.lotes.every(lote => lote.bin_procesado === true && info.row.original.lotes.length > 0)) && (
 							info.row.original.tarjas_resultantes.length > 0 && info.row.original.tarjas_resultantes.every(tarja => tarja.cc_tarja === true)
-						) 
+						) && (info.row.original.operarios.length > 0) && info.row.original.estado !== '5'
 							? (
 								<Tooltip title='Terminar Producción'>
 									<button
@@ -290,6 +290,21 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 								)
 							: null
 					}
+
+					{
+							info.row.original.estado === '5'
+								? (
+									<Tooltip title='Iniciar Reproceso'>
+										<button 
+											type='button'
+											onClick={() => registrarReproceso(id)}
+											className='w-16 rounded-md h-12 bg-orange-500 flex items-center justify-center p-2 hover:scale-105'>
+											<TfiReload style={{ fontSize: 30, color: 'white', fontWeight: 'bold'}}/>
+										</button>
+									</Tooltip>
+									)
+								: null
+						}
 					</div>
 				);
 			},
@@ -337,20 +352,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 								: null
 						}
 
-						{
-							info.row.original.estado === '5'
-								? (
-									<Tooltip title='Iniciar Reproceso'>
-										<button 
-											type='button'
-											onClick={() => registrarReproceso(id)}
-											className='w-16 rounded-md h-12 bg-orange-500 flex items-center justify-center p-2 hover:scale-105'>
-											<TfiReload style={{ fontSize: 30, color: 'white', fontWeight: 'bold'}}/>
-										</button>
-									</Tooltip>
-									)
-								: null
-						}
+						
 
 					</div>
 				);
@@ -360,6 +362,8 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 	];
 
 	
+
+	console.log(data.map(lote => lote.estado))
 
 
 
@@ -409,25 +413,9 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
-				{
-					data.length >= 1
-						? null
-						: (
-							<SubheaderRight>
-								<Tooltip title='Registro Programa de produccion'>
-									<button
-										type='button'
-										onClick={() => registroProgramaProduccion()}
-										className='w-full rounded-md h-12 bg-blue-700 flex items-center justify-center p-2 hover:scale-105 px-2'>
-										<span className='text-lg text-white'>Registrar Programa de Producción</span>
-									</button>
-								</Tooltip>
-							</SubheaderRight>
-						)
-				}
 
 				{
-					data.every(programa => programa.estado === '5') || data.some(programa => programa.estado === '2') && data.some(programa => programa.tarjas_resultantes.length !== 0)
+					data.length >= 1 && data.some(programa => programa.estado !== '5') 
 						? null
 							: (
 								<SubheaderRight>
@@ -441,7 +429,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 									</Tooltip>
 								</SubheaderRight>
 							)
-				}
+				} 
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>

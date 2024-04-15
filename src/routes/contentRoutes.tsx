@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import { RouteProps } from 'react-router-dom';
-import { appPages, authPages, examplePages } from '../config/pages.config';
+import { appPages, authPages } from '../config/pages.config';
 import NotFoundPage from '../pages/NotFound.page';
 import LoginPage from '../pages/auth/Login.page';
 import DashboardProduccion from '../pages/programas produccion/Detalle Produccion/DashboardProduccion.tsx';
@@ -116,6 +116,11 @@ const DetalleBodega = lazy(() => import ('../pages/bodega/Detalle Bodega/Detalle
 // CC TARJA 
 const ListaCCTarja = lazy(() => import ('../pages/control calidad tarjas/ListaControlCalidadTarja.tsx'))
 const DetalleCCTarja = lazy(() => import ('../pages/control calidad tarjas/Detalle Control Calidad Tarja/DetalleCCTarja.tsx'))
+// CC TARJA REPROCESO
+const ListaCCTarjaReproceso = lazy(() => import ('../pages/control calidad tarja reproceso/ListaControlCalidadTarjaReproceso.tsx'))
+const DetalleCCTarjaReproceso = lazy(() => import ('../pages/control calidad tarja reproceso/Detalle Control Calidad Tarja/DetalleCCTarjaReproceso.tsx'))
+
+
 /**
  * Other
  */
@@ -152,8 +157,8 @@ const contentRoutes: RouteProps[] = [
 
 
 	// RECEPCION MP
-	{ path: appPages.recepcionAppPages.subPages.recepcionMp.to, element: <GuiaRecepcion /> },
-	{ path: appPages.recepcionAppPages.subPages.envases.to, element: <Envases /> },
+	{ path: '/app/recepcionmp/', element: <GuiaRecepcion /> },
+	{ path: '/app/envases/', element: <Envases /> },
 	{ path: '/app/registro-guia-recepcion', element: <RegistroGuiaRecepcion /> },
 	{ path: '/app/edicion-guia-recepcion/:id', element: <EdicionGuiaRecepcion /> },
 	{ path: '/app/pdf-guia-recepcion/:id', element: <PDFGuiaRecepcion /> },
@@ -215,6 +220,11 @@ const contentRoutes: RouteProps[] = [
 	{ path: '/app/tarjas-cc/', element: <ListaCCTarja />},
 	{ path: '/app/tarjas-cc/:id', element: <DetalleCCTarja />},
 	{ path: '/app/control-rendimiento/:id', element: <DetalleCCTarja />},
+	// TARJAS CC REPROCESO
+	{ path: '/app/tarjas-cc-reproceso/', element: <ListaCCTarjaReproceso />},
+	{ path: '/app/tarjas-cc-reproceso/:id', element: <DetalleCCTarjaReproceso />},
+
+
 
 	
 

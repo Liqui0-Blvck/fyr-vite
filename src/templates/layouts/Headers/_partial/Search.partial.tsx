@@ -49,14 +49,14 @@ const SearchPartial = () => {
 			...i,
 			category: 'Component',
 		})),
-		...Object.values(appPages.recepcionAppPages.subPages).map((i) => ({
-			...i,
-			category: 'Form',
-		})),
-		...Object.values(appPages.produccion.subPages).map((i) => ({
-			...i,
-			category: 'Other',
-		}))
+		// ...Object.values(appPages.recepcionAppPages.subPages).map((i) => ({
+		// 	...i,
+		// 	category: 'Form',
+		// })),
+		// ...Object.values(appPages.produccion.subPages).map((i) => ({
+		// 	...i,
+		// 	category: 'Other',
+		// }))
 	];
 	const result = list.filter(
 		(key) =>
