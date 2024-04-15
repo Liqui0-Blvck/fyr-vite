@@ -519,6 +519,7 @@ export type TTarjaResultante = {
   calle_bodega: string;
   produccion: number;
   registrado_por: string;
+  esta_eliminado: boolean
 }
 
 export type TProduccion = {

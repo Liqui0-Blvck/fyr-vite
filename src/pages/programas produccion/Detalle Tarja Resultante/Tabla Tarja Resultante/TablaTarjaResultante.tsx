@@ -46,6 +46,8 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, producci
     setPage(0);
   };
 
+
+  console.log(data)
   
 
   return (
@@ -69,7 +71,8 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, producci
             </TableHead>
             <TableBody className='table-body' >
               {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).
-                filter((row) => 
+                filter(row => row.esta_eliminado !== true).
+                filter((row) =>
                   row.codigo_tarja.toString().toLowerCase().includes(search) ||
                   row.tipo_patineta.toString().includes(search)
                 ).

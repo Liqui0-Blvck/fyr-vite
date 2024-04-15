@@ -20,6 +20,8 @@ interface IUser {
 const UserTemplate = () => {
 	const { perfilData, onLogout } = useAuth();
 
+	console.log(perfilData)
+
 	const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
 
 	return (

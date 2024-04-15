@@ -363,6 +363,8 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 
 	
 
+	console.log(data.map(lote => lote.estado))
+
 
 
 	const table = useReactTable({
@@ -413,7 +415,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 				</SubheaderLeft>
 
 				{
-					data.length >= 1 || data.some(programa => programa.estado !== '5')
+					data.length >= 1 && data.some(programa => programa.estado !== '5') 
 						? null
 							: (
 								<SubheaderRight>

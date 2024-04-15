@@ -56,6 +56,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
 
+
+  console.log("hola soy el perfil" ,  perfilData)
   const [lastActivity, setLastActivity] = useState<number>(Date.now()); 
 
   // const resetTimer = () => {
@@ -223,7 +225,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
             }
             const responsePersonalizacion = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/personalizacion-perfil/${dataMe.id}`, configPerfil)
             const responsePerfil = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/perfil/${dataMe.id}`, configPerfil)
-            if (responsePerfil.ok && responsePersonalizacion.ok) {
+            if (responsePerfil.ok && responsePersonalizacion.ok || responsePerfil.ok && !responsePersonalizacion.ok) {
                 const dataPersonalizacion = await responsePersonalizacion.json()
                 const dataPerfil = await responsePerfil.json()
                 setPerfilData(dataPerfil)
