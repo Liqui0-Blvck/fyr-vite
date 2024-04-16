@@ -19,7 +19,7 @@ const FormularioRegistroPrograma = () => {
         <h2 className='text-center text-2xl'>Seleccione los Lotes a Procesar en este programa desde la lista de Lotes en Patio Techado Disponibles</h2>
       </div>
 
-      <div className='w-[96%] mx-auto h-full py-5'>
+      <div className='w-[96%] mx-auto h-full py-2'>
         <FooterRegistroPrograma lote={lotes || []} refresh={setRefresh}/>
       </div>
     </div>

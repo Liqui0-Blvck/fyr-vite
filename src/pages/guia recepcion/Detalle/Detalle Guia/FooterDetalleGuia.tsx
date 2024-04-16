@@ -165,30 +165,29 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data, refresh }) => {
               </TableRow>
             </TableHead>
             <TableBody className='table-body'>
-              {data && data.lotesrecepcionmp.map((row: TLoteGuia) => {
+              {data?.lotesrecepcionmp.
+                filter(lote => lote.estado_recepcion < '6' && lote.estado_recepcion !== '4').
+                map((row: TLoteGuia) => {
+                
                 return (
                   <TableRow key={row.id} className='table-row-body'>
-                    {
-                      row.estado_recepcion < '7' && row.estado_recepcion !== '4'
-                        ? <LoteFila
-                          lote={row}
-                          guia={data}
-                          acoplado={camionAcoplado!}
-                          envases={envases}
-                          filtro_variedad={variedadFilter}
-                          filtro_productos={tipoFrutaFilter}
-                          openModalRows={openModalRows}
-                          setOpenModalRows={setOpenModalRows}
-                          openModalEdicion={openModalEdicion}
-                          setOpenModalEdicion={setOpenModalEdicion}
-                          openModalConfirmacion={openModalConfirmacion}
-                          setOpenModalConfirmacion={setOpenModalConfirmacion}
-                          estadoActivo={estadoActivo}
-                          setEstadoActivo={setEstadoActivo}
-                          refresh={refresh}
-                        />
-                        : null
-                    }
+                    <LoteFila
+                      lote={row}
+                      guia={data}
+                      acoplado={camionAcoplado!}
+                      envases={envases}
+                      filtro_variedad={variedadFilter}
+                      filtro_productos={tipoFrutaFilter}
+                      openModalRows={openModalRows}
+                      setOpenModalRows={setOpenModalRows}
+                      openModalEdicion={openModalEdicion}
+                      setOpenModalEdicion={setOpenModalEdicion}
+                      openModalConfirmacion={openModalConfirmacion}
+                      setOpenModalConfirmacion={setOpenModalConfirmacion}
+                      estadoActivo={estadoActivo}
+                      setEstadoActivo={setEstadoActivo}
+                      refresh={refresh}
+                    />
                   </TableRow>
 
                 )

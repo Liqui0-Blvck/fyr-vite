@@ -489,7 +489,8 @@ export type TLoteProduccion = {
   bodega_techado_ext: number;
   procesado_por: string;
   envases?: TEnvasesPrograma[]
-  numero_lote: number
+  numero_lote: number,
+  kilos_fruta: number
 }
 
 export type TOperarioProduccion = {
@@ -588,6 +589,7 @@ export type TBinEnReproceso = {
   binbodega: string
   kilos_bin: number
   identificador_bin_bodega: number
+  bin_ingresado: boolean
 }
 
 export type TEnvasesPrograma = {
@@ -607,6 +609,7 @@ export type TEnvasesPrograma = {
   variedad: string
   guia_recepcion: number
   control_calidad: number
+  esta_eliminado: boolean
 }
 
 export type TControlCalidadTarja = {
@@ -656,6 +659,4 @@ export type TRendimientoActual = {
   pepa_resultante: number
   cc_pepa_calibre: TCalibreTarja;
 }
-
-
 

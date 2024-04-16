@@ -34,7 +34,7 @@ interface ILoteCompletadoProps {
   setOpenModalConfirmacion: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
   estadoActivo: string | null
   setEstadoActivo: Dispatch<SetStateAction<string | null>>
-  refresh: Dispatch<SetStateAction<boolean | null>>
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
 const LoteFila: FC<ILoteCompletadoProps> = (

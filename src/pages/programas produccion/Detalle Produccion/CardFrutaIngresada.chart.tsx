@@ -1,8 +1,4 @@
-
-import { TPeriod } from "../../../constants/periods.constant";
 import Card, { CardBody } from "../../../components/ui/Card";
-import Icon from "../../../components/icon/Icon";
-import Balance from "../../../components/Balance";
 import { TEnvasesPrograma, TProduccion, TTarjaResultante } from "../../../types/registros types/registros.types";
 import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { TTabs } from "../../../types/registros types/TabsDashboardPrograma.types";
@@ -19,16 +15,19 @@ interface ICardFrutaCalibradaProps {
 
 const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, programa, refresh, tarjas_resultantes }) => {
 
-	const totalEnvases = programa?.lotes.length || 1; 
+	const totales_kilos_en_programa = envases_programa?.reduce((acc, lote) => lote.kilos_fruta + acc, 0) || 1
 
-	const kilosTotales = envases_programa?.length ?
-		((envases_programa.reduce((acc, envase) => (envase?.kilos_fruta || 0) + acc, 0) / totalEnvases) * 100).toFixed(1)
+	const kilos_totales_ingresados_porcentual = envases_programa?.length ?
+		((envases_programa.reduce((acc, envase) => (envase?.kilos_fruta || 0) + acc, 0) / totales_kilos_en_programa!) * 100)?.toFixed(2) || 0
 		: 0;
+  const kilos_totales_ingresados = envases_programa?.filter(lote => lote.bin_procesado === true).reduce((acc, lote) => lote.kilos_fruta + acc, 0)
+  
 
-	const kilosTotalesProcesados = envases_programa?.filter(envase => envase?.bin_procesado === true).length ?
-		((envases_programa.filter(envase => envase?.bin_procesado === true)
-			.reduce((acc, envase) => (envase?.kilos_fruta || 0) + acc, 0) / totalEnvases) * 100).toFixed(1)
-		: 0;
+
+
+  const kilos_totales_procesados_porcentual = ((envases_programa?.filter(lote => lote.bin_procesado)
+    .reduce((acc, lote) => (lote?.kilos_fruta + acc), 0) / totales_kilos_en_programa!) * 100)?.toFixed(2) || 0
+
 
   useEffect(() => {
     let isMounted = true
@@ -41,7 +40,8 @@ const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
     }
   }, [refresh])
 
-	const seriesData = [Number(kilosTotales), Number(kilosTotalesProcesados)]; 
+
+  const seriesData = [Number(kilos_totales_ingresados_porcentual), Number(kilos_totales_procesados_porcentual)]
   const optionsData = {
     chart: {
       type: "bar",
@@ -54,13 +54,15 @@ const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
       },
     },
     xaxis: {
-      categories: ['Kilos Totales en Producción', 'Kilos de Fruta Procesados'],
+      categories: [`Kilos Fruta Ingresado ${Number(kilos_totales_ingresados_porcentual)} %`, `Kilos de Fruta Procesados ${Number(kilos_totales_procesados_porcentual)} %`],
     },
     colors: ['#008FFB'],
     yaxis: {
       title: {
         text: 'Kilogramos (kgs)',
       },
+      tickAmount: 5,
+      max: 100
     },
     title: {
       text: 'Información de Producción',
@@ -90,7 +92,7 @@ const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
 			const diffHours = diffTime / (1000 * 3600);
 			return diffHours <= 1;
 		}).
-		reduce((acc, envase) => envase?.kilos_fruta + acc, 0).toFixed(1);
+		reduce((acc, envase) => envase?.kilos_fruta + acc, 0)?.toFixed(1);
 
 
   const pepa_calibrada = (tarjas_resultantes?.filter(tarja => {
@@ -99,14 +101,8 @@ const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
     return diffHours <= 1;
   }).reduce((acc, tarja) => tarja.peso + acc, 0)!);
   
-  const totalKilosFrutaPrograma = envases_programa?.reduce((acc, lote) => lote.kilos_fruta + acc, 0);
-  
-  const pepaCalibradaPercentage = ((pepa_calibrada / (totalKilosFrutaPrograma || 1)) * 100).toFixed(2) || 0
-
-	console.log("soy una pepa calibrada", tarjas_resultantes)
-
 	const chartProps2: IChartProps = {
-		series: [Number(kilos_totales_procesados), Number(pepa_calibrada)],
+		series: [Number(pepa_calibrada), Number(kilos_totales_procesados),],
 		options: {
 			chart: {
 				type: 'donut',
@@ -134,10 +130,10 @@ const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
         <CardBody className="w-full h-full flex flex-col md:flex-col gap-y-5 lg:gap-2">
           <div className='w-full flex justify-between gap-y-2 md:gap-2 lg:gap-2 '>
             <div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center p-2'>
-              <span className="text-center w-11/12 mx-auto">Kilos totales en producción: {0} kgs</span>
+              <span className="text-center w-11/12 mx-auto">Kilos totales en producción: {(totales_kilos_en_programa)?.toFixed(2)} kgs</span>
             </div>
             <div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center p-2'>
-              <span className="text-center w-8/12 mx-auto">Kilo Fruta Procesados: {1} kgs.</span>
+              <span className="text-center w-8/12 mx-auto">Kilos Fruta Procesados: {(kilos_totales_ingresados)?.toFixed(2)} kgs.</span>
             </div>
             <div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center p-2'>
               <span className="text-center w-8/12 mx-auto">Total de envases a procesar: {programa?.lotes.length} </span>

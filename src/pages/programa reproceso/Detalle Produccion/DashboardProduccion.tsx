@@ -20,7 +20,7 @@ import PeriodButtonsPartial from './PeriodButtons.partial';
 import Balance1Partial from './CardMetricaRecepcion.tsx';
 import { OPTIONS, TTabs } from '../../../types/registros types/TabsDashboardPrograma.types';
 import DetalleEnvasesLote from '../Detalle Envases Lote/DetalleEnvasesLote';
-import DetalleEnvasesMasivosLotes from '../Detalle Masivo Envases Lotes/DetalleBinsMasivos.tsx';
+import DetalleEnvasesMasivosLotes from '../Detalle Masivo Envases Lotes/DetalleBinsMasivosReproceso.tsx';
 import DetalleOperarioPrograma from '../Detalle Operarios Programa/DetalleOperarioPrograma';
 import DetalleTarjaResultante from '../Detalle Tarja Resultante/DetalleTarjaResultante';
 import Balance3Partial from './CardUltimaHora.card.tsx';
@@ -38,7 +38,7 @@ import Tooltip from '../../../components/ui/Tooltip';
 import CardMetricaRecepcion from './CardMetricaRecepcion.tsx';
 import CardLoteCalibrado from './CardLoteCalibrado.card';
 import CardUltimaHora from './CardUltimaHora.card.tsx';
-import DetalleBinsMasivos from '../Detalle Masivo Envases Lotes/DetalleBinsMasivos.tsx';
+import DetalleBinsMasivos from '../Detalle Masivo Envases Lotes/DetalleBinsMasivosReproceso.tsx';
 
 const DashboardProduccion = () => {
   const { authTokens, validate } = useAuth()
@@ -59,7 +59,7 @@ const DashboardProduccion = () => {
     `/api/registros/perfil/${programa_produccion?.registrado_por}/`
   )
 
-  const { data: envases_programa } = useAuthenticatedFetch<TEnvasesPrograma[]>(
+  const { data: bins_En_reproceso } = useAuthenticatedFetch<TEnvasesPrograma[]>(
     authTokens,
     validate,
     `/api/reproceso/${id}/bins_en_reproceso`
@@ -70,6 +70,8 @@ const DashboardProduccion = () => {
     validate,
     `/api/reproceso/${id}/tarjas_resultantes/`
   )
+
+  console.log(bins_En_reproceso)
 
 
 	return (
@@ -120,22 +122,20 @@ const DashboardProduccion = () => {
             
           </SubheaderRight>
 				</Subheader>
-				<Container breakpoint={null} className='w-full'>
+				<Container breakpoint={null} className='w-full h-full'>
 					<div className='grid grid-cols-12 gap-4'>
-						{
+          {
               activeTab.text === 'General'
                 ? (
-                  <>
-                    <div className='col-span-12 '>
-                      <CardMetricaRecepcion activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!}/>
+                  <>  
+                    <div className='row col-span-12 mt-2'>
+                      <CardMetricaRecepcion activeTab={activeTab} programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!} bins_en_reproceso={bins_En_reproceso!} refresh={setRefresh} />
                     </div>
+
                     <div className='row-start-2 col-span-12 '>
-                      <CardLoteCalibrado activeTab={activeTab} programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!}/>
+                      <CardLoteCalibrado activeTab={activeTab}  programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!}/>
                     </div>
-                    <div className='col-span-12 '>
-                      <CardUltimaHora activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!} tarjas_resultantes={tarjas_resultantes!}/>
-                    </div>
-                    </>
+                  </>
                   )
                 : null
             }
@@ -146,9 +146,11 @@ const DashboardProduccion = () => {
                 ? <DetalleTarjaResultante />
                   : activeTab.text === 'Envases de Lotes Seleccionados'
                     ? <DetalleEnvasesLote />
-                    : activeTab.text === 'Operarios en Programa'
-                        ? <DetalleOperarioPrograma programa_produccion={programa_produccion} loading={loading} refresh={setRefresh}/>
-                        : null
+                    : activeTab.text === 'Procesar Masivamente'
+                        ? <DetalleEnvasesMasivosLotesReproceso />
+                        : activeTab.text === 'Operarios en Programa'
+                          ? <DetalleOperarioPrograma programa_produccion={programa_produccion} loading={loading} refresh={setRefresh}/>
+                          : null
               }
 						</div>
 					

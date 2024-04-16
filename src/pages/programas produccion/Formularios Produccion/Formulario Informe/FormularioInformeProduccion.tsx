@@ -41,7 +41,7 @@ const FormularioInformeProduccion: FC<IInformeProduccion> = ({ setOpen }) => {
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/prueba`, {
+        const res = await fetch(`${base_url}/api/produccion/pdf_produccion/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -55,11 +55,11 @@ const FormularioInformeProduccion: FC<IInformeProduccion> = ({ setOpen }) => {
         })
 
         if (res.ok){
-          console.log("Nos fue bien")
+          const data = await res.json()
           if (values.tipo_informe === '1'){
-            navigate('/app/pdf-pre-limpia/')
+            navigate('/app/pdf-pre-limpia/', { state: { key: data, desde: state[0].startDate, hasta: state[0].endDate }})
           } else {
-            navigate('/app/pdf-descascarado/')
+            navigate('/app/pdf-descascarado/', { state: { key: data, desde: state[0].startDate, hasta: state[0].endDate }})
           }
         }
       } catch (error) {

@@ -20,11 +20,11 @@ interface IRendimientoMuestra {
   id_lote?: number
   data?: TEnvasePatio[] | []
   refresh?: Dispatch<SetStateAction<boolean>>
-  ccLote?: TControlCalidad | null
+
 }
 
 
-const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh }) => {
+const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh, id_lote }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
 
@@ -36,10 +36,11 @@ const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh }) => {
           <Table className='table' aria-label="simple table">
             <TableHead className='table-header'>
               <TableRow className='table-row' sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+                <TableCell className='table-cell-4' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>N° Lote</TableCell>
                 <TableCell className='table-cell-4' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>N° Bin</TableCell>
                 <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Kilos Fruta</TableCell>
                 <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Estado</TableCell>
-                <TableCell className='table-cell-2' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Guia</TableCell>
+                <TableCell className='table-cell-2' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Guia Patio</TableCell>
                 <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Variedad</TableCell>
               </TableRow>
             </TableHead>
@@ -50,6 +51,7 @@ const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh }) => {
                   <TableRow key={row.id} className='table-row-body' style={{ overflowX: 'auto'}}>
                     <FilaEnvasesPatio
                       muestra={row}
+                      id_lote={id_lote}
                       refresh={refresh}
                     />
                       

@@ -1,6 +1,6 @@
 import { TSelectOptions } from "../components/form/SelectReact"
 import { TCamion } from "../types/registros types/registros.types"
-import { RESULTADO_RECHAZO, TIPO_ACOPLADO, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from "../utils/select.constanst"
+import { RESULTADO_RECHAZO, TIPO_ACOPLADO, TIPO_PRODUCTOS_RECEPCIONMP, TIPO_RESULTANTE, VARIEDADES_MP } from "../utils/select.constanst"
 
 const acoplados = TIPO_ACOPLADO?.map((acoplado) => ({
   value: acoplado.values,
@@ -23,6 +23,11 @@ export const tipoFrutaFilter = TIPO_PRODUCTOS_RECEPCIONMP?.map((producto) => ({
   value: String(producto.value),
   label: producto.label
 })) ?? []
+
+export const tipoResultante = TIPO_RESULTANTE?.map((tipo) => ({
+  value: String(tipo.value),
+  label: tipo.label
+}))
 
 
 export const optionsRadio = [

@@ -101,7 +101,7 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
               </TableRow>
             </TableHead>
             <TableBody className='table-body'>
-              {data && data.lotesrecepcionmp.map((row: TLoteGuia) => {
+              {data?.lotesrecepcionmp.map((row: TLoteGuia) => {
                 const control_calidad_filtro = control_calidad?.find(control => control.recepcionmp === row.id)?.estado_cc
 
                 const kilos_total_envases = 
@@ -113,10 +113,12 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
 
                   const kilos_netos_fruta = row.kilos_brutos_1 + row.kilos_brutos_2 - row?.kilos_tara_1 - row?.kilos_tara_2 - kilos_total_envases!;
 
+
+                  console.log(row)
                 return (
                   <TableRow key={row.id} className='table-row-body'>
                       {
-                        row.estado_recepcion === '7'
+                      row.estado_recepcion === '7' || row.estado_recepcion === '6'
                           ? <LoteFilaCompleta
                               lote={row}
                               guia={data}

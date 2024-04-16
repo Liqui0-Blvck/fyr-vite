@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,11 +14,12 @@ import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import useDarkMode from '../../../../hooks/useDarkMode';
-import { TCamion, TEnvases, TGuia } from '../../../../types/registros types/registros.types';
+import { TCamion, TEnvases, TGuia, TLoteGuia } from '../../../../types/registros types/registros.types';
 import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../../utils/select.constanst';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { values } from 'lodash';
 import { Switch } from 'antd';
+import { urlNumeros } from '../../../../services/url_number';
 
 interface Row {
   kilos_brutos_1: null,
@@ -40,6 +41,8 @@ interface IFooterProps {
 const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle, refresh }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
+  const { pathname } = useLocation()
+  const id = urlNumeros(pathname)
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const [iotBruto, setIotBruto] = useState<boolean>(false)
@@ -132,6 +135,47 @@ const FooterFormularioEdicionGuia: FC<IFooterProps> = ({ data, variedad, detalle
       }
     }
   })
+
+
+
+
+  const { data: lote_ne } = useAuthenticatedFetch<TGuia>(
+    authTokens,
+    validate,
+    `/api/recepcionmp/${id}`
+  )
+
+  const ultima_tara: TLoteGuia = lote_ne?.lotesrecepcionmp.filter((lote: TLoteGuia) => lote?.kilos_tara_1 !== 0 && lote.kilos_tara_2 !== 0)?.pop()!
+
+  console.log(ultima_tara)
+
+  useEffect(() => {
+    let isMounted = true
+    if (isMounted && ultima_tara){
+      formik.setValues({
+        kilos_brutos_1: ultima_tara.kilos_tara_1,
+        kilos_brutos_2: ultima_tara.kilos_tara_2
+      })
+    }
+
+    return () => {
+      isMounted = false
+    }
+
+  }, [ultima_tara])
+
+
+
+  console.log(formik.values)
+
+
+
+
+
+
+
+
+
 
 
   const agregarFila = () => {

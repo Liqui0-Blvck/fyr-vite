@@ -55,7 +55,7 @@ const DetalleTarjaResultante: FC<IMuestraProps> = () => {
 
   return (
     <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full
-         dark:bg-zinc-800 bg-zinc-200 relative px-5
+         dark:bg-zinc-800 bg-zinc-200 relative px-5 py-10
         place-items-center lg:gap-2 md:gap-2 flex flex-col gap-5
         rounded-md`}
     >

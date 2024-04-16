@@ -52,7 +52,8 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ref
       body: JSON.stringify({
         reproceso: id[0],
         tipo_bin_bodega: tipo_bin,
-        id_bin_bodega: id_bin
+        id_bin_bodega: id_bin,
+        bin_ingresado: true
       })
     })
 
@@ -112,9 +113,9 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ref
                   ? 'Bodega G1'
                   : row.binbodega.includes('G2')
                     ? 'Bodega G2'
-                    : row.binbodega.includes('G1R-')
+                    : row.binbodega.includes('G1')
                       ? 'Bodega G1 Reproceso'
-                      : row.binbodega.includes('G2R-')
+                      : row.binbodega.includes('G2')
                         ? 'Bodega G2 Reproceso'
                         : null
               }
@@ -131,9 +132,9 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ref
                   ? 'bodegag1'
                   : row.binbodega.includes('G2')
                     ? 'bodegag2'
-                    : row.binbodega.includes('G1R')
+                    : row.binbodega.includes('G1')
                       ? 'bodegag1reproceso'!
-                      : row.binbodega.includes('G2R')
+                      : row.binbodega.includes('G2')
                         ? 'bodegag2reproceso'!
                         : ''
             )
