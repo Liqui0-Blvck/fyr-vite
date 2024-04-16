@@ -27,12 +27,18 @@ const SelectYear = () => {
             anio: personalizacionData?.anio ? personalizacionData.anio : ''
         },
         onSubmit: async (values) => {
-            const personalizacion = await putPersonalizacionPerfil({estilo: personalizacionData.estilo, cabecera: personalizacionData.cabecera, anio: values.anio}, authTokens?.access, personalizacionData.user.id)
+            const personalizacion = await putPersonalizacionPerfil({
+                estilo: personalizacionData.estilo, cabecera: personalizacionData.cabecera, anio: values.anio,
+                iot_balanza_recepcionmp: personalizacionData.iot_balanza_recepcionmp
+            }, authTokens?.access, personalizacionData.user.id)
             let valido = false
             if (personalizacion == 401) {
                 const access = await refreshToken()
                 if (access) {
-                    const personalizacion_v = await putPersonalizacionPerfil({estilo: personalizacionData.estilo, cabecera: personalizacionData.cabecera, anio: values.anio}, access, personalizacionData.user.id)
+                    const personalizacion_v = await putPersonalizacionPerfil({
+                        estilo: personalizacionData.estilo, cabecera: personalizacionData.cabecera, anio: values.anio,
+                        iot_balanza_recepcionmp: personalizacionData.iot_balanza_recepcionmp
+                    }, access, personalizacionData.user.id)
                     if (personalizacion_v) {
                         valido = true
                     }
