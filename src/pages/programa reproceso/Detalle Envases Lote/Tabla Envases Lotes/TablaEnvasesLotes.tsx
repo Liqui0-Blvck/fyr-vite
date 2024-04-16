@@ -68,6 +68,10 @@ const TablaEnvasesLotes: FC<IProduccionProps> = ({ data, refresh, id_lote, produ
             </TableHead>
             <TableBody className='table-body' >
               {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).
+                filter(lote => 
+                  lote.id_bin_bodega.toString().toLowerCase().includes(search) ||
+                  lote.kilos_bin.toString().toLowerCase().includes(search)
+                ).
                 map((row: TBinEnReproceso) => {
                 return (
                   <TableRow key={row.id} className='table-row-body' style={{ overflowX: 'auto', height: 40 }}>

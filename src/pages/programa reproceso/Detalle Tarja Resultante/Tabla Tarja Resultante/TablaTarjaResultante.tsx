@@ -69,6 +69,7 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, id_lote,
             </TableHead>
             <TableBody className='table-body' >
               {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).
+                filter(row => row.esta_eliminado !== true).
                 filter((row) => 
                   row.codigo_tarja.toString().toLowerCase().includes(search) ||
                   row.tipo_patineta.toString().includes(search)
@@ -86,7 +87,7 @@ const TablaTarjaResultante: FC<IRendimientoMuestra> = ({ data, refresh, id_lote,
             sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`, color: `${isDarkTheme ? 'white' : 'black'}` }}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={data?.length || 0} 
+            count={data?.filter(lote => lote.esta_eliminado !== true).length || 0} 
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

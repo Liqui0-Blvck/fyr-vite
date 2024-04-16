@@ -17,14 +17,14 @@ import themeConfig from '../../../config/theme.config';
 import Breadcrumb from '../../../components/layouts/Breadcrumb/Breadcrumb';
 import Card from '../../../components/ui/Card';
 import PeriodButtonsPartial from './PeriodButtons.partial';
-import Balance1Partial from './Balance1.partial';
+import Balance1Partial from './CardFrutaIngresa.chart';
 import { OPTIONS, TTabs } from '../../../types/registros types/TabsDashboardPrograma.types';
 import DetalleEnvasesLote from '../Detalle Envases Lote/DetalleEnvasesLote';
 import DetalleEnvasesMasivosLotes from '../Detalle Masivo Envases Lotes/DetalleEnvasesMasivosLotes';
 import DetalleOperarioPrograma from '../Detalle Operarios Programa/DetalleOperarioPrograma';
 import DetalleTarjaResultante from '../Detalle Tarja Resultante/DetalleTarjaResultante';
-import Balance3Partial from './Balance3.partial';
-import Balance2Partial from './Balance2.partial';
+import Balance3Partial from './CardFrutaProcesadaUltimaHora';
+import Balance2Partial from './CardFrutaCalibrada.chart';
 import { useAuth } from '../../../context/authContext';
 import { Link, useLocation } from 'react-router-dom';
 import { urlNumeros } from '../../../services/url_number';
@@ -35,6 +35,8 @@ import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroTarja from '../Formularios Produccion/Formulario Registro Tarja/FormularioRegistroTarja';
 import Badge from '../../../components/ui/Badge';
 import Tooltip from '../../../components/ui/Tooltip';
+import CardFrutaIngresada from './CardFrutaIngresa.chart';
+import CardFrutaCalibrada from './CardFrutaCalibrada.chart';
 
 const DashboardProduccion = () => {
   const { authTokens, validate } = useAuth()
@@ -49,12 +51,6 @@ const DashboardProduccion = () => {
     validate,
     `/api/produccion/${id}/`
   )
-
-  // const { data: userData } = useAuthenticatedFetch<TPerfil>(
-  //   authTokens,
-  //   validate,
-  //   `/api/registros/perfil/${programa_produccion?.registrado_por}/`
-  // )
 
   const { data: envases_programa } = useAuthenticatedFetch<TEnvasesPrograma[]>(
     authTokens,
@@ -74,6 +70,7 @@ const DashboardProduccion = () => {
     }
   }, [activeTab])
 
+  console.log("soy una tarja resultante", tarjas_resultantes)
 
 	return (
 		<>
@@ -83,7 +80,7 @@ const DashboardProduccion = () => {
 						<PeriodButtonsPartial activeTab={activeTab} setActiveTab={setActiveTab} />
 					</SubheaderLeft>
           <SubheaderRight>
-            <div className='flex gap-1 w-full h-10'>
+            <div className='flex gap-2 w-full h-10'>
             <Badge color='emerald' variant='solid' className='rounded-lg text-xs font-bold animate-pulse'>
               {programa_produccion?.estado_label}
             </Badge>
@@ -95,7 +92,7 @@ const DashboardProduccion = () => {
                     <Link to={`/app/produccion/registro-programa/${id}`}>
                       <button
                         type='button' 
-                        className=' dark:bg-zinc-700 bg-zinc-700 rounded-md flex items-center justify-center w-full h-12 px-3 py-2 text-white'>
+                        className=' dark:bg-zinc-700 bg-zinc-700 rounded-md flex items-center justify-center w-full h-12 px-5  py-2 text-white hover:scale-105'>
                         <span>Añadir Lote al Programa N°{id}</span>
                       </button>
                     </Link>
@@ -111,7 +108,7 @@ const DashboardProduccion = () => {
                       open={open}
                       setOpen={setOpen}
                       textButton={`Registro Tarja`}
-                      width='w-40 rounded-md h-12 bg-blue-700 flex items-center justify-center px-5 py-3 hover:scale-105 text-white'
+                      width='w-auto rounded-md h-12 bg-blue-700 flex items-center justify-center px-5 py-3 hover:scale-105 text-white'
                       >
                         <FormularioRegistroTarja tab={setActiveTab} setOpen={setOpen} refresh={setRefresh}/>
                     </ModalRegistro>
@@ -123,22 +120,19 @@ const DashboardProduccion = () => {
             
           </SubheaderRight>
 				</Subheader>
-				<Container breakpoint={null} className='w-full'>
-					<div className='grid grid-cols-12 gap-4'>
+				<Container breakpoint={null} className='w-full h-full'>
+					<div className='grid grid-cols-12 gap-2'>
 
-            <div className='col-span-12 2xl:col-span-12'>
+            <div className='col-span-12 2xl:col-span-12 gap-2'>
             {
               activeTab.text === 'General'
                 ? (
                   <>
                     <div className='col-span-12 '>
-                      <Balance1Partial activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!} refresh={setRefresh}/>
+                      <CardFrutaIngresada activeTab={activeTab}  programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!} envases_programa={envases_programa!} refresh={setRefresh}/>
                     </div>
-                    <div className='row-start-2 col-span-12 '>
-                      <Balance2Partial activeTab={activeTab} programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!} refresh={setRefresh}/>
-                    </div>
-                    <div className='col-span-12 '>
-                      <Balance3Partial activeTab={activeTab}  programa={programa_produccion!} envases_programa={envases_programa!} tarjas_resultantes={tarjas_resultantes!}/>
+                    <div className='row-start-2 col-span-12 mt-2'>
+                      <CardFrutaCalibrada activeTab={activeTab} programa={programa_produccion!} tarjas_resultantes={tarjas_resultantes!} refresh={setRefresh}/>
                     </div>
                   </>
                   )

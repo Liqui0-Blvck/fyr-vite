@@ -88,6 +88,8 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ubi
     }
   };
 
+  
+
   const handleToggleItem = (itemId: number) => {
     const selectedIndex = selectedItems.indexOf(itemId);
     let newSelected: number[] = [];
@@ -109,6 +111,7 @@ const FilaRegistroPrograma: FC<IRegistroPrograma> = ({row, id_row, variedad, ubi
   };
 
   const isSelected = (itemId: number) => selectedItems.indexOf(itemId) !== -1;
+  
 
   const variedad_nombre = variedadFilter.find(varie => varie.value === variedad)?.label
 

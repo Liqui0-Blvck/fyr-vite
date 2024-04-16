@@ -46,10 +46,15 @@ const FilaTarjaResultante: FC<ILoteCompletadoProps> = ({ envase: row, produccion
 
   const eliminarTarja = async (id_lote: number) => {
     const res = await fetch(`${base_url}/api/reproceso/${id}/tarjas_resultantes/${id_lote}/`, {
-      method: 'DELETE',
-      headers: {  
+      method: 'PATCH',
+      headers: { 
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${authTokens?.access}`
       },
+      body: JSON.stringify({
+        reproceso: id[0],
+        esta_eliminado: true
+      })
     })  
 
     if (res.ok){
