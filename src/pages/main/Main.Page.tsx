@@ -45,7 +45,7 @@ const Home = () => {
                     console.log('valido todo')
                 }
 
-            }}>Refrescar</Button>
+            }}>Peticion Prueba</Button>
         </div>
     )
 }

@@ -109,8 +109,9 @@ const User: FC<IUserProps> = (props) => {
 				className={classNames('absolute end-0 top-0 -me-1 -mt-1 flex h-3 w-3', {
 					'ltr:translate-x-[0.625rem] rtl:translate-x-[-0.625rem]': !asideStatus,
 				})}>
-				<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75' />
-				<span className='relative inline-flex h-3 w-3 rounded-full bg-blue-500' />
+				{/* Notificacion */}
+				{/* <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75' /> */}
+				{/* <span className='relative inline-flex h-3 w-3 rounded-full bg-blue-500' /> */}
 			</span>
 		</div>
 	);

@@ -34,7 +34,6 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
 
         if (!isMounted) return;
 
-        const isValid = await validate(token);
 
         
           const response = await fetch(base_url + url, {

@@ -13,7 +13,8 @@ const options: TSelectOptions = [
 	{ value: '2024', label: '2024'},
 	{ value: '2023', label: '2023'},
 	{ value: '2022', label: '2022'},
-	{ value: '2021', label: '2021'}
+	{ value: '2021', label: '2021'},
+    { value: 'Todo', label: 'Todo'}
 ];
 
 const SelectYear = () => {
@@ -59,6 +60,7 @@ const SelectYear = () => {
                 onChange={(value: any) => {
                     formik.setFieldValue('anio', value.value)
                 }}
+                variant='solid'
                 />
             </div>
             <div className="col-span-4">

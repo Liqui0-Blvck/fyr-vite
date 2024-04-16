@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,7 +19,7 @@ import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../utils/select
 import { useNavigate } from 'react-router-dom';
 import { Switch } from 'antd';
 import { generarNumeroLote } from '../../../utils/numberLote';
-
+import mqtt, { MqttClient } from "mqtt";
 
 
 interface Row {
@@ -38,12 +38,13 @@ interface IFooterProps {
 }
 
 const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
-  const { authTokens, validate } = useAuth()
+  const { authTokens, validate, refreshToken, personalizacionData } = useAuth()
   const { isDarkTheme } = useDarkMode();
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const [iotBruto, setIotBruto] = useState<boolean>(false)
   const [iotBrutoAcoplado, setIotBrutoAcoplado] = useState<boolean>(false)
+  const [client, setClient] = useState<MqttClient | null>(null)
 
   const initialRows = [
     {
@@ -182,6 +183,37 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
   const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
+  useEffect(() => {
+    if (client) {
+      client.on('connect', () => {
+        client.subscribe('prodalmen/recepcionmp/pesaje')
+      })
+      client.on('error', error => {
+        try {
+          toast.error(`MQTT error: ${error}`);
+        } catch (err) {
+          toast.error(`Connection error: ${err}`);
+        }
+      })
+      client.on('message', (topic, payload, packet) => {
+        console.log(`Message ${payload.toString()}, from topic ${topic}`)
+      })
+    } else {
+      setClient(mqtt.connect({
+        port: 8083,
+        hostname: `${process.env.VITE_BASE_IOT_DEV}`,
+        protocol: 'ws',
+        // clientId: `${alias.replace(' ', '_')}_${Math.random().toString(16).substring(2, 8)}`,
+        username: 'user01',
+        password: 'Hola.2020',
+        clean: true,
+        reconnectPeriod: 1000,
+        connectTimeout: 30 * 1000,
+        rejectUnauthorized: true,
+        // path: '/mqtt',
+      }))
+    }
+  }, [client])
 
   return (
     <div>
@@ -195,7 +227,29 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               className='col-span-3'
             >Kilos Brutos</label>
             <div className='row-start-2 flex gap-2 items-center'>
-              <Input
+              {
+                personalizacionData?.iot_balanza_recepcionmp == 'Manual' ? 
+                  <Input
+                    type='number'
+                    name='kilos_brutos_1'
+                    className='py-3  col-span-3 w-56'
+                    value={formik.values.kilos_brutos_1}
+                    onChange={formik.handleChange}
+                    disabled={iotBruto ? true : false}
+                  /> : personalizacionData?.iot_balanza_recepcionmp == 'Automático' ? 
+                  <Input
+                    type='number'
+                    name='kilos_brutos_1'
+                    className='py-3  col-span-3 w-56'
+                    value={formik.values.kilos_brutos_1}
+                    onChange={formik.handleChange}
+                    disabled={true}
+                  /> : null
+              }
+
+
+              {/* DEFAULT */}
+              {/* <Input
                 type='number'
                 name='kilos_brutos_1'
                 className='py-3  col-span-3 w-56'
@@ -205,7 +259,10 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               />
               <Switch
                 className='row-start-2 col-start-4 w-16 bg-slate-300'
-                onChange={() => setIotBruto(prev => !prev)} />
+                onChange={() => {
+                  setIotBruto(prev => !prev)
+                  // const client = mqtt.connect('mqtt://prodalmen.cl')
+                }} /> */}
             </div>
           </div>
 

@@ -20,7 +20,7 @@ const SettingsPartial = () => {
 			</DropdownToggle>
 			<DropdownMenu placement='bottom-end'>
 				<DropdownItem className='flex flex-col !items-start'>
-					<div>Font Size:</div>
+					<div>Tamaño de la Fuente:</div>
 					<ButtonGroup>
 						<Button
 							icon='HeroMinus'
@@ -36,7 +36,7 @@ const SettingsPartial = () => {
 					</ButtonGroup>
 				</DropdownItem>
 				<DropdownItem className='flex flex-col !items-start'>
-					<div>Dark Mode:</div>
+					<div>Tema:</div>
 					<ButtonGroup>
 						<Button
 							icon='HeroMoon'
