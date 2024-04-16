@@ -20,7 +20,7 @@ interface IUser {
 const UserTemplate = () => {
 	const { perfilData, onLogout } = useAuth();
 
-	console.log(perfilData)
+	// console.log(perfilData)
 
 	const cargoLabels = perfilData?.cargos.map(cargo => cargo.cargo_label) || [];
 
@@ -30,7 +30,7 @@ const UserTemplate = () => {
 			name={perfilData?.user.first_name}
 			nameSuffix={perfilData?.user.first_name ? '' : perfilData?.user.username}
 			position={cargoLabels}
-			src={''}
+			src={perfilData?.fotoperfil ? perfilData.fotoperfil : ''}
 		// suffix={
 		// 	<Badge color='amber' variant='solid' className='text-xs font-bold'>
 		// 		PRO
@@ -39,7 +39,7 @@ const UserTemplate = () => {
 		>
 			<NavSeparator />
 			<NavItem {...authPages.profilePage} />
-			<NavItem text='Logout' icon='HeroArrowRightOnRectangle' onClick={() => onLogout()} />
+			<NavItem text='Cerrar Sesión' icon='HeroArrowRightOnRectangle' onClick={() => onLogout()} />
 		</User>
 	);
 };

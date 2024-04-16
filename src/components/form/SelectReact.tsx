@@ -73,7 +73,7 @@ const SelectReact: FC<ISelectReactProps> = (props) => {
 			control: classNames(
 				// Default
 				[`${borderWidth as TBorderWidth} border-zinc-100 dark:border-zinc-800`],
-				'bg-zinc-100 dark:bg-zinc-800',
+				'bg-zinc-200 dark:bg-zinc-800',
 				'w-full',
 				'text-black dark:text-white',
 				themeConfig.transition,
@@ -87,7 +87,7 @@ const SelectReact: FC<ISelectReactProps> = (props) => {
 				{
 					'!border-zinc-300 dark:!border-white': isValid,
 				},
-				'!bg-transparent dark:!bg-transparent text-white',
+				'! dark:!bg-transparent',
 			),
 			validation: classNames({
 				'!border-red-500 ring-4 ring-red-500/30': !isValid && isTouched && invalidFeedback,

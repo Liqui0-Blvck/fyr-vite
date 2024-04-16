@@ -57,8 +57,8 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const location = useLocation()
 
 
-  console.log("hola soy el perfil" ,  perfilData)
-  const [lastActivity, setLastActivity] = useState<number>(Date.now()); 
+  // console.log("hola soy el perfil" ,  perfilData)
+  // const [lastActivity, setLastActivity] = useState<number>(Date.now()); 
 
   // const resetTimer = () => {
   //   setLastActivity(Date.now());

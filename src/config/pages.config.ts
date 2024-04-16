@@ -292,7 +292,7 @@ export const authPages = {
 	profilePage: {
 		id: 'profilePage',
 		to: '/profile',
-		text: 'Profile',
+		text: 'Perfil',
 		icon: 'HeroUser',
 	},
 	restorePage: {

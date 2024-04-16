@@ -23,3 +23,23 @@ export async function putPerfil(values: { username: string; email: string; first
         return responsePutPerfil.status
     }
 }
+
+export async function putFotoPerfil(fotoperfil: File, token: string | undefined, user_id: number) {
+    const form = new FormData
+    form.append('fotoperfil', fotoperfil)
+
+    const configPutFoto = {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: form
+        
+    }
+    const responsePutFoto = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/perfil/${user_id}/`, configPutFoto)
+    if (responsePutFoto.ok) {
+        return true
+    } else {
+        return responsePutFoto.status
+    }
+}
