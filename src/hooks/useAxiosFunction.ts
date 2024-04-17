@@ -34,11 +34,8 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
 
         if (!isMounted) return;
 
-        const isValid = await validate(token);
 
-        if (!isValid) {
-          navigate(`../${authPages.loginPage.to}`, { replace: true });
-        } else {
+        
           const response = await fetch(base_url + url, {
             method: 'GET',
             headers: {
@@ -58,7 +55,7 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
           } else {
             setError('Cualquier otro error');
           }
-        }
+        
       } catch (error) {
         console.error(error);
         navigate(`not_found/`, { replace: true });

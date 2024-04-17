@@ -19,7 +19,8 @@ import { TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP } from '../../../utils/select
 import { useNavigate } from 'react-router-dom';
 import { Switch } from 'antd';
 import { generarNumeroLote } from '../../../utils/numberLote';
-
+import mqtt, { MqttClient } from "mqtt";
+import Button from '../../../components/ui/Button';
 
 
 interface Row {
@@ -38,12 +39,18 @@ interface IFooterProps {
 }
 
 const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
-  const { authTokens, validate } = useAuth()
+  const { authTokens, validate, refreshToken, personalizacionData } = useAuth()
   const { isDarkTheme } = useDarkMode();
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const [iotBruto, setIotBruto] = useState<boolean>(false)
   const [iotBrutoAcoplado, setIotBrutoAcoplado] = useState<boolean>(false)
+  const [client, setClient] = useState<MqttClient | null>(null)
+  const [listoIot_1, setListoIot_1] = useState<boolean>(false)
+  const [listoIot_2, setListoIot_2] = useState<boolean>(false)
+
+  const [icono_1, setIcono_1] = useState<boolean>(false)
+
 
   const initialRows = [
     {
@@ -191,15 +198,45 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
   const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
-  // useEffect(() => {
-  //   const lastRow = rows.length > 0;
-  //   if (lastRow && lastRow.envase === '42') {
-  //     handleChangeRow(lastRow.id, 'cantidad_envases', 1);
-  //   }
-  // }, [rows]);
-
-  // console.log(rows)
-
+  useEffect(() => {
+    if (client) {
+      client.on('connect', () => {
+        client.subscribe('prodalmen/recepcionmp/pesaje')
+      })
+      client.on('error', error => {
+        try {
+          toast.error(`MQTT error: ${error}`);
+        } catch (err) {
+          toast.error(`Connection error: ${err}`);
+        }
+      })
+      client.on('message', (topic, payload, packet) => {
+        console.log(`Message ${payload.toString()}, from topic ${topic}`)
+        console.log(listoIot_1, listoIot_2)
+        if (listoIot_1 == false && listoIot_2 == false) {
+          formik.setFieldValue('kilos_brutos_1', payload)
+        } else if (listoIot_1 == true && listoIot_2 == false) {
+          formik.setFieldValue('kilos_brutos_2', payload)
+        } else if (listoIot_2 == true && listoIot_1 == true) {
+          client.end()
+        }
+      })
+    } else {
+      setClient(mqtt.connect({
+        port: 8083,
+        hostname: `${process.env.VITE_BASE_IOT_DEV}`,
+        clientId: `mqtt_${Math.random().toString(16).substring(2, 8)}`,
+        username: 'user01',
+        password: 'Hola.2024',
+        clean: true,
+        reconnectPeriod: 1000,
+        connectTimeout: 30 * 1000,
+        rejectUnauthorized: true,
+        path: '/mqtt',
+        
+      }))
+    }
+  }, [client])
 
   return (
     <div>
@@ -213,7 +250,34 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               className='col-span-3'
             >Kilos Brutos</label>
             <div className='row-start-2 flex gap-2 items-center'>
-              <Input
+              {
+                personalizacionData?.iot_balanza_recepcionmp == 'Manual' ? 
+                  <Input
+                    type='number'
+                    name='kilos_brutos_1'
+                    className='py-3  col-span-3 w-56'
+                    value={formik.values.kilos_brutos_1}
+                    onChange={formik.handleChange}
+                    disabled={iotBruto ? true : false}
+                  /> : personalizacionData?.iot_balanza_recepcionmp == 'Automático' ? 
+                    <Input
+                      type='number'
+                      name='kilos_brutos_1'
+                      className='py-3  col-span-3 w-56'
+                      value={formik.values.kilos_brutos_1}
+                      readOnly={true}
+                      // disabled={true}
+                    /> 
+                     : null
+              }
+              {
+                listoIot_1 === false ?
+                <Button variant='outline' onClick={() => {setListoIot_1((prevState) => !prevState)}} icon='HeroArrowSmallRight'></Button> : <Button variant='outline' color={icono_1 ? 'emerald' : 'red'} onMouseLeave={() => {setIcono_1(true)}} onMouseEnter={() => {setIcono_1(false)}} onClick={() => {setListoIot_1((prevState) => !prevState)}} icon={icono_1 ? 'HeroCheck' : 'HeroXMark'}></Button>
+              }
+
+
+              {/* DEFAULT */}
+              {/* <Input
                 type='number'
                 name='kilos_brutos_1'
                 className='py-3  col-span-3 w-56'
@@ -223,7 +287,10 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               />
               <Switch
                 className='row-start-2 col-start-4 w-16 bg-slate-300'
-                onChange={() => setIotBruto(prev => !prev)} />
+                onChange={() => {
+                  setIotBruto(prev => !prev)
+                  // const client = mqtt.connect('mqtt://prodalmen.cl')
+                }} /> */}
             </div>
           </div>
 
@@ -237,19 +304,26 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
                       className='col-span-3'
                     >Kilos Brutos Acoplado</label>
                     <div className='row-start-2 flex gap-2 items-center'>
-                      <Input
-                        type='number'
-                        name='kilos_brutos_2'
-                        className='py-3 row-start-2 col-span-3 w-56'
-                        value={formik.values.kilos_brutos_2}
-                        onChange={formik.handleChange}
-                        disabled={iotBrutoAcoplado ? true : false}
-
-                      />
-                      <Switch
-                        className='row-start-2 col-start-4 w-16 bg-slate-300'
-                        onChange={() => setIotBrutoAcoplado(prev => !prev)} 
-                        />
+                    {
+                      personalizacionData?.iot_balanza_recepcionmp == 'Manual' ? 
+                        <Input
+                          type='number'
+                          name='kilos_brutos_1'
+                          className='py-3  col-span-3 w-56'
+                          value={formik.values.kilos_brutos_2}
+                          onChange={formik.handleChange}
+                          disabled={iotBruto ? true : false}
+                        /> : personalizacionData?.iot_balanza_recepcionmp == 'Automático' ? 
+                          <Input
+                            type='number'
+                            name='kilos_brutos_1'
+                            className='py-3  col-span-3 w-56'
+                            value={formik.values.kilos_brutos_2}
+                            readOnly={true}
+                            // disabled={true}
+                          /> 
+                          : null
+                    }
                     </div>
                     
                     </div>

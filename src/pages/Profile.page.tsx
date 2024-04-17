@@ -28,7 +28,7 @@ import Radio, { RadioGroup } from '../components/form/Radio';
 import useDarkMode from '../hooks/useDarkMode';
 import { TDarkMode } from '../types/darkMode.type';
 import toast from 'react-hot-toast';
-import { putPerfil } from '../api/perfil.api';
+import { putFotoPerfil, putPerfil } from '../api/perfil.api';
 import { putPersonalizacionPerfil } from '../api/personalizacion-perfil.api';
 import { putUser } from '../api/user.api';
 import SelectReact, { TSelectOptions } from '../components/form/SelectReact';
@@ -38,6 +38,13 @@ const options: TSelectOptions = [
 	{ value: '2022', label: '2022'},
 	{ value: '2021', label: '2021'}
 ];
+
+const options_balanza_recepcion: TSelectOptions = [
+	{ value: 'Manual', label: 'Manual'},
+	{ value: 'Automático', label: 'Automático'}
+]
+
+import fotoPerfil from '../assets/avatar/user6-thumb.png'
 
 // type TTab = {
 // 	text:
@@ -67,12 +74,14 @@ type TTab = {
 	text:
 		| 'Perfil'
 		| 'Personalización'
+		| 'Permisos'
 	icon: TIcons;
 };
 type TTabs = {
 	[key in
 		| 'PERFIL'
-		| 'PERSONALIZACION']: TTab;
+		| 'PERSONALIZACION'
+		| 'PERMISOS' ]: TTab;
 };
 
 const TAB: TTabs = {
@@ -84,6 +93,10 @@ const TAB: TTabs = {
 		text: 'Personalización',
 		icon: 'HeroSwatch',
 	},
+	PERMISOS: {
+		text: 'Permisos',
+		icon: 'HeroShieldExclamation'
+	}
 };
 
 const ProfilePage = () => {
@@ -125,7 +138,8 @@ const ProfilePage = () => {
 			cabecera: personalizacionData?.cabecera,
 			anio: personalizacionData?.anio,
 			direccion: perfilData?.direccion,
-			comuna: perfilData?.comuna
+			comuna: perfilData?.comuna,
+			iot_balanza_recepcionmp: personalizacionData?.iot_balanza_recepcionmp
 		},
 		onSubmit: async (values) => {
 			let put_valido = false
@@ -174,7 +188,6 @@ const ProfilePage = () => {
 		<PageWrapper name='pagina'>
 			<Subheader>
 				<SubheaderLeft>
-					
 					<Badge
 						color='blue'
 						variant='outline'
@@ -231,7 +244,7 @@ const ProfilePage = () => {
 										<div className='flex w-full gap-4'>
 											<div className='flex-shrink-0'>
 												<Avatar
-													// src={userData?.image?.thumb}
+													src={perfilData?.fotoperfil ? perfilData.fotoperfil : fotoPerfil}
 													className='!w-24'
 													// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 													// name={`${userData?.firstName} ${userData?.lastName}`}
@@ -250,8 +263,31 @@ const ProfilePage = () => {
 															id='fileUpload'
 															name='fileUpload'
 															type='file'
-															// onChange={formik.handleChange}
-															// value={formik.values.fileUpload}
+															onChange={async (e) => {
+																// console.log(e.target.files ? e.target.files[0] : '' )
+																if (e.target.files) {
+																	const put_perfil = await putFotoPerfil(e.target.files[0], authTokens?.access, perfilData.user.id)
+																	let valido = false
+																	if (put_perfil == 401) {
+																		const access = await refreshToken()
+																		if (access) {
+																			const put_perfil_v = await putFotoPerfil(e.target.files[0], access, perfilData.user.id)
+																			if (put_perfil_v == true) {
+																				valido = true
+																			}
+																		}
+																	} else if (put_perfil == true) {
+																		valido = true
+																	}
+																	if (valido) {
+																		toast.success('Cambio de Foto Correcto')
+																		location.reload()
+																	} else {
+																		toast.error('Error en el Cambio de Foto')
+																	}
+																}
+															}}
+															// defaultValue={perfilData?.fotoperfil ? perfilData.fotoperfil: ''}
 														/>
 													</div>
 												</div>
@@ -457,474 +493,6 @@ const ProfilePage = () => {
 										</div>
 									</>
 								)}
-								{/* {activeTab === TAB.SOCIAL && (
-									<>
-										<div className='text-4xl font-semibold'>Social</div>
-										<div className='grid grid-cols-12 gap-4'>
-											<div className='col-span-12'>
-												<Label htmlFor='twitter'>Twitter</Label>
-												<FieldWrap firstSuffix='https://twitter.com/'>
-													<Input
-														id='twitter'
-														name='twitter'
-														onChange={formik.handleChange}
-														value={formik.values.twitter}
-														placeholder='username'
-													/>
-												</FieldWrap>
-											</div>
-
-											<div className='col-span-12'>
-												<Label htmlFor='facebook'>Facebook</Label>
-												<FieldWrap firstSuffix='https://facebook.com/'>
-													<Input
-														id='facebook'
-														name='facebook'
-														onChange={formik.handleChange}
-														value={formik.values.facebook}
-														placeholder='username'
-													/>
-												</FieldWrap>
-											</div>
-
-											<div className='col-span-12'>
-												<Label htmlFor='instagram'>Instagram</Label>
-												<FieldWrap firstSuffix='https://instagram.com/'>
-													<Input
-														id='instagram'
-														name='instagram'
-														onChange={formik.handleChange}
-														value={formik.values.instagram}
-														placeholder='username'
-													/>
-												</FieldWrap>
-											</div>
-
-											<div className='col-span-12'>
-												<Label htmlFor='github'>GitHub</Label>
-												<FieldWrap firstSuffix='https://github.com/'>
-													<Input
-														id='github'
-														name='github'
-														onChange={formik.handleChange}
-														value={formik.values.github}
-														placeholder='username'
-													/>
-												</FieldWrap>
-											</div>
-										</div>
-									</>
-								)}
-								{activeTab === TAB.PASSWORD && (
-									<>
-										<div className='text-4xl font-semibold'>Password</div>
-										<div className='grid grid-cols-12 gap-4'>
-											<div className='col-span-12'>
-												<Label htmlFor='oldPassword'>Old Password</Label>
-												<FieldWrap
-													lastSuffix={
-														<Icon
-															className='mx-2'
-															icon={
-																passwordShowStatus
-																	? 'HeroEyeSlash'
-																	: 'HeroEye'
-															}
-															onClick={() => {
-																setPasswordShowStatus(
-																	!passwordShowStatus,
-																);
-															}}
-														/>
-													}>
-													<Input
-														type={
-															passwordShowStatus ? 'text' : 'password'
-														}
-														id='oldPassword'
-														name='oldPassword'
-														onChange={formik.handleChange}
-														value={formik.values.oldPassword}
-														autoComplete='current-password'
-													/>
-												</FieldWrap>
-											</div>
-											<div className='col-span-12'>
-												<Label htmlFor='newPassword'>New Password</Label>
-												<FieldWrap
-													lastSuffix={
-														<Icon
-															className='mx-2'
-															icon={
-																passwordNewShowStatus
-																	? 'HeroEyeSlash'
-																	: 'HeroEye'
-															}
-															onClick={() => {
-																setPasswordNewShowStatus(
-																	!passwordNewShowStatus,
-																);
-															}}
-														/>
-													}>
-													<Input
-														type={
-															passwordNewShowStatus
-																? 'text'
-																: 'password'
-														}
-														id='newPassword'
-														name='newPassword'
-														onChange={formik.handleChange}
-														value={formik.values.newPassword}
-														autoComplete='new-password'
-													/>
-												</FieldWrap>
-											</div>
-											<div className='col-span-12'>
-												<Label htmlFor='newPasswordConfirmation'>
-													New Password Confirmation
-												</Label>
-												<FieldWrap
-													lastSuffix={
-														<Icon
-															className='mx-2'
-															icon={
-																passwordNewConfShowStatus
-																	? 'HeroEyeSlash'
-																	: 'HeroEye'
-															}
-															onClick={() => {
-																setPasswordNewConfShowStatus(
-																	!passwordNewConfShowStatus,
-																);
-															}}
-														/>
-													}>
-													<Input
-														type={
-															passwordNewConfShowStatus
-																? 'text'
-																: 'password'
-														}
-														id='newPasswordConfirmation'
-														name='newPasswordConfirmation'
-														onChange={formik.handleChange}
-														value={
-															formik.values.newPasswordConfirmation
-														}
-														autoComplete='new-password'
-													/>
-												</FieldWrap>
-											</div>
-										</div>
-									</>
-								)}
-								{activeTab === TAB['2FA'] && (
-									<>
-										<div className='text-4xl font-semibold'>2FA</div>
-										<div className='flex flex-wrap divide-y divide-dashed divide-zinc-500/50 [&>*]:py-4'>
-											<div className='flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<div className='w-full text-xl font-semibold'>
-														Authenticator App
-													</div>
-												</div>
-												<div className='flex-shrink-0'>
-													<Button
-														variant='outline'
-														isDisable={!formik.values.twoFactorAuth}>
-														Set up
-													</Button>
-												</div>
-											</div>
-											<div className='flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<div className='w-full text-xl font-semibold'>
-														Security Keys
-													</div>
-												</div>
-												<div className='flex-shrink-0'>
-													<Button
-														color='red'
-														className='!px-0'
-														isDisable={!formik.values.twoFactorAuth}>
-														Deactivate
-													</Button>
-												</div>
-											</div>
-											<div className='flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<div className='w-full text-xl font-semibold'>
-														Telephone Number
-													</div>
-												</div>
-												<div className='flex flex-shrink-0 items-center gap-4'>
-													<span className='text-zinc-500'>
-														{userData?.phone}
-													</span>
-													<Button
-														variant='outline'
-														color='zinc'
-														isDisable={!formik.values.twoFactorAuth}>
-														Edit
-													</Button>
-												</div>
-											</div>
-										</div>
-									</>
-								)}
-								{activeTab === TAB.NEWSLETTER && (
-									<>
-										<div className='text-4xl font-semibold'>Newsletter</div>
-										<div className='flex flex-wrap divide-y divide-dashed divide-zinc-500/50 [&>*]:py-4'>
-											<div className='flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<Label
-														htmlFor='weeklyNewsletter'
-														className='!mb-0'>
-														<div className='text-xl font-semibold'>
-															Weekly newsletter
-														</div>
-														<div className='text-zinc-500'>
-															Get notified about articles, discounts
-															and new products.
-														</div>
-													</Label>
-												</div>
-												<div className='flex flex-shrink-0 items-center'>
-													<Checkbox
-														variant='switch'
-														id='weeklyNewsletter'
-														name='weeklyNewsletter'
-														onChange={formik.handleChange}
-														checked={formik.values.weeklyNewsletter}
-													/>
-												</div>
-											</div>
-											<div className='flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<Label
-														htmlFor='lifecycleEmails'
-														className='!mb-0'>
-														<div className='text-xl font-semibold'>
-															Lifecycle emails
-														</div>
-														<div className='text-zinc-500'>
-															Get personalized offers and emails based
-															on your activity.
-														</div>
-													</Label>
-												</div>
-												<div className='flex flex-shrink-0 items-center'>
-													<Checkbox
-														variant='switch'
-														id='lifecycleEmails'
-														name='lifecycleEmails'
-														onChange={formik.handleChange}
-														checked={formik.values.lifecycleEmails}
-													/>
-												</div>
-											</div>
-											<div className='flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<Label
-														htmlFor='promotionalEmails'
-														className='!mb-0'>
-														<div className='text-xl font-semibold'>
-															Promotional emails
-														</div>
-														<div className='text-zinc-500'>
-															Get personalized offers and emails based
-															on your orders & preferences.
-														</div>
-													</Label>
-												</div>
-												<div className='flex flex-shrink-0 items-center'>
-													<Checkbox
-														variant='switch'
-														id='promotionalEmails'
-														name='promotionalEmails'
-														onChange={formik.handleChange}
-														checked={formik.values.promotionalEmails}
-													/>
-												</div>
-											</div>
-											<div className='flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<Label
-														htmlFor='productUpdates'
-														className='!mb-0'>
-														<div className='text-xl font-semibold'>
-															Product updates
-														</div>
-														<div className='text-zinc-500'>
-															Checking this will allow us to notify
-															you when we make updates to products you
-															have downloaded/purchased.
-														</div>
-													</Label>
-												</div>
-												<div className='flex flex-shrink-0 items-center'>
-													<Checkbox
-														variant='switch'
-														id='productUpdates'
-														name='productUpdates'
-														onChange={formik.handleChange}
-														checked={formik.values.productUpdates}
-													/>
-												</div>
-											</div>
-										</div>
-									</>
-								)}
-								{activeTab === TAB.SESSIONS && (
-									<>
-										<div className='text-4xl font-semibold'>Newsletter</div>
-										<div className='flex flex-wrap divide-y divide-dashed divide-zinc-500/50 [&>*]:py-4'>
-											<div className='group flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<div>
-														<div className='text-xl font-semibold'>
-															Chrome
-														</div>
-														<div className='text-zinc-500'>
-															MacOS 13.4.1
-														</div>
-													</div>
-													<Button
-														className='invisible group-hover:visible'
-														color='red'>
-														Delete
-													</Button>
-												</div>
-												<div className='flex flex-shrink-0 items-center gap-4'>
-													<Icon icon='CustomUSA' size='text-3xl' />
-													<Badge
-														variant='outline'
-														rounded='rounded-full'
-														className='border-transparent'>
-														3 hours ago
-													</Badge>
-												</div>
-											</div>
-											<div className='group flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<div>
-														<div className='text-xl font-semibold'>
-															Safari
-														</div>
-														<div className='text-zinc-500'>
-															MacOS 13.4.1
-														</div>
-													</div>
-													<Button
-														className='invisible group-hover:visible'
-														color='red'>
-														Delete
-													</Button>
-												</div>
-												<div className='flex flex-shrink-0 items-center gap-4'>
-													<Icon icon='CustomUSA' size='text-3xl' />
-													<Badge
-														variant='outline'
-														rounded='rounded-full'
-														className='border-transparent'>
-														1 day ago
-													</Badge>
-												</div>
-											</div>
-											<div className='group flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<div>
-														<div className='text-xl font-semibold'>
-															App
-														</div>
-														<div className='text-zinc-500'>
-															iOS 16.5.1
-														</div>
-													</div>
-													<Button
-														className='invisible group-hover:visible'
-														color='red'>
-														Delete
-													</Button>
-												</div>
-												<div className='flex flex-shrink-0 items-center gap-4'>
-													<Icon icon='CustomUSA' size='text-3xl' />
-													<Badge
-														variant='outline'
-														rounded='rounded-full'
-														className='border-transparent'>
-														3 days ago
-													</Badge>
-												</div>
-											</div>
-											<div className='group flex basis-full gap-4'>
-												<div className='flex grow items-center'>
-													<div>
-														<div className='text-xl font-semibold'>
-															Safari
-														</div>
-														<div className='text-zinc-500'>
-															iPadOS 16.5.1
-														</div>
-													</div>
-													<Button
-														className='invisible group-hover:visible'
-														color='red'>
-														Delete
-													</Button>
-												</div>
-												<div className='flex flex-shrink-0 items-center gap-4'>
-													<Icon icon='CustomUSA' size='text-3xl' />
-													<Badge
-														variant='outline'
-														rounded='rounded-full'
-														color='red'
-														className='border-transparent'>
-														Expired
-													</Badge>
-												</div>
-											</div>
-										</div>
-									</>
-								)}
-								{activeTab === TAB.CONNECTED && (
-									<>
-										<div className='text-4xl font-semibold'>Connected</div>
-										<div className='flex flex-wrap divide-y divide-dashed divide-zinc-500/50 [&>*]:py-4'>
-											{userData?.socialAuth &&
-												Object.keys(userData?.socialAuth).map((i) => {
-													// @ts-ignore
-													// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-													const status = userData?.socialAuth[i];
-													return (
-														<div
-															key={i}
-															className='flex basis-full gap-4'>
-															<div className='flex grow items-center'>
-																<div className='text-xl font-semibold capitalize'>
-																	{i}
-																</div>
-															</div>
-															<div className='flex flex-shrink-0 items-center gap-4'>
-																<Button
-																	icon={
-																		status
-																			? 'HeroTrash'
-																			: 'HeroCog8Tooth'
-																	}
-																	color={status ? 'red' : 'blue'}>
-																	{status ? 'Delete' : 'Set up'}
-																</Button>
-															</div>
-														</div>
-													);
-												})}
-										</div>
-									</>
-								)} */}
 								{activeTab === TAB.PERSONALIZACION && (
 									<>
 										<div className='text-4xl font-semibold'>Personalización</div>
@@ -937,7 +505,7 @@ const ProfilePage = () => {
 														value='dark'
 														selectedValue={formik.values.estilo}
 														onChange={formik.handleChange}
-														>
+													>
 														<div className='relative'>
 															<div className='flex h-2 w-full items-center gap-1 bg-zinc-500 p-1'>
 																<div className='h-1 w-1 rounded-full bg-red-500' />
@@ -989,6 +557,24 @@ const ProfilePage = () => {
 											</div>
 										</div>
 									</>
+								)}
+								{activeTab === TAB.PERMISOS && (
+									<>
+									<div className='text-4xl font-semibold'>Permisos</div>
+									<div className='grid grid-cols-12 gap-4'>
+										<div className="col-span-12">
+											<Label htmlFor='iot_balanza_recepcionmp'>Balanza Recepcion MP</Label>
+											<SelectReact
+												placeholder="Balanza Recepcion MP"
+												options={options_balanza_recepcion}
+												id='iot_balanza_recepcionmp'
+												name='iot_balanza_recepcionmp'
+												value={{value: formik.values.iot_balanza_recepcionmp, label: formik.values.iot_balanza_recepcionmp}}
+												onChange={(value: any) => formik.setFieldValue('iot_balanza_recepcionmp', value.value)}
+											/>
+										</div>
+									</div>
+								</>
 								)}
 							</div>
 						</div>
