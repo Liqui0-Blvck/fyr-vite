@@ -23,15 +23,16 @@ const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row, id_lote }) => {
   const { authTokens, validate, perfilData, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
+
+  console.log(row)
   
-  console.log(row?.estado_envase_label)
 
   return (
     <>
       <TableCell className='table-cell-row-detail-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center py-2'>
           <Tooltip text={`${row?.id!}`}>
-            <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{id_lote}</span>
+            <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_lote}</span>
           </Tooltip>
         </div>
       </TableCell>

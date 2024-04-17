@@ -96,7 +96,7 @@ const DefaultAsideTemplate = () => {
 							<NavItem {...appPages.produccion.subPages.p_produccion} />
 							<NavItem {...appPages.produccion.subPages.reproceso} />
 
-							<NavCollapse
+							{/* <NavCollapse
 								text={appPages.produccion.subPages.seleccion.text}
 								to={'seleccion'}
 								icon={appPages.produccion.icon}
@@ -104,7 +104,7 @@ const DefaultAsideTemplate = () => {
 								<NavItem {...appPages.produccion.subPages.seleccion.subPages.programa_seleccion} />
 								<NavItem {...appPages.produccion.subPages.seleccion.subPages.bins_subproducto} />
 								<NavItem {...appPages.produccion.subPages.seleccion.subPages.bins_subproducto_operario} />
-							</NavCollapse>
+							</NavCollapse> */}
 					</NavCollapse>
 
 					{

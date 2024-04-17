@@ -112,7 +112,10 @@ const DetalleCC = () => {
   const contra_muestra_ok = cc_rendimiento?.some(cc => cc.cc_ok === true && cc.es_contramuestra === true)
   const contra_muestra_calibre_ok = cc_rendimiento?.some(cc => cc.cc_calibrespepaok === true && cc.es_contramuestra === true)
 
+  console.log(cc_rendimiento?.length)
 
+
+  console.log("soy el numero de lote", control_calidad?.numero_lote)
 
   return (
     <div className={`flex flex-col md:grid md:grid-rows-6 gap-x-3 h-full w-[95%] mx-auto
@@ -237,15 +240,15 @@ const DetalleCC = () => {
         <div className='flex items-center justify-between px-8'>
           <div className='w-72'>
             {
-              cc_rendimiento?.length! < 2 && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP', 'Administrador')
+              cc_rendimiento?.length! <= 2 && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP', 'Administrador')
                 ? (
                     <ModalRegistro
                       open={openModalRegistro}
                       setOpen={setOpenModalRegistro}
-                      title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote} `}
+                      title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote!}  `}
                       textTool='Editar'
                       size={900}
-                      width={`w-40 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                      width={`w-40 px-1 h-12 dark:bg-[#3B82F6] hover:bg-[#3b83f6cd] bg-[#3B82F6] text-white hover:scale-105`}
                       textButton='Agregar Muestra'
                     >
                       <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro} control_calidad={control_calidad!}/>
@@ -256,7 +259,7 @@ const DetalleCC = () => {
                       <ModalRegistro
                         open={openModalRegistro}
                         setOpen={setOpenModalRegistro}
-                        title={`Contra Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote} `}
+                        title={`Contra Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote!} `}
                         textTool='Contra Muestra'
                         size={900}
                         width={`w-56 px-1 h-12 ${isDarkTheme ? 'bg-orange-700 hover:bg-orange-600' : 'bg-orange-700 text-white'} hover:scale-105`}
@@ -272,16 +275,16 @@ const DetalleCC = () => {
 
 
           {
-            cc_rendimiento?.length! >= 2  && !cc_rendimiento?.some(cc => cc.cc_calibrespepaok === true)
+            cc_rendimiento?.length! >= 2  && cc_rendimiento?.every(cc => cc.cc_calibrespepaok !== true)
               ? (
                 <div className='w-72'>
                   <ModalRegistro
                     open={openModalCPepaCalibre}
                     setOpen={setOpenModalCPepaCalibre}
-                    title={`Muestra Control de Rendimiento del Lote N° `}
+                    title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote}`}
                     textTool='CC Pepas Muestras'
-                    size={800}
-                    width={`w-full px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                    size={900}
+                    width={`w-full px-2 h-12 dakr:bg-[#3B82F6] hover:bg-[#3b83f6cd] bg-[#3B82F6] text-white hover:scale-105`}
                     textButton='Calibrar Muestras'
                   >
                     <ModalConfirmacion 
@@ -304,9 +307,9 @@ const DetalleCC = () => {
                 <ModalRegistro
                   open={openModalCPepaCalibre}
                   setOpen={setOpenModalCPepaCalibre}
-                  title={`Muestra Control de Rendimiento del Lote N° `}
+                  title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote}`}
                   textTool='CC Pepas Muestras'
-                  size={800}
+                  size={900}
                   width={`w-full px-1 h-12 ${isDarkTheme ? 'bg-orange-600 hover:bg-orange-500' : 'bg-orange-600 text-white'} hover:scale-105`}
                   textButton='Calibrar Contra Muestra'
                 >

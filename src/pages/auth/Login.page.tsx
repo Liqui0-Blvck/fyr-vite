@@ -125,7 +125,7 @@ const LoginPage = () => {
 						</div>
 						<div>
 							<Button
-
+								
 								size='lg'
 								variant='solid'
 								className='w-full font-semibold'

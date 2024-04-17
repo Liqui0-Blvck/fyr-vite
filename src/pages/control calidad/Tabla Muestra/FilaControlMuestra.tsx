@@ -130,7 +130,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
                 <ModalRegistro
                   open={openModalCCPepa}
                   setOpen={setOpenModalCCPepa}
-                  title={`Muestra Control de Rendimiento del Lote N° `}
+                  title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote}`}
                   textTool='CC Pepas Muestras'
                   size={ccPepaConfirmacion ? 900 : 500}
                   width={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
@@ -158,12 +158,12 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
             </Tooltip>
 
             {
-              cargolabels(perfilData).includes('CDC Jefatura', 'Administrador') && row?.es_contramuestra
+              cargolabels(perfilData).includes('CDC Jefatura', 'Administrador') && !row?.es_contramuestra
                 ? (
                   <ModalRegistro
                     open={openConfirmacion}
                     setOpen={setOpenConfirmacion}
-                    title={`Muestra Control de Rendimiento del Lote N° ${row?.cc_recepcionmp}`}
+                    title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote}`}
                     textTool='Eliminar Muestra'
                     size={500}
                     width={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-red-800 hover:bg-red-700' : 'bg-red-800 hover:bg-red-700 text-white'} hover:scale-105`}

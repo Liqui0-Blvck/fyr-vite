@@ -36,17 +36,14 @@ function validarRutB(rut: string) {
 
 export const headerGuiaRegistroSchema = Yup.object().shape({
   estado_recepcion: Yup.string().nullable(),
-  mezcla_variedades: Yup.boolean().required(),
-  cierre_guia: Yup.boolean().required(),
+  mezcla_variedades: Yup.boolean().required('Mezcla variedades es requerido!'),
   tara_camion_1: Yup.number().nullable(),
   tara_camion_2: Yup.number().nullable(),
-  terminar_guia: Yup.boolean().required(),
-  numero_guia_productor: Yup.string().required(),
-  creado_por: Yup.string().nullable(),
-  comercializador: Yup.string().nullable().required(),
-  productor: Yup.string().nullable().required(),
-  camionero: Yup.string().nullable().required(),
-  camion: Yup.string().nullable().required(),
+  numero_guia_productor: Yup.string().nullable(),
+  comercializador: Yup.string().nullable().required('Comercializador es requerido!'),
+  productor: Yup.string().nullable().required('El productor es requerido!'),
+  camionero: Yup.string().nullable().required('El Chofer es requerido!'),
+  camion: Yup.string().nullable().required('El Camión es requerido!'),
 });
 
 

@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 import { DateRange, Range } from 'react-date-range';
 import colors from 'tailwindcss/colors';
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 interface IInformeProduccion {
   setOpen: Dispatch<SetStateAction<boolean>>
@@ -40,29 +41,28 @@ const FormularioResumen: FC<IInformeProduccion> = ({ setOpen }) => {
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/prueba`, {
+        const res = await fetch(`${base_url}/api/produccion/pdf_operario_resumido/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
-            ...values,
             desde: state[0].startDate,
             hasta: state[0].endDate
           })
-        })
-
+        });
+  
         if (res.ok){
-          console.log("Nos fue bien")
-          if (values.tipo_informe === '1'){
-            navigate('/app/pdf-pre-limpia/')
-          } else {
-            navigate('/app/pdf-descascarado/')
-          }
+          toast.success("Generado correctamente")
+          const data = await res.json();
+          navigate('/app/pdf-operario-resumido/', { state: { produccion: data, desde: state[0].startDate, hasta: state[0].endDate }});
+        } else {
+          const errorData = await res.json();
+          toast.error(errorData.message);
         }
-      } catch (error) {
-        console.log("Algo ocurrio")
+      } catch (error: any) {
+        toast.error(error.message);
       }
     }
   })

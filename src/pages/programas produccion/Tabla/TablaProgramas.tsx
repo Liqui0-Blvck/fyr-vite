@@ -223,7 +223,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 				<div className='font-bold truncate'>
 					<Tooltip title='Rendimiento CDC'>
 						<Link to={`/app/proyeccion-rendimiento/${info.row.original.id}/`}>
-							<button className='w-full rounded-md h-12 bg-zinc-300 flex items-center justify-center p-2'>
+							<button className='w-full px-5 rounded-md h-12 bg-zinc-300 flex items-center justify-center p-2'>
 								<p className='text-black m-0'>Rendimiento CDC</p>
 							</button>
 						</Link>

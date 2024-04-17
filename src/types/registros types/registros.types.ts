@@ -455,6 +455,7 @@ export interface TEnvasePatio {
   numero_bin: number;
   guia_patio: number;
   estado_envase_label: string
+  numero_lote: number
 }
 
 

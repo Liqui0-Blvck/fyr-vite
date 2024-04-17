@@ -175,87 +175,12 @@ const styles = StyleSheet.create({
 })
 
 const PDFResumidoOperarios = () => {
-  const { pathname } = useLocation()
+  const { pathname, state } = useLocation()
   const id = urlNumeros(pathname)
-  const { authTokens, validate } = useAuth()
-
-  const { data: guia } = useAuthenticatedFetch<TGuia>(
-    authTokens,
-    validate,
-    `/api/recepcionmp/${id[0]}`
-  )
-
-  const { data: usuario } = useAuthenticatedFetch<TPerfil>(
-    authTokens,
-    validate,
-    `/api/registros/perfil/${guia?.creado_por}`
-  )
-
-  const { data: productor } = useAuthenticatedFetch<TProductor>(
-    authTokens,
-    validate,
-    `/api/productores/${guia?.productor}`
-  )
-
-  const { data: envases } = useAuthenticatedFetch<TEnvases[]>(
-    authTokens,
-    validate,
-    `/api/envasesmp/`
-  )
-
-  const { data: camionero } = useAuthenticatedFetch<TConductor>(
-    authTokens,
-    validate,
-    `/api/registros/choferes/${guia?.camionero}`
-  )
-
-  const { data: camion } = useAuthenticatedFetch<TCamion>(
-    authTokens,
-    validate,
-    `/api/registros/camiones/${guia?.camion}`
-  )
-
-  console.log(envases)
-  console.log(guia)
-  console.log(usuario)
-  console.log(productor)
-  console.log(camionero)
-  console.log(camion)
-
-  const kilos_brutos_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_brutos_1
-  })
-  const kilos_brutos_2 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_brutos_2
-  })
-  const kilos_tara_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_tara_1
-  })
-  const kilos_tara_2 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_tara_2
-  })
-
+  const { authTokens, validate, perfilData } = useAuth()
+  const hoy = new Date()
+  console.log(state)
   
-  const kilos_fruta = guia?.lotesrecepcionmp.map((row: TLoteGuia) => {
-    const kilos_total_envases = 
-      row.envases.map((envase_lote) => {
-      const envaseTotal = envases?.
-      filter(envase => envase.id === envase_lote.envase).
-      reduce((acumulador, envase) => acumulador + (envase_lote.cantidad_envases * envase.peso), 0)
-      return envaseTotal;
-      })
-
-      return kilos_total_envases[0]
-  })
-  console.log(kilos_fruta)
-
-  const kilo_fruta_neta_final = (Number(kilos_brutos_1) + Number(kilos_brutos_2)) - (Number(kilos_tara_1) + Number(kilos_tara_2)) - Number(kilos_fruta)
-  const kilos_brutos = Number(kilos_brutos_1) + Number(kilos_brutos_2)
-  const kilos_tara = Number(kilos_tara_1) + Number(kilos_tara_2) 
-  console.log(kilos_tara)
-  console.log(kilos_brutos)
-  console.log(kilo_fruta_neta_final)
-      
   return (
     <PDFViewer style={{ height: '100%'}}>
       <Document>
@@ -267,22 +192,20 @@ const PDFResumidoOperarios = () => {
             </View>
 
             <Text style={{ width: 220, textAlign: 'center', fontSize: 14, position: 'relative', left: 18, top: 10}}>
-            Informe Resumido Operarios en Producción
-              del día 01 de Marzo del 2024
-              Hasta el 30 de Marzo del 2024
+              {`Informe Resumido Operarios en Producción del ${format(state.desde, { date: 'long' }, 'es' )}
+              Hasta el ${format(state.hasta, { date: 'long' }, 'es' )}`}
             </Text>
 
-            <View style={{ width: 150, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -10 }}>
+            <View style={{ width: 150, border: '1px solid green', height: 32, padding: 5, borderRadius: 2, position: 'relative', top: -10 }}>
 
               <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Generado el {}</Text>
-                <Text style={styles.header_date_info_text}>{}</Text>
+                <Text style={styles.header_date_info_text}>Generado el {format(hoy, { date: 'short', time: 'short'}, 'es' )}</Text>
               </View>
 
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Creado Por: </Text>
 
-                <Text style={styles.header_date_info_text}>{usuario?.user.username}</Text>
+                <Text style={styles.header_date_info_text}>{perfilData?.user.first_name! || perfilData?.user.username!}</Text>
               </View>
             </View>
           </View>
@@ -316,24 +239,19 @@ const PDFResumidoOperarios = () => {
           </View>
 
           {
-            guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
+            state.produccion.operario_produccion.map((operario) => {
+              const pago_x_operario = state.produccion.operario_info.map((operario) => ({
+                id: operario.id,
+                pago_x_kilo: operario.pago_x_kilo
+              })).find(info => info.id === operario.id)
 
-              const envase_lote = lote.envases.map((envase: any) => {
-                return envases?.find(envase_ => envase_.id === envase.id)
-              })
+              console.log(operario)
+              console.log(pago_x_operario)
 
-              const cantidad = lote.envases.map((lote) => {
-                return lote.cantidad_envases
-              })
+              const pago_operario_neto = operario.kilos * pago_x_operario.pago_x_kilo
 
-              const variedad = lote.envases.map((lote) => {
-                return lote.variedad
-              })
-
-              const variedad_lote = variedadFilter.find(variety => variety.value === String(variedad))?.label
-            
-
-              const kilo_fruta_neto = (lote.kilos_brutos_1 + lote.kilos_brutos_2) - (lote.kilos_tara_1) + lote.kilos_tara_2
+              console.log(pago_operario_neto)
+             
 
               
               return (
@@ -346,28 +264,17 @@ const PDFResumidoOperarios = () => {
                   }}>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{lote.numero_lote}</Text>
+                   <Text style={{ fontSize: 10}}>{operario.nombres}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 10}}>{envase_lote.map((envase) => envase?.nombre)}</Text>
+                    <Text style={{ fontSize: 10}}>{operario.kilos}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{cantidad}</Text>
+                   <Text style={{ fontSize: 10}}>{pago_operario_neto}</Text>
                   </View>
-      
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{envase_lote.map(envase => envase?.peso)} kgs</Text>
-                  </View>
-      
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{kilo_fruta_neta_final} kgs</Text>
-                  </View>
-      
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{variedad_lote}</Text>
-                  </View>
+
                 </View>
               )
             })

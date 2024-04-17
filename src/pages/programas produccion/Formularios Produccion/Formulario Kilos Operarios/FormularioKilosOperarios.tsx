@@ -15,6 +15,7 @@ import colors from 'tailwindcss/colors';
 import { useNavigate } from 'react-router-dom'
 import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
 import { TOperarioProduccion } from '../../../../types/registros types/registros.types'
+import toast from 'react-hot-toast'
 
 interface IInformeProduccion {
   setOpen: Dispatch<SetStateAction<boolean>>
@@ -65,17 +66,20 @@ const FormularioKilosOperarios: FC<IInformeProduccion> = ({ setOpen }) => {
             desde: state[0].startDate,
             hasta: state[0].endDate
           })
-        })
-
+        });
+  
         if (res.ok){
-          const data = await res.json()
-          navigate('/app/pdf-operario-x-kilo/', { state: { produccion: data }})
+          const data = await res.json();
+          navigate('/app/pdf-operario-x-kilo/', { state: { produccion: data, desde: state[0].startDate, hasta: state[0].endDate }});
+        } else {
+          const errorData = await res.json();
+          toast.error(errorData.message);
         }
-      } catch (error) {
-        console.log("Algo ocurrio")
+      } catch (error: any) {
+        toast.error(error.message);
       }
     }
-  })
+  });
 
   console.log(formik.values)
   

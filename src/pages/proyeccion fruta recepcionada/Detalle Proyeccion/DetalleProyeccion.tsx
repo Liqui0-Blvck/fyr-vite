@@ -109,7 +109,7 @@ const DetalleProyeccion = () => {
             </div>
           </SubheaderRight>
 				</Subheader>
-				<Container>
+				<Container breakpoint={null} className='w-full'>
 					<div className='grid grid-cols-12 gap-4'>
 						<div className='col-span-12 2xl:col-span-8 h-[500px]'>
               {
