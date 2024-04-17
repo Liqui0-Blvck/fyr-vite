@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SetStateAction, useState } from 'react'
 import Label from '../../../../components/form/Label'
-import SelectReact from '../../../../components/form/SelectReact'
+import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import Validation from '../../../../components/form/Validation'
 import FieldWrap from '../../../../components/form/FieldWrap'
 import { useFormik } from 'formik'
@@ -13,6 +13,8 @@ import dayjs from 'dayjs'
 import { DateRange, Range } from 'react-date-range';
 import colors from 'tailwindcss/colors';
 import { useNavigate } from 'react-router-dom'
+import { useAuthenticatedFetch } from '../../../../hooks/useAxiosFunction'
+import { TOperarioProduccion } from '../../../../types/registros types/registros.types'
 
 interface IInformeProduccion {
   setOpen: Dispatch<SetStateAction<boolean>>
@@ -30,18 +32,29 @@ const FormularioKilosOperarios: FC<IInformeProduccion> = ({ setOpen }) => {
 		},
 	]);
 
-  console.log("estados del rango de tiempo", state[0])
+  const { data: operarios } = useAuthenticatedFetch<TOperarioProduccion[]>(
+    authTokens,
+    validate,
+    `/api/registros/operarios`
+  )
+
+  console.log(operarios)
+
+  const optionOperarios: TSelectOptions = operarios?.map((operario) => ({
+    value: String(operario.id),
+    label: `${operario.nombre} ${operario.apellido}`
+  })) ?? []
 
 
   const formik = useFormik({
     initialValues: {
-      tipo_informe: '',
+      operario: '',
       desde: '',
       hasta: ''
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/prueba`, {
+        const res = await fetch(`${base_url}/api/produccion/pdf_operarios/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -55,12 +68,8 @@ const FormularioKilosOperarios: FC<IInformeProduccion> = ({ setOpen }) => {
         })
 
         if (res.ok){
-          console.log("Nos fue bien")
-          if (values.tipo_informe === '1'){
-            navigate('/app/pdf-pre-limpia/')
-          } else {
-            navigate('/app/pdf-descascarado/')
-          }
+          const data = await res.json()
+          navigate('/app/pdf-operario-x-kilo/', { state: { produccion: data }})
         }
       } catch (error) {
         console.log("Algo ocurrio")
@@ -75,7 +84,7 @@ const FormularioKilosOperarios: FC<IInformeProduccion> = ({ setOpen }) => {
       <form className='flex flex-col gap-y-5' onSubmit={formik.handleSubmit}>
         <div className='flex flex-col md:flex-row lg:flex-row gap-10'>
           <div className='w-full'>
-            <Label htmlFor='tipo_informe'>Activo: </Label>
+            <Label htmlFor='operarios'>Operarios: </Label>
                   
               <Validation
               isValid={formik.isValid}
@@ -84,13 +93,13 @@ const FormularioKilosOperarios: FC<IInformeProduccion> = ({ setOpen }) => {
               validFeedback='Good'>
               <FieldWrap>
                 <SelectReact
-                  options={tipo_informe}
-                  id='tipo_informe'
+                  options={optionOperarios}
+                  id='operario'
                   placeholder='Selecciona un opción'
-                  name='tipo_informe'
+                  name='operario'
                   className='h-12'
                   onChange={(value: any) => {
-                    formik.setFieldValue('tipo_informe', value.value)
+                    formik.setFieldValue('operario', value.value)
                   }}
                 />
               </FieldWrap>

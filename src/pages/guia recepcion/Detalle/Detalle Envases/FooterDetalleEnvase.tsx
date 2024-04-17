@@ -90,7 +90,7 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {loteEnGuia && loteEnGuia.envases.map((row: TEnvaseEnGuia) => {
+              {loteEnGuia?.envases.map((row: TEnvaseEnGuia) => {
                 const nombre_envase = envases?.find(envaseList => envaseList.id === row.envase)?.nombre
                 const nombre_variedad = variedadFilter.find(variedad => variedad.value === row.variedad)?.label;
                 const nombre_producto = tipoFrutaFilter.find(producto => producto.value === row.tipo_producto)?.label

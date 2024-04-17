@@ -1,15 +1,9 @@
-import { useFormik } from 'formik'
-import Input from '../../../components/form/Input'
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
-import { TIPO_ACOPLADO } from '../../../utils/select.constanst'
-import Textarea from '../../../components/form/Textarea'
-import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+import { useState } from 'react'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TCamion, TControlCalidad, TControlCalidadB, TEnvaseEnGuia, TEnvases, TFotosCC, TGuia, TLoteGuia, TPerfil, TProductor, TRendimientoMuestra } from '../../../types/registros types/registros.types'
+import {  TControlCalidadB, TEnvases, TFotosCC, TGuia, TLoteGuia, TPerfil, TProductor, TRendimientoMuestra } from '../../../types/registros types/registros.types'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
 import { format } from '@formkit/tempo'
@@ -20,7 +14,6 @@ import ModalRegistro from '../../../components/ModalRegistro'
 import FormularioCCRendimiento from '../Formulario CC Rendimiento/FormularioCCRendimiento'
 import ModalConfirmacion from '../../../components/ModalConfirmacion'
 import FormularioCCPepaCalibre from '../Formulario Calibres/FormularioCalibres'
-import { FaPlus } from 'react-icons/fa6'
 import { cargolabels } from '../../../utils/generalUtils'
 
 
@@ -84,15 +77,20 @@ const DetalleCC = () => {
       return envaseTotal;
       }).reduce((acumulador, pesoTotal) => acumulador! + pesoTotal!, 0)
     return row.kilos_brutos_1 + row.kilos_brutos_2 - row?.kilos_tara_1 - row?.kilos_tara_2 - kilos_total_envases!;
-  })
+  })?.shift()
+
 
   const variedad = guia_recepcion?.lotesrecepcionmp.flatMap((row: TLoteGuia) => {
     const variedad_row = row.envases.map((envase) => {
         const variedd = variedadFilter.find(variedad => variedad.value === envase.variedad);
-        return variedd?.label;
+        return variedd?.label
         });
         return variedad_row;
-    }).join(', ')
+    })
+
+  const variedadSinRepetir = [...new Set(variedad)].join(', ');
+
+  console.log(variedadSinRepetir)
 
   const tipo_producto = guia_recepcion?.lotesrecepcionmp.flatMap((row: TLoteGuia) => {
     const variedad_row = row.envases.map((envase) => {
@@ -100,7 +98,7 @@ const DetalleCC = () => {
         return producto?.label;
         });
         return variedad_row;
-    }).join(', ')
+    })?.shift()
 
 
   const muestrasCompletas = cc_rendimiento?.
@@ -113,12 +111,6 @@ const DetalleCC = () => {
   const contra_muestras_limit = cc_rendimiento?.filter(cc => cc.es_contramuestra === true).length
   const contra_muestra_ok = cc_rendimiento?.some(cc => cc.cc_ok === true && cc.es_contramuestra === true)
   const contra_muestra_calibre_ok = cc_rendimiento?.some(cc => cc.cc_calibrespepaok === true && cc.es_contramuestra === true)
-  console.log(contra_muestras_limit)
-  console.log("Si soy una contra muestra completada", contra_muestra_ok)
-  console.log("Si soy una contra muestra calibrada", contra_muestra_calibre_ok)
-  
-
-  // console.log(cc_rendimiento)
 
 
 
@@ -173,9 +165,9 @@ const DetalleCC = () => {
             </div>
             
             <div className='h-full'>
-              <label htmlFor="rut_productor">Variedad: </label>
+              <label htmlFor="rut_productor">Variedades: </label>
               <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
-                <span className='text-xl'>{variedad}</span>
+                <span className='text-xl'>{variedadSinRepetir}</span>
               </div>
             </div>
 

@@ -140,7 +140,8 @@ const DetalleGuia = () => {
     const res = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}` 
       },
       body: JSON.stringify({
         estado_recepcion: 4
@@ -313,7 +314,7 @@ const DetalleGuia = () => {
                     ? (
                       <ModalRegistro
                         open={open || false}
-                        setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpen(prev => (!prev))}
+                        setOpen={setOpen}
                         title={'Finalizar Guía'}
                         textTool='Detalle'
                         size={450}
@@ -322,11 +323,12 @@ const DetalleGuia = () => {
                         
                       >
                         <ModalConfirmacion 
-                          id={id[0]}
-                          confirmacion={confirmacion}
-                          setConfirmacion={setConfirmacion}
-                          setOpen={setOpen}
-                          refresh={setRefresh} />
+                            id={id[0]}
+                            mensaje='¿Quieres Finalizar La Guia'
+                            confirmacion={confirmacionCierre}
+                            setConfirmacion={setConfirmacionCierre}
+                            setOpen={setOpen}
+                            refresh={setRefresh} />
                       </ModalRegistro>
                           )
                           
@@ -335,7 +337,7 @@ const DetalleGuia = () => {
                       <>
                         <ModalRegistro
                           open={open || false}
-                          setOpen={(isOpen: Dispatch<SetStateAction<boolean>>) => setOpen(prev => (!prev))}
+                          setOpen={setOpen}
                           title={'Finalizar Guía'}
                           textTool='Detalle'
                           size={450}

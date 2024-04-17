@@ -17,7 +17,7 @@ import themeConfig from '../../../config/theme.config';
 import Breadcrumb from '../../../components/layouts/Breadcrumb/Breadcrumb';
 import Card from '../../../components/ui/Card';
 import PeriodButtonsPartial from './PeriodButtons.partial';
-import Balance1Partial from './CardFrutaIngresa.chart';
+import Balance1Partial from './CardFrutaIngresada.chart';
 import { OPTIONS, TTabs } from '../../../types/registros types/TabsDashboardPrograma.types';
 import DetalleEnvasesLote from '../Detalle Envases Lote/DetalleEnvasesLote';
 import DetalleEnvasesMasivosLotes from '../Detalle Masivo Envases Lotes/DetalleEnvasesMasivosLotes';
@@ -35,7 +35,7 @@ import ModalRegistro from '../../../components/ModalRegistro';
 import FormularioRegistroTarja from '../Formularios Produccion/Formulario Registro Tarja/FormularioRegistroTarja';
 import Badge from '../../../components/ui/Badge';
 import Tooltip from '../../../components/ui/Tooltip';
-import CardFrutaIngresada from './CardFrutaIngresa.chart';
+import CardFrutaIngresada from './CardFrutaIngresada.chart';
 import CardFrutaCalibrada from './CardFrutaCalibrada.chart';
 
 const DashboardProduccion = () => {

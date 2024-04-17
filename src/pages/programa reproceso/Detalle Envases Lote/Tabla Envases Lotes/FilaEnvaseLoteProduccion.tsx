@@ -20,6 +20,7 @@ import { variedadFilter } from '../../../../constants/options.constants';
 import Tooltip from '../../../../components/ui/Tooltip';
 import { FaForward } from "react-icons/fa6";
 import { urlNumeros } from '../../../../services/url_number';
+import { HeroXMark } from '../../../../components/icon/heroicons';
 
 
 interface ILoteCompletadoProps {
@@ -63,6 +64,22 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, refre
       refresh(true)
     } else {
       toast.error("No se pudo procesar el lote, vuelve a intentarlo")
+    }
+  }
+
+  const eliminarEnvaseProduccion = async (id_lote: number) => {
+    const res = await fetch(`${base_url}/api/reproceso/${id}/bins_en_reproceso/${id_lote}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authTokens?.access}`
+      }
+    })
+
+    if (res.ok){
+      toast.success("Bin devuelto con exito a bodega")
+      refresh(true)
+    } else {
+      toast.error("No se pudo devolver el bin, vuelve a intentarlo")
     }
   }
 
@@ -121,7 +138,6 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, refre
                   <button
                     type='button'
                     onClick={() => {
-                      // actualizarEstadoEnvase()
                       actualizacionEstadoBodega() 
                     }}
                     className='w-16 rounded-md h-12 bg-amber-600 flex items-center justify-center p-2 hover:scale-105'
@@ -131,6 +147,22 @@ const FilaEnvaseLoteProduccion: FC<ILoteCompletadoProps> = ({ envase: row, refre
                 </Tooltip>
                 )
           }
+          {
+            row?.bin_procesado
+              ? null
+              : (
+                <Tooltip text='Envase Procesado en Producción'>
+                  <button
+                    type='button'
+                    onClick={() => eliminarEnvaseProduccion(row?.id!)}
+                    className='w-16 rounded-md h-12 bg-red-800 hover:bg-red-700 flex items-center justify-center p-2 hover:scale-105'
+                    >
+                      <HeroXMark style={{ fontSize: 35 }}/>
+                  </button>
+                </Tooltip>
+              )
+          }
+
 
           
         </div>

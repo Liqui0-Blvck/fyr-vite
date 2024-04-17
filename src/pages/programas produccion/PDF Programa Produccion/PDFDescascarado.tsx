@@ -6,7 +6,7 @@ import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { TCamion, TConductor, TEnvases, TGuia, TLoteGuia, TPerfil, TProductor } from '../../../types/registros types/registros.types';
 import { TProduct } from '../../../mocks/db/products.db';
-import { variedadFilter } from '../../../constants/options.constants';
+import { tipoResultante, variedadFilter } from '../../../constants/options.constants';
 
 
 const styles = StyleSheet.create({
@@ -175,87 +175,14 @@ const styles = StyleSheet.create({
 })
 
 const PDFDescascarado = () => {
-  const { pathname } = useLocation()
+  const { pathname, state } = useLocation()
   const id = urlNumeros(pathname)
-  const { authTokens, validate } = useAuth()
+  const { authTokens, validate, perfilData } = useAuth()
 
-  const { data: guia } = useAuthenticatedFetch<TGuia>(
-    authTokens,
-    validate,
-    `/api/recepcionmp/${id[0]}`
-  )
-
-  const { data: usuario } = useAuthenticatedFetch<TPerfil>(
-    authTokens,
-    validate,
-    `/api/registros/perfil/${guia?.creado_por}`
-  )
-
-  const { data: productor } = useAuthenticatedFetch<TProductor>(
-    authTokens,
-    validate,
-    `/api/productores/${guia?.productor}`
-  )
-
-  const { data: envases } = useAuthenticatedFetch<TEnvases[]>(
-    authTokens,
-    validate,
-    `/api/envasesmp/`
-  )
-
-  const { data: camionero } = useAuthenticatedFetch<TConductor>(
-    authTokens,
-    validate,
-    `/api/registros/choferes/${guia?.camionero}`
-  )
-
-  const { data: camion } = useAuthenticatedFetch<TCamion>(
-    authTokens,
-    validate,
-    `/api/registros/camiones/${guia?.camion}`
-  )
-
-  console.log(envases)
-  console.log(guia)
-  console.log(usuario)
-  console.log(productor)
-  console.log(camionero)
-  console.log(camion)
-
-  const kilos_brutos_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_brutos_1
-  })
-  const kilos_brutos_2 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_brutos_2
-  })
-  const kilos_tara_1 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_tara_1
-  })
-  const kilos_tara_2 = guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-    return lote.kilos_tara_2
-  })
-
+  console.log(state)
+  const today = new Date()
   
-  const kilos_fruta = guia?.lotesrecepcionmp.map((row: TLoteGuia) => {
-    const kilos_total_envases = 
-      row.envases.map((envase_lote) => {
-      const envaseTotal = envases?.
-      filter(envase => envase.id === envase_lote.envase).
-      reduce((acumulador, envase) => acumulador + (envase_lote.cantidad_envases * envase.peso), 0)
-      return envaseTotal;
-      })
 
-      return kilos_total_envases[0]
-  })
-  console.log(kilos_fruta)
-
-  const kilo_fruta_neta_final = (Number(kilos_brutos_1) + Number(kilos_brutos_2)) - (Number(kilos_tara_1) + Number(kilos_tara_2)) - Number(kilos_fruta)
-  const kilos_brutos = Number(kilos_brutos_1) + Number(kilos_brutos_2)
-  const kilos_tara = Number(kilos_tara_1) + Number(kilos_tara_2) 
-  console.log(kilos_tara)
-  console.log(kilos_brutos)
-  console.log(kilo_fruta_neta_final)
-      
   return (
     <PDFViewer style={{ height: '100%'}}>
       <Document>
@@ -268,21 +195,19 @@ const PDFDescascarado = () => {
 
             <Text style={{ width: 240, textAlign: 'center', fontSize: 14, position: 'relative', left: 10, top: 10}}>
               Informe Descascarado - Despelonado
-              del día 01 de Marzo del 2024 Hasta el Marzo del 2024
+              del día {format(state.desde)} Hasta el {format(state.hasta)}
             </Text>
 
 
             <View style={{ width: 150, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -10 }}>
 
               <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Generado el {}</Text>
-                <Text style={styles.header_date_info_text}>{}</Text>
+                <Text style={styles.header_date_info_text}>Generado el {format(today, { date: 'medium', time: 'short' }, 'es' )}</Text>
               </View>
 
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Creado Por: </Text>
-
-                <Text style={styles.header_date_info_text}>{usuario?.user.username}</Text>
+                <Text style={styles.header_date_info_text}>{perfilData.user.first_name || perfilData.user.username}</Text>
               </View>
             </View>
           </View>
@@ -298,7 +223,7 @@ const PDFDescascarado = () => {
             
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Total Kilos Procesados: </Text>
-                <Text style={styles.header_date_info_text}>486836 Kgs</Text>
+                <Text style={styles.header_date_info_text}>{state.key.reduce((acc: number, tarja) => tarja.peso + acc, 0)} Kgs</Text>
               </View>
         
             </View>
@@ -342,24 +267,26 @@ const PDFDescascarado = () => {
           </View>
 
           {
-            guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
+            state?.key?.map((tarja) => {
 
-              const envase_lote = lote.envases.map((envase: any) => {
-                return envases?.find(envase_ => envase_.id === envase.id)
-              })
+              console.log(tarja)
 
-              const cantidad = lote.envases.map((lote) => {
-                return lote.cantidad_envases
-              })
+              // const envase_lote = lote.envases.map((envase: any) => {
+              //   return envases?.find(envase_ => envase_.id === envase.id)
+              // })
 
-              const variedad = lote.envases.map((lote) => {
-                return lote.variedad
-              })
+              // const cantidad = lote.envases.map((lote) => {
+              //   return lote.cantidad_envases
+              // })
 
-              const variedad_lote = variedadFilter.find(variety => variety.value === String(variedad))?.label
+              // const variedad = lote.envases.map((lote) => {
+              //   return lote.variedad
+              // })
+
+              // const variedad_lote = variedadFilter.find(variety => variety.value === String(variedad))?.label
             
 
-              const kilo_fruta_neto = (lote.kilos_brutos_1 + lote.kilos_brutos_2) - (lote.kilos_tara_1) + lote.kilos_tara_2
+              // const kilo_fruta_neto = (lote.kilos_brutos_1 + lote.kilos_brutos_2) - (lote.kilos_tara_1) + lote.kilos_tara_2
 
               
               return (
@@ -372,27 +299,24 @@ const PDFDescascarado = () => {
                   }}>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{lote.numero_lote}</Text>
+                   <Text style={{ fontSize: 10}}>{tarja.codigo_tarja}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 10}}>{envase_lote.map((envase) => envase?.nombre)}</Text>
+                    <Text style={{ fontSize: 10}}>{tarja.produccion}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{cantidad}</Text>
+                   <Text style={{ fontSize: 10}}>{tipoResultante.find(tipo => tipo.value === tarja.tipo_resultante)?.label}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{envase_lote.map(envase => envase?.peso)} kgs</Text>
+                   <Text style={{ fontSize: 10}}>{tarja.peso} kgs</Text>
                   </View>
       
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{kilo_fruta_neta_final} kgs</Text>
-                  </View>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 10}}>{variedad_lote}</Text>
+                   <Text style={{ fontSize: 10}}>{format(tarja.fecha_creacion, { date: 'medium', time: 'short'}, 'es')}</Text>
                   </View>
                 </View>
               )

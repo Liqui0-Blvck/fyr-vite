@@ -84,7 +84,7 @@ export const comercializadorSchema = Yup.object().shape({
   giro: Yup.string().required('El giro es requerido'),
   direccion: Yup.string().required('La dirección es requerida'),
   zip_code: Yup.string(),
-  email_comercializador: Yup.string().email('El correo electrónico debe tener un formato válido').required('El correo electrónico del comercializador es requerido'),
+  email_comercializador: Yup.string().email('El correo electrónico debe tener un formato válido'),
 });
 
 export const operarioSchema = Yup.object().shape({

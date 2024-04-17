@@ -47,7 +47,7 @@ const EnvasesEnGuiaList: FC<IEnvasesEnGuiaListProps> = ({ ubicacion, row, isSele
 
 
   return (
-    <div className='w-full h-[500px] flex overflow-hidden overflow-y-auto'>
+    <div className='w-full h-full flex overflow-hidden overflow-y-auto'>
       <ul className='w-full h-14 flex flex-col gap-3'>
       
       {row.filter(envase => envase.estado_envase !== '2').map((envase) => {

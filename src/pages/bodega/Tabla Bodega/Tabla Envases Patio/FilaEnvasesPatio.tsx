@@ -16,11 +16,10 @@ interface IEnvasePatioProps {
   muestra?: TEnvasePatio | null
   refresh?: Dispatch<SetStateAction<boolean>>
   id_lote?: number
-  ccLote?: TControlCalidad | null
 
 }
 
-const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row }) => {
+const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row, id_lote }) => {
   const { authTokens, validate, perfilData, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
@@ -29,6 +28,13 @@ const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row }) => {
 
   return (
     <>
+      <TableCell className='table-cell-row-detail-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
+        <div className=' h-full w-full flex items-center justify-center py-2'>
+          <Tooltip text={`${row?.id!}`}>
+            <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{id_lote}</span>
+          </Tooltip>
+        </div>
+      </TableCell>
       <TableCell className='table-cell-row-detail-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center py-2'>
           <Tooltip text={`${row?.id!}`}>

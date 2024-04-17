@@ -150,6 +150,15 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
     setRows((prevRows) =>
       prevRows.map((row) => (row.id === id ? { ...row, [fieldName]: value } : row))
     );
+    if (value === '42'){
+      setRows((prevRows) =>
+        prevRows.map((row) => (row.id === id ? { ...row, ['cantidad_envases']: 1 } : row))
+      );
+    } else {
+      setRows((prevRows) =>
+        prevRows.map((row) => (row.id === id ? { ...row, ['cantidad_envases']: 0 } : row))
+      );
+    }
   };
 
   const envasesList = (rows.length < 1) ?
@@ -355,8 +364,8 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
                     <TableCell style={{ maxWidth: 150, minWidth: 150, }}>
                       <SelectReact
                         options={optionEnvases}
-                        id='camion'
-                        name='camion'
+                        id='envase'
+                        name='envase'
                         variant='solid'
                         placeholder='Selecciona un envase'
                         className='h-14 w-full background'

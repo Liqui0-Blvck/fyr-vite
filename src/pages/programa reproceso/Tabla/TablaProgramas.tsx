@@ -119,6 +119,26 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 		}
 	}
 
+	const registroProgramaProduccion = async () => {
+		const response = await fetch(`${base_url}/api/reproceso/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${authTokens?.access}`
+			},
+			body: JSON.stringify({
+				registrado_por: userID?.user_id
+			})
+		})
+		if (response.ok) {
+			const data: TProduccion = await response.json()
+			toast.success(`El programa fue creado exitosamente`)
+			navigate(`/app/produccion/registro-programa-reproceso/${data.id}`)
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
 	const columns = [
 		columnHelper.accessor('id', {
 			cell: (info) => (
@@ -332,6 +352,25 @@ const TablaProgramasReproceso: FC<IProduccionProps> = ({ data, refresh }) => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
+
+					<SubheaderRight>
+					{
+						data.length >= 1 && data.some(programa => programa.estado !== '3') 
+							? null
+								: (
+									<SubheaderRight>
+										<Tooltip title='Registro Programa de produccion'>
+											<button
+												type='button'
+												onClick={() => registroProgramaProduccion()}
+												className='w-full rounded-md h-12 bg-blue-700 flex items-center justify-center p-2 hover:scale-105 px-2'>
+												<span className='text-lg text-white'>Registrar Programa de Reproceso</span>
+											</button>
+										</Tooltip>
+									</SubheaderRight>
+								)
+					} 
+				</SubheaderRight>
 				
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>

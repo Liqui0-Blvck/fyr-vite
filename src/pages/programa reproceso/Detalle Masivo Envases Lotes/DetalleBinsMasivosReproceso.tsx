@@ -108,7 +108,7 @@ interface IDetalleBinsMasivosProps {
   refresh: Dispatch<SetStateAction<boolean>>
 }
 
-const DetalleBinsMasivos: FC<IDetalleBinsMasivosProps> = ({ programa_reproceso, refresh }) => {
+const DetalleBinsMasivosReproceso: FC<IDetalleBinsMasivosProps> = ({ programa_reproceso, refresh }) => {
   const { isDarkTheme } = useDarkMode();
   const { pathname } = useLocation()
   const id = urlNumeros(pathname)
@@ -152,35 +152,35 @@ const DetalleBinsMasivos: FC<IDetalleBinsMasivosProps> = ({ programa_reproceso, 
     setSelectedItems(newSelected);
   };
 
-  // && programa_produccion?.bins.every(bin => bin.bin_procesado !== true)
+  //  programa_produccion?.bins.every(bin => bin.bin_procesado !== true)
 
   console.log("soy del programa reproceso", programa_reproceso)
 
-  // const registrarLoteAProduccion = async (envases: string) => {
-  //   const res = await fetch(`${base_url}/api/produccion/${id}/lotes_en_programa/actualizar_estados_lotes/${envases}/`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${authTokens?.access}`
-  //     }
-  //   })
-  //   if (res.ok){
-  //     refresh(true)
-  //     toast.success('Envases procesados correctamente a producción')
-  //   } else {
-  //     toast.error("Ocurrió un error, vuelve a intentarlo")
-  //   }
-  // }
+  const registrarLoteAProduccion = async (envases: string) => {
+    const res = await fetch(`${base_url}/api/produccion/${id}/lotes_en_programa/actualizar_estados_lotes/${envases}/`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
+      }
+    })
+    if (res.ok){
+      refresh(true)
+      toast.success('Envases procesados correctamente a producción')
+    } else {
+      toast.error("Ocurrió un error, vuelve a intentarlo")
+    }
+  }
 
 
-  // useEffect(() => {
-  //   if (registroMasivo){
-  //     const lista_seleccionada = selectedItems?.map(id => id)
-  //     const envases = lista_seleccionada ? lista_seleccionada.join(",") : "";
+  useEffect(() => {
+    if (registroMasivo){
+      const lista_seleccionada = selectedItems?.map(id => id)
+      const envases = lista_seleccionada ? lista_seleccionada.join(",") : "";
 
-  //     registrarLoteAProduccion(envases)
-  //   }
-  // }, [selectedItems, registroMasivo])
+      registrarLoteAProduccion(envases)
+    }
+  }, [selectedItems, registroMasivo])
 
 
 
@@ -229,7 +229,7 @@ const DetalleBinsMasivos: FC<IDetalleBinsMasivosProps> = ({ programa_reproceso, 
     }
   }, [eliminadoMasivo])
 
-  // programa_produccion?.lotes.some(lote => lote.bin_procesado !== true)
+  programa_produccion?.lotes.some(lote => lote.bin_procesado !== true)
 
   return (
     <div className={`lg:grid lg:grid-rows-10 md:grid md:grid-rows-7 gap-x-3 h-full mx-auto
@@ -291,7 +291,7 @@ const DetalleBinsMasivos: FC<IDetalleBinsMasivosProps> = ({ programa_reproceso, 
                                       checked={isSelected(item.id)}
                                       onChange={() => {
                                         handleToggleItem(item.id)
-                                        // registrarLoteAProduccion(item.id)
+                                        registrarLoteAProduccion(item.id)
                                       }}
                                       className='w-10 h-4'
                                     />
@@ -321,4 +321,4 @@ const DetalleBinsMasivos: FC<IDetalleBinsMasivosProps> = ({ programa_reproceso, 
 }
 
 
-export default DetalleBinsMasivos;
+export default DetalleBinsMasivosReproceso;

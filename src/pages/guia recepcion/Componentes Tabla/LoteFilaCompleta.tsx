@@ -17,6 +17,7 @@ import { FaIndustry } from 'react-icons/fa6'
 import { FaWeight } from 'react-icons/fa'
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2'
 import { BiCheckDouble } from 'react-icons/bi'
+import { DuoDoubleCheck } from '../../../components/icon/duotone'
 
 interface ILoteCompletadoProps {
   lote: TLoteGuia | null
@@ -165,7 +166,7 @@ const LoteFilaCompleta: FC<ILoteCompletadoProps> = (
       </TableCell >
 
       <TableCell className='table-cell-row-final-8' sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`}}>
-        {row?.estado_recepcion === '7' ? <BiCheckDouble className='text-4xl text-green-700'/> : 'Veremos' }
+        {row?.estado_recepcion === '7' ? <BiCheckDouble className='text-4xl text-green-700'/> : <DuoDoubleCheck style={{ color: 'green', fontSize: 30 }}/> }
       </TableCell>
     </>
   )

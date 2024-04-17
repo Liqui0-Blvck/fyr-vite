@@ -322,7 +322,7 @@ const PDFOperarioXKilo = () => {
                 <View style={styles.header_info_inferior}>
                 
                   <View style={styles.header_date_info_box}>
-                    <Text style={styles.header_date_info_text}>Rut Conductor: </Text>
+                    <Text style={styles.header_date_info_text}>Total Kilos: </Text>
                     <Text style={styles.header_date_info_text}>{camionero?.rut}</Text>
                   </View>
 

@@ -66,7 +66,9 @@ const TablaEnvasesLotes: FC<IProduccionProps> = ({ data, refresh, id_lote, produ
               </TableRow>
             </TableHead>
             <TableBody className='table-body' >
-              {data?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).
+              {data?.
+                filter(lote => lote.esta_eliminado !== true).
+                slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).
                 filter((row) => 
                   row.numero_lote.toString().toLocaleLowerCase().includes(search) ||
                   row.variedad.toString().toLocaleLowerCase().includes(search)
@@ -84,7 +86,7 @@ const TablaEnvasesLotes: FC<IProduccionProps> = ({ data, refresh, id_lote, produ
             sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`, color: `${isDarkTheme ? 'white' : 'black'}` }}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={data?.length || 0}
+            count={data?.filter(lote => lote.esta_eliminado !== true).length || 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

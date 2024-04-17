@@ -114,7 +114,7 @@ const FormularioRegistroGuiaRecepcion = () => {
 
   const camionFilter = camiones?.map((camion: TCamion) => ({
     value: String(camion.id),
-    label: (`${camion.patente},  ${camion.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`)
+    label: (`Patente ${camion.patente},  ${camion.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`)
   })) ?? []
 
   const productoresFilter = productores?.map((productor: TProductor) => ({
@@ -124,7 +124,7 @@ const FormularioRegistroGuiaRecepcion = () => {
 
   const conductoresFilter = conductores?.map((conductor: TConductor) => ({
     value: String(conductor.id),
-    label: conductor.nombre
+    label: conductor.nombre + ' ' + conductor.apellido
   })) ?? []
 
   const comercializadoresFilter = comercializadores?.map((comerciante: TComercializador) => ({

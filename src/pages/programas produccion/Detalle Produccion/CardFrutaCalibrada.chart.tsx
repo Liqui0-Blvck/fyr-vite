@@ -40,7 +40,7 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps>= ({ tarjas_resultantes, r
 				enabled: false,
 			},
 			xaxis: {
-				categories: ['Kilo Fruta Calibrada', 'Kilos Totales Borrel',  'Kilo Totales Residuos Solidos'],
+				categories: ['Kilos Fruta Calibrada', 'Kilos Totales Borrel',  'Kilos Totales Residuos Solidos'],
 			},
 			yaxis: {
 				title: {
@@ -80,7 +80,7 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps>= ({ tarjas_resultantes, r
 						<span>Kilos Fruta Borrel: {pepa_borrel} kgs</span>
 					</div>
 					<div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center py-3.5 px-2'>
-						<span>Kilos Fruta Borrel: {residuo_solido} kgs</span>
+						<span>Kilos Residuos Solidos: {residuo_solido} kgs</span>
 					</div>
 				</div>
 
