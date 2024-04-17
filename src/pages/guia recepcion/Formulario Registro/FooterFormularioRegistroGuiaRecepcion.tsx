@@ -250,7 +250,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               className='col-span-3'
             >Kilos Brutos</label>
             <div className='row-start-2 flex gap-2 items-center'>
-              {
+              {/* {
                 personalizacionData?.iot_balanza_recepcionmp == 'Manual' ? 
                   <Input
                     type='number'
@@ -273,11 +273,11 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
               {
                 listoIot_1 === false ?
                 <Button variant='outline' onClick={() => {setListoIot_1((prevState) => !prevState)}} icon='HeroArrowSmallRight'></Button> : <Button variant='outline' color={icono_1 ? 'emerald' : 'red'} onMouseLeave={() => {setIcono_1(true)}} onMouseEnter={() => {setIcono_1(false)}} onClick={() => {setListoIot_1((prevState) => !prevState)}} icon={icono_1 ? 'HeroCheck' : 'HeroXMark'}></Button>
-              }
+              } */}
 
 
               {/* DEFAULT */}
-              {/* <Input
+              <Input
                 type='number'
                 name='kilos_brutos_1'
                 className='py-3  col-span-3 w-56'
@@ -290,7 +290,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
                 onChange={() => {
                   setIotBruto(prev => !prev)
                   // const client = mqtt.connect('mqtt://prodalmen.cl')
-                }} /> */}
+                }} />
             </div>
           </div>
 
@@ -304,7 +304,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
                       className='col-span-3'
                     >Kilos Brutos Acoplado</label>
                     <div className='row-start-2 flex gap-2 items-center'>
-                    {
+                    {/* {
                       personalizacionData?.iot_balanza_recepcionmp == 'Manual' ? 
                         <Input
                           type='number'
@@ -323,7 +323,20 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
                             // disabled={true}
                           /> 
                           : null
-                    }
+                    } */}
+                    <Input
+                      type='number'
+                      name='kilos_brutos_2'
+                      className='py-3  col-span-3 w-56'
+                      value={formik.values.kilos_brutos_2}
+                      onChange={formik.handleChange}
+                      disabled={iotBrutoAcoplado ? true : false}
+                    />
+                    <Switch
+                      className='row-start-2 col-start-4 w-16 bg-slate-300'
+                      onChange={() => {
+                        setIotBrutoAcoplado(prev => !prev)
+                      }} />
                     </div>
                     
                     </div>
