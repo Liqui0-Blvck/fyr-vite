@@ -4,15 +4,18 @@ import { useAuth } from "../../context/authContext"
 // import { fetch_chris } from "../../functions/fetch_chris"
 
 const Home = () => {
-    const { refreshToken, authTokens } = useAuth()
+    const { refreshToken, authTokens, perfilData } = useAuth()
     const [refresh, setRefresh] = useState(false)
-    // const data = useAuthenticatedFetch('/api/registros/tractores/', 'GET', {})
-    // console.log(data)
+
+    console.log(perfilData?.cargos)
+
     return (
         <div className="h-full">
-            <div className="w-full h-full flex items-center justify-center">
-                <h1 className="text-7xl">Proximamente tendra informacion</h1>
+            <div className="w-full h-full flex items-center justify-center gap-10">
+                <h1 className="text-7xl">Usuario {perfilData?.user.username} </h1>
+                <img src={perfilData?.fotoperfil} alt="" width={100} height={100} className="rounded-full"/>
             </div>
+            <h2>{perfilData?.cargos.shift()?.cargo_label}</h2>
         </div>
     )
 }

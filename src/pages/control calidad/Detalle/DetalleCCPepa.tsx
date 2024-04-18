@@ -242,7 +242,7 @@ const DetalleCCPepa = () => {
               {muestra?.cc_calibrespepaok === true 
                 ? (
                   <div className='w-full h-20 flex flex-col '>
-                      <label htmlFor="rut_productor">Peso Muestra Calibrar: </label>
+                      <label htmlFor="rut_productor">Pepa Sana: </label>
                       <div className={`${isDarkTheme ? 'bg-zinc-700 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
                         <span className='text-xl'>{cc_rendimiento_c?.peso_muestra_calibre} grs</span>
                       </div>

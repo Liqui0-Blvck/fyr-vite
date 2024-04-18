@@ -60,14 +60,14 @@ export const ProductorSchema = Yup.object().shape({
 export const camionSchema = Yup.object().shape({
   patente: Yup.string().required('La patente es requerida'),
   acoplado: Yup.boolean(),
-  observaciones: Yup.string(),
+  observaciones: Yup.string(),  
 });
 
 export const conductorSchema = Yup.object().shape({
   nombre: Yup.string().required('El nombre es requerido'),
   apellido: Yup.string().required('El apellido es requerido'),
   rut: Yup.string().required('El RUT es requerido').test('rut-valido', 'El RUT ingresado no es válido', validarRut),
-  telefono: Yup.string(),
+  telefono: Yup.string().matches(/^\+569\s\d{8}$/, 'El móvil debe tener el formato "+569 12345678"'),
 });
 
 export const comercializadorSchema = Yup.object().shape({

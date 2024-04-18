@@ -8,7 +8,7 @@ import {
 	SortingState,
 	useReactTable,
 } from '@tanstack/react-table';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper';
 import Container from '../../../components/layouts/Container/Container';
 import Card, {
@@ -75,6 +75,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 	const { perfilData, authTokens, userID } = useAuth()
 	const { isDarkTheme } = useDarkMode();
 	const navigate = useNavigate()
+	const {pathname} = useLocation()
 	const [id_programa, setIDPrograma] = useState<number>(0)
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
@@ -83,6 +84,8 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 	const [informeKgOp, setInformeinformeKgOp] = useState<boolean>(false)
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
 	const base_url = process.env.VITE_BASE_URL_DEV
+
+	console.log(pathname)
 
 
 	const asisteDelete = async (id: number) => {
@@ -318,7 +321,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 								? (
 									<>
 										<Tooltip title='Detalle envases del lote en Programa'>
-											<Link to={`/app/pdf-detalle-envases/${id}`}>
+											<Link to={`/app/pdf-detalle-envases/${id}`} state={{ beforePath: pathname }}>
 												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
 													<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
 												</button>
@@ -326,7 +329,7 @@ const TablaProgramas: FC<IProduccionProps> = ({ data, refresh }) => {
 										</Tooltip>
 
 										<Tooltip title='Documento de entrada a proceso'>
-											<Link to={`/app/pdf-documento-entrada/${id}`}>
+											<Link to={`/app/pdf-documento-entrada/${id}`} state={{ beforePath: pathname }}>
 												<button className='w-16 rounded-md h-12 bg-red-500 flex items-center justify-center p-2 hover:scale-105'>
 													<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
 												</button>
