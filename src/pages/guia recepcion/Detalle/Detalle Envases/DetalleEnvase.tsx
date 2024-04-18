@@ -8,8 +8,7 @@ import { TCamion, TComercializador, TConductor, TGuia, TLoteGuia, TProductor } f
 import SelectReact, { TSelectOptions } from '../../../../components/form/SelectReact'
 import useDarkMode from '../../../../hooks/useDarkMode'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { FC, useEffect, useState } from 'react'
-import { ACTIVO } from '../../../../utils/select.constanst'
+import { FC, useState } from 'react'
 
 import Radio, { RadioGroup } from '../../../../components/form/Radio'
 import { urlNumeros } from '../../../../services/url_number'
@@ -234,10 +233,10 @@ const DetalleEnvase: FC<IDetalleProps> = ({ id_lote }) => {
                     key={id}
                     label={label}
                     name='mezcla_variedades'
-                    value={label} // Asignar el valor correcto de cada botón de radio
-                    checked={formik.values.mezcla_variedades === value} // Comprobar si este botón de radio está seleccionado
+                    value={label} 
+                    checked={formik.values.mezcla_variedades === value} 
                     onChange={(e) => {
-                      formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
+                      formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) 
                     }}
                     selectedValue={undefined}
                     disabled />

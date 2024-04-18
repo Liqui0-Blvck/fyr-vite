@@ -55,11 +55,11 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 	const base_url = process.env.VITE_BASE_URL_DEV
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
-	const [modalStatus, setModalStatus] = useState<boolean>(false)
+	const [registroModal, setRegistroModal] = useState<boolean>(false)
 	const { isDarkTheme } = useDarkMode();
 	const { perfilData, authTokens } = useAuth()
-	const [detalleModalStatus, setDetalleModalStatus] = useState<boolean>(false);
-	const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
+
+
 
 	const asisteDelete = async (id: number) => {
 		const response = await fetch(`${base_url}/api/productores/${id}/`, {
@@ -114,10 +114,15 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const id = info.row.original.id;
+				const [detalleModalStatus, setDetalleModalStatus] = useState<boolean>(false);
+				const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
+				const [invitacionModal, setInvitacionModal] = useState<boolean>(false);
+				const [contratoModal, setContratoModal] = useState<boolean>(false);
+
 				
 
 				return (
-					<div className='h-full w-full flex justify-center gap-5 flex-wrap md:flex-wrap lg:flex-nowrap'>
+					<div className='h-full w-full flex justify-center gap-3 flex-wrap md:flex-wrap lg:flex-nowrap'>
 
 						<ModalRegistro
 							open={detalleModalStatus}
@@ -125,7 +130,7 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 							textTool='Detalle'
 							title='Detalle Productor'
 							size={900}
-							width={`w-16 lg:w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-16 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<HeroEye style={{ fontSize: 25 }} />}
 						>
 							<DetalleProductor id={id} />
@@ -136,42 +141,48 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 							setOpen={setEdicionModalStatus}
 							title='Edición Productor'
 							textTool='Editar'
-							size={1000}
-							width={`w-16 lg:w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#c9429c] hover:bg-[#ff84d6]' : 'bg-[#c9429c] hover:bg-[#ff84d6] text-white'} hover:scale-105`}
+							size={900}
+							width={`w-16 h-12 ${isDarkTheme ? 'bg-[#c9429c] hover:bg-[#ff84d6]' : 'bg-[#c9429c] hover:bg-[#ff84d6] text-white'} hover:scale-105`}
 							icon={<HeroPencilSquare style={{ fontSize: 25 }} />}
 						>
 							<FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
 						</ModalRegistro>
 
 						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
+							open={invitacionModal}
+							setOpen={setInvitacionModal}
 							title='Edición Productor'
 							textTool='Enviar invitación al sistema al productor'
 							size={1000}
-							width={`w-16 lg:w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#198754] hover:bg-[#24a066]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-16 h-12 ${isDarkTheme ? 'bg-[#198754] hover:bg-[#24a066]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<FaUserPlus style={{ fontSize: 25 }} />}
 						>
-							<FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+							{/* <FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
+							<div className='flex items-center justify-center'>
+								<h1 className='text-xl'>Invitación Futura</h1>
+							</div>
 						</ModalRegistro>
 
 						<ModalRegistro
-							open={edicionModalStatus}
-							setOpen={setEdicionModalStatus}
+							open={contratoModal}
+							setOpen={setContratoModal}
 							title='Edición Productor'
 							textTool='Crear contrato Productor'
 							size={1000}
-							width={`w-16 lg:w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#edbf2a] hover:bg-[#f9d24f]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+							width={`w-16 h-12 ${isDarkTheme ? 'bg-[#edbf2a] hover:bg-[#f9d24f]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 							icon={<FaFileContract style={{ fontSize: 25 }} />}
 						>
-							<FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} />
+							{/* <FormularioEdicionProductores refresh={refresh} setOpen={setEdicionModalStatus} id={id} /> */}
+							<div className='flex items-center justify-center'>
+								<h1 className='text-xl'>Contrato Futuro</h1>
+							</div>
 						</ModalRegistro>
 
 						{
 							cargolabels(perfilData).includes('Administrador')
 								? (
 									<Tooltip title='Eliminar'>
-										<button onClick={async () => await asisteDelete(id)} type='button' className={`w-16 lg:w-24 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+										<button onClick={async () => await asisteDelete(id)} type='button' className={`w-16 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 											<HeroXMark style={{ fontSize: 25 }} />
 										</button>
 									</Tooltip>
@@ -237,14 +248,14 @@ const TablaProductor: FC<IProductorProps> = ({ data, refresh }) => {
 				</SubheaderLeft>
 				<SubheaderRight>
 					<ModalRegistro
-						open={modalStatus}
-						setOpen={setModalStatus}
+						open={registroModal}
+						setOpen={setRegistroModal}
 						title='Registro Productores'
 						textButton='Agregar Productor'
-						width={`w-full md:w-full px-4 py-2 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-						size={1200}
+						width={`w-full md:w-full px-4 py-2 dark:bg-[#3B82F6] dark:hover:bg-[#3b83f6cd] bg-[#3B82F6] text-white hover:scale-105`}
+						size={900}
 					>
-						<FormularioRegistroProductores setOpen={setModalStatus} refresh={refresh} />
+						<FormularioRegistroProductores setOpen={setRegistroModal} refresh={refresh} />
 					</ModalRegistro>
 				</SubheaderRight>
 			</Subheader>

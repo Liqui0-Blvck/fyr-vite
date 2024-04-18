@@ -1,28 +1,21 @@
 import * as Yup from "yup";
 
-function validarRut(rut) {
-  // Formato válido: xxxxxxxx-x
-  if (!/^\d{7,8}-\d{1}$/.test(rut)) {
-    return false;
-  }
+function validarRut(rutCompleto: string) {
+  if (!/^[0-9]+-[0-9kK]{1}$/.test(rutCompleto))
+      return false;
+  var tmp = rutCompleto.split('-');
+  var digv = tmp[1];
+  var rut = tmp[0];
+  if (digv == 'K') digv = 'k';
+  return (calcularDigitoVerificador(rut) == digv);
+}
 
-  const digits = rut.split('-')[0];
-  let splitDigits = digits.split('');
-  let factor = 2;
-  let sum = 0;
-
-  for (let i = splitDigits.length - 1; i >= 0; i--) {
-    if (factor > 7) {
-      factor = 2;
-    }
-    sum += parseInt(splitDigits[i]) * factor;
-    factor++;
-  }
-
-  const verifierDigit = 11 - (sum % 11);
-  const expectedVerifier = (verifierDigit === 11) ? '0' : (verifierDigit === 10) ? 'k' : verifierDigit.toString();
-
-  return expectedVerifier === rut.slice(-1).toLowerCase();
+function calcularDigitoVerificador(T: any) {
+  var M = 0,
+      S = 1;
+  for (; T; T = Math.floor(T / 10))
+      S = (S + T % 10 * (9 - M++ % 6)) % 11;
+  return S ? S - 1 : 'k';
 }
 
 
@@ -50,7 +43,7 @@ export const ProductorSchema = Yup.object().shape({
   provincia: Yup.string().nullable().required('La provincia es requerida'),
   comuna: Yup.string().nullable().required('La comuna es requerida'),
   direccion: Yup.string().required('La dirección es requerida'),
-  movil: Yup.string().matches(/^\+569\s\d{8}$/, 'El móvil debe tener el formato "+569 12345678"'),
+  movil: Yup.string().matches(/^\+569\d{8}$/, 'El móvil debe tener el formato "+569 12345678"'),
   pagina_web: Yup.string().url('Ingrese una URL válida'),
   email: Yup.string().email('Ingrese un correo electrónico válido'),
   numero_contrato: Yup.string().nullable()
@@ -67,7 +60,7 @@ export const conductorSchema = Yup.object().shape({
   nombre: Yup.string().required('El nombre es requerido'),
   apellido: Yup.string().required('El apellido es requerido'),
   rut: Yup.string().required('El RUT es requerido').test('rut-valido', 'El RUT ingresado no es válido', validarRut),
-  telefono: Yup.string().matches(/^\+569\s\d{8}$/, 'El móvil debe tener el formato "+569 12345678"'),
+  telefono: Yup.string().matches(/^\+569\d{8}$/, 'El móvil debe tener el formato "+56912345678"'),
 });
 
 export const comercializadorSchema = Yup.object().shape({

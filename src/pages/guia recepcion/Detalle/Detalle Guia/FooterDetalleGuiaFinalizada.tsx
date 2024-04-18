@@ -24,7 +24,7 @@ import LoteFilaCompleta from '../../Componentes Tabla/LoteFilaCompleta';
 
 interface IFooterProps {
   data: TGuia,
-  refresh: Dispatch<SetStateAction<boolean | null>>
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
 const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
@@ -101,14 +101,14 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
               </TableRow>
             </TableHead>
             <TableBody className='table-body'>
-              {data?.lotesrecepcionmp.map((row: TLoteGuia) => {
+              {data?.lotesrecepcionmp.filter(row => row.estado_recepcion === '7' || row.estado_recepcion === '6').map((row: TLoteGuia) => {
                 const control_calidad_filtro = control_calidad?.find(control => control.recepcionmp === row.id)?.estado_cc
 
                 const kilos_total_envases = 
                   row.envases.map((envase_lote) => {
                   const envaseTotal = envases?.filter(envase => envase.id === envase_lote.envase)
                                                  .reduce((acumulador, envase) => acumulador + (envase_lote.cantidad_envases * envase.peso), 0);
-                  return envaseTotal; // Retornar el peso total de envases
+                  return envaseTotal; 
                   }).reduce((acumulador, pesoTotal) => acumulador! + pesoTotal!, 0);
 
                   const kilos_netos_fruta = row.kilos_brutos_1 + row.kilos_brutos_2 - row?.kilos_tara_1 - row?.kilos_tara_2 - kilos_total_envases!;
@@ -117,24 +117,19 @@ const FooterDetalleGuiaFinalizada: FC<IFooterProps> = ({ data, refresh }) => {
                   console.log(row)
                 return (
                   <TableRow key={row.id} className='table-row-body'>
-                      {
-                      row.estado_recepcion === '7' || row.estado_recepcion === '6'
-                          ? <LoteFilaCompleta
-                              lote={row}
-                              guia={data}
-                              acoplado={camionAcoplado!}
-                              envases={envases}
-                              filtro_variedad={variedadFilter}
-                              filtro_productos={tipoFrutaFilter}
-                              openModalRows={openModalRows}
-                              setOpenModalRows={setOpenModalRows}
-                              kilos_netos_fruta={kilos_netos_fruta}
-                              kilos_total_envases={kilos_total_envases!}
-                              refresh={refresh}
-                              />
-                          : null 
-                      }
-
+                    <LoteFilaCompleta
+                      lote={row}
+                      guia={data}
+                      acoplado={camionAcoplado!}
+                      envases={envases}
+                      filtro_variedad={variedadFilter}
+                      filtro_productos={tipoFrutaFilter}
+                      openModalRows={openModalRows}
+                      setOpenModalRows={setOpenModalRows}
+                      kilos_netos_fruta={kilos_netos_fruta}
+                      kilos_total_envases={kilos_total_envases!}
+                      refresh={refresh}
+                      />
                   </TableRow>
 
                 )

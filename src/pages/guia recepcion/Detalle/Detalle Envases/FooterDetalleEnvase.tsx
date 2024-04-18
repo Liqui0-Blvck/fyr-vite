@@ -100,25 +100,25 @@ const FooterDetalleEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) => {
                     
                     <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1}}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{nombre_envase}</span>
+                        <span className={`text-xl text-center  dark:text-white text-zinc-800 `}>{nombre_envase}</span>
                       </div>
                     </TableCell>
 
                     <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{row.cantidad_envases}</span>
+                        <span className={`text-xl text-center  dark:text-white text-zinc-800`}>{row.cantidad_envases}</span>
                       </div>
                     </TableCell>
 
                     <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1 }}>
                       <div className=' h-full w-full flex items-center justify-center'>
-                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{nombre_variedad}</span>
+                        <span className={`text-xl text-center dark:text-white text-zinc-800`}>{nombre_variedad}</span>
                       </div>
                     </TableCell>
                     
                     <TableCell component="th" sx={{background: `${isDarkTheme ? '#18181b' : '#c0c0c6'}`, paddingY: 1 }}>
                     <div className=' h-full w-full flex items-center justify-center'>
-                        <span className={`text-xl text-center ${isDarkTheme ? 'text-white' : 'text-zinc-800'}`}>{nombre_producto}</span>
+                        <span className={`text-xl text-center dark:text-white text-zinc-800`}>{nombre_producto}</span>
                       </div>
                     </TableCell>
 

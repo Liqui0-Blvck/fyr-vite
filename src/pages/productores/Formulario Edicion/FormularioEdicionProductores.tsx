@@ -1,14 +1,20 @@
-import { useFormik, validateYupSchema } from 'formik'
+import { useFormik } from 'formik'
+// import { Select, Switch } from 'antd'
 import Input from '../../../components/form/Input'
-import { Dispatch, FC, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import Label from '../../../components/form/Label'
+import Validation from '../../../components/form/Validation'
+import FieldWrap from '../../../components/form/FieldWrap'
+import { ProductorSchema } from '../../../utils/Validator'
 import { TProductor } from '../../../types/registros types/registros.types'
+import { urlNumeros } from '../../../services/url_number'
 
 interface IRegion {
   region_id: number
@@ -31,15 +37,16 @@ interface IFormProductor {
   id: number
 }
 
-const FormularioEdicionProductores: FC<IFormProductor> = ({ refresh, setOpen, id }) => {
+const FormularioRegistroProductores: FC<IFormProductor> = ({ id , refresh, setOpen }) => {
   const { authTokens, validate } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const navigate = useNavigate()
   const { isDarkTheme } = useDarkMode()
+
   const { data: productores } = useAuthenticatedFetch<TProductor>(
     authTokens,
     validate,
-    `/api/productores/${id}`
+    `/api/productores/${id}/`
   )
 
 
@@ -48,64 +55,40 @@ const FormularioEdicionProductores: FC<IFormProductor> = ({ refresh, setOpen, id
       rut_productor: "",
       nombre: "",
       telefono: "",
-      region: 0,
-      provincia: 0,
-      comuna: 0,
+      region: null,
+      provincia: null,
+      comuna: null,
       direccion: "",
       movil: "",
       pagina_web: "",
       email: "",
-      numero_contrato: 0
+      numero_contrato: null
     },
-    onSubmit: async (values) => {
+    validationSchema: ProductorSchema,
+    onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/productores/${id}/`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
             ...values
           })
         })
         if (res.ok) {
-          toast.success("El productor fue registrado exitosamente!!")
+          toast.success("El productor fue editado exitosamente!!")
           setOpen(false)
           refresh(true)
-          navigate('/app/productores')
-
         } else {
-          toast.error("No se pudo registrar el camión volver a intentar")
+          toast.error("No se pudo editar el productor volver a intentar")
         }
       } catch (error) {
         console.log(error)
       }
     }
   })
-
-  useEffect(() => {
-    let isMounted = true
-
-    if (isMounted && productores) {
-      formik.setValues({
-        rut_productor: productores?.rut_productor,
-        nombre: productores?.nombre,
-        telefono: productores?.telefono,
-        region: productores.region,
-        provincia: productores.provincia,
-        comuna: productores.comuna,
-        direccion: productores.direccion,
-        movil: productores.movil,
-        pagina_web: productores.pagina_web,
-        email: productores.email,
-        numero_contrato: productores.numero_contrato
-      })
-    }
-
-    return () => {
-      isMounted = false
-    }
-  }, [productores])
 
   const { data: regiones } = useAuthenticatedFetch<IRegion[]>(
     authTokens,
@@ -144,7 +127,32 @@ const FormularioEdicionProductores: FC<IFormProductor> = ({ refresh, setOpen, id
   const optionsProvincia: TSelectOptions | [] = provincia
   const optionsComuna: TSelectOptions | [] = comuna
 
-  console.log(formik.values)
+  useEffect(() => {
+    let isMounted = true
+
+    if (isMounted && productores) {
+      formik.setValues({
+        rut_productor: productores?.rut_productor,
+        nombre: productores?.nombre,
+        telefono: productores?.telefono,
+        region: productores.region,
+        provincia: productores.provincia,
+        comuna: productores.comuna,
+        direccion: productores.direccion,
+        movil: productores.movil,
+        pagina_web: productores.pagina_web,
+        email: productores.email,
+        numero_contrato: productores.numero_contrato
+      })
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [productores])
+
+
+  console.log("soy productores desde edicion", productores)
 
   return (
     <form
@@ -154,147 +162,251 @@ const FormularioEdicionProductores: FC<IFormProductor> = ({ refresh, setOpen, id
       rounded-md`}
     >
       <div className='md:col-span-2 md:flex-col items-center'>
-        <label htmlFor="rut_productor">Rut Productor: </label>
-        <Input
-          type='text'
-          name='rut_productor'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.rut_productor}
-        />
+        <Label htmlFor='rut_productor'>Rut Productor: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.rut_productor ? true : undefined}
+          invalidFeedback={formik.errors.rut_productor ? String(formik.errors.rut_productor) : undefined}
+          >
+          <FieldWrap>
+          <Input
+              type='text'
+              name='rut_productor'
+              onChange={formik.handleChange}
+              className='py-3'
+              value={formik.values.rut_productor}
+            />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="nombre">Nombre: </label>
-        <Input
-          type='text'
-          name='nombre'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.nombre}
-        />
+        <Label htmlFor='nombre'>Nombre: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.nombre ? true : undefined}
+          invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
+          >
+          <FieldWrap>
+          <Input
+              type='text'
+              name='nombre'
+              onChange={formik.handleChange}
+              className='py-3'
+              value={formik.values.nombre}
+            />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
-        <label htmlFor="email">Correo: </label>
-        <Input
-          type='email'
-          name='email'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.email}
-        />
+        <Label htmlFor='email'>Email: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.email ? true : undefined}
+          invalidFeedback={formik.errors.email ? String(formik.errors.email) : undefined}
+          >
+          <FieldWrap>
+          <Input
+            type='text'
+            name='email'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.email}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:row-start-2 md:flex-col items-center'>
-        <label htmlFor="region">Región: </label>
-        <SelectReact
-          options={optionsRegion}
-          id='region'
-          name='region'
-          placeholder='Selecciona una región'
-          value={optionsRegion.find(option => Number(option?.value) === formik.values.region)}
-          className='h-14'
-          onChange={(value: any) => {
-            formik.setFieldValue('region', value.value)
-          }}
-        />
+        <Label htmlFor='region'>Región: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.region ? true : undefined}
+          invalidFeedback={formik.errors.region ? String(formik.errors.region) : undefined}
+          >
+          <FieldWrap>
+          <SelectReact
+              options={optionsRegion}
+              id='region'
+              name='region'
+              placeholder='Selecciona una región'
+              className='h-14'
+              value={optionsRegion.find(option => Number(option?.value) === formik.values.region)}
+              onChange={(value: any) => {
+                formik.setFieldValue('region', value.value)
+              }}
+            />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2  md:row-start-2 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="provincia">Provincia: </label>
-        <SelectReact
-          options={optionsProvincia}
-          id='provincia'
-          name='provincia'
-          placeholder='Selecciona una provincia'
-          value={optionsProvincia.find(option => Number(option?.value) === formik.values.provincia)}
-          className='h-14'
-          onChange={(value: any) => {
-            formik.setFieldValue('provincia', value.value)
-          }}
-        />
+        <Label htmlFor='provincia'>Provincia: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.provincia ? true : undefined}
+          invalidFeedback={formik.errors.provincia ? String(formik.errors.provincia) : undefined}
+          >
+          <FieldWrap>
+          <SelectReact
+            options={optionsProvincia}
+            id='provincia'
+            name='provincia'
+            placeholder='Selecciona una provincia'
+            className='h-14'
+            value={optionsProvincia.find(option => Number(option?.value) === formik.values.provincia)}
+            onChange={(value: any) => {
+              formik.setFieldValue('provincia', value.value)
+            }}
+          />
+          </FieldWrap>
+        </Validation>
+  
       </div>
 
       <div className='md:col-span-2 md:row-start-2 md:col-start-5 md:flex-col items-center'>
-        <label htmlFor="comuna">Comuna: </label>
-        <SelectReact
-          options={optionsComuna}
-          id='comuna'
-          name='comuna'
-          placeholder='Selecciona una comuna'
-          value={optionsComuna.find(option => Number(option?.value) === formik.values.comuna)}
-          className='h-14'
-          onChange={(value: any) => {
-            formik.setFieldValue('comuna', value.value)
-          }}
-        />
+        <Label htmlFor='comuna'>Comuna: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.comuna ? true : undefined}
+          invalidFeedback={formik.errors.comuna ? String(formik.errors.comuna) : undefined}
+          >
+          <FieldWrap>
+          <SelectReact
+            options={optionsComuna}
+            id='comuna'
+            name='comuna'
+            placeholder='Selecciona una comuna'
+            className='h-14'
+            value={optionsComuna.find(option => Number(option?.value) === formik.values.comuna)}
+            onChange={(value: any) => {
+              formik.setFieldValue('comuna', value.value)
+            }}
+          />
+          </FieldWrap>
+        </Validation>
+
       </div>
 
       <div className='md:col-span-2 md:row-start-3  md:flex-col items-center'>
-        <label htmlFor="direccion">Dirección: </label>
-        <Input
-          type='text'
-          name='direccion'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.direccion}
-        />
+        <Label htmlFor='direccion'>Dirección: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.direccion ? true : undefined}
+          invalidFeedback={formik.errors.direccion ? String(formik.errors.direccion) : undefined}
+          >
+          <FieldWrap>
+          <Input
+            type='text'
+            name='direccion'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.direccion}
+          />
+          </FieldWrap>
+        </Validation>
+        
       </div>
 
 
       <div className='md:col-span-2 md:row-start-3 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="telefono">Telefono Fijo: </label>
-        <Input
-          type='text'
-          name='telefono'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.telefono}
-        />
+        <Label htmlFor='telefono'>Telefono: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.telefono ? true : undefined}
+          invalidFeedback={formik.errors.telefono ? String(formik.errors.telefono) : undefined}
+          >
+          <FieldWrap>
+          <Input
+            type='text'
+            name='telefono'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.telefono}
+          />
+          </FieldWrap>
+        </Validation>
+
       </div>
 
 
 
       <div className='md:col-span-2 md:row-start-3 md:col-start-5 md:flex-col items-center'>
-        <label htmlFor="movil">Telefono Celular: </label>
-        <Input
-          type='text'
-          name='movil'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.movil}
-        />
+        <Label htmlFor='movil'>Movil: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.movil ? true : undefined}
+          invalidFeedback={formik.errors.movil ? String(formik.errors.movil) : undefined}
+          >
+          <FieldWrap>
+          <Input
+            type='text'
+            name='movil'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.movil}
+          />
+          </FieldWrap>
+        </Validation>
+
       </div>
 
       <div className='md:col-span-2 md:row-start-4 md:flex-col items-center'>
-        <label htmlFor="pagina_web">Página Web: </label>
-        <Input
-          type='text'
-          name='pagina_web'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.pagina_web}
-        />
+        <Label htmlFor='pagina_web'>Página Web: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.pagina_web ? true : undefined}
+          invalidFeedback={formik.errors.pagina_web ? String(formik.errors.pagina_web) : undefined}
+          >
+          <FieldWrap>
+          <Input
+            type='text'
+            name='pagina_web'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.pagina_web}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
       <div className='md:col-span-2 md:row-start-4 md:col-start-3 md:flex-col items-center'>
-        <label htmlFor="numero_contrato">N° Contrato: </label>
-        <Input
-          type='text'
-          name='numero_contrato'
-          onChange={formik.handleChange}
-          className='py-3'
-          value={formik.values.numero_contrato!}
-        />
+        <Label htmlFor='numero_contrato'>Número Contrato: </Label>
+
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.numero_contrato ? true : undefined}
+          invalidFeedback={formik.errors.numero_contrato ? String(formik.errors.numero_contrato) : undefined}
+          >
+          <FieldWrap>
+          <Input
+            type='text'
+            name='numero_contrato'
+            onChange={formik.handleChange}
+            className='py-3'
+            value={formik.values.numero_contrato!}
+          />
+          </FieldWrap>
+        </Validation>
       </div>
 
 
-      <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full'>
-        <button className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3.5'>Guardar Cambios</button>
+      <div className='md:row-start-4 md:col-start-5 md:col-span-2 relative w-full top-2'>
+        <button type='submit' className='w-full mt-6 bg-[#3B82F6] hover:bg-[#3b83f6cd] rounded-md text-white py-3.5'>Registrar Productor</button>
       </div>
     </form>
   )
 }
 
-export default FormularioEdicionProductores  
+export default FormularioRegistroProductores  

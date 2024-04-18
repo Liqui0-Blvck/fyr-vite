@@ -1,15 +1,11 @@
 import { useFormik } from 'formik'
 // import { Select, Switch } from 'antd'
 import Input from '../../../components/form/Input'
-import Select from '../../../components/form/Select'
 import React, { Dispatch, FC, SetStateAction } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/authContext'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import Container from '../../../components/layouts/Container/Container'
-import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper'
-import Card, { CardBody, CardHeader } from '../../../components/ui/Card'
 import SelectReact, { TSelectOptions } from '../../../components/form/SelectReact'
 import useDarkMode from '../../../hooks/useDarkMode'
 import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -78,7 +74,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           navigate('/app/productores')
 
         } else {
-          toast.error("No se pudo registrar el camión volver a intentar")
+          toast.error("No se pudo registrar el productor volver a intentar")
         }
       } catch (error) {
         console.log(error)
@@ -192,7 +188,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
       </div>
 
       <div className='md:col-span-2 md:row-start-2 md:flex-col items-center'>
-        <Label htmlFor='region'>region: </Label>
+        <Label htmlFor='region'>Región: </Label>
 
         <Validation
           isValid={formik.isValid}

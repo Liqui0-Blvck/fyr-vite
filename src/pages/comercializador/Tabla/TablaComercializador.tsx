@@ -83,14 +83,6 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
   const columns = [
     columnHelper.accessor('nombre', {
       cell: (info) => (
-        <div className='font-bold w-20'>
-          {`${info.row.original.nombre}`}
-        </div>
-      ),
-      header: 'Rut Productor'
-    }),
-    columnHelper.accessor('nombre', {
-      cell: (info) => (
         <div className='font-bold '>
           {`${info.row.original.nombre}`}
         </div>

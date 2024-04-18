@@ -11,6 +11,7 @@ import { TConductor } from '../../../types/registros types/registros.types'
 import Label from '../../../components/form/Label'
 import Validation from '../../../components/form/Validation'
 import FieldWrap from '../../../components/form/FieldWrap'
+import { conductorSchema } from '../../../utils/Validator'
 
 interface IFormChoferes {
   refresh: Dispatch<SetStateAction<boolean>>
@@ -37,6 +38,7 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
       rut: "",
       telefono: ""
     },
+    validationSchema: conductorSchema,
     onSubmit: async (values: any) => {
       try {
         const res = await fetch(`${base_url}/api/registros/choferes/${id}/`, {

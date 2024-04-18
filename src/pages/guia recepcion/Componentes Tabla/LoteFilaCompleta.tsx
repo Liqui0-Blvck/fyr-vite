@@ -30,7 +30,7 @@ interface ILoteCompletadoProps {
   setOpenModalRows: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
   kilos_total_envases: number | null
   kilos_netos_fruta: number | null
-  refresh: Dispatch<SetStateAction<boolean | null>>
+  refresh: Dispatch<SetStateAction<boolean>>
 }
 
 const LoteFilaCompleta: FC<ILoteCompletadoProps> = (

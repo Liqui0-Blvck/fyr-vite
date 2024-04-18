@@ -16,7 +16,7 @@ const ListaProductores = () => {
 
   return (
     <div className='h-full'>
-      <TablaProductor data={productores ? productores : []} refresh={() => setRefresh} />
+      <TablaProductor data={productores ? productores : []} refresh={setRefresh} />
     </div>
   )
 }

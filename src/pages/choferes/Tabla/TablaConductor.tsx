@@ -11,7 +11,6 @@ import {
 import { Link } from 'react-router-dom';
 import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper';
 import Container from '../../../components/layouts/Container/Container';
-import { appPages } from '../../../config/pages.config';
 import Card, {
 	CardBody,
 	CardHeader,
@@ -25,12 +24,6 @@ import TableTemplate, {
 	TableCardFooterTemplate,
 } from '../../../templates/common/TableParts.template';
 import Badge from '../../../components/ui/Badge';
-import Dropdown, {
-	DropdownItem,
-	DropdownMenu,
-	DropdownNavLinkItem,
-	DropdownToggle,
-} from '../../../components/ui/Dropdown';
 import Subheader, {
 	SubheaderLeft,
 	SubheaderRight,
@@ -81,10 +74,6 @@ const TablaConductor: FC<IConductorProps> = ({ data, refresh }) => {
 			toast.error('Error al eliminar el conductor')
 		}
 	}
-
-
-	const editLinkProductor = `/app/conductores/`
-	const createLinkProductor = `/app/registro-conductor/`
 
 	const columns = [
 		columnHelper.accessor('rut', {

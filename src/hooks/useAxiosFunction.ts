@@ -33,10 +33,8 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
       try {
         setLoading(true);
 
-        if (!isMounted) return;
-
-
-        
+        if (!isMounted) return
+      
           const response = await fetch(base_url + url, {
             method: 'GET',
             headers: {
@@ -50,7 +48,6 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
             setData(fetchedData);
           } else if (response.status === 401) {
             refreshToken()
-            setRefresh(true)
             setError('No estás autorizado para hacer esta petición');
           } else if (response.status === 404) {
             setError('La URL que ingresaste no tiene ninguna información');
