@@ -57,7 +57,7 @@ const DetalleCCTarjaReproceso = () => {
     if (control_calidad){
       clavesDeseadas.forEach((key: any) => {
         labels.push(key); // Agregar la etiqueta
-        valores.push(control_calidad[key]); // Calcular y agregar el valor
+        valores.push(parseFloat((control_calidad[key] / totalMuestra * 100).toFixed(2))); // Calcular y agregar el valor
       });
     }
 
@@ -179,7 +179,7 @@ const DetalleCCTarjaReproceso = () => {
                           </div>
                           <div className='md:row-start-6 md:col-start-3 md:col-span-2 '>
                             <Label htmlFor='' className='text-center'>Pepa Sana</Label>
-                            <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                            <div className='flex items-center justify-center dark:bg-green-700 bg-zinc-200 py-2 px-3 rounded-md'>
                               <span>{control_calidad?.pepa_sana.toFixed(1)} grs</span>
                             </div>
                           </div>

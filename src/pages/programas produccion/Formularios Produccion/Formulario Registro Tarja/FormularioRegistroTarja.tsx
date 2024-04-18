@@ -74,7 +74,7 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOp
             isValid={formik.isValid}
             isTouched={formik.touched.tipo_resultante ? true : undefined}
             invalidFeedback={formik.errors.tipo_resultante ? String(formik.errors.tipo_resultante) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                 options={optionTipoResultante}
@@ -98,7 +98,7 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOp
             isValid={formik.isValid}
             isTouched={formik.touched.peso ? true : undefined}
             invalidFeedback={formik.errors.peso ? String(formik.errors.peso) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <Input
                 type='number'
@@ -119,7 +119,7 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOp
             isValid={formik.isValid}
             isTouched={formik.touched.tipo_patineta ? true : undefined}
             invalidFeedback={formik.errors.tipo_patineta ? String(formik.errors.tipo_patineta) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                   options={optionTipoPatineta}
@@ -142,7 +142,7 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOp
             isValid={formik.isValid}
             isTouched={formik.touched.calle_bodega ? true : undefined}
             invalidFeedback={formik.errors.calle_bodega ? String(formik.errors.calle_bodega) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                   options={optionCalleBodega}

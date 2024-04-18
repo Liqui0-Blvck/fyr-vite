@@ -16,15 +16,19 @@ interface IEnvasePatioProps {
   muestra?: TEnvasePatio | null
   refresh?: Dispatch<SetStateAction<boolean>>
   id_lote?: number
+  total_envases: number
 
 }
 
-const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row, id_lote }) => {
+const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row, id_lote, total_envases }) => {
   const { authTokens, validate, perfilData, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
+
+
+  console.log(total_envases)
+
   
-  console.log(row?.estado_envase_label)
 
   return (
     <>
@@ -38,7 +42,7 @@ const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row, id_lote }) => {
       <TableCell className='table-cell-row-detail-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center py-2'>
           <Tooltip text={`${row?.id!}`}>
-            <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_bin}</span>
+            <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{row?.numero_bin} / {total_envases}</span>
           </Tooltip>
         </div>
       </TableCell>
@@ -50,11 +54,6 @@ const FilaEnvasesPatio: FC<IEnvasePatioProps> = ({ muestra: row, id_lote }) => {
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center py-2'>
           <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.estado_envase_label)}</span>
-        </div>
-      </TableCell>
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`, }}>
-        <div className=' h-full w-full flex items-center justify-center py-2'>
-          <span className={`text-md ${isDarkTheme ? 'text-white' : 'text-black'}`}>{(row?.guia_patio)}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>

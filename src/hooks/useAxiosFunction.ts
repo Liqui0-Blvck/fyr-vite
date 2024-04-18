@@ -17,11 +17,12 @@ interface IUseAuthenticatedFetchResult<T> {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (token: IToken | null) => Promise<boolean>, url: string): IUseAuthenticatedFetchResult<T> => {
+export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (token: IToken | null) => Promise<boolean> ,url: string): IUseAuthenticatedFetchResult<T> => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const { refreshToken } = useAuth()
   const navigate = useNavigate();
   const base_url = process.env.VITE_BASE_URL_DEV;
 
@@ -48,7 +49,8 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
             const fetchedData: T = await response.json();
             setData(fetchedData);
           } else if (response.status === 401) {
-            navigate(`not_found/`, { replace: true });
+            refreshToken()
+            setRefresh(true)
             setError('No estás autorizado para hacer esta petición');
           } else if (response.status === 404) {
             setError('La URL que ingresaste no tiene ninguna información');
@@ -58,8 +60,7 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
         
       } catch (error) {
         console.error(error);
-        navigate(`not_found/`, { replace: true });
-
+        setRefresh(true)
 
       } finally {
         setTimeout(() => {

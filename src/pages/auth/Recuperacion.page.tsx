@@ -77,7 +77,7 @@ const RecoveryPage: FC<IRecoveryPageProps> = ({ setOpen }) => {
 								isValid={formik.isValid}
 								isTouched={formik.touched.email}
 								invalidFeedback={formik.errors.email}
-								validFeedback='Good'>
+								>
 								<FieldWrap>
 									<Input
 										className='p-2'

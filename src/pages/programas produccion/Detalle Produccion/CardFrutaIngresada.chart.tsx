@@ -54,7 +54,7 @@ const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
       },
     },
     xaxis: {
-      categories: [`Kilos Fruta Ingresado ${Number(kilos_totales_ingresados_porcentual)} %`, `Kilos de Fruta Procesados ${Number(kilos_totales_procesados_porcentual)} %`],
+      categories: [`Fruta Ingresada ${Number(kilos_totales_ingresados_porcentual)} %`, `Fruta Procesada ${Number(kilos_totales_procesados_porcentual)} %`],
     },
     colors: ['#008FFB'],
     yaxis: {
@@ -130,13 +130,13 @@ const CardFrutaIngresada: FC<ICardFrutaCalibradaProps> = ({ envases_programa, pr
         <CardBody className="w-full h-full flex flex-col md:flex-col gap-y-5 lg:gap-2">
           <div className='w-full flex justify-between gap-y-2 md:gap-2 lg:gap-2 '>
             <div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center p-2'>
-              <span className="text-center w-11/12 mx-auto">Kilos totales en producción: {(totales_kilos_en_programa)?.toFixed(2)} kgs</span>
+              <span className="text-center w-11/12 mx-auto">Fruta en producción: {(totales_kilos_en_programa)?.toFixed(2)} kgs</span>
             </div>
             <div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center p-2'>
-              <span className="text-center w-8/12 mx-auto">Kilos Fruta Procesados: {(kilos_totales_ingresados)?.toFixed(2)} kgs.</span>
+              <span className="text-center w-8/12 mx-auto">Fruta Procesada: {(kilos_totales_ingresados)?.toFixed(2)} kgs.</span>
             </div>
             <div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center p-2'>
-              <span className="text-center w-8/12 mx-auto">Total de envases a procesar: {programa?.lotes.length} </span>
+              <span className="text-center w-8/12 mx-auto">Total de envases a procesar: {programa?.lotes.filter(lote => lote.bin_procesado !== true).length} </span>
             </div>
           </div>
           <div className="w-full h-full">

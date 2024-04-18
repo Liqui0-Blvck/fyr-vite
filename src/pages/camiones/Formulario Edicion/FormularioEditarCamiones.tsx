@@ -95,7 +95,7 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
             isValid={formik.isValid}
             isTouched={formik.touched.patente ? true : undefined}
             invalidFeedback={formik.errors.patente ? String(formik.errors.patente) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
             <Input
               type='text'
@@ -115,7 +115,7 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
             isValid={formik.isValid}
             isTouched={formik.touched.acoplado ? true : undefined}
             invalidFeedback={formik.errors.acoplado ? String(formik.errors.acoplado) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                 options={optionsAcoplado}
@@ -141,7 +141,7 @@ const FormularioEditarCamiones: FC<IFormCamiones> = ({ refresh, setOpen, id }) =
             isValid={formik.isValid}
             isTouched={formik.touched.observaciones ? true : undefined}
             invalidFeedback={formik.errors.observaciones ? String(formik.errors.observaciones) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <Textarea
                 rows={5}

@@ -18,12 +18,13 @@ import FieldWrap from '../../../components/form/FieldWrap'
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
 import { calibracionSchema } from '../../../utils/Validator'
+import Button from '../../../components/ui/Button'
 
 interface IFormCC {
   id_lote?: number
   refresh?: Dispatch<SetStateAction<boolean>>
   isOpen?: Dispatch<SetStateAction<boolean>>
-  CCLote?: TPepaMuestra | null
+  CCLote?: TRendimientoMuestra[] | null
   id_muestra?: number
 }
 
@@ -39,17 +40,16 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
     `/api/control-calidad/recepcionmp/${id[0]}/muestras/${id_muestra}/cdcpepa/`
   )
 
-  console.log(id)
-  console.log(id_muestra)
-
-  console.log(CCLote)
+  console.log("gola", CCLote)
 
   const pepaCCID = [...(ccPepa || [])].shift()?.id
 
+  const promedio_pepa_sana = CCLote?.reduce((acc, lote) => lote.pepa + acc, 0)! / CCLote?.length!
+  console.log("Creo ser un promedio", promedio_pepa_sana)
 
   const formik = useFormik({
     initialValues: {
-      peso_muestra_calibre: 0,
+      peso_muestra_calibre: promedio_pepa_sana,
       gramos_x_asignar: 0,
       pre_calibre: 0, 
       calibre_18_20: 0,
@@ -67,7 +67,7 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
     validationSchema: calibracionSchema,
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/${id[0]}/muestras/${id_muestra}/cdcpepa/${pepaCCID }/`, {
+        const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/${id[0]}/muestras/${id_muestra}/cdcpepa/${pepaCCID}/`, {
           method: 'PATCH', 
           headers: {
             'Content-Type': 'application/json',
@@ -91,12 +91,12 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
           })
         })
         if (res.ok) {
-          toast.success("El control de calidad fue registrado exitosamente!!")
+          toast.success("la calibración fue registrada exitosamente!!")
           refresh!(true)
           isOpen!(false)
 
         } else {
-          toast.error("No se pudo registrar el control de calidad, volver a intentar")
+          toast.error("No se pudo registrar la calibración, volver a intentar")
           
         }
       } catch (error) {
@@ -164,13 +164,16 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
     formik.values.calibre_40_mas
     ]);
 
-    // const pepa_sana = 
+
+
+
+  console.log("soy los valores del formik", formik.values)
 
   
   return (
     <form
         onSubmit={formik.handleSubmit}
-        className={`w-[300px] md:w-full lg:w-full flex-col md:grid lg:grid lg:grid-cols-8 gap-x-3
+        className={`w-[400px] md:w-full lg:w-full flex-col md:grid lg:grid lg:grid-cols-8 gap-x-3
         gap-y-10  mt-10 ${ isDarkTheme ? 'bg-zinc-950' : 'bg-white'} p-2 
         rounded-md`}
       >
@@ -181,7 +184,6 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
             isValid={formik.isValid}
             isTouched={formik.touched.peso_muestra_calibre ? true : undefined}
             invalidFeedback={formik.errors.peso_muestra_calibre ? String(formik.errors.peso_muestra_calibre) : undefined}
-            validFeedback='Bien'
             >
             <FieldWrap>
               <Input
@@ -408,8 +410,10 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
 
 
         <div className='row-start-5 col-start-7 relative w-full h-20 col-span-2 '>
-         <button type='submit' className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
-            Guardar CC Pepa Bruta
+          <button 
+            type='submit' 
+            className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
+            Calibrar Muestra Lote
           </button>
         </div>
       </form>

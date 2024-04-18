@@ -102,7 +102,7 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
           isValid={formik.isValid}
           isTouched={formik.touched.nombre ? true : undefined}
           invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -123,7 +123,7 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
           isValid={formik.isValid}
           isTouched={formik.touched.razon_social ? true : undefined}
           invalidFeedback={formik.errors.razon_social ? String(formik.errors.razon_social) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -143,7 +143,7 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
           isValid={formik.isValid}
           isTouched={formik.touched.giro ? true : undefined}
           invalidFeedback={formik.errors.giro ? String(formik.errors.giro) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -165,7 +165,7 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
           isValid={formik.isValid}
           isTouched={formik.touched.direccion ? true : undefined}
           invalidFeedback={formik.errors.direccion ? String(formik.errors.direccion) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -186,7 +186,7 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
           isValid={formik.isValid}
           isTouched={formik.touched.zip_code ? true : undefined}
           invalidFeedback={formik.errors.zip_code ? String(formik.errors.zip_code) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -208,7 +208,7 @@ const FormularioEdicionComercializador: FC<IFormComercializadorProps> = ({ refre
           isValid={formik.isValid}
           isTouched={formik.touched.email_comercializador ? true : undefined}
           invalidFeedback={formik.errors.email_comercializador ? String(formik.errors.email_comercializador) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'

@@ -73,7 +73,7 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
             isValid={formik.isValid}
             isTouched={formik.touched.nombre ? true : undefined}
             invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
                <Input
                  type='text'
@@ -93,7 +93,7 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
             isValid={formik.isValid}
             isTouched={formik.touched.peso ? true : undefined}
             invalidFeedback={formik.errors.peso ? String(formik.errors.peso) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
                <Input
                  type='text'
@@ -113,7 +113,7 @@ const FormularioRegistroEnvases : FC<IFormEnvasesProps> = ({ refresh, setOpen })
             isValid={formik.isValid}
             isTouched={formik.touched.descripcion ? true : undefined}
             invalidFeedback={formik.errors.descripcion ? String(formik.errors.descripcion) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <Textarea 
                 name='descripcion'

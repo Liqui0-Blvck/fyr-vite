@@ -80,8 +80,7 @@ const styles = StyleSheet.create({
     padding: 5
   },
   header_date_info_text: {
-    fontSize: 10,
-    textAlign: 'center'
+    fontSize: 8,
   },
   body: {
     width: '100%',
@@ -122,10 +121,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   body_table_info_text: {
-    fontSize: 10,
-    borderRight: '1px solid green',
-    paddingRight: '3px',
-    textAlign: 'center'
+    fontSize: 8,
+    paddingVertical: 4,
+    borderRight: '1px solid green', 
+    paddingRight: 2,
+    textAlign: 'center',
+    borderBottom: '1px solid green',
+    
   },
   body_table_rows: {
     width: '100%',
@@ -177,7 +179,6 @@ const CCRendimiento = () => {
 
   const entry = Object.entries(rendimiento_cc) 
   const filteredEntry = entry.filter(([key]) => key !== 'cc_lote')
-  console.log(filteredEntry)
   formattedData = filteredEntry.map(([key, value]) => ({
     label: key,
     data: [value]
@@ -186,8 +187,7 @@ const CCRendimiento = () => {
 
   labels = labels_pre.map((label, index) => {
     if (label !== 'cc_lote') {
-      const porcentaje = (valores[index] / total) * 100;
-      return `${label}: ${porcentaje.toFixed(1)}%`;
+      return `${label}: ${valores[index].toFixed(1)}%`;
     }
     return null; // Ignorar 'cc_lote' devolviendo null
   }).filter(label => label !== null);
@@ -213,10 +213,6 @@ const CCRendimiento = () => {
     getRendimientos()
   }, [control_calidad])
 
-  const labelStyle = {
-    fontSize: 14, // Tamaño de fuente
-    fontColor: 'white', // Color de fuente
-  };
   
 
   console.log(formattedData)
@@ -233,7 +229,7 @@ const CCRendimiento = () => {
             labels: labels,
             datasets: [{
                 data: formattedData.map((item: any) => item.data[0]),
-                backgroundColor: ['#ffcd5c', '#5CEBAF', '#3b82f6', '#F43F5E', '#D885FF', 'D855FF'],
+                backgroundColor: ['#ffcd5c', '#5CEBAF', '#3b82f6', '#F43F5E', '#D885FF', '#0ece6e'],
                 borderColor: "darkgreen",
                 color: 'black',
                 size: 10
@@ -295,7 +291,7 @@ const CCRendimiento = () => {
             }}>
 
               <View style={styles.header_info_box_superior}>
-                <Text style={{ fontSize: 10 }}>Datos Guia Recepcion Materia Prima </Text>
+                <Text style={{ fontSize: 8 }}>Datos Guia Recepcion Materia Prima </Text>
                 <View style={styles.header_info_inferior}>
                 
                   <View style={styles.header_date_info_box}>
@@ -325,7 +321,7 @@ const CCRendimiento = () => {
               </View>
 
               <View style={styles.header_info_box_superior}>
-                <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Datos Inspección Control De Calidad</Text>
+                <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Datos Inspección Control De Calidad</Text>
                 <View style={styles.header_info_inferior}>
                 
                   <View style={styles.header_date_info_box}>
@@ -362,14 +358,14 @@ const CCRendimiento = () => {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                height: 40,
+                height: 45,
                 border: '1px solid green',
                 borderRadius: 5,
                 position: 'relative',
                 top: -20,
                 padding: 5
             }}>
-                <Text style={{ fontSize: 10 }}>
+                <Text style={{ fontSize: 8 }}>
                   {control_calidad?.observaciones}
                 </Text>
               </View>
@@ -394,15 +390,19 @@ const CCRendimiento = () => {
                 position: 'relative',
                 top: -20
               }}>
-                  <Text style={{ fontSize: 10}}>Control Rendimiento</Text>
+                  <Text style={{ fontSize: 8}}>Control Rendimiento</Text>
                   <View style={{width: '100%', height: 170, padding: 20}} >
                     <Image source={`${imageSrc}`} style={{ height: 150 }}/>
               
                   </View>
                 </View>
-                <View style={styles.header_info_box_superior}>
-                  <Text style={{ fontSize: 12, textAlign: 'center'}}>Calibres</Text>
-                  <View style={{width: '100%', height: 150}}>
+                <View style={{
+                  width: '100%',
+                  position: 'relative',
+                  top: -20
+                }}>
+                  <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: 5}}>Calibres</Text>
+                  <View style={{width: '100%', height: 230}}>
                     <View style={styles.body_table}>
                       
                       // 1
@@ -435,7 +435,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_18_20! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_18_20}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_18_20}%</Text> 
                           </View>
                         </View>
 
@@ -452,7 +452,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_20_22! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_20_22}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_20_22}%</Text> 
                           </View>
                         </View>
 
@@ -468,7 +468,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_23_25! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_23_25}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_23_25}%</Text> 
                           </View>
                         </View>
 
@@ -484,7 +484,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_25_27! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_25_27}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_25_27}%</Text> 
                           </View>
                         </View>
 
@@ -500,7 +500,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_27_30! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_27_30}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_27_30}%</Text> 
                           </View>
                         </View>
 
@@ -516,7 +516,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_30_32! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_30_32}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_30_32}%</Text> 
                           </View>
                         </View>
                         
@@ -532,7 +532,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_32_34! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_32_34}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_32_34}%</Text> 
                           </View>
                         </View>
 
@@ -545,10 +545,10 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>34/36</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_34_36! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} %</Text> 
+                            <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_34_36! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_34_36}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_34_36}%</Text> 
                           </View>
                         </View>
 
@@ -564,14 +564,14 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_36_40! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_36_40}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_36_40}%</Text> 
                           </View>
                         </View>
 
                         // 10
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ width: '100%', borderRight: '1px solid green', color: 'white', fontSize: 10}}>a</Text> 
+                            <Text style={{ width: '100%', borderRight: '1px solid green',  borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8}}>a</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
                             <Text style={styles.body_table_info_text}>40/+</Text> 
@@ -580,14 +580,14 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_40_mas! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].calibre_40_mas}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].calibre_40_mas}%</Text> 
                           </View>
                         </View>
 
                         // 10
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ width: '100%', borderRight: '1px solid green', color: 'white', fontSize: 10}}>a</Text> 
+                            <Text style={{ width: '100%', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8}}>a</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
                             <Text style={styles.body_table_info_text}>Pre calibre</Text> 
@@ -596,7 +596,7 @@ const CCRendimiento = () => {
                             <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].precalibre! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 10}}>{rendimientos?.cc_pepa_calibre[0].precalibre}%</Text> 
+                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].precalibre}%</Text> 
                           </View>
                         </View>
 
@@ -613,8 +613,8 @@ const CCRendimiento = () => {
                   position: 'relative',
                   top: -30
                 }}>
-                  <Text style={{ fontSize: 12 }}>CAT 2</Text>
-                  <View style={{width: '100%', height: 100}}>
+                  <Text style={{ fontSize: 12, textAlign: 'center' }}>CAT 2</Text>
+                  <View style={{width: '100%', height: 105}}>
                     <View style={styles.body_table}>
                       
                       // 1
@@ -638,16 +638,16 @@ const CCRendimiento = () => {
                         // 1
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 9, borderRight: '1px solid green'}}>Mezcla Variedades</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>Mezcla Variedades</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 6, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].mezcla}%</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>{rendimientos?.cc_pepa[0].mezcla}%</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 6, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>5 %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>5 %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 9}}>{rendimientos?.cc_descuentos[0].mezcla}%</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green'}}>{rendimientos?.cc_descuentos[0].mezcla}%</Text> 
                           </View>
                         </View>
 
@@ -655,48 +655,48 @@ const CCRendimiento = () => {
 
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Fuera Color</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>Fuera Color</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].color}%</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>{rendimientos?.cc_pepa[0].color}%</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>5 %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>5 %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 9}}>{rendimientos?.cc_descuentos[0].color}%</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green'}}>{rendimientos?.cc_descuentos[0].color}%</Text> 
                           </View>
                         </View>
 
                         // 4
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Dobles</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>Dobles</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].dobles}%</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].dobles}%</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>10 %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>10 %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ textAlign: 'center', fontSize: 9}}>{rendimientos?.cc_descuentos[0].dobles}%</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].dobles}%</Text> 
                           </View>
                         </View>
 
                         // 5
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderTop: '1px solid green'}}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ padding: 2, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Total CAT2</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>Total CAT2</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.body_table_info_text}></Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>a</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.body_table_info_text}></Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>a</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{fontSize: 9, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].cat2} %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].cat2} %</Text> 
                           </View>
                         </View>
 
@@ -707,114 +707,114 @@ const CCRendimiento = () => {
 
 
                   <Text style={{ fontSize: 12, textAlign: 'center' }}>Desechos</Text>
-                    <View style={{width: '100%', height: 170}}>
+                    <View style={{width: '100%', height: 160}}>
                   
                     <View style={styles.body_table}>
                       
                       <View style={styles.body_table_header}>
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ fontSize: 10, textAlign: 'center', padding: 2}}>Desechos</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>Desechos</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ fontSize: 10, textAlign: 'center', padding: 2}}>%</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>%</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ fontSize: 10, textAlign: 'center', padding: 2}}>% Permitido</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>% Permitido</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ fontSize: 10, textAlign: 'center'}}>Kilos des</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>Kilos des</Text> 
                           </View>
                         </View>
                       </View>
                       <View style={styles.body_table_info}>
                         <View style={styles.body_table_rows}>
                           <View style={{ width: '350px'}}>
-                            <Text style={{ padding: 4, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Daño insecto</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>Daño insecto</Text> 
                           </View>
                           <View style={{ width: '350px'}}>
-                            <Text style={{ padding: 4, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].insecto} %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>{rendimientos?.cc_pepa[0].insecto} %</Text> 
                           </View>
                           <View style={{ width: '350px'}}>
-                            <Text style={{ padding: 4, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>1.5 %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>1.5 %</Text> 
                           </View>
                           <View style={{ width: '350px'}}>
-                            <Text style={{ padding: 4, fontSize: 9, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].insecto} Kgs</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green'}}>{rendimientos?.cc_descuentos[0].insecto} Kgs</Text> 
                           </View>
                         </View>
 
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 3, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Presencia de Hongo</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>Presencia de Hongo</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 8, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].hongo} %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>{rendimientos?.cc_pepa[0].hongo} %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 8, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>1.5 %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>1.5 %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 8, fontSize: 9, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].hongo} Kgs</Text> 
-                          </View>
-                        </View>
-
-                        <View style={styles.body_table_rows}>
-                          <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 3, paddingHorizontal: 1, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Vana Deshidratada</Text> 
-                          </View>
-                          <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 8, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].vana} %</Text> 
-                          </View>
-                          <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 8, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>1 %</Text> 
-                          </View>
-                          <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 7, fontSize: 9, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].vana} Kgs</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green'}}>{rendimientos?.cc_descuentos[0].hongo} Kgs</Text> 
                           </View>
                         </View>
 
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 7, paddingHorizontal: 1, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Punto de Goma</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>Vana Deshidratada</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 7, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].pgoma} %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>{rendimientos?.cc_pepa[0].vana} %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 7, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>0.5 %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>1 %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 7, fontSize: 9, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].pgoma} Kgs</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green'}}>{rendimientos?.cc_descuentos[0].vana} Kgs</Text> 
                           </View>
                         </View>
 
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 5, paddingHorizontal: 1, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Goma</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>Punto de Goma</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>{rendimientos?.cc_pepa[0].goma} %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>{rendimientos?.cc_pepa[0].pgoma} %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 5, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>0.5 %</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>0.5 %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 7, fontSize: 9, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].goma} Kgs</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green'}}>{rendimientos?.cc_descuentos[0].pgoma} Kgs</Text> 
                           </View>
                         </View>
 
-                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderTop: '1px solid green'}}>
+                        <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 4, paddingHorizontal: 1, fontSize: 9, textAlign: 'center', borderRight: '1px solid green'}}>Total Deshecho</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>Goma</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 4, fontSize: 9, textAlign: 'center'}}></Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>{rendimientos?.cc_pepa[0].goma} %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 4, fontSize: 9, textAlign: 'center'}}></Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green'}}>0.5 %</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 7, fontSize: 9, textAlign: 'center'}}>{(rendimientos?.cc_descuentos[0].desechos)?.toFixed(1)} Kgs</Text> 
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green'}}>{rendimientos?.cc_descuentos[0].goma} Kgs</Text> 
+                          </View>
+                        </View>
+
+                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                          <View style={styles.boxes_table_row}>
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>Total Deshecho</Text> 
+                          </View>
+                          <View style={styles.boxes_table_row}>
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>1</Text> 
+                          </View>
+                          <View style={styles.boxes_table_row}>
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>1</Text> 
+                          </View>
+                          <View style={styles.boxes_table_row}>
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>{(rendimientos?.cc_descuentos[0].desechos)?.toFixed(1)} Kgs</Text> 
                           </View>
                         </View>
                       </View>
@@ -830,13 +830,15 @@ const CCRendimiento = () => {
                   flexDirection: 'column',
                   gap: 2,
                   justifyContent: 'space-between',
+                  position: 'relative',
+                  top: -34,
                 }}>
-                  <Text style={{ fontSize: 14}}>Resumen</Text>
-                  <View style={{width: '100%', height: 80, border: '1px solid green', borderRadius: 4, padding: '10px'}}>
+                  <Text style={{ fontSize: 14, textAlign: 'center' }}>Resumen</Text>
+                  <View style={{width: '100%', height: 70, border: '1px solid green', borderRadius: 4, padding: '5px'}}>
                   
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                       <View style={{ width: 150 }}>
-                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Totales Recepcionados: </Text>
+                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Recepcionados: </Text>
                       </View>
                       <View style={{ width: '50%' }}>
                           <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_netos} kgs</Text>
@@ -845,7 +847,7 @@ const CCRendimiento = () => {
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                       <View style={{ width: 150 }}>
-                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Pepa Bruta: </Text>
+                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Bruta: </Text>
                       </View>
                       <View style={{ width: '50%' }}>
                         <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</Text>
@@ -854,7 +856,7 @@ const CCRendimiento = () => {
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                       <View style={{ width: 150 }}>
-                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Porcentaje Pepa Bruta: </Text>
+                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Bruta: </Text>
                       </View>
                       <View style={{ width: '50%' }}>
                         <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.por_brutos} %</Text>
@@ -864,7 +866,7 @@ const CCRendimiento = () => {
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                       <View style={{ width: 150 }}>
-                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
+                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
                       </View>
                       <View style={{ width: '50%' }}>
                         <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable)?.toFixed(1)} kgs</Text>
@@ -874,7 +876,7 @@ const CCRendimiento = () => {
 
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                       <View style={{ width: 150 }}>
-                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
+                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
                       </View>
                       
                       <View style={{ width: '50%' }}>
@@ -886,7 +888,7 @@ const CCRendimiento = () => {
 
                   <View style={{
                     width: '100%',
-                    height: 60,
+                    height: 50,
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 3,
@@ -911,10 +913,10 @@ const CCRendimiento = () => {
                          padding: 1,
                          marginBottom: 3
                       }}>
-                        <Text style={{ fontSize: 9 }}></Text>
-                        <Text style={{ fontSize: 9 }}></Text>
-                        <Text style={{ fontSize: 9 }}>Merma</Text>
-                        <Text style={{ fontSize: 9, position: 'relative', left: -20 }}>Final</Text>
+                        <Text style={{ fontSize: 8 }}></Text>
+                        <Text style={{ fontSize: 8 }}></Text>
+                        <Text style={{ fontSize: 8 }}>Merma</Text>
+                        <Text style={{ fontSize: 8, position: 'relative', left: -20 }}>Final</Text>
                       </View>
 
                       <View style={{
@@ -931,15 +933,15 @@ const CCRendimiento = () => {
                                 justifyContent: "space-between",
                             }}>
                           <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                            <Text style={{ fontSize: 9}}>Almendras Exportables</Text>
+                            <Text style={{ fontSize: 8}}>Almendras Exportables</Text>
                           </View>
 
                           <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40}}>
-                            <Text style={{ fontSize: 9}}>{rendimientos?.cc_calculo_final.merma_exp} kgs</Text>
+                            <Text style={{ fontSize: 8}}>{rendimientos?.cc_calculo_final.merma_exp} kgs</Text>
                           </View>
 
                           <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35}}>
-                            <Text style={{ fontSize: 9}}>{rendimientos?.cc_calculo_final.final_exp} kgs</Text>
+                            <Text style={{ fontSize: 8}}>{rendimientos?.cc_calculo_final.final_exp} kgs</Text>
                           </View>
                           
                         </View>
@@ -959,14 +961,14 @@ const CCRendimiento = () => {
                                 justifyContent: "space-between",
                             }}>
                           <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                            <Text style={{ fontSize: 9}}>CAT 2</Text>
+                            <Text style={{ fontSize: 8}}>CAT 2</Text>
                           </View>
                           <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                            <Text style={{ fontSize: 9}}>{rendimientos?.cc_calculo_final.merma_cat2}</Text>
+                            <Text style={{ fontSize: 8}}>{rendimientos?.cc_calculo_final.merma_cat2}</Text>
                           </View>
 
                           <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                            <Text style={{ fontSize: 9}}>{rendimientos?.cc_calculo_final.final_cat2}</Text>
+                            <Text style={{ fontSize: 8}}>{rendimientos?.cc_calculo_final.final_cat2}</Text>
                           </View>
                           
                         </View>
@@ -986,14 +988,14 @@ const CCRendimiento = () => {
                                 justifyContent: "space-between",
                             }}>
                           <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5}}>
-                            <Text style={{ fontSize: 9}}>Desechos</Text>
+                            <Text style={{ fontSize: 8}}>Desechos</Text>
                           </View>
                           <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                            <Text style={{ fontSize: 9, fontWeight: 'bold'}}>{rendimientos?.cc_calculo_final.merma_des} kgs</Text>
+                            <Text style={{ fontSize: 8, fontWeight: 'bold'}}>{rendimientos?.cc_calculo_final.merma_des} kgs</Text>
                           </View>
                           
                           <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                            <Text style={{ fontSize: 9}}>{rendimientos?.cc_calculo_final.final_des} kgs</Text>
+                            <Text style={{ fontSize: 8}}>{rendimientos?.cc_calculo_final.final_des} kgs</Text>
                           </View>
                           
                         </View>
@@ -1002,15 +1004,15 @@ const CCRendimiento = () => {
                   </View>
 
                   {
-                    control_calidad?.estado_aprobacion_cc === 1
+                    String(control_calidad?.estado_aprobacion_cc) === '1'
                         ? (
-                          <View style={{ width: '100%', display: 'flex', height: 100, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'relative' }}>
+                          <View style={{ width: '100%', display: 'flex', height: 100, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 180 }}>
                             <Image source='/src/assets/firma_donandres.png' style={{ width: 100, height: 50}}/>
                             <Text style={{ 
                               borderBottom: '1px solid green',
                               height: 15,
                               width: '100%',
-                              fontSize: 10,
+                              fontSize: 8,
                               textAlign: 'center'
                             }}>
                               CC Aprobado por Andres Hasbun

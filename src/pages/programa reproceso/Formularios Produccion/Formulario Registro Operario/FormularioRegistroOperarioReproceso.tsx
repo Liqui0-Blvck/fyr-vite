@@ -90,7 +90,7 @@ const FormularioRegistroOperarioProgramaReproceso: FC<IFormCamiones> = ({ refres
             isValid={formik.isValid}
             isTouched={formik.touched.operario ? true : undefined}
             invalidFeedback={formik.errors.operario ? String(formik.errors.operario) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
             <SelectReact
                 options={optionOperario}
@@ -114,7 +114,7 @@ const FormularioRegistroOperarioProgramaReproceso: FC<IFormCamiones> = ({ refres
             isValid={formik.isValid}
             isTouched={formik.touched.dia ? true : undefined}
             invalidFeedback={formik.errors.dia ? String(formik.errors.dia) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <Input
                 type='date'

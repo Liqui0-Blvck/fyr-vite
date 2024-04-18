@@ -197,8 +197,7 @@ const FormularioEdicionGuiaRecepcion = () => {
             isValid={formik.isValid}
             isTouched={formik.touched.camionero ? true : undefined}
             invalidFeedback={formik.errors.camionero ? String(formik.errors.camionero) : undefined}
-
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                 options={optionsConductor}
@@ -260,8 +259,7 @@ const FormularioEdicionGuiaRecepcion = () => {
             isValid={formik.isValid}
             isTouched={formik.touched.numero_guia_productor ? true : undefined}
             invalidFeedback={formik.errors.numero_guia_productor ? String(formik.errors.numero_guia_productor) : undefined}
-
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <Input
                 type='text'

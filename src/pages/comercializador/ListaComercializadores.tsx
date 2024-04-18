@@ -12,6 +12,8 @@ const ListaComercializadores = () => {
     `/api/comercializador/`
   )
 
+  console.log(comercializador)
+
 
   return (
     <div className='h-full'>

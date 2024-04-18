@@ -71,9 +71,10 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
     })
 
     if (res.ok){
+      toast.success("Eliminado correctamente!")
       refresh(true)
     } else {
-      console.log("Confirmame porfavor")
+      toast.error("No se ha podido eliminar")
     }
   }
 
@@ -93,17 +94,17 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
     <>
       <TableCell className='table-cell-row-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'} ${control_calidad.esta_contramuestra && !row?.es_contramuestra ? 'line-through' : ''}`}>{row?.id}</span>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'} ${control_calidad.esta_contramuestra && row?.es_contramuestra ? '' : 'line-through'}`}>{row?.id}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}  ${control_calidad.esta_contramuestra && !row?.es_contramuestra ? 'line-through' : ''}`}>{format(row?.fecha_creacion!, { date: 'long', time: 'short' }, 'es')}</span>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}  ${control_calidad.esta_contramuestra && row?.es_contramuestra ? '' : 'line-through'}`}>{format(row?.fecha_creacion!, { date: 'long', time: 'short' }, 'es')}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center gap-5'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}  ${control_calidad.esta_contramuestra && !row?.es_contramuestra ? 'line-through' : ''}`}>{userData?.user.username} | {userData?.user.email}</span>
+          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}  ${control_calidad.esta_contramuestra && row?.es_contramuestra ? '' : 'line-through'}`}>{userData?.user.username} | {userData?.user.email}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
@@ -158,7 +159,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
             </Tooltip>
 
             {
-              cargolabels(perfilData).includes('CDC Jefatura', 'Administrador') && row?.es_contramuestra
+              cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
                 ? (
                   <ModalRegistro
                     open={openConfirmacion}

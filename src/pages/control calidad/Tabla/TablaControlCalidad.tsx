@@ -70,6 +70,9 @@ const TablaControlCalidad: FC<IControlProps> = ({ data, refresh }) => {
 		const base_url = process.env.VITE_BASE_URL_DEV
 		const response = await fetch(`${base_url}/api/envasesmp/${id}/`, {
 			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${authTokens?.access}`
+			}
 		})
 		if (response.ok) {
 			refresh(true)

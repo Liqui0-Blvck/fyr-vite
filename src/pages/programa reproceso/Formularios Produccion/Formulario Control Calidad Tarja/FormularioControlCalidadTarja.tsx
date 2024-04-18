@@ -24,7 +24,7 @@ interface IFormCC {
   id_muestra?: number
 }
 
-const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_muestra }) => {
+const FormularioControlCalidadTarjaResultante : FC<IFormCC> = ({ id_lote, refresh, isOpen, id_muestra }) => {
   const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
@@ -97,6 +97,45 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
     }
   })
 
+  const calcularPepaSana = () => {
+    const {
+      cantidad_muestra,
+      trozo,
+      picada,
+      hongo,
+      daño_insecto,
+      dobles,
+      goma,
+      basura,
+      mezcla_variedad,
+      fuera_color,
+      punto_goma,
+      vana_deshidratada,
+    } = formik.values;
+
+    return (
+      cantidad_muestra - trozo - picada - hongo - daño_insecto - dobles - goma - basura - mezcla_variedad - fuera_color - punto_goma - vana_deshidratada
+    );
+  };
+
+  // Actualiza el valor de pepa_sana cuando cambia algún campo relevante
+  useEffect(() => {
+    formik.setFieldValue('pepa_sana', calcularPepaSana());
+  }, [
+    formik.values.cantidad_muestra,
+    formik.values.trozo,
+    formik.values.picada,
+    formik.values.hongo,
+    formik.values.daño_insecto,
+    formik.values.dobles,
+    formik.values.goma,
+    formik.values.basura,
+    formik.values.mezcla_variedad,
+    formik.values.fuera_color,
+    formik.values.punto_goma,
+    formik.values.vana_deshidratada,
+  ]);
+
 
   console.log(formik.values)
   
@@ -114,7 +153,6 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
             isValid={formik.isValid}
             isTouched={formik.touched.variedad ? true : undefined}
             invalidFeedback={formik.errors.variedad ? String(formik.errors.variedad) : undefined}
-            validFeedback='Bien'
             >
             <FieldWrap>
               <SelectReact
@@ -329,25 +367,6 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
         </div>
 
         <div className='md:row-start-4 md:col-start-9 md:col-span-4'>
-          <Label htmlFor='pepa_sana'>Pepa Sana: </Label>
-
-          <Validation
-            isValid={formik.isValid}
-            isTouched={formik.touched.pepa_sana ? true : undefined}
-            invalidFeedback={formik.errors.pepa_sana ? String(formik.errors.pepa_sana) : undefined}>
-            <FieldWrap>
-              <Input
-                type='number'
-                name='pepa_sana'
-                onChange={formik.handleChange}
-                className='py-2 w-[90%] bg-zinc-100 focus-visible:bg-zinc-200'
-                value={formik.values.pepa_sana}
-              />
-            </FieldWrap>
-          </Validation>
-        </div>
-
-        <div className='md:row-start-5 md:col-span-4'>
           <Label htmlFor='fuera_color'>Fuera de Color: </Label>
 
           <Validation
@@ -366,7 +385,7 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
           </Validation>
         </div>
 
-        <div className='md:row-start-5 md:col-start-5 md:col-span-4'>
+        <div className='md:row-start-5  md:col-span-4'>
           <Label htmlFor='punto_goma'>Punto de Goma: </Label>
 
           <Validation
@@ -385,7 +404,7 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
           </Validation>
         </div>
 
-        <div className='md:row-start-5 md:col-start-9 md:col-span-4'>
+        <div className='md:row-start-5 md:col-start-5 md:col-span-4'>
           <Label htmlFor='vana_deshidratada'>Vana Deshidratada: </Label>
 
           <Validation
@@ -416,7 +435,7 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, refresh, isOpen,
   )
 }
 
-export default FormularioControlCalidadTarja
+export default FormularioControlCalidadTarjaResultante
 
 
 

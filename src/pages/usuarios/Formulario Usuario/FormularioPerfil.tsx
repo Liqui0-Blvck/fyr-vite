@@ -34,25 +34,6 @@ const FormularioPerfil = () => {
     gap-y-5 mt-10 ${ isDarkTheme ? 'bg-zinc-700' : 'bg-zinc-200'} relative px-5 py-6
     rounded-md`}
   >
-    {/* <div className='md:col-span-2 md:flex-col items-center'>
-      <Label htmlFor='patente'>Patente: </Label>
-
-      <Validation
-        isValid={formik.isValid}
-        isTouched={formik.touched.patente ? true : undefined}
-        invalidFeedback={formik.errors.patente ? String(formik.errors.patente) : undefined}
-        validFeedback='Good'>
-        <FieldWrap>
-        <Input
-          type='text'
-          name='patente'
-          onChange={formik.handleChange}
-          className='py-3 text-black'
-          value={formik.values.patente}
-        />
-        </FieldWrap>
-      </Validation>
-    </div> */}
 
     <div className='md:col-span-2 md:col-start-3 md:flex-col flex'>
       <Label htmlFor='acoplado'>Acoplado: </Label>

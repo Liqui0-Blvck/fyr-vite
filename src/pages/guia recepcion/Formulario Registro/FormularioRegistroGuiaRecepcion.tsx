@@ -167,7 +167,7 @@ const FormularioRegistroGuiaRecepcion = () => {
             isValid={formik.isValid}
             isTouched={formik.touched.productor ? true : undefined}
             invalidFeedback={formik.errors.productor ? String(formik.errors.productor) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                 options={optionsProductor}
@@ -191,7 +191,7 @@ const FormularioRegistroGuiaRecepcion = () => {
             isTouched={formik.touched.camionero ? true : undefined}
             invalidFeedback={formik.errors.camionero ? String(formik.errors.camionero) : undefined}
 
-            validFeedback='Good'>
+>
             <FieldWrap>
               <SelectReact
                 options={optionsConductor}
@@ -214,7 +214,7 @@ const FormularioRegistroGuiaRecepcion = () => {
             isValid={formik.isValid}
             isTouched={formik.touched.camion ? true : undefined}
             invalidFeedback={formik.errors.camionero ? String(formik.errors.camion) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                 options={optionsCamion}
@@ -239,7 +239,7 @@ const FormularioRegistroGuiaRecepcion = () => {
             isTouched={formik.touched.comercializador ? true : undefined}
             invalidFeedback={formik.errors.comercializador ? String(formik.errors.comercializador) : undefined}
 
-            validFeedback='Good'>
+>
             <FieldWrap>
               <SelectReact
                 options={optionsComercializador}
@@ -289,7 +289,7 @@ const FormularioRegistroGuiaRecepcion = () => {
             isTouched={formik.touched.numero_guia_productor ? true : undefined}
             invalidFeedback={formik.errors.numero_guia_productor ? String(formik.errors.numero_guia_productor) : undefined}
 
-            validFeedback='Good'>
+>
             <FieldWrap>
               <Input
                 type='text'

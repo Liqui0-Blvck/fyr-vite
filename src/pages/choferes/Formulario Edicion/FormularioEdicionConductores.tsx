@@ -93,7 +93,7 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
           isValid={formik.isValid}
           isTouched={formik.touched.nombre ? true : undefined}
           invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -113,7 +113,7 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
           isValid={formik.isValid}
           isTouched={formik.touched.apellido ? true : undefined}
           invalidFeedback={formik.errors.apellido ? String(formik.errors.apellido) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -133,7 +133,7 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
           isValid={formik.isValid}
           isTouched={formik.touched.rut ? true : undefined}
           invalidFeedback={formik.errors.rut ? String(formik.errors.rut) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -153,7 +153,7 @@ const FormularioEdicionConductores: FC<IFormChoferes> = ({ setOpen, refresh, id 
           isValid={formik.isValid}
           isTouched={formik.touched.telefono ? true : undefined}
           invalidFeedback={formik.errors.telefono ? String(formik.errors.telefono) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'

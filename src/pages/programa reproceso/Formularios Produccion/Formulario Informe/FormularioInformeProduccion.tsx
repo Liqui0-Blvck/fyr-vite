@@ -81,7 +81,7 @@ const FormularioInformeProduccion: FC<IInformeProduccion> = ({ setOpen }) => {
               isValid={formik.isValid}
               isTouched={formik.touched.tipo_informe ? true : undefined}
               invalidFeedback={formik.errors.tipo_informe ? String(formik.errors.tipo_informe) : undefined}
-              validFeedback='Good'>
+              >
               <FieldWrap>
                 <SelectReact
                   options={tipo_informe}

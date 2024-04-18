@@ -40,6 +40,9 @@ import { Tooltip } from 'antd';
 import FormularioEdicionComercializador from '../Formulario Edicion/FormularioEdicionComercializador';
 import DetalleComercializador from '../Detalle/Detalle';
 import toast from 'react-hot-toast';
+import { useAuth } from '../../../context/authContext';
+import { GiTestTubes } from 'react-icons/gi';
+import FormularioControlCalidadTarja from '../../programas produccion/Formularios Produccion/Formulario Control Calidad Tarja/FormularioControlCalidadTarja';
 
 
 
@@ -57,12 +60,17 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
   const [globalFilter, setGlobalFilter] = useState<string>('')
   const [modalStatus, setModalStatus] = useState<boolean>(false)
   const { isDarkTheme } = useDarkMode();
+  const { authTokens } = useAuth()
 
+  
 
   const asisteDelete = async (id: number) => {
     const base_url = process.env.VITE_BASE_URL_DEV
     const response = await fetch(`${base_url}/api/comercializador/${id}/`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authTokens?.access}`
+      }
     })
     if (response.ok) {
       refresh(true)
@@ -71,9 +79,6 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
       toast.error('No se ha logrado eliminar el comercializador')
     }
   }
-
-  const editLinkProductor = `/app/comercializador/`
-  const createLinkProductor = `/app/registro-comercializador/`
 
   const columns = [
     columnHelper.accessor('nombre', {
@@ -109,11 +114,14 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
       header: 'Giro',
     }),
     columnHelper.accessor('email_comercializador', {
-      cell: (info) => (
-        <div className='font-bold'>
+      cell: (info) => {
+        console.log("algo", info.row.original.email_comercializador)
+        return (
+          <div className='font-bold'>
           {`${info.row.original.email_comercializador}`}
         </div>
-      ),
+        )
+      },
       header: 'Email',
     }),
     columnHelper.accessor('direccion', {
@@ -130,16 +138,17 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
         const id = info.row.original.id;
         const [detalleModalStatus, setDetalleModalStatus] = useState(false);
         const [edicionModalStatus, setEdicionModalStatus] = useState(false);
+        const [calibracionModalStatus, setCalibracionModalStatus] = useState(false);
 
         return (
-          <div className='h-full w-full flex justify-around gap-2'>
+          <div className='h-full w-full flex gap-2 '>
             <ModalRegistro
               open={detalleModalStatus}
               setOpen={setDetalleModalStatus}
               textTool='Detalle'
               title='Detalle Comercializador'
               size={900}
-              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              width={`w-16 h-12 dark:bg-[#3B82F6] hover:bg-[#3b83f6cd] bg-[#3B82F6] text-white hover:scale-105`}
               icon={<HeroEye style={{ fontSize: 25 }} />}
             >
               <DetalleComercializador id={id} />
@@ -151,7 +160,7 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
               title='Edición Comercializador'
               textTool='Editar'
               size={900}
-              width={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+              width={`w-16 h-12 dark:bg-[#3B82F6] hover:bg-[#3b83f6cd] bg-[#3B82F6] text-white hover:scale-105`}
               icon={<HeroPencilSquare style={{ fontSize: 25 }}
               />}
             >
@@ -159,7 +168,7 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
             </ModalRegistro>
 
             <Tooltip title='Eliminar'>
-              <button onClick={async () => await asisteDelete(id)} type='button' className={`md:w-14 lg:w-14 px-1 md:h-10 lg:h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+              <button onClick={async () => await asisteDelete(id)} type='button' className={`w-16 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
                 <HeroXMark style={{ fontSize: 25 }} />
               </button>
             </Tooltip>
@@ -226,7 +235,7 @@ const TablaComercializadores: FC<IFormComercializadorProps> = ({ data, refresh }
             setOpen={setModalStatus}
             title='Registro Comercializador'
             textButton='Agregar Comercializador'
-            width={`px-6 py-3 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+            width={`px-6 py-3 dark:bg-[#3B82F6] hover:bg-[#3b83f6cd] bg-[#3B82F6] text-white hover:scale-105`}
             size={900}
           >
             <FormularioRegistroComercializador refresh={refresh} setOpen={setModalStatus} />

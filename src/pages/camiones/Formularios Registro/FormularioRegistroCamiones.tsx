@@ -73,7 +73,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
 					invalidFeedback={
 						formik.errors.patente ? String(formik.errors.patente) : undefined
 					}
-					validFeedback='Good'>
+					>
 					<FieldWrap>
 						<Input
 							type='text'
@@ -95,7 +95,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
 					invalidFeedback={
 						formik.errors.acoplado ? String(formik.errors.acoplado) : undefined
 					}
-					validFeedback='Good'>
+					>
 					<FieldWrap>
 						<SelectReact
 							options={optionsAcoplado}
@@ -122,7 +122,7 @@ const FormularioRegistroCamiones: FC<IFormCamiones> = ({ refresh, setOpen }) => 
 							? String(formik.errors.observaciones)
 							: undefined
 					}
-					validFeedback='Good'>
+					>
 					<FieldWrap>
 						<Textarea
 							rows={5}

@@ -45,11 +45,11 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   const navigate = useNavigate()
   const [iotBruto, setIotBruto] = useState<boolean>(false)
   const [iotBrutoAcoplado, setIotBrutoAcoplado] = useState<boolean>(false)
-  const [client, setClient] = useState<MqttClient | null>(null)
-  const [listoIot_1, setListoIot_1] = useState<boolean>(false)
-  const [listoIot_2, setListoIot_2] = useState<boolean>(false)
+  // const [client, setClient] = useState<MqttClient | null>(null)
+  // const [listoIot_1, setListoIot_1] = useState<boolean>(false)
+  // const [listoIot_2, setListoIot_2] = useState<boolean>(false)
 
-  const [icono_1, setIcono_1] = useState<boolean>(false)
+  // const [icono_1, setIcono_1] = useState<boolean>(false)
 
 
   const initialRows = [
@@ -156,7 +156,7 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
       );
     } else {
       setRows((prevRows) =>
-        prevRows.map((row) => (row.id === id ? { ...row, ['cantidad_envases']: 0 } : row))
+        prevRows.map((row) => (row.id === id ? { ...row, [fieldName]: value } : row))
       );
     }
   };
@@ -198,45 +198,45 @@ const FooterFormularioRegistro: FC<IFooterProps> = ({ data, variedad }) => {
   const optionsTipoFruta: TSelectOptions | [] = tipoFrutaFilter
   const camionAcoplado = camiones?.find(camion => camion.id === Number(data.camion))?.acoplado
 
-  useEffect(() => {
-    if (client) {
-      client.on('connect', () => {
-        client.subscribe('prodalmen/recepcionmp/pesaje')
-      })
-      client.on('error', error => {
-        try {
-          toast.error(`MQTT error: ${error}`);
-        } catch (err) {
-          toast.error(`Connection error: ${err}`);
-        }
-      })
-      client.on('message', (topic, payload, packet) => {
-        console.log(`Message ${payload.toString()}, from topic ${topic}`)
-        console.log(listoIot_1, listoIot_2)
-        if (listoIot_1 == false && listoIot_2 == false) {
-          formik.setFieldValue('kilos_brutos_1', payload)
-        } else if (listoIot_1 == true && listoIot_2 == false) {
-          formik.setFieldValue('kilos_brutos_2', payload)
-        } else if (listoIot_2 == true && listoIot_1 == true) {
-          client.end()
-        }
-      })
-    } else {
-      setClient(mqtt.connect({
-        port: 8083,
-        hostname: `${process.env.VITE_BASE_IOT_DEV}`,
-        clientId: `mqtt_${Math.random().toString(16).substring(2, 8)}`,
-        username: 'user01',
-        password: 'Hola.2024',
-        clean: true,
-        reconnectPeriod: 1000,
-        connectTimeout: 30 * 1000,
-        rejectUnauthorized: true,
-        path: '/mqtt',
+  // useEffect(() => {
+  //   if (client) {
+  //     client.on('connect', () => {
+  //       client.subscribe('prodalmen/recepcionmp/pesaje')
+  //     })
+  //     client.on('error', error => {
+  //       try {
+  //         toast.error(`MQTT error: ${error}`);
+  //       } catch (err) {
+  //         toast.error(`Connection error: ${err}`);
+  //       }
+  //     })
+  //     client.on('message', (topic, payload, packet) => {
+  //       console.log(`Message ${payload.toString()}, from topic ${topic}`)
+  //       console.log(listoIot_1, listoIot_2)
+  //       if (listoIot_1 == false && listoIot_2 == false) {
+  //         formik.setFieldValue('kilos_brutos_1', payload)
+  //       } else if (listoIot_1 == true && listoIot_2 == false) {
+  //         formik.setFieldValue('kilos_brutos_2', payload)
+  //       } else if (listoIot_2 == true && listoIot_1 == true) {
+  //         client.end()
+  //       }
+  //     })
+  //   } else {
+  //     setClient(mqtt.connect({
+  //       port: 8083,
+  //       hostname: `${process.env.VITE_BASE_IOT_DEV}`,
+  //       clientId: `mqtt_${Math.random().toString(16).substring(2, 8)}`,
+  //       username: 'user01',
+  //       password: 'Hola.2024',
+  //       clean: true,
+  //       reconnectPeriod: 1000,
+  //       connectTimeout: 30 * 1000,
+  //       rejectUnauthorized: true,
+  //       path: '/mqtt',
         
-      }))
-    }
-  }, [client])
+  //     }))
+  //   }
+  // }, [client])
 
   return (
     <div>

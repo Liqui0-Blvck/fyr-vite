@@ -90,7 +90,6 @@ const DetalleCC = () => {
 
   const variedadSinRepetir = [...new Set(variedad)].join(', ');
 
-  console.log(variedadSinRepetir)
 
   const tipo_producto = guia_recepcion?.lotesrecepcionmp.flatMap((row: TLoteGuia) => {
     const variedad_row = row.envases.map((envase) => {
@@ -237,7 +236,7 @@ const DetalleCC = () => {
         <div className='flex items-center justify-between px-8'>
           <div className='w-72'>
             {
-              cc_rendimiento?.length! < 2 && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP', 'Administrador')
+              cc_rendimiento?.length! >= 0 && control_calidad?.esta_contramuestra !== '1' && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP', 'Administrador')
                 ? (
                     <ModalRegistro
                       open={openModalRegistro}
@@ -272,20 +271,20 @@ const DetalleCC = () => {
 
 
           {
-            cc_rendimiento?.length! >= 2  && !cc_rendimiento?.some(cc => cc.cc_calibrespepaok === true)
+            cc_rendimiento?.length! >= 2 && control_calidad?.esta_contramuestra !== '1' && cc_rendimiento?.every(cc => cc.cc_ok === true)
               ? (
                 <div className='w-72'>
                   <ModalRegistro
                     open={openModalCPepaCalibre}
                     setOpen={setOpenModalCPepaCalibre}
-                    title={`Muestra Control de Rendimiento del Lote N° `}
+                    title={`Calibración de muestras del Lote N°${control_calidad?.numero_lote}`}
                     textTool='CC Pepas Muestras'
                     size={800}
-                    width={`w-full px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+                    width={`w-full px-1 h-12 dark:bg-[#3B82F6] hover:bg-[#3b83f6cd] bg-[#3B82F6] text-white hover:scale-105`}
                     textButton='Calibrar Muestras'
                   >
                     <ModalConfirmacion 
-                      formulario={<FormularioCCPepaCalibre  refresh={setRefresh} id_muestra={muestra.shift()?.id} isOpen={setOpenModalCPepaCalibre}/>}
+                      formulario={<FormularioCCPepaCalibre  refresh={setRefresh} id_muestra={muestra.shift()?.id} isOpen={setOpenModalCPepaCalibre} CCLote={cc_rendimiento}/>}
                       mensaje='¿Estas seguro de querer calibrar las muestras?'
                       confirmacion={openConfirmacion}
                       setConfirmacion={setOpenConfirmacion}

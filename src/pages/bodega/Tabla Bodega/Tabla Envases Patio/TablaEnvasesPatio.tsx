@@ -20,11 +20,12 @@ interface IRendimientoMuestra {
   id_lote?: number
   data?: TEnvasePatio[] | []
   refresh?: Dispatch<SetStateAction<boolean>>
+  total_envases: number[]
 
 }
 
 
-const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh, id_lote }) => {
+const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh, id_lote, total_envases }) => {
   const { authTokens, validate } = useAuth()
   const { isDarkTheme } = useDarkMode();
 
@@ -40,7 +41,6 @@ const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh, id_lote }) 
                 <TableCell className='table-cell-4' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>N° Bin</TableCell>
                 <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Kilos Fruta</TableCell>
                 <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Estado</TableCell>
-                <TableCell className='table-cell-2' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Guia Patio</TableCell>
                 <TableCell className='table-cell-3' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Variedad</TableCell>
               </TableRow>
             </TableHead>
@@ -53,6 +53,7 @@ const TablaEnvasesPatio: FC<IRendimientoMuestra> = ({ data, refresh, id_lote }) 
                       muestra={row}
                       id_lote={id_lote}
                       refresh={refresh}
+                      total_envases={total_envases}
                     />
                       
                   </TableRow>

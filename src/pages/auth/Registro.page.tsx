@@ -63,7 +63,7 @@ const LoginPage = () => {
 								isValid={formik.isValid}
 								isTouched={formik.touched.username}
 								invalidFeedback={formik.errors.username}
-								validFeedback='Good'>
+								>
 								<FieldWrap
 									firstSuffix={<Icon icon='HeroEnvelope' className='mx-2' />}>
 									<Input
@@ -87,7 +87,7 @@ const LoginPage = () => {
 								isValid={formik.isValid}
 								isTouched={formik.touched.password}
 								invalidFeedback={formik.errors.password}
-								validFeedback='Good'>
+								>
 								<FieldWrap
 									firstSuffix={<Icon icon='HeroKey' className='mx-2' />}
 									lastSuffix={

@@ -33,11 +33,13 @@ import { TControlCalidadTarja, TEnvases, TProductor } from '../../../types/regis
 import ModalRegistro from '../../../components/ModalRegistro';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
-import { Tooltip } from 'antd';
+import { Row, Tooltip } from 'antd';
 import { useAuth } from '../../../context/authContext';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { cargolabels } from '../../../utils/generalUtils';
 import { variedadFilter } from '../../../constants/options.constants';
+import FormularioControlCalidadTarja from '../../programas produccion/Formularios Produccion/Formulario Control Calidad Tarja/FormularioControlCalidadTarja';
+import { GiTestTubes } from 'react-icons/gi';
 
 
 const columnHelper = createColumnHelper<TControlCalidadTarja>();
@@ -116,10 +118,9 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 		}),
 		columnHelper.accessor('variedad', {
 			cell: (info) => {
-				const variedad = info.row.original.variedad
-				return (
-					<div className='font-bold'>{`${variedad ? variedadFilter.find(variety => variety.value === variedad)?.label : 'Aun sin datos' }`}</div>
-				)
+				const variedad = info.row.original.variedad;
+				const variedadLabel = variedad ? variedadFilter.find(variety => variety.value === variedad)?.label : 'No disponible';
+				return <div className='font-bold'>{variedadLabel ? variedadLabel : 'No disponible'}</div>;
 			},
 			header: 'Variedad',
 		}),
@@ -139,17 +140,38 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 			id: 'actions',
 			cell: (info) => {
 				const [edicionModalStatus, setEdicionModalStatus] = useState<boolean>(false);
+				const [calibracionModalStatus, setCalibracionModalStatus] = useState<boolean>(false);
 				const id = info.row.original.id;
 
 
 				return (
-					<div className='h-full w-full flex justify-around gap-2'>
+					<div className='h-full w-full flex justify-center gap-2 flex-wrap'>
 						<Link to={`/app/tarjas-cc/${info.row.original.tarja}`}
-							className={`w-24 px-1 h-12 
+							className={`w-16 px-1 h-12 
 								${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
 								 hover:scale-105 rounded-md flex items-center justify-center`}>
 							<HeroEye style={{ fontSize: 32 }} />
 						</Link>
+						
+
+						{
+							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador') && info.row.original.estado_cc !== '3'
+								? (
+									<ModalRegistro
+											open={calibracionModalStatus}
+											setOpen={setCalibracionModalStatus}
+											title='Calibración Tarja'
+											textTool='Calibrar Tarja'
+											size={900}
+											width={`w-16 h-12 dark:bg-[#7124b5] dark:hover:bg-[#8647bc] bg-[#7124b5] hover:bg-[#8647bc] text-white hover:scale-105`}
+											icon={<GiTestTubes style={{ fontSize: 25 }}
+											/>}
+										>
+											<FormularioControlCalidadTarja refresh={refresh} isOpen={setCalibracionModalStatus} id_lote={id} />
+										</ModalRegistro>
+									)
+								: null
+						}
 
 						{
 							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
@@ -160,7 +182,7 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 										title='Edición Comercializador'
 										textTool='Editar'
 										size={500}
-										width={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
+										width={`w-16 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
 										icon={<HeroPencilSquare style={{ fontSize: 25 }}
 										/>}
 									>
@@ -175,7 +197,7 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
 								? (
 									<Tooltip title='Eliminar'>
-										<button onClick={async () => await asisteDelete(id)} type='button' className={`w-24 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
+										<button onClick={async () => await asisteDelete(id)} type='button' className={`w-16 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 											<HeroXMark style={{ fontSize: 25 }} />
 										</button>
 									</Tooltip>

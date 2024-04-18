@@ -28,6 +28,9 @@ const DetalleCamion = () => {
   )
 
   const envasesPatio: TEnvasePatio[] = guia?.envases!
+  const totalEnvases: number = guia?.envases.length!
+
+  console.log(totalEnvases)
 
   return (
     <div
@@ -71,7 +74,7 @@ const DetalleCamion = () => {
       </div>
 
       <div className='md:row-start-2 md:col-start-3 md:col-span-2'>
-        <TablaEnvasesPatio data={envasesPatio} id_lote={guia?.cc_guia} />
+        <TablaEnvasesPatio data={envasesPatio} id_lote={guia?.cc_guia} total_envases={totalEnvases!}/>
       </div>
     </div>
 

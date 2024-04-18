@@ -94,7 +94,7 @@ const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) =>
             isValid={formik.isValid}
             isTouched={formik.touched.nombre ? true : undefined}
             invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
             <Input
               type='text'
@@ -114,7 +114,7 @@ const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) =>
             isValid={formik.isValid}
             isTouched={formik.touched.apellido ? true : undefined}
             invalidFeedback={formik.errors.apellido ? String(formik.errors.apellido) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
             <Input
               type='text'
@@ -135,7 +135,7 @@ const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) =>
             isValid={formik.isValid}
             isTouched={formik.touched.rut ? true : undefined}
             invalidFeedback={formik.errors.rut ? String(formik.errors.rut) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
             <Input
               type='text'
@@ -179,7 +179,7 @@ const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) =>
             isValid={formik.isValid}
             isTouched={formik.touched.activo ? true : undefined}
             invalidFeedback={formik.errors.activo ? String(formik.errors.activo) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <SelectReact
                 options={optionActive}
@@ -203,7 +203,7 @@ const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) =>
             isValid={formik.isValid}
             isTouched={formik.touched.etiquetas ? true : undefined}
             invalidFeedback={formik.errors.etiquetas ? String(formik.errors.etiquetas) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
               <Input
                 type='text'
@@ -223,7 +223,7 @@ const FormularioRegistroOperario : FC<IFormChoferes> = ({ setOpen, refresh }) =>
             isValid={formik.isValid}
             isTouched={formik.touched.pago_x_kilo ? true : undefined}
             invalidFeedback={formik.errors.pago_x_kilo ? String(formik.errors.pago_x_kilo) : undefined}
-            validFeedback='Good'>
+            >
             <FieldWrap>
                <Input
                  type='number'

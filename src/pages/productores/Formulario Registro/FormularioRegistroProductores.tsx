@@ -138,7 +138,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.rut_productor ? true : undefined}
           invalidFeedback={formik.errors.rut_productor ? String(formik.errors.rut_productor) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
               type='text'
@@ -158,7 +158,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.nombre ? true : undefined}
           invalidFeedback={formik.errors.nombre ? String(formik.errors.nombre) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
               type='text'
@@ -178,7 +178,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.email ? true : undefined}
           invalidFeedback={formik.errors.email ? String(formik.errors.email) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -198,7 +198,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.region ? true : undefined}
           invalidFeedback={formik.errors.region ? String(formik.errors.region) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <SelectReact
               options={optionsRegion}
@@ -221,7 +221,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.provincia ? true : undefined}
           invalidFeedback={formik.errors.provincia ? String(formik.errors.provincia) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <SelectReact
             options={optionsProvincia}
@@ -245,7 +245,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.comuna ? true : undefined}
           invalidFeedback={formik.errors.comuna ? String(formik.errors.comuna) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <SelectReact
             options={optionsComuna}
@@ -269,7 +269,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.direccion ? true : undefined}
           invalidFeedback={formik.errors.direccion ? String(formik.errors.direccion) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -291,7 +291,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.telefono ? true : undefined}
           invalidFeedback={formik.errors.telefono ? String(formik.errors.telefono) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -314,7 +314,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.movil ? true : undefined}
           invalidFeedback={formik.errors.movil ? String(formik.errors.movil) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -335,7 +335,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.pagina_web ? true : undefined}
           invalidFeedback={formik.errors.pagina_web ? String(formik.errors.pagina_web) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
@@ -355,7 +355,7 @@ const FormularioRegistroProductores: FC<IFormProductor> = ({ refresh, setOpen })
           isValid={formik.isValid}
           isTouched={formik.touched.numero_contrato ? true : undefined}
           invalidFeedback={formik.errors.numero_contrato ? String(formik.errors.numero_contrato) : undefined}
-          validFeedback='Good'>
+          >
           <FieldWrap>
           <Input
             type='text'
