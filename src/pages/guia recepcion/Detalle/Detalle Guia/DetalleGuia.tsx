@@ -205,11 +205,9 @@ const DetalleGuia = () => {
 
   console.log(cargoLabels)
 
-  const controles = guia_recepcion?.lotesrecepcionmp.some((lote: TGuia) => {
+  const controles = guia_recepcion?.lotesrecepcionmp.some((lote: TLoteGuia) => {
     return control_calidad?.filter(control => control.recepcionmp === lote.id && (control.estado_cc === '1' || control.estado_cc === '0')).length;
   })
-
-  console.log("comprobacion", controles && cargoLabels.includes('RecepcionMP') && guia_recepcion?.estado_recepcion !== '4')
 
 
   return (

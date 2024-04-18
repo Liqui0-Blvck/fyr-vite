@@ -219,7 +219,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                           setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                           title={modalTitle}
                           textTool='Registrar Tara camión'
-                          size={900}
+                          size={800}
                           width={`w-20 h-16 md:h-16 lg:h-11 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                           icon={iconComponent}
                         >

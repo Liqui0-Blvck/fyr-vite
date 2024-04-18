@@ -5,12 +5,14 @@ import TablaGuiaRecepcion from "./Tabla/TablaGuiaRecepcion"
 
 
 const ListaGuiaRecepcion = () => {
-  const { authTokens, validate } = useAuth()
+  const { authTokens, validate, perfilData } = useAuth()
   const { data: guia_recepcion, setData, loading, setRefresh } = useAuthenticatedFetch<TGuia[]>(
     authTokens,
     validate,
     `/api/recepcionmp/`
   )
+
+  console.log(perfilData)
 
   return (
     <div className="h-full">

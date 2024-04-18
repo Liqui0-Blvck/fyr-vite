@@ -7,8 +7,6 @@ const Home = () => {
     const { refreshToken, authTokens, perfilData } = useAuth()
     const [refresh, setRefresh] = useState(false)
 
-    console.log(perfilData?.cargos)
-
     return (
         <div className="h-full">
             <div className="w-full h-full flex items-center justify-center gap-10">
