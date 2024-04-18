@@ -1,12 +1,12 @@
 import * as Yup from "yup";
 
-function validarRut(rut: any) {
-  // Formato válido: xx.xxx.xxx-x
-  if (!/^[0-9]{1,2}\.[0-9]{3}\.[0-9]{3}-[0-9kK]{1}$/.test(rut)) {
+function validarRut(rut) {
+  // Formato válido: xxxxxxxx-x
+  if (!/^\d{7,8}-\d{1}$/.test(rut)) {
     return false;
   }
 
-  const digits = rut.split('.').join('').split('-')[0];
+  const digits = rut.split('-')[0];
   let splitDigits = digits.split('');
   let factor = 2;
   let sum = 0;
@@ -25,12 +25,6 @@ function validarRut(rut: any) {
   return expectedVerifier === rut.slice(-1).toLowerCase();
 }
 
-function validarRutB(rut: string) {
-  // Formato válido: xxxxxxxx-x
-  if (!/^\d{7,8}-\d{1}$/.test(rut)) {
-    return false;
-  }
-}
 
 
 
@@ -49,7 +43,7 @@ export const headerGuiaRegistroSchema = Yup.object().shape({
 
 
 export const ProductorSchema = Yup.object().shape({
-  rut_productor: Yup.string().required('El RUT del productor es requerido'),
+  rut_productor: Yup.string().required('El RUT del productor es requerido').test('rut-valido', 'El RUT ingresado no es válido', validarRut),
   nombre: Yup.string().required('El nombre es requerido'),
   telefono: Yup.string().matches(/^\d{9}$/, 'El teléfono debe tener 9 dígitos'),
   region: Yup.string().nullable().required('La región es requerida'),
@@ -72,7 +66,7 @@ export const camionSchema = Yup.object().shape({
 export const conductorSchema = Yup.object().shape({
   nombre: Yup.string().required('El nombre es requerido'),
   apellido: Yup.string().required('El apellido es requerido'),
-  rut: Yup.string().required('El RUT es requerido'),
+  rut: Yup.string().required('El RUT es requerido').test('rut-valido', 'El RUT ingresado no es válido', validarRut),
   telefono: Yup.string(),
 });
 
@@ -88,7 +82,7 @@ export const comercializadorSchema = Yup.object().shape({
 export const operarioSchema = Yup.object().shape({
   nombre: Yup.string().required('El nombre es requerido'),
   apellido: Yup.string(),
-  rut: Yup.string().required('El RUT es requerido'),
+  rut: Yup.string().required('El RUT es requerido').test('rut-valido', 'El RUT ingresado no es válido', validarRut),
   tipo_operario: Yup.string().required('El tipo de operario es requerido'),
   activo: Yup.boolean().required('El estado activo/inactivo es requerido'),
   etiquetas: Yup.string(),
