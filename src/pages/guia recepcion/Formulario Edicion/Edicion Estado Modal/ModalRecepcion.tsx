@@ -25,9 +25,6 @@ const ModalRecepcion: FC<IModalProps> = ({ id, estadoActivo, setOpen, numero_est
 
   console.log(lote)
 
-
-  
-
   const [prevNumeroEstado, setPrevNumeroEstado] = useState<number>(0);
   const [confirmacion, setConfirmacion] = useState<boolean>(false);
 

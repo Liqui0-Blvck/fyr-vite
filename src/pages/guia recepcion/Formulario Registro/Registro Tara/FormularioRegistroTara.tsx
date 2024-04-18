@@ -37,24 +37,6 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
     '/api/registros/camiones/'
   )
 
-  const { data: productores } = useAuthenticatedFetch<TProductor[]>(
-    authTokens,
-    validate,
-    '/api/productores/'
-  )
-
-  const { data: conductores } = useAuthenticatedFetch<TConductor[]>(
-    authTokens,
-    validate,
-    '/api/registros/choferes'
-  )
-
-  const { data: comercializadores } = useAuthenticatedFetch<TComercializador[]>(
-    authTokens,
-    validate,
-    '/api/comercializador/'
-  )
-
   const optionsRadio = [
     { id: 1, value: true, label: 'Si' },
     { id: 2, value: false, label: 'No' }
@@ -88,10 +70,6 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
     }
   }
 
-
-
-
-  
 
   const formik = useFormik({
     initialValues: {
@@ -135,37 +113,7 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
     }
   })
 
-  const camionFilter = camiones?.map((camion: TCamion) => ({
-    value: String(camion.id),
-    label: (`${camion.patente},  ${camion.acoplado ? 'Con Acoplado' : 'Sin Acoplado'}`)
-  })) ?? []
 
-  const productoresFilter = productores?.map((productor: TProductor) => ({
-    value: String(productor.id),
-    label: productor.nombre
-  })) ?? []
-
-  const conductoresFilter = conductores?.map((conductor: TConductor) => ({
-    value: String(conductor.id),
-    label: conductor.nombre
-  })) ?? []
-
-  const comercializadoresFilter = comercializadores?.map((comerciante: TComercializador) => ({
-    value: String(comerciante.id),
-    label: comerciante.nombre
-  })) ?? []
-
-  const mezclaVariedadesFilter = ACTIVO?.map((variedad) => ({
-    value: String(variedad.values),
-    label: variedad.label
-  })) ?? []
-
-  const optionsCamion: TSelectOptions | [] = camionFilter
-  const optionsProductor: TSelectOptions | [] = productoresFilter
-  const optionsConductor: TSelectOptions | [] = conductoresFilter
-  const optionsComercializador: TSelectOptions | [] = comercializadoresFilter 
-  
-  
 
 
   useEffect(() => {
@@ -185,13 +133,22 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
     }
   }, [loteGuia])
 
+  useEffect(() => {
+    let isMounted = true
+    if (guia && isMounted){
+      formik
+    }
+  }, [guia])
+
+  console.log(guia)
+
 
   const camionAcoplado = camiones?.find(camion => camion.id === Number(guia?.camion))?.acoplado
 
 
 
   return (
-    <div className={`${isDarkTheme ? oneDark : 'bg-white'}w-full  h-full`}>
+    <div className={`${isDarkTheme ? oneDark : 'bg-white'} w-full  h-full`}>
       <form
         onSubmit={formik.handleSubmit}
         className={`flex flex-col md:grid md:grid-cols-6 gap-x-5
@@ -206,7 +163,7 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
         <div className='md:row-start-2 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="productor">Productor: </label>
           <div className={`rounded-md px-3 h-14 w-full flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
-            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_productor}</span>
+            <span className={`text-lg ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_productor}</span>
           </div>
 
         </div>
@@ -214,7 +171,7 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
           <label htmlFor="camionero">Chofer: </label>
           <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
-            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camionero}</span>
+            <span className={`text-lg ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camionero}</span>
           </div>
 
         </div>
@@ -222,14 +179,14 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
         <div className='md:row-start-2 md:col-span-2 md:col-start-5 md:flex-col items-center'>
           <label htmlFor="camion">Camion: </label>
           <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
-            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camion}</span>
+            <span className={`text-lg ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_camion}</span>
           </div>
         </div>
 
         <div className='md:row-start-3 md:col-span-2 md:flex-col items-center'>
           <label htmlFor="comercializador">Comercializador: </label>
           <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
-            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_comercializador}</span>
+            <span className={`text-lg ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.nombre_comercializador}</span>
           </div>
         </div>
 
@@ -237,21 +194,17 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
           <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
 
           <div className={`w-fullrounded-md h-14  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
-            <RadioGroup isInline>
+          <RadioGroup isInline>
               {optionsRadio.map(({ id, value, label }) => {
                 return (
                   <Radio
                     key={id}
                     label={label}
                     name='mezcla_variedades'
-                    value={label} // Asignar el valor correcto de cada botón de radio
-                    checked={formik.values.mezcla_variedades === value} // Comprobar si este botón de radio está seleccionado
-                    onChange={(e) => {
-                      formik.setFieldValue('mezcla_variedades', e.target.value === 'Si' ? true : false) // Actualizar el valor de mezcla_variedades en el estado de formik
-                    }}
-                    selectedValue={undefined} 
+                    value={value}
+                    checked={guia?.mezcla_variedades === value} // Comprueba si la opción está seleccionada basándose en el valor de guia.mezcla_variedades
                     disabled
-                    />
+                  />
                 );
               })}
             </RadioGroup>
@@ -261,7 +214,7 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({ refresh, isOpen, gui
         <div className='md:row-start-3 md:col-span-2  md:col-start-5 md:flex-col items-center'>
           <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
           <div className={`rounded-md h-14 w-full px-3 flex items-center justify-center ${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-300'}`}>
-            <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.numero_guia_productor}</span>
+            <span className={`text-lg ${isDarkTheme ? 'text-white' : 'text-black'}`}>{guia?.numero_guia_productor}</span>
           </div>
         </div>
 
