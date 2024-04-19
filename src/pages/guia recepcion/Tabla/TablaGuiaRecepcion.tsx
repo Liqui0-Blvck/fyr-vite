@@ -142,12 +142,6 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data, refresh }) => {
 							cargolabels(perfilData).includes('RecepcionMP', 'Administrador')
 								? (
 									<>
-										<Link to={`/app/edicion-guia-recepcion/${info.row.original.id}`}
-											className={`w-14 lg:w-14 md:14 h-12 px-1
-												${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'}
-												hover:scale-105 rounded-md flex items-center justify-center`}>
-											<HeroPencilSquare style={{ fontSize: 25 }} />
-										</Link>
 										<Tooltip title='Eliminar'>
 											<button onClick={async () => await asisteDelete(id)} type='button' className={`w-14 lg:w-14 md:14 px-1 h-12 bg-red-800 ${isDarkTheme ? 'text-white' : 'text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
 												<HeroXMark style={{ fontSize: 25 }} />

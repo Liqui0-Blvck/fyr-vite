@@ -100,11 +100,11 @@ const FormularioRegistroGuiaRecepcion = () => {
           setGuiaID(data.id)
           setVariedad(data.mezcla_variedades)
           setDatosGuia(data)
-          toast.success("la guia de recepción fue registrado exitosamente!!")
           setGuiaGenerada(true)
+          toast.success("La guia de recepción fue registrado exitosamente!!")
 
         } else {
-          toast.error("No se pudo registrar la guia de recepción volver a intentar")
+          toast.error("No se pudo registrar la guia de recepción, volver a intentar!")
         }
       } catch (error) {
         console.log(error)
@@ -143,19 +143,18 @@ const FormularioRegistroGuiaRecepcion = () => {
   const optionsComercializador: TSelectOptions | [] = comercializadoresFilter
   const optionsMezcla: TSelectOptions | [] = mezclaVariedadesFilter
 
+  console.log(datosGuia)
 
 
   return (
-    <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
+    <div className={`dark:bg-zinc-900 bg-zinc-50 h-full`}>
       <form
         onSubmit={formik.handleSubmit}
         noValidate
-        className={`flex flex-col md:grid md:grid-cols-6 gap-x-3
-      gap-y-10 mt-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6 
-      rounded-md`}
+        className={`flex flex-col md:grid md:grid-cols-6 gap-x-3 gap-y-10 dark:bg-inherit relative px-5 rounded-md py-2`}
       >
 
-        <div className={`${isDarkTheme ? 'bg-zinc-800' : 'bg-zinc-100'} rounded-md col-span-6`}>
+        <div className={`dark:bg-zinc-900 bg-zinc-50 rounded-md col-span-6`}>
           <h1 className='text-center text-2xl p-4'>Guía Recepción Materia Prima</h1>
           <h4>{datosGuia?.estado_recepcion_label}</h4>
         </div>

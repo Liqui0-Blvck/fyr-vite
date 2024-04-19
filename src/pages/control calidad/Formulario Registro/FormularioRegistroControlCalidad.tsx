@@ -13,6 +13,7 @@ import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
 import { TControlCalidad, TFotosCC, TLoteGuia } from '../../../types/registros types/registros.types'
 import { optionsRadio } from '../../../constants/options.constants'
 import { CheckboxGroup } from '../../../components/form/Checkbox'
+import Button from '../../../components/ui/Button'
 
 interface IFormCC {
   refresh: Dispatch<SetStateAction<boolean | null>>
@@ -75,6 +76,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
   // console.log(imagenes)
 
   // console.log(JSON.stringify(imagenes))
+
 
   useEffect(() => {
     let isMounted = true
@@ -221,9 +223,12 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
         </div>
 
         <div className='relative w-full h-20 col-span-4'>
-         <button className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
+         <Button
+             variant='solid'
+             onClick={formik.handleSubmit}
+            className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
             Registrar Control Calidad
-          </button>
+          </Button>
         </div>
       </form>
       

@@ -12,7 +12,6 @@ const ListaGuiaRecepcion = () => {
     `/api/recepcionmp/`
   )
 
-  console.log(perfilData)
 
   return (
     <div className="h-full">

@@ -175,7 +175,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                     icon={<HeroPencilSquare style={{ fontSize: 25 }}
                     />}
                   >
-                    <FooterFormularioEdicionEnvase id_lote={row?.id!} id_guia={guia?.id!} />
+                    <FooterFormularioEdicionEnvase id_lote={row?.id!} id_guia={guia?.id!} setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}/>
                   </ModalRegistro>
                 )
                 : null

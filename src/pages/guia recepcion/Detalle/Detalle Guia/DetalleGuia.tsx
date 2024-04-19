@@ -23,6 +23,11 @@ import ModalConfirmacion from '../../../../components/ModalConfirmacion'
 import ModalRegistro from '../../../../components/ModalRegistro'
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import FooterDetalleRechazado from './FooterDetalleRechazado'
+import Button from '../../../../components/ui/Button'
+import Validation from '../../../../components/form/Validation'
+import FieldWrap from '../../../../components/form/FieldWrap'
+import Label from '../../../../components/form/Label'
+import { cargolabels } from '../../../../utils/generalUtils'
 
 
 interface TabPanelProps {
@@ -73,6 +78,10 @@ const DetalleGuia = () => {
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode()
 
+  const [editar, setEditar] = useState<boolean>(false)
+
+
+
   const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad[]>(
     authTokens,
     validate,
@@ -107,8 +116,8 @@ const DetalleGuia = () => {
     },
     onSubmit: async (values: any) => {
       try {
-        const res = await fetch(`${base_url}/api/recepcionmp/`, {
-          method: 'POST',
+        const res = await fetch(`${base_url}/api/recepcionmp/${id}/`, {
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authTokens?.access}`
@@ -210,15 +219,62 @@ const DetalleGuia = () => {
   })
 
 
+  const { data: conductores } = useAuthenticatedFetch<TConductor[]>(
+    authTokens,
+    validate,
+    '/api/registros/choferes'
+  )
+
+  const conductoresFilter = conductores?.map((conductor: TConductor) => ({
+    value: String(conductor.id),
+    label: conductor.nombre + ' ' + conductor.apellido
+  })) ?? []
+
+  const optionsConductor: TSelectOptions | [] = conductoresFilter
+
+
+
   return (
-    <div className={`${isDarkTheme ? oneDark : 'bg-white'} h-full`}>
+    <div className={`dark:bg-zinc-900 bg-zinc-50 h-full px-5`}>
       <form
         onSubmit={formik.handleSubmit}
-        className={`flex flex-col md:grid md:grid-cols-6 gap-x-3
-      gap-y-10 mt-10 ${isDarkTheme ? oneDark : oneLight} relative px-5 py-6 
-      rounded-md`}
+        className={`flex flex-col md:grid md:grid-cols-6 gap-x-3 gap-y-10 dark:bg-zinc-900 bg-zinc-50 px-5 py-2 rounded-md relative`}
       >
-
+        {
+          cargolabels(perfilData).includes('RecepcionMP', 'Administrador')
+            ? (
+              <>
+                {
+                  !editar
+                    ? (
+                      <Button
+                        color='sky'
+                        variant='solid'
+                        className='absolute top-28 right-10'
+                        onClick={() => setEditar(true)}>
+                        Editar
+                      </Button>
+                    )
+                    : (
+                      <Button
+                        color='sky'
+                        variant='solid'
+                        className='absolute top-28 right-10'
+                        onClick={() => {
+                          formik.handleSubmit()
+                          setEditar(false)
+                          setRefresh(true)
+                        }}
+                        >
+                        Guardar
+                      </Button>
+                    )
+                }
+              </>
+            )
+            : null
+        }
+        
         <div className={`${isDarkTheme ? 'bg-zinc-800' : 'bg-[#F4F4F5] '} rounded-md col-span-6 bg-[#F4F4F5]`}>
           <h1 className='text-center text-2xl p-2'>Guía Recepción Materia Prima</h1>
           <h5 className='text-center text-xl p-2'>Estado: {guia_recepcion?.estado_recepcion_label}</h5>
@@ -233,9 +289,41 @@ const DetalleGuia = () => {
 
         <div className='md:row-start-2 md:col-span-2 md:col-start-3 md:flex-col items-center'>
           <label htmlFor="camionero">Chofer: </label>
-          <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
-            <span>{guia_recepcion?.nombre_camionero}</span>
-          </div>
+
+          {
+            editar
+              ? (
+                <>
+                  <Validation
+                    isValid={formik.isValid}
+                    isTouched={formik.touched.camionero ? true : undefined}
+                    invalidFeedback={formik.errors.camionero ? String(formik.errors.camionero) : undefined}
+                  >
+                    <FieldWrap>
+                      <SelectReact
+                        options={optionsConductor}
+                        id='camionero'
+                        name='camionero'
+                        placeholder='Selecciona un chofer'
+                        className='h-12'
+                        onBlur={formik.handleBlur}
+                        value={optionsConductor.find(con => con?.value === String(formik.values.camionero))}
+                        onChange={(value: any) => {
+                          formik.setFieldValue('camionero', value.value)
+                        }}
+                      />
+                    </FieldWrap>
+                  </Validation>
+                </>
+                )
+              : (
+               <>
+                <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+                  <span>{guia_recepcion?.nombre_camionero}</span>
+                </div>
+               </>
+              )
+          }
 
         </div>
 
@@ -256,7 +344,7 @@ const DetalleGuia = () => {
         <div className='md:col-span-2  2 md:col-start-3 md:flex-col items-center justify-center'>
           <label htmlFor="mezcla_variedades">Mezcla Variedades: </label>
 
-          <div className={`w-full h-12  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative`}>
+          <div className={`w-full h-12  ${isDarkTheme ? 'bg-[#27272A]' : 'bg-gray-100'} rounded-md flex items-center justify-center relative mt-0.5`}>
             <RadioGroup isInline>
               {optionsRadio.map(({ id, value, label }) => {
                 return (
@@ -277,15 +365,57 @@ const DetalleGuia = () => {
           </div>
         </div>
 
-        <div className='md:col-span-2  md:col-start-5 md:flex-col items-center'>
+        <div className='md:col-span-2 md:col-start-5 md:flex-col items-center'>
           <label htmlFor="numero_guia_productor">N° Guia Productor: </label>
-          <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
-            <span>{guia_recepcion?.numero_guia_productor}</span>
-          </div>
+          {
+            editar
+              ? (
+                <>
+                <Validation
+                    isValid={formik.isValid}
+                    isTouched={formik.touched.numero_guia_productor ? true : undefined}
+                    invalidFeedback={formik.errors.numero_guia_productor ? String(formik.errors.numero_guia_productor) : undefined}
+
+                  >   
+                    <FieldWrap>
+                      <Input
+                        type='text'
+                        name='numero_guia_productor'
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className='py-3'
+                        value={formik.values.numero_guia_productor!}
+                      />
+                    </FieldWrap>
+                  </Validation>
+                </>
+                )
+              : (
+                <>
+                  <div className={`${isDarkTheme ? 'bg-[#27272A] border border-gray-600 ' : 'bg-[#F4F4F5] border border-blue-100 '} p-2 flex items-center h-12 rounded-md`}>
+                    <span>{guia_recepcion?.numero_guia_productor}</span>
+                  </div>
+                </>
+                )
+          }
         </div>
 
 
       </form>
+
+
+      {
+        guia_recepcion?.lotesrecepcionmp.length === 0
+          ? (
+            <div
+              onClick={() => setNuevoLote(prev => !prev)}
+              className='bg-blue-400 w-32 flex items-center justify-center rounded-md p-2 cursor-pointer hover:scale-105 relative left-5 top-2'>
+              <span className='text-white'>Agregar Lote</span>
+            </div>
+          )
+          : null
+      }
+
 
       {
         nuevoLote
@@ -368,13 +498,13 @@ const DetalleGuia = () => {
         nuevoLote
           ? <FooterFormularioEdicionGuia data={guia_recepcion!} variedad={guia_recepcion?.mezcla_variedades!} detalle={setNuevoLote} refresh={setRefresh} />
           : (
-            <div className='mt-10'>
-              <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <Tabs value={guia_recepcion?.estado_recepcion === '4' ? valueConditional : value}  onChange={handleChange} aria-label="basic tabs example">
+            <div className='mt-5'>
+              <Box sx={{ width: '100%'}}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', paddingTop: 2 }}>
+                  <Tabs value={guia_recepcion?.estado_recepcion === '4' ? valueConditional : value}  onChange={handleChange}>
                     { guia_recepcion?.estado_recepcion !== '4' ? <Tab label="Lotes Pendientes" {...a11yProps(0)} className={`${isDarkTheme ? 'light' : 'dark'}`} /> : null}
                     <Tab label="Lotes Aprobados" {...a11yProps(1)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
-                    <Tab label="Lote Rechazado" {...a11yProps(2)} className={`${isDarkTheme ? 'light' : 'dark'}`} />
+                    <Tab label="Lote Rechazado" {...a11yProps(2)}  className={`${isDarkTheme ? 'light' : 'dark'}`}/>
                   </Tabs>
                 </Box>
                 {

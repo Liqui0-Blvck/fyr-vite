@@ -61,7 +61,7 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
     initialRows.map((row, index) => ({ ...row, id: index }))
   );
 
-  const { data: envases } = useAuthenticatedFetch<TEnvases[]>(
+  const { data: envases  } = useAuthenticatedFetch<TEnvases[]>(
     authTokens,
     validate,
     `/api/envasesmp/`
@@ -78,6 +78,26 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
     validate,
     `/api/recepcionmp/${id_guia}`
   )
+
+  const actualizacionKilosLote = async (kilos_brutos_1: number, kilos_brutos_2?: number) => {
+    const res = await fetch(`${base_url}/api/recepcionmp/${id_guia}/lotes/${id_lote}/`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
+      },
+      body: JSON.stringify({
+        kilos_brutos_1: kilos_brutos_1,
+        kilos_brutos_2: camionAcoplado ? kilos_brutos_2 : 0
+      })
+    })
+
+    if (res.ok){
+      console.log("Bien hecho muchacho")
+    } else {
+      console.log("Revisa hubo un error")
+    }
+  }
 
 
   const formik = useFormik({
@@ -109,8 +129,9 @@ const FooterFormularioEdicionEnvase: FC<IFooterProps> = ({ id_lote, id_guia }) =
           body: formData
         })
         if (res.ok) {
+          actualizacionKilosLote(values.kilos_brutos_1, values.kilos_brutos_2)
           toast.success("la guia de recepción fue registrado exitosamente!!")
-          navigate(`/app/recepciomp`)
+          navigate(`/app/recepcionmp`)
         } else {
           toast.error("No se pudo registrar la guia de recepción volver a intentar")
         }
