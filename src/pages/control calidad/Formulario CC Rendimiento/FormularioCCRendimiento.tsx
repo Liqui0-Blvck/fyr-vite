@@ -24,6 +24,8 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen, contr
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
 
+  
+
 
 
   const formik = useFormik({
@@ -62,6 +64,7 @@ const FormularioCCRendimiento : FC<IFormCC> = ({ id_lote, refresh, isOpen, contr
           toast.success("El control de calidad fue registrado exitosamente!!")
           refresh(true)
           isOpen(false)
+
 
         } else {
           toast.error("No se pudo registrar el control de calidad, volver a intentar")

@@ -18,19 +18,16 @@ import TablaEnvasesPatio from '../Tabla Bodega/Tabla Envases Patio/TablaEnvasesP
 const DetalleCamion = () => {
   const { isDarkTheme } = useDarkMode();
   const { authTokens, validate } = useAuth()
-  const { pathname } = useLocation()
-  const id = urlNumeros(pathname)
+  const { state } = useLocation()
 
   const { data: guia } = useAuthenticatedFetch<TPatioTechadoEx>(
     authTokens,
     validate,
-    `/api/patio-exterior/${id}`
+    `/api/patio-exterior/${state.id_recepcion}`
   )
 
   const envasesPatio: TEnvasePatio[] = guia?.envases!
   const totalEnvases: number = guia?.envases.length!
-
-  console.log(totalEnvases)
 
   return (
     <div

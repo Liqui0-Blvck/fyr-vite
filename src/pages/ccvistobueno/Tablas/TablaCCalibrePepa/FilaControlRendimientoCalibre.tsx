@@ -43,6 +43,7 @@ const FilaControlRendimientoCalibre: FC<ILoteCompletadoProps> = ({ muestra: row,
     getRendimientos()
   }, [ccLote])
 
+
   return (
     <>
       <TableCell className='table-cell-row-detail-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}`, padding: 5 }}>

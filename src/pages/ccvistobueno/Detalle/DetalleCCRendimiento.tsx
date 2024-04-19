@@ -106,7 +106,6 @@ const DetalleCCRendimiento = () => {
               ? <Skeleton variant="rectengular" width='100%' height={200}/>
               : (
                 <div className='flex flex-col md:flex-col w-full h-full '>
-                  <h1 className='text-3xl text-center text-gray-700'>Resultados Kilos</h1>
                   <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col lg:flex-row items-center justify-center rounded-md py-1`}>
                     <div className='lg:w-7/12 relative -top-2'>
                       <PieChart series={valores! || []} labels={labels! || []}/>
@@ -123,7 +122,7 @@ const DetalleCCRendimiento = () => {
           
           {
             loading
-              ? <Skeleton variant="rectengular" width='100%' height={200}/>
+              ? <Skeleton variant="rectangular" width='100%' height={200}/>
               : (
                 <div className='flex flex-col h-full '>
                   <h1 className='text-3xl text-center text-gray-700'>Control de Calidad Pepa Bruta </h1>
@@ -143,24 +142,27 @@ const DetalleCCRendimiento = () => {
           
           {
             loading
-              ? <Skeleton variant="rectengular" width='100%' height={400}/>
+              ? <Skeleton variant="rectangular" width='100%' height={400}/>
               : (
                   <div className='flex flex-col h-full'>
                     <h1 className='text-3xl text-center text-gray-700'>Control de Calidad Calibres Pepa</h1>
                     <div className={`w-full h-full border ${isDarkTheme ? 'border-zinc-700' : ' '} px-2 flex flex-col items-center justify-center rounded-md py-2 gap-y-5`}>
                       <div className='w-full h-full flex flex-col lg:flex-row gap-y-10 py-10'>
-                        <div className='lg:w-7/12 flex flex-col'>
-                          <PieChart series={valores_cc_calibre || []} labels={labels_cc_calibre || []}/>
-                          <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
-                        </div>
                         <div className='w-full h-full flex flex-col items-center overflow-x-auto'>
                           <h1 className='text-2xl'>Calculo Descuento</h1>
                           <TablaDetalleDescuento data={control_calidad?.control_rendimiento! || []} ccLote={control_calidad}/>
                         </div>
                       </div>
-                      <div className='w-full flex flex-col h-full justify-center py-10'>
-                        <h1 className='text-2xl text-center'>Detalle Calibres Pepa</h1>
-                        <TablaCCalibrePepa data={control_calidad?.control_rendimiento! || []} ccLote={control_calidad}/>
+                      <div className='w-full h-full flex flex-col  gap-y-10 py-10'>
+
+                        <div className='w-7/12 flex flex-col gap-y-5'>
+                          <PieChart series={valores_cc_calibre || []} labels={labels_cc_calibre || []}/>
+                          <p className='text-center'>Grafico Generado en promedio de GRM de muestra registrada</p>
+                        </div>
+                        <div className='w-full flex flex-col'>
+                          <h1 className='text-2xl text-center'>Detalle Calibres Pepa</h1>
+                          <TablaCCalibrePepa data={control_calidad?.control_rendimiento! || []} ccLote={control_calidad}/>
+                        </div>
                       </div>
                     </div>
                   </div>

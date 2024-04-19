@@ -238,7 +238,7 @@ export type TControlCalidadB = {
 export type TRendimientoMuestra = { 
   id: number
   cc_recepcionmp: number
-  peso_muestra:number
+  peso_muestra_calibre:number
   muestra_variedad: number
   basura: number
   pelon:number

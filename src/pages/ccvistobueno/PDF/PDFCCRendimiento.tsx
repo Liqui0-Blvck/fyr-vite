@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   body_table: {
     width: '100%',
-    height: '90%',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     border: '1px solid green',
@@ -232,15 +232,17 @@ const CCRendimiento = () => {
                 backgroundColor: ['#ffcd5c', '#5CEBAF', '#3b82f6', '#F43F5E', '#D885FF', '#0ece6e'],
                 borderColor: "darkgreen",
                 color: 'black',
-                size: 10
+                size: 20
             }],
         }
-    }).setHeight(400).setWidth(600);
+    }).setHeight(500).setWidth(650);
 
     setImageSrc(myChart.getUrl());
 
     return () => {}
-  }, [formattedData]);  
+  }, [formattedData]);
+
+  console.log("soy la guia", control_calidad)
 
   
   return (
@@ -250,14 +252,14 @@ const CCRendimiento = () => {
           // Top Superior
           <View style={styles.header}>
             <View style={styles.header_superior}>
-              <View style={{ position: 'relative', top: -15 }}>
+              <View style={{ position: 'relative', top: -30 }}>
                 <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100}}/>
                 <Text style={{ fontSize: 5, width: 100}}>Actividades de Apoyo a la agrícultura
                       Dirección: Fundo Challay Alto Lote A-1, Paine
                       Teléfonos: +56 2 228215583 - +56 2 2282 25584</Text>
               </View>
 
-              <View style={{ width: 190, border: '1px solid green', height: 40, padding: 5, borderRadius: 5, position: 'relative', top: 30 }}>
+              <View style={{ width: 190, border: '1px solid green', height: 40, padding: 5, borderRadius: 5, position: 'relative', top: 20 }}>
                 <View style={styles.header_date_info_box}>
                   <Text style={styles.header_date_info_text}>Fecha Recepción: </Text>
                   <Text style={styles.header_date_info_text}>{format(guia?.fecha_creacion!, { date: 'short'}, 'es')}</Text>
@@ -278,7 +280,7 @@ const CCRendimiento = () => {
 
             // Top Inferior 
 
-            <Text style={{ textAlign: 'center', fontSize: 14, position: 'relative', top: -20}}>Informe Control De Calidad Materia Prima</Text>
+            <Text style={{ textAlign: 'center', fontSize: 14, position: 'relative', top: -50}}>Informe Control De Calidad Materia Prima</Text>
 
             <View style={{
               width: '100%',
@@ -287,11 +289,11 @@ const CCRendimiento = () => {
               justifyContent: 'space-between',
               gap: 10,
               position: 'relative',
-              top: -20
+              top: -50
             }}>
 
               <View style={styles.header_info_box_superior}>
-                <Text style={{ fontSize: 8 }}>Datos Guia Recepcion Materia Prima </Text>
+                <Text style={{ fontSize: 10 }}>Datos Guia Recepcion Materia Prima </Text>
                 <View style={styles.header_info_inferior}>
                 
                   <View style={styles.header_date_info_box}>
@@ -302,7 +304,7 @@ const CCRendimiento = () => {
                   <View style={styles.header_date_info_box}>
                     <Text style={styles.header_date_info_text}>Variedad: </Text>
 
-                    {/* <Text style={styles.header_date_info_text}>{variedad}</Text> */}
+                    <Text style={styles.header_date_info_text}>{control_calidad?.variedad}</Text>
                   </View>
 
                   <View style={styles.header_date_info_box}>
@@ -321,7 +323,7 @@ const CCRendimiento = () => {
               </View>
 
               <View style={styles.header_info_box_superior}>
-                <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Datos Inspección Control De Calidad</Text>
+                <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Datos Inspección Control De Calidad</Text>
                 <View style={styles.header_info_inferior}>
                 
                   <View style={styles.header_date_info_box}>
@@ -351,7 +353,7 @@ const CCRendimiento = () => {
               marginTop: 10,
               textAlign: 'center',
               position: 'relative',
-              top: -20
+              top: -53
              }}>Observaciones</Text>
               <View style={{ 
                 width: '100%',
@@ -362,7 +364,7 @@ const CCRendimiento = () => {
                 border: '1px solid green',
                 borderRadius: 5,
                 position: 'relative',
-                top: -20,
+                top: -50,
                 padding: 5
             }}>
                 <Text style={{ fontSize: 8 }}>
@@ -382,7 +384,8 @@ const CCRendimiento = () => {
             padding: 20,
             gap: 2,
             position: 'relative',
-            top: -30
+            top: -55,
+            height: 540,
           }}>
             <View style={styles.header_inferior}>
               <View style={{
@@ -402,7 +405,7 @@ const CCRendimiento = () => {
                   top: -20
                 }}>
                   <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: 5}}>Calibres</Text>
-                  <View style={{width: '100%', height: 230}}>
+                  <View style={{width: '100%', height: '120%'}}>
                     <View style={styles.body_table}>
                       
                       // 1
@@ -587,16 +590,16 @@ const CCRendimiento = () => {
                         // 10
                         <View style={styles.body_table_rows}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ width: '100%', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8}}>a</Text> 
+                            <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8}}>a</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.body_table_info_text}>Pre calibre</Text> 
+                            <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8}}>Pre calibre</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].precalibre! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
+                            <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8}}>{(rendimientos?.cc_pepa_calibre[0].precalibre! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center'}}>{rendimientos?.cc_pepa_calibre[0].precalibre}%</Text> 
+                            <Text style={{ width: '100%', textAlign: 'center', paddingVertical: 4, paddingRight: 2, fontSize: 8}}>{rendimientos?.cc_pepa_calibre[0].precalibre}%</Text> 
                           </View>
                         </View>
 
@@ -610,26 +613,27 @@ const CCRendimiento = () => {
               <View style={styles.header_inferior}>
                 <View style={{
                   width: '100%',
+                  height: '100%',
                   position: 'relative',
-                  top: -30
+                  top: -50
                 }}>
-                  <Text style={{ fontSize: 12, textAlign: 'center' }}>CAT 2</Text>
-                  <View style={{width: '100%', height: 105}}>
+                  <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px' }}>CAT 2</Text>
+                  <View style={{width: '100%', height: 180}}>
                     <View style={styles.body_table}>
                       
                       // 1
                       <View style={styles.body_table_header}>
                          <View style={{ width: '100%'}}>
-                          <Text style={styles.header_date_info_text}>CAT 2</Text>
+                          <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>CAT 2</Text>
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.header_date_info_text}>%</Text>
+                            <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>%</Text>
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.header_date_info_text}>% Permitido</Text>
+                            <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>% Permitido</Text>
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={styles.header_date_info_text}>Kilos Desc.</Text>
+                            <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>Kilos Desc.</Text>
                           </View>
                       </View>
 
@@ -687,13 +691,13 @@ const CCRendimiento = () => {
                         // 5
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderTop: '1px solid green'}}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>Total CAT2</Text> 
+                            <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>Total CAT2</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>a</Text> 
+                            <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>a</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>a</Text> 
+                            <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>a</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
                             <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>{rendimientos?.cc_descuentos[0].cat2} %</Text> 
@@ -706,8 +710,8 @@ const CCRendimiento = () => {
                 </View>
 
 
-                  <Text style={{ fontSize: 12, textAlign: 'center' }}>Desechos</Text>
-                    <View style={{width: '100%', height: 160}}>
+                  <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Desechos</Text>
+                    <View style={{width: '100%', height: '100%'}}>
                   
                     <View style={styles.body_table}>
                       
@@ -803,15 +807,15 @@ const CCRendimiento = () => {
                           </View>
                         </View>
 
-                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>Total Deshecho</Text> 
+                            <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green'}}>Total Deshecho</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>1</Text> 
+                            <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>1</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
-                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>1</Text> 
+                            <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white'}}>1</Text> 
                           </View>
                           <View style={styles.boxes_table_row}>
                             <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center'}}>{(rendimientos?.cc_descuentos[0].desechos)?.toFixed(1)} Kgs</Text> 
@@ -831,10 +835,10 @@ const CCRendimiento = () => {
                   gap: 2,
                   justifyContent: 'space-between',
                   position: 'relative',
-                  top: -34,
+                  top: 0,
                 }}>
                   <Text style={{ fontSize: 14, textAlign: 'center' }}>Resumen</Text>
-                  <View style={{width: '100%', height: 70, border: '1px solid green', borderRadius: 4, padding: '5px'}}>
+                  <View style={{width: '100%', height: 58, border: '1px solid green', borderRadius: 4, padding: '5px'}}>
                   
                     <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                       <View style={{ width: 150 }}>
@@ -888,14 +892,14 @@ const CCRendimiento = () => {
 
                   <View style={{
                     width: '100%',
-                    height: 50,
+                    height: 47,
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 3,
                     border: '1px solid green',
                     borderRadius: 5,
                     padding: 5,
-                    paddingLeft: 10
+                    paddingLeft: 10,
                   }}>
                   
                     <View style={{
@@ -995,7 +999,7 @@ const CCRendimiento = () => {
                           </View>
                           
                           <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                            <Text style={{ fontSize: 8}}>{rendimientos?.cc_calculo_final.final_des} kgs</Text>
+                            <Text style={{ fontSize: 8 }}>{rendimientos?.cc_calculo_final.final_des} kgs</Text>
                           </View>
                           
                         </View>
@@ -1006,8 +1010,8 @@ const CCRendimiento = () => {
                   {
                     String(control_calidad?.estado_aprobacion_cc) === '1'
                         ? (
-                          <View style={{ width: '100%', display: 'flex', height: 100, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 180 }}>
-                            <Image source='/src/assets/firma_donandres.png' style={{ width: 100, height: 50}}/>
+                          <View style={{ width: '100%', display: 'flex', height: 90, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 220 }}>
+                            <Image source='/src/assets/firma_donandres.png' style={{ width: 90, height: 50}}/>
                             <Text style={{ 
                               borderBottom: '1px solid green',
                               height: 15,
@@ -1022,10 +1026,7 @@ const CCRendimiento = () => {
                           )
                         : null
                   
-                  }
-
-
-
+                        }
                 </View>
               </View>
 

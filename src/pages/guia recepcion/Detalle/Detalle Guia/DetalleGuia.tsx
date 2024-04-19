@@ -124,9 +124,6 @@ const DetalleGuia = () => {
           },
           body: JSON.stringify({
             ...values,
-            estado_recepcion: 1,
-            creado_por: userID?.user_id
-
           })
         })
         if (res.ok) {

@@ -42,6 +42,7 @@ const FormularioPepaMuestra : FC<IFormCC> = ({ id_lote, refresh, isCalibrable, i
 
   const formik = useFormik({
     initialValues: {
+
       pepa_sana: 0,
       pepa_muestra: 0,
       muestra_variedad: 0,
@@ -67,6 +68,7 @@ const FormularioPepaMuestra : FC<IFormCC> = ({ id_lote, refresh, isCalibrable, i
             'Authorization': `Bearer ${authTokens?.access}`
           },
           body: JSON.stringify({
+            peso_muestra_calibre: values.pepa_sana,
             muestra_variedad: values.muestra_variedad,
             daño_insecto: values.daño_insecto,
             hongo: values.hongo,

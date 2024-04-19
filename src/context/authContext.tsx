@@ -1,4 +1,4 @@
-import { createContext, FC, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, FC, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useNavigation } from 'react-router-dom';
 import { authPages, appPages } from '../config/pages.config';
 import toast from 'react-hot-toast';
@@ -25,6 +25,7 @@ interface IAuthContext {
   // onLogin: (username: string, password: string) => Promise<void>;
   onLogout: () => void;
   obtener_perfil: () => Promise<void>
+  updateToken: () => void
 }
 
 interface TokenPayload {
@@ -135,6 +136,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     if (response.status === 200) {
       const data = await response.json();
       setAuthTokens(data);
+      setRefresh(true)
       Cookies.set('user', JSON.stringify(data));
       return true;
     } else {
@@ -142,106 +144,48 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     }
   };
 
-  // useEffect(() => {
-  //   let isMounted = true;
 
-  //   const fetchProfile = async () => {
-  //     try {
-  //       if (authTokens && userID && isMounted) {
-  //         const res = await fetch(`${base_url}/api/registros/perfil/${userID.user_id}`, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //             'Authorization': `Bearer ${authTokens.access}`
-  //           }
-  //         });
-
-  //         if (res.ok) {
-  //           const data = await res.json();
-  //           if (isMounted) {
-  //             setPerfilData(data);
-  //           }
-  //         } else {
-  //           console.log("Tenemos un problema nuevo");
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error al obtener el perfil:", error);
-  //     }
-  //   };
-
-  //   if (refresh) {
-  //     fetchProfile();
-  //   }
-
-  //   fetchProfile();
-
-  //   return () => {
-  //     isMounted = false;
-  //     setRefresh(false);
-  //   };
-  // }, [authTokens, userID, refresh]);
-
-
-
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     try {
-  //       if (authTokens) {
-  //         const isTokenValid = await validate(authTokens);
-  //         if (!isTokenValid) {
-  //           await updateToken();
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error al verificar o actualizar el token:", error);
-
-  //     }
-  //   }, 1000 * 60 * 4);
-
-
-  //   return () => clearInterval(interval);
-  // }, [authTokens, validate, updateToken]);
+  console.log(perfilData)
 
     useEffect(() => {
         if (refresh){
           obtener_perfil()
         }
-        
-        obtener_perfil()
-    }, [logeado, refresh])
 
-    const obtener_perfil = async () => {
-        const configMe = {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${authTokens?.access}`
-            }
-        }
-        const responseMe = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/users/me`, configMe)
-        if (responseMe.ok) {
-            const dataMe = await responseMe.json()
-            const configPerfil = {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${authTokens?.access}`
-                }
-            }
-            const responsePersonalizacion = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/personalizacion-perfil/${dataMe.id}`, configPerfil)
-            const responsePerfil = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/perfil/${dataMe.id}`, configPerfil)
-            if (responsePerfil.ok && responsePersonalizacion.ok || responsePerfil.ok && !responsePersonalizacion.ok) {
-                const dataPersonalizacion = await responsePersonalizacion.json()
-                const dataPerfil = await responsePerfil.json()
-                setPerfilData(dataPerfil)
-                setPersonalizacionData(dataPersonalizacion)
-                setDarkModeStatus(dataPersonalizacion.estilo)
-            } else {
-                toast.error('ERROR INESPERADO PERFIL')
-            }
-        } else {
-            refreshToken()
-        }
-    }
+        obtener_perfil()
+    }, [logeado])
+
+    const obtener_perfil = useCallback(async () => {
+      const configMe = {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${authTokens?.access}`
+          }
+      }
+      const responseMe = await fetch(`${process.env.VITE_BASE_URL_DEV}/auth/users/me`, configMe)
+      if (responseMe.ok) {
+          const dataMe = await responseMe.json()
+          const configPerfil = {
+              method: 'GET',
+              headers: {
+                  'Authorization': `Bearer ${authTokens?.access}`
+              }
+          }
+          const responsePersonalizacion = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/personalizacion-perfil/${dataMe.id}`, configPerfil)
+          const responsePerfil = await fetch(`${process.env.VITE_BASE_URL_DEV}/api/registros/perfil/${dataMe.id}`, configPerfil)
+          if (responsePerfil.ok && responsePersonalizacion.ok || responsePerfil.ok && !responsePersonalizacion.ok) {
+              const dataPersonalizacion = await responsePersonalizacion.json()
+              const dataPerfil = await responsePerfil.json()
+              setPerfilData(dataPerfil)
+              setPersonalizacionData(dataPersonalizacion)
+              setDarkModeStatus(dataPersonalizacion.estilo)
+          } else {
+              toast.error('ERROR INESPERADO PERFIL')
+          }
+      } else {
+          refreshToken()
+      }
+  }, [authTokens, setPerfilData, setPersonalizacionData, setDarkModeStatus, refreshToken, toast]);
 
     const onLogout = async () => {
         setAuthTokens(null);
@@ -318,22 +262,31 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
                 if (verificarToken.status == 401) {
                     const access = await refreshToken()
                     setLogeado(true)
-                    // else {
-                    //     console.log('redirigiendo a login....')
-                    //     setAuthTokens(null)
-                    //     Cookies.remove('token')
-                    //     Cookies.remove('user')
-                    //     navigate(`../${authPages.loginPage.to}`, { replace: true });
-                    // }
+
                 }
             }
         }
         verificar_login()
     })
 
-    // useEffect(() => {
-    //     console.log( 'authTokens',authTokens)
-    // }, [authTokens])
+    useEffect(() => {
+      const interval = setInterval(async () => {
+        try {
+          if (authTokens) {
+            const isTokenValid = await validate(authTokens);
+            if (!isTokenValid) {
+              await updateToken();
+            }
+          }
+        } catch (error) {
+          console.error("Error al verificar o actualizar el token:", error);
+        }
+      }, 1000 * 60 * 4);
+    
+      return () => clearInterval(interval);
+    }, [authTokens, validate, updateToken]);
+  
+
 
   const value: IAuthContext = {
     authTokens,
@@ -343,6 +296,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
     login,
     refreshToken,
     validate,
+    updateToken,
     // onLogin,
     onLogout,
     obtener_perfil,

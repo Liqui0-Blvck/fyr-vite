@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { authPages, componentsPages } from '../config/pages.config';
@@ -22,7 +22,7 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const { refreshToken } = useAuth()
+  const { refreshToken, obtener_perfil } = useAuth()
   const navigate = useNavigate();
   const base_url = process.env.VITE_BASE_URL_DEV;
 
@@ -34,7 +34,6 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
         setLoading(true);
 
         if (!isMounted) return
-      
           const response = await fetch(base_url + url, {
             method: 'GET',
             headers: {
@@ -47,7 +46,7 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
             const fetchedData: T = await response.json();
             setData(fetchedData);
           } else if (response.status === 401) {
-            refreshToken()
+            await refreshToken()
             setError('No estás autorizado para hacer esta petición');
           } else if (response.status === 404) {
             setError('La URL que ingresaste no tiene ninguna información');
@@ -77,6 +76,7 @@ export const useAuthenticatedFetch = <T>(token: (IToken | null), validate: (toke
       setRefresh(false);
     };
   }, [url, refresh, token, validate, navigate, base_url]);
+
 
   return {
     loading,

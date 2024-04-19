@@ -32,7 +32,7 @@ const TablaCCalibrePepa: FC<IRendimientoMuestra> = ({ refresh, id_lote, ccLote }
   return (
     <div>
       <div
-        className='relative left-[0px] lg:left-0 p-5'>
+        className='relative left-[0px]  p-5'>
         <TableContainer sx={{ height: 200}}>
           <Table className='table' aria-label="simple table">
             <TableHead className='table-header'>

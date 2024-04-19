@@ -51,8 +51,6 @@ const EnvasesEnGuiaList: FC<IEnvasesEnGuiaListProps> = ({ ubicacion, row, isSele
       <ul className='w-full h-14 flex flex-col gap-3'>
       
       {row.filter(envase => envase.estado_envase !== '2').map((envase) => {
-        
-        
         return (
           <li key={envase.id} className={`${isDarkTheme ? 'bg-zinc-700' : 'bg-zinc-100'} w-full h-full rounded-md`}>
             <div className={`${isDarkTheme ? 'bg-zinc-700' : 'bg-zinc-100'} rounded-md w-full flex items-center p-3`}>

@@ -203,15 +203,19 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data, refresh }) => {
 									{
 										estado_aprobacion > 0 && estado_aprobacion < 2 
 											? (
-												<Tooltip title={contra_muestras_estado === '1' ? 'Contra Muestra Solicitada' : 'Solicitar Contra Muestra'}>
+												<Tooltip title={contra_muestras_estado === '0' ? 'Contra Muestra Solicitada' : contra_muestras_estado === '5' ? 'Contra Muestra Completada' : null}>
 													<button
 														type='button'
 														onClick={() => {
-															posted ? null : handleContramuestra(id, '1', setPosted)
+															if (contra_muestras_estado === '5'){
+																{}
+															} else {
+																posted ? null : handleContramuestra(id, '1', setPosted)
+															}
 														}}
 														className={`w-full cursor-pointer flex items-center justify-center rounded-md px-1 h-12
 															${isDarkTheme ? 'text-white' : 'text-white'}
-															${contra_muestras_estado === '1' ? 'bg-green-600 hover:bg-green-400' : 'bg-orange-600 hover:bg-orange-400'} hover:scale-105`}>
+															${contra_muestras_estado === '0' || contra_muestras_estado === '5' ? 'bg-green-600 hover:bg-green-400' : 'bg-orange-600 hover:bg-orange-400'} hover:scale-105`}>
 														{
 															contra_muestras_estado === '1'
 																? <ImSpinner2  className='text-4xl transition-all delay-200 animate-spin'/>

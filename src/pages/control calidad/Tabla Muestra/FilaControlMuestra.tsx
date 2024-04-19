@@ -90,21 +90,23 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
   }, [confirmacion])
 
 
+
+  const esta_contramuestra = control_calidad.esta_contramuestra === '1' || control_calidad.esta_contramuestra === '2' || control_calidad.esta_contramuestra === '3' || control_calidad.esta_contramuestra === '4'
   return (
     <>
       <TableCell className='table-cell-row-1' component="th" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'} ${control_calidad.esta_contramuestra && !row?.es_contramuestra ? '' : 'line-through'}`}>{row?.id}</span>
-        </div>
+          <span className={`text-xl dark:text-white text-black`}>{row?.id}</span>
+        </div>  
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}  ${control_calidad.esta_contramuestra && !row?.es_contramuestra ? '' : 'line-through'}`}>{format(row?.fecha_creacion!, { date: 'long', time: 'short' }, 'es')}</span>
+          <span className={`text-xl dark:text-white text-black `}>{format(row?.fecha_creacion!, { date: 'long', time: 'short' }, 'es')}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
         <div className=' h-full w-full flex items-center justify-center gap-5'>
-          <span className={`text-xl ${isDarkTheme ? 'text-white' : 'text-black'}  ${control_calidad.esta_contramuestra && !row?.es_contramuestra ? '' : 'line-through'}`}>{userData?.user.username} | {userData?.user.email}</span>
+          <span className={`text-xl dark:text-white text-black `}>{userData?.user.username} | {userData?.user.email}</span>
         </div>
       </TableCell>
       <TableCell className='table-cell-row-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
@@ -112,15 +114,15 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
           {
             row?.cc_ok === true
               ? (
-                <Tooltip text={control_calidad.esta_contramuestra === '1' ? 'Muestra invalidad por Contra Muestra': 'Muestra Valida'}>
+                <Tooltip text={control_calidad.esta_contramuestra === '1'  && !row.es_contramuestra ? 'Muestra invalidad por Contra Muestra': 'Muestra Valida'}>
                   <div 
                     className={`w-24 flex items-center justify-center rounded-md px-1 h-12 
                     ${isDarkTheme ?  'text-white' : 'text-white'}
-                    ${control_calidad.esta_contramuestra === '1' && !row.es_contramuestra ? 'bg-orange-600 hover:bg-orange-400' : 'bg-green-600 hover:bg-green-400'}
+                    ${control_calidad.esta_contramuestra === '1'  && !row.es_contramuestra ? 'bg-orange-600 hover:bg-orange-400' : 'bg-green-600 hover:bg-green-400'}
                     hover:scale-105`}>
                     
                     {
-                      control_calidad.esta_contramuestra === '1' && !row.es_contramuestra
+                      control_calidad.esta_contramuestra === '1'  && !row.es_contramuestra
                         ? <MdOutlineCommentsDisabled className='text-4xl'/>
                         : <BiCheckDouble className='text-4xl'/>
                     }
@@ -141,7 +143,7 @@ const FilaControlMuestra: FC<ILoteCompletadoProps> = ({ muestra: row, refresh, i
                     id={row?.id!}
                     id_lote={id_lote}
                     mensaje='¿Quieres registrar CC Pepa?'
-                    formulario={<FormularioPepaMuestra isCalibrable={setIsCalibrable} id_lote={id_lote!} id_muestra={row?.id!} refresh={refresh} isOpen={setOpenModalCCPepa} CCLote={row}/>}
+                    formulario={<FormularioPepaMuestra isCalibrable={setIsCalibrable} id_lote={id_lote!} id_muestra={row?.id!} refresh={refresh} isOpen={setOpenModalCCPepa} />}
                     confirmacion={ccPepaConfirmacion}
                     setConfirmacion={setccPepaConfirmacion}
                     setOpen={setOpenModalCCPepa}

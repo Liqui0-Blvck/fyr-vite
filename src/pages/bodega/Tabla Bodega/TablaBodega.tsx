@@ -126,7 +126,7 @@ const TablaBodega: FC<IOperarioProps> = ({ data, refresh }) => {
           <div className='h-full w-full flex items-center justify-center gap-2'>
 
             <Tooltip text='Detalle Guía Bodega'>
-              <Link to={`/app/bodega/${id}`}>
+              <Link to={`/app/bodega/${id}`} state={{ id_recepcion: info.row.original.id_recepcion }}>
                 <button className={`w-24 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} rounded-md flex items-center justify-center hover:scale-105`}>
                   <HeroEye style={{ fontSize: 25 }} />
                 </button>

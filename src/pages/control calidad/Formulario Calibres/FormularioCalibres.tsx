@@ -10,7 +10,7 @@ import useDarkMode from '../../../hooks/useDarkMode'
 import { useAuth } from '../../../context/authContext'
 import Radio, { RadioGroup } from '../../../components/form/Radio'
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction'
-import { TControlCalidad, TLoteGuia, TPepaMuestra, TRendimientoMuestra } from '../../../types/registros types/registros.types'
+import { TControlCalidad, TControlCalidadB, TLoteGuia, TPepaMuestra, TRendimientoMuestra } from '../../../types/registros types/registros.types'
 import { optionsRadio } from '../../../constants/options.constants'
 import Label from '../../../components/form/Label'
 import Validation from '../../../components/form/Validation'
@@ -24,11 +24,11 @@ interface IFormCC {
   id_lote?: number
   refresh?: Dispatch<SetStateAction<boolean>>
   isOpen?: Dispatch<SetStateAction<boolean>>
-  CCLote?: TRendimientoMuestra[] | null
-  id_muestra?: number
+  control_calidad?: TControlCalidadB
+  id_muestra?: number,
 }
 
-const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CCLote }) => {
+const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra }) => {
   const { authTokens, validate, userID } = useAuth()
   const base_url = process.env.VITE_BASE_URL_DEV
   const { isDarkTheme } = useDarkMode ();
@@ -40,16 +40,42 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
     `/api/control-calidad/recepcionmp/${id[0]}/muestras/${id_muestra}/cdcpepa/`
   )
 
-  console.log("gola", CCLote)
+  const { data: control_calidad } = useAuthenticatedFetch<TControlCalidadB>(
+    authTokens,
+    validate,
+    `/api/control-calidad/recepcionmp/${id[0]}`
+  )
+
+
 
   const pepaCCID = [...(ccPepa || [])].shift()?.id
 
-  const promedio_pepa_sana = CCLote?.reduce((acc, lote) => lote.pepa + acc, 0)! / CCLote?.length!
-  console.log("Creo ser un promedio", promedio_pepa_sana)
+  const actualizarEstadoContraMuestra = async (estado: string) => {
+    const res = await fetch(`${base_url}/api/control-calidad/recepcionmp/${control_calidad?.id}/`, {
+      method: 'PATCH', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authTokens?.access}`
+      },
+      body: JSON.stringify({
+        esta_contramuestra: estado
+      })
+    })
+
+    if (res.ok){
+      toast.success("Todo bien amigo mio")
+    } else {
+      toast.error("Todo mal amigo mio")
+    }
+  }
+
+
+  console.log(control_calidad)
+
 
   const formik = useFormik({
     initialValues: {
-      peso_muestra_calibre: promedio_pepa_sana,
+      peso_muestra_calibre: 0,
       gramos_x_asignar: 0,
       pre_calibre: 0, 
       calibre_18_20: 0,
@@ -91,9 +117,13 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
           })
         })
         if (res.ok) {
+          if (control_calidad?.esta_contramuestra === '1' ){
+            actualizarEstadoContraMuestra('5')
+          }
           toast.success("la calibración fue registrada exitosamente!!")
           refresh!(true)
           isOpen!(false)
+
 
         } else {
           toast.error("No se pudo registrar la calibración, volver a intentar")
@@ -105,8 +135,23 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
     }
   })
 
+  useEffect(() => {
+    let isMounted = true;
+  
+    if (isMounted && ccPepa) {
+      const ccPepaCopy = [...ccPepa];
+      const primeraMuestra = ccPepaCopy.shift();
+      if (primeraMuestra) {
+        formik.setFieldValue('peso_muestra_calibre', primeraMuestra.peso_muestra_calibre);
+      }
+    }
+  
+    return () => {
+      isMounted = false;
+    };
+  }, [ccPepa]);
 
-  console.log(formik.values)
+
 
   const calcularPepaSana = () => {
     const { pre_calibre,
@@ -166,7 +211,6 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
 
 
 
-
   console.log("soy los valores del formik", formik.values)
 
   
@@ -184,15 +228,16 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
             isValid={formik.isValid}
             isTouched={formik.touched.peso_muestra_calibre ? true : undefined}
             invalidFeedback={formik.errors.peso_muestra_calibre ? String(formik.errors.peso_muestra_calibre) : undefined}
+
             >
             <FieldWrap>
               <Input
-              type='number'
-              name='peso_muestra_calibre'
-              onChange={formik.handleChange}
-              className='py-2 w-[90%] bg-zinc-100 focus-visible:bg-zinc-100 focus:bg-zinc-200 '
-              value={formik.values.peso_muestra_calibre}
-            />
+                type='number'
+                name='peso_muestra_calibre'
+                onChange={formik.handleChange}
+                className='py-2 w-[90%] bg-zinc-100 focus-visible:bg-zinc-100 focus:bg-zinc-200 '
+                value={formik.values.peso_muestra_calibre}
+              />
             </FieldWrap>
           </Validation>
           
@@ -410,8 +455,8 @@ const FormularioCCPepaCalibre : FC<IFormCC> = ({ refresh, isOpen, id_muestra, CC
 
 
         <div className='row-start-5 col-start-7 relative w-full h-20 col-span-2 '>
-          <button 
-            type='submit' 
+          <button
+            type='submit'
             className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
             Calibrar Muestra Lote
           </button>

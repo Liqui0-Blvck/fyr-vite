@@ -58,6 +58,8 @@ const DetalleCC = () => {
     validate,
     `/api/fotos-cc/?search=${control_calidad?.id}`
   )
+  
+  console.log("fotos", fotoscc)
 
 
   const { data: cc_rendimiento, setRefresh } = useAuthenticatedFetch<TRendimientoMuestra[]>(
@@ -65,6 +67,8 @@ const DetalleCC = () => {
     validate,
     `/api/control-calidad/recepcionmp/${control_calidad?.id!}/muestras/`
   )
+
+  console.log("rendimiento ",cc_rendimiento)
 
 
 
@@ -100,17 +104,10 @@ const DetalleCC = () => {
     })?.shift()
 
 
-  const muestrasCompletas = cc_rendimiento?.
-    filter(cc_pepa => cc_pepa.cc_recepcionmp = control_calidad?.id!).
-    every(cc_pepa => cc_pepa.cc_ok === true )
-
-  const ccPepasCompletas = cc_rendimiento?.some((cc) => cc.cc_calibrespepaok === true)
-
   const muestra = [...(cc_rendimiento || [])];
   const contra_muestras_limit = cc_rendimiento?.filter(cc => cc.es_contramuestra === true).length
   const contra_muestra_ok = cc_rendimiento?.some(cc => cc.cc_ok === true && cc.es_contramuestra === true)
   const contra_muestra_calibre_ok = cc_rendimiento?.some(cc => cc.cc_calibrespepaok === true && cc.es_contramuestra === true)
-
 
 
   return (
@@ -236,13 +233,13 @@ const DetalleCC = () => {
         <div className='flex items-center justify-between px-8'>
           <div className='w-72'>
             {
-              cc_rendimiento?.length! >= 0 && control_calidad?.esta_contramuestra !== '1' && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP', 'Administrador')
+              cc_rendimiento?.length! >= 0 && control_calidad?.esta_contramuestra === '0'  && cargolabels(perfilData).includes('CDC Jefatura', 'CDC Operario MP', 'Administrador')
                 ? (
                     <ModalRegistro
                       open={openModalRegistro}
                       setOpen={setOpenModalRegistro}
                       title={`Muestra Control de Rendimiento del Lote N° ${control_calidad?.numero_lote} `}
-                      textTool='Editar'
+                      textTool='Agregar Muestra'
                       size={900}
                       width={`w-40 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
                       textButton='Agregar Muestra'
@@ -250,7 +247,7 @@ const DetalleCC = () => {
                       <FormularioCCRendimiento id_lote={control_calidad?.id!} refresh={setRefresh} isOpen={setOpenModalRegistro} control_calidad={control_calidad!}/>
                     </ModalRegistro>
                   )
-                : control_calidad?.esta_contramuestra === '1' && contra_muestras_limit! < 1
+                : control_calidad?.esta_contramuestra === '1' &&  contra_muestras_limit! < 1
                     ? (
                       <ModalRegistro
                         open={openModalRegistro}
@@ -271,7 +268,7 @@ const DetalleCC = () => {
 
 
           {
-            cc_rendimiento?.length! >= 2 && control_calidad?.esta_contramuestra !== '1' && cc_rendimiento?.every(cc => cc.cc_ok === true)
+            cc_rendimiento?.length! >= 2 &&  control_calidad?.esta_contramuestra === '0'  && cc_rendimiento?.every(cc => cc.cc_ok === true) && !cc_rendimiento.some(cc => cc.cc_calibrespepaok === true)
               ? (
                 <div className='w-72'>
                   <ModalRegistro
@@ -284,7 +281,7 @@ const DetalleCC = () => {
                     textButton='Calibrar Muestras'
                   >
                     <ModalConfirmacion 
-                      formulario={<FormularioCCPepaCalibre  refresh={setRefresh} id_muestra={muestra.shift()?.id} isOpen={setOpenModalCPepaCalibre} CCLote={cc_rendimiento}/>}
+                      formulario={<FormularioCCPepaCalibre  refresh={setRefresh} id_muestra={muestra.shift()?.id} isOpen={setOpenModalCPepaCalibre} control_calidad={control_calidad!}/>}
                       mensaje='¿Estas seguro de querer calibrar las muestras?'
                       confirmacion={openConfirmacion}
                       setConfirmacion={setOpenConfirmacion}
