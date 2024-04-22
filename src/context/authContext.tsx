@@ -58,59 +58,6 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
   const location = useLocation()
 
 
-  // console.log("hola soy el perfil" ,  perfilData)
-  // const [lastActivity, setLastActivity] = useState<number>(Date.now()); 
-
-  // const resetTimer = () => {
-  //   setLastActivity(Date.now());
-  // };
-
-  // const checkInactivity = () => {
-  //   const thirtyMinutes = 1 * 60 * 1000; // 30 minutos en milisegundos
-  //   const currentTime = Date.now();
-  //   if (currentTime - lastActivity > thirtyMinutes) {
-  //     onLogout(); // Si ha pasado más de 30 minutos, cierra la sesión automáticamente
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const interval = setInterval(checkInactivity, 2000); // Verifica la inactividad cada segundo
-
-  //   return () => clearInterval(interval);
-  // }, [lastActivity]);
-
-
-  // const onLogin = async (username: string, password: string) => {
-  //   const body = JSON.stringify({
-  //     username: username,
-  //     password: password
-  //   });
-
-  //   const res = await fetch(`${base_url}/api/token/`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: body
-  //   });
-
-  //   if (res.ok) {
-  //     const data = await res.json();
-  //     toast.success('Inicio de sesión exitoso!');// Convierte a TUsuario
-  //     setRefresh(true)
-  //     setAuthTokens(data)
-  //     Cookies.set('token', JSON.stringify(data), { expires: 1 });
-  //     Cookies.set('user', JSON.stringify(data.access), { expires: 1 })
-
-  //     // resetTimer();
-
-  //     // navigate(`../${appPages.mainAppPages.to}`, { replace: true });
-  //     window.location.href = `${appPages.mainAppPages.to}`
-  //   } else if (res.status === 401) {
-  //     toast.error('Error al ingresar, volver a intentar');
-  //   }
-  // };
-
   const validate = async (token: IAuthTokens | null): Promise<boolean> => {
     const response = await fetch(`${base_url}/auth/jwt/verify/`, {
       method: 'POST',
@@ -275,7 +222,7 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
           if (authTokens) {
             const isTokenValid = await validate(authTokens);
             if (!isTokenValid) {
-              await updateToken();
+              await refreshToken();
             }
           }
         } catch (error) {

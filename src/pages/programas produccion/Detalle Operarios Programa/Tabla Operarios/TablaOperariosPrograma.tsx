@@ -16,7 +16,7 @@ import Modal from '../../../../components/ui/Modal';
 import ModalRecordatorio from '../../../../components/utils/ModalWarning';
 import ModalConfirmacion from '../../../../components/ModalConfirmacion';
 import { GoQuestion } from 'react-icons/go';
-import ModalForm from '../../../../components/ModalRegistro';
+import ModalForm from '../../../../components/ModalForm.modal';
 import FormularioRegistroOperarioPrograma from '../../Formularios Produccion/Formulario Registro Operario/FormularioRegistroOperario';
 import FilaOperarioPrograma from './FilaOperariosPrograma';
 import { TablePagination } from '@mui/material';

@@ -30,7 +30,7 @@ import Subheader, {
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
 import { TEnvases } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import FormularioRegistroEnvases from '../Formulario Registro/FormularioRegistroEnvases';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';

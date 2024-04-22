@@ -21,7 +21,7 @@ import Tooltip from '../../../../components/ui/Tooltip';
 import { FaForward } from "react-icons/fa6";
 import { urlNumeros } from '../../../../services/url_number';
 import { HeroXMark } from '../../../../components/icon/heroicons';
-import ModalForm from '../../../../components/ModalRegistro';
+import ModalForm from '../../../../components/ModalForm.modal';
 import FormularioControlCalidadTarja from '../../Formularios Produccion/Formulario Control Calidad Tarja/FormularioControlCalidadTarja';
 import { optionTipoPatineta } from '../../../../utils/generalUtils';
 

@@ -32,7 +32,7 @@ import Subheader, {
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
 import { TOperarios } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import FormularioRegistroOperario from '../Formularios Registro/FormularioRegistroOperario';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';

@@ -29,7 +29,7 @@ import Subheader, {
 } from '../../../components/layouts/Subheader/Subheader';
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 // import FormularioRegistroProductores from '../Formulario Registro/FormularioRegistroProductores';
 import { TProduccion, TProductor, TReprocesoProduccion } from '../../../types/registros types/registros.types';
 import useDarkMode from '../../../hooks/useDarkMode';

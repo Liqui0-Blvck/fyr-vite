@@ -23,7 +23,7 @@ import { urlNumeros } from '../../../services/url_number';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { TControlCalidadB, TEnvasesPrograma, TPerfil, TProduccion, TRendimiento, TTarjaResultante } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import Badge from '../../../components/ui/Badge';
 import Tooltip from '../../../components/ui/Tooltip';
 import CardFrutaCalibrada from './Calibres.chart';

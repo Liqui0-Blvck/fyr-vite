@@ -30,7 +30,7 @@ import Subheader, {
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
 import { TCamion } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import FormularioRegistroCamiones from '../Formularios Registro/FormularioRegistroCamiones';
 import FormularioEditarCamiones from '../Formulario Edicion/FormularioEditarCamiones';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';

@@ -20,7 +20,7 @@ interface IRendimientoMuestra {
   id_lote?: number
   data?: TEnvasePatio[] | []
   refresh?: Dispatch<SetStateAction<boolean>>
-  total_envases: number[]
+  total_envases: number
 
 }
 

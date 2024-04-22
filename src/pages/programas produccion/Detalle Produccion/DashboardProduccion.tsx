@@ -31,7 +31,7 @@ import { urlNumeros } from '../../../services/url_number';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useAuthenticatedFetch } from '../../../hooks/useAxiosFunction';
 import { TEnvasesPrograma, TPerfil, TProduccion, TTarjaResultante } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import FormularioRegistroTarja from '../Formularios Produccion/Formulario Registro Tarja/FormularioRegistroTarja';
 import Badge from '../../../components/ui/Badge';
 import Tooltip from '../../../components/ui/Tooltip';

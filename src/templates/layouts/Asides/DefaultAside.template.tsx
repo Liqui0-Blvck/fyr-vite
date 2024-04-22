@@ -1,22 +1,16 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Aside, { AsideBody, AsideFooter, AsideHead } from '../../../components/layouts/Aside/Aside';
 import LogoAndAsideTogglePart from './_parts/LogoAndAsideToggle.part';
 import DarkModeSwitcherPart from './_parts/DarkModeSwitcher.part';
-import { appPages, componentsPages } from '../../../config/pages.config';
+import { appPages } from '../../../config/pages.config';
 import Nav, {
-	NavButton,
 	NavCollapse,
 	NavItem,
 	NavSeparator,
 	NavTitle,
-	NavUser,
 } from '../../../components/layouts/Navigation/Nav';
-import Badge from '../../../components/ui/Badge';
 import UserTemplate from '../User/User.template';
 import { useAuth } from '../../../context/authContext';
 import { cargolabels } from '../../../utils/generalUtils';
-import Tooltip from '../../../components/ui/Tooltip';
 
 const DefaultAsideTemplate = () => {
 	const { perfilData } = useAuth()

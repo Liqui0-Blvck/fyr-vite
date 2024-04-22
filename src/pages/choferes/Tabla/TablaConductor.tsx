@@ -32,7 +32,7 @@ import FieldWrap from '../../../components/form/FieldWrap';
 import { useAuth } from '../../../context/authContext';
 import { format } from "@formkit/tempo"
 import { TConductor } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import FormularioRegistroChoferes from '../Formularios Registro/FormularioRegistroChoferes';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';

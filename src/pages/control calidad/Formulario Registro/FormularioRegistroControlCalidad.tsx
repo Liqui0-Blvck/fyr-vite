@@ -225,6 +225,7 @@ const FormularioRegistroControlCalidad : FC<IFormCC> = ({ refresh, setOpen, id_l
         <div className='relative w-full h-20 col-span-4'>
          <Button
              variant='solid'
+             //@ts-ignore
              onClick={formik.handleSubmit}
             className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
             Registrar Control Calidad

@@ -30,7 +30,7 @@ import Subheader, {
 import FieldWrap from '../../../components/form/FieldWrap';
 import { format } from "@formkit/tempo"
 import { TControlCalidadTarja, TEnvases, TProductor } from '../../../types/registros types/registros.types';
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Row, Tooltip } from 'antd';
@@ -172,27 +172,6 @@ const TablaControlCalidadTarja: FC<IControlProps> = ({ data, refresh }) => {
 									)
 								: null
 						}
-
-						{
-							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
-								? (
-									<ModalRegistro
-										open={edicionModalStatus}
-										setOpen={setEdicionModalStatus}
-										title='Edición Comercializador'
-										textTool='Editar'
-										size={500}
-										width={`w-16 px-1 h-12 ${isDarkTheme ? 'bg-[#3B82F6] hover:bg-[#3b83f6cd]' : 'bg-[#3B82F6] text-white'} hover:scale-105`}
-										icon={<HeroPencilSquare style={{ fontSize: 25 }}
-										/>}
-									>
-										hola
-										{/* <FormularioEdicionControlCalidad  id_lote={info.row.original.id} refresh={refresh} setOpen={setEdicionModalStatus} updateEstado={updateEstadoLote}/> */}
-									</ModalRegistro>
-									)
-								: null
-						}
-
 						{
 							cargolabels(perfilData).includes('CDC Jefatura', 'Administrador')
 								? (

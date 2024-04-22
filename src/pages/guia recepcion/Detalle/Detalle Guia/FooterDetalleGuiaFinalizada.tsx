@@ -13,7 +13,7 @@ import { ESTADOS_GUIA_MP, ESTADOS_MP, TIPO_PRODUCTOS_RECEPCIONMP, VARIEDADES_MP 
 import Dropdown, { DropdownToggle, DropdownMenu, DropdownItem } from '../../../../components/ui/Dropdown'
 import Button from '../../../../components/ui/Button';
 import { HeroEye, HeroPencilSquare } from '../../../../components/icon/heroicons';
-import ModalRegistro from '../../../../components/ModalRegistro';
+import ModalRegistro from '../../../../components/ModalForm.modal';
 import FooterDetalleEnvase from '../Detalle Envases/FooterDetalleEnvase';
 import '../../../../styles/index.css'
 

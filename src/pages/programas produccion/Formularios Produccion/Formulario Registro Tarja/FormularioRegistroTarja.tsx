@@ -1,5 +1,5 @@
 import { useFormik } from 'formik'
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import Textarea from '../../../../components/form/Textarea'
 import FieldWrap from '../../../../components/form/FieldWrap'
 import Validation from '../../../../components/form/Validation'
@@ -58,6 +58,11 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ tab, setOp
   })
 
   console.log(formik.values)
+
+  useEffect(() => {
+    const fruta_neta = formik.values.peso - formik.values.tipo_patineta
+    formik.setFieldValue('peso', fruta_neta)
+  }, [])
 
   return (
     <div>

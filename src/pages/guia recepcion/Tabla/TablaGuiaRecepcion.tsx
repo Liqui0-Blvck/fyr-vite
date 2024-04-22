@@ -33,7 +33,7 @@ import FieldWrap from '../../../components/form/FieldWrap';
 import { useAuth } from '../../../context/authContext';
 import { format } from "@formkit/tempo"
 import { TGuia } from "../../../types/registros types/registros.types"
-import ModalRegistro from '../../../components/ModalRegistro';
+import ModalRegistro from '../../../components/ModalForm.modal';
 import { HeroEye, HeroPencilSquare, HeroXMark } from '../../../components/icon/heroicons';
 import { Tooltip } from 'antd';
 import useDarkMode from '../../../hooks/useDarkMode';

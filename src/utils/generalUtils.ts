@@ -12,7 +12,6 @@ export const cargolabels = (perfilData: any) => {
   }
 
   const cargoLabels = perfilData.cargos.map((cargo: any) => cargo.cargo_label) || [];
-  // Agrega más campos aquí según sea necesario
 
   return cargoLabels;
 };

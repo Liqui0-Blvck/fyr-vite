@@ -3,7 +3,7 @@ import { TableCell } from '@mui/material'
 import useDarkMode from '../../../hooks/useDarkMode'
 import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from '../../../components/ui/Dropdown'
 import Button from '../../../components/ui/Button'
-import ModalRegistro from '../../../components/ModalRegistro'
+import ModalRegistro from '../../../components/ModalForm.modal'
 import FooterDetalleEnvase from '../Detalle/Detalle Envases/FooterDetalleEnvase'
 import FooterFormularioEdicionEnvase from '../Formulario Edicion/Edicion Envase/FooterFormularioEdicionEnvase'
 import { HeroEye, HeroPencilSquare } from '../../../components/icon/heroicons'
@@ -149,6 +149,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
         <div className='flex gap-5 items-center justify-center w-full h-full'>
           <ModalRegistro
             open={openModalRows[row?.id!] || false}
+            //@ts-ignore
             setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalRows(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
             title='Detalle Envases'
             textTool='Detalle'
@@ -167,6 +168,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                 ? (
                   <ModalRegistro
                     open={openModalEdicion[row?.id!] || false}
+                    //@ts-ignore
                     setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                     title='Detalle Envases'
                     textTool='Edicion'
@@ -175,7 +177,11 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                     icon={<HeroPencilSquare style={{ fontSize: 25 }}
                     />}
                   >
-                    <FooterFormularioEdicionEnvase id_lote={row?.id!} id_guia={guia?.id!} setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}/>
+                    <FooterFormularioEdicionEnvase 
+                      id_lote={row?.id!} 
+                      id_guia={guia?.id!}
+                      // @ts-ignore
+                      setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalEdicion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}/>
                   </ModalRegistro>
                 )
                 : null
@@ -190,6 +196,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                     ? (
                       <ModalRegistro
                         open={openModalConfirmacion[row?.id!] || false}
+                        //@ts-ignore
                         setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                         title={modalTitle}
                         textTool='Accion'
@@ -203,7 +210,11 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                               <>
                                 {
                                   row?.estado_recepcion! <= '3'
-                                    ? <ModalControlCalidad id={row?.id!} estadoActivo={setEstadoActivo!} setOpen={setOpenModalConfirmacion!} numero_estado={`${estadoActivoCoincide?.value}`} refresh={refresh} lote={row} guia_id={guia?.id!} />
+                                    ? <ModalControlCalidad 
+                                      id={row?.id!} 
+                                      estadoActivo={setEstadoActivo!}
+                                      // @ts-ignores
+                                      setOpen={setOpenModalConfirmacion!} numero_estado={`${estadoActivoCoincide?.value}`} refresh={refresh} lote={row} guia_id={guia?.id!} />
                                     : null
 
                                 }
@@ -216,6 +227,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                       ? (
                         <ModalRegistro
                           open={openModalConfirmacion[row?.id!] || false}
+                          //@ts-ignore
                           setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                           title={modalTitle}
                           textTool='Registrar Tara camión'
@@ -225,7 +237,14 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                         >
                           {
                             row?.estado_recepcion === '5'
-                                ? <ModalRecepcion id={row?.id!} estadoActivo={setEstadoActivo!} setOpen={setOpenModalConfirmacion!} numero_estado={`${estadoActivoCoincide?.value}`} refresh={refresh} lote={row} guia={guia!} />
+                                ? <ModalRecepcion 
+                                  id={row?.id!} 
+                                  estadoActivo={setEstadoActivo!}
+                                  //@ts-ignore
+                                  setOpen={setOpenModalConfirmacion!} 
+                                  numero_estado={`${estadoActivoCoincide?.value}`}
+                                  lote={row} 
+                                  guia={guia!} />
                                 : null
                           
                           }
@@ -235,6 +254,7 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                         ? (
                           <ModalRegistro
                             open={openModalConfirmacion[row?.id!] || false}
+                            //@ts-ignore
                             setOpen={(isOpen: Dispatch<SetStateAction<boolean | null>>) => setOpenModalConfirmacion(prevState => ({ ...prevState, [row?.id!]: isOpen }))}
                             title={modalTitle}
                             textTool='Accion'
@@ -244,7 +264,13 @@ const LoteFila: FC<ILoteCompletadoProps> = (
                           >
                             {
                               checkCargoPerfil(perfilData.cargos)
-                                  ? <ModalBodega id={row?.id!} estadoActivo={setEstadoActivo!} setOpen={setOpenModalConfirmacion!} numero_estado={`${estadoActivoCoincide?.value}`} refresh={refresh} lote={row} />
+                                  ? <ModalBodega
+                                    id={row?.id!} 
+                                    estadoActivo={setEstadoActivo!}
+                                    //@ts-ignore 
+                                    setOpen={setOpenModalConfirmacion!} 
+                                    numero_estado={`${estadoActivoCoincide?.value}`}
+                                    lote={row} />
                                   : null
                               
                             }

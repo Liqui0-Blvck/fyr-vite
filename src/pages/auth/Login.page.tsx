@@ -11,7 +11,7 @@ import Icon from '../../components/icon/Icon';
 import Validation from '../../components/form/Validation';
 import { useAuthenticatedFetch } from '../../hooks/useAxiosFunction';
 import { authPages } from '../../config/pages.config';
-import ModalRegistro from '../../components/ModalRegistro';
+import ModalRegistro from '../../components/ModalForm.modal';
 import RecoveryPage from './Recuperacion.page';
 import DarkModeSwitcherPart from '../../templates/layouts/Asides/_parts/DarkModeSwitcher.part';
 

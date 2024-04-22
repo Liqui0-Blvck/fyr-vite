@@ -8,7 +8,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 
 import toast from 'react-hot-toast'
 import { format } from '@formkit/tempo'
-import ModalRegistro from '../../../components/ModalRegistro'
+import ModalRegistro from '../../../components/ModalForm.modal'
 import { GiTestTubes } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa6";
 import { BiCheckDouble, BiPlus } from 'react-icons/bi'

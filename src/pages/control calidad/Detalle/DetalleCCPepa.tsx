@@ -10,7 +10,7 @@ import { TControlCalidad, TGuia, TPepaMuestra, TPerfil, TRendimientoMuestra } fr
 import { useLocation } from 'react-router-dom'
 import { urlNumeros } from '../../../services/url_number'
 import TablaMuestras from '../Tabla Muestra/TablaMuestras'
-import ModalRegistro from '../../../components/ModalRegistro'
+import ModalRegistro from '../../../components/ModalForm.modal'
 import FormularioCCRendimiento from '../Formulario CC Rendimiento/FormularioCCRendimiento'
 import ModalConfirmacion from '../../../components/ModalConfirmacion'
 import FormularioCCPepaCalibre from '../Formulario Calibres/FormularioCalibres'

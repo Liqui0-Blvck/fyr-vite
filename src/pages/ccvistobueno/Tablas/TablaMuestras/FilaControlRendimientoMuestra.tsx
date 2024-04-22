@@ -5,7 +5,7 @@ import useDarkMode from "../../../../hooks/useDarkMode"
 import { useAuthenticatedFetch } from "../../../../hooks/useAxiosFunction"
 import { TableCell } from "@mui/material"
 import { BiCheckDouble } from "react-icons/bi"
-import ModalRegistro from "../../../../components/ModalRegistro"
+import ModalRegistro from "../../../../components/ModalForm.modal"
 import { format } from "@formkit/tempo"
 import useDeviceScreen from "../../../../hooks/useDeviceScreen"
 

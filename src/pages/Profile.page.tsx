@@ -46,29 +46,6 @@ const options_balanza_recepcion: TSelectOptions = [
 
 import fotoPerfil from '../assets/avatar/user6-thumb.png'
 
-// type TTab = {
-// 	text:
-// 		| 'Edit Profile'
-// 		| 'Social'
-// 		| 'Password'
-// 		| '2FA'
-// 		| 'Newsletter'
-// 		| 'Sessions'
-// 		| 'Connected'
-// 		| 'Appearance';
-// 	icon: TIcons;
-// };
-// type TTabs = {
-// 	[key in
-// 		| 'EDIT'
-// 		| 'SOCIAL'
-// 		| 'PASSWORD'
-// 		| '2FA'
-// 		| 'NEWSLETTER'
-// 		| 'SESSIONS'
-// 		| 'CONNECTED'
-// 		| 'APPEARANCE']: TTab;
-// };
 
 type TTab = {
 	text:

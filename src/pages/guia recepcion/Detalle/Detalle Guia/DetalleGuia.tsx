@@ -20,7 +20,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { Tabs, Typography } from '@mui/material'
 import ModalConfirmacion from '../../../../components/ModalConfirmacion'
-import ModalRegistro from '../../../../components/ModalRegistro'
+import ModalRegistro from '../../../../components/ModalForm.modal'
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import FooterDetalleRechazado from './FooterDetalleRechazado'
 import Button from '../../../../components/ui/Button'
