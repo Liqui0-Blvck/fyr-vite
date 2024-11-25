@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from '../../../components/icon/Icon';
 import Badge from '../../../components/ui/Badge';
 import { NavButton, NavItem, NavSeparator } from '../../../components/layouts/Navigation/Nav';
@@ -7,15 +7,16 @@ import User from '../../../components/layouts/User/User';
 import { useAuth } from '../../../context/authContext';
 
 const UserTemplate = () => {
-	const { isLoading, userData, onLogout } = useAuth();
+	const [loading, setLoading] = useState(false);
+	// const { isLoading, userData, onLogout } = useAuth();
 
 	return (
 		<User
-			isLoading={isLoading}
-			name={userData?.firstName}
-			nameSuffix={userData?.isVerified && <Icon icon='HeroCheckBadge' color='blue' />}
-			position={userData?.position}
-			src={userData?.image?.thumb}
+			isLoading={loading}
+			name={'Hola'}
+			nameSuffix={!loading && <Icon icon='HeroCheckBadge' color='blue' />}
+			position={'Software Developer'}
+			src={''}
 			suffix={
 				<Badge color='amber' variant='solid' className='text-xs font-bold'>
 					PRO
@@ -29,7 +30,7 @@ const UserTemplate = () => {
 				</Badge>
 				<NavButton icon='HeroPlusCircle' title='New Mail' onClick={() => {}} />
 			</NavItem> */}
-			<NavItem text='Logout' icon='HeroArrowRightOnRectangle' onClick={() => onLogout()} />
+			<NavItem text='Logout' icon='HeroArrowRightOnRectangle'  />
 		</User>
 	);
 };
