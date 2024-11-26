@@ -26,15 +26,32 @@ export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 
 	// call this function when you want to authenticate the user
 	const onLogin = async (email: string, password: string) => {
-		dispatch(login({ email, password })).unwrap().then((res) => {
-			if (res) {
-				console.log(res)
+		try {
+			// Desencadenar la acción de login y esperar el resultado
+			await dispatch(login({ email, password })).unwrap()
+			.then((res) => {
+				toast.success('Inicio de sesión exitoso');
+				// Convertir los datos de respuesta en una cadena JSON
 				const data = JSON.stringify(res);
-				setUserName(data);
+		
+				// Verificar que setUserName es una función antes de llamarla
+				if (typeof setUserName === "function") {
+					setUserName(data); // Llamar a setUserName con los datos
+				}
 				navigate(`../${authPages.profilePage.to}`, { replace: true });
-			}
-		})
+			})
+			.catch((err) => {
+				toast.error('Error al iniciar sesión');
+				console.error('Error al iniciar sesión:', err);
+			})
+	
+		} catch (err) {
+			// Manejo de errores
+			console.error("Error al iniciar sesión:", err);
+			// Aquí puedes manejar el error, mostrar una notificación, etc.
+		}
 	};
+	
 
 	// call this function to sign out logged-in user
 	const onLogout = async () => {

@@ -16,7 +16,6 @@ import Badge from '../../../components/ui/Badge';
 import UserTemplate from '../User/User.template';
 
 const DefaultAsideTemplate = () => {
-	const navigate = useNavigate();
 
 	return (
 		<Aside>
