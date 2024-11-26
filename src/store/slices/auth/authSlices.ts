@@ -1,18 +1,34 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { User, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import {  signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { SLICE_BASE_NAME } from './constants';
-import { auth } from '../../../config/firebase.config';
+import { auth, firestoreService } from '../../../config/firebase.config';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+
+export interface User {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  phoneNumber: string | null;
+  name?: string;
+  role?: string;
+  createdAt?: string;
+  notificationToken?: string;
+  address?: string;
+}
 
 export interface AuthState {
   user: User | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+  isAuthenticated?: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   status: 'idle',
   error: null,
+  isAuthenticated: false,
 };
 
 
@@ -22,8 +38,27 @@ export const login = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return userCredential.user;
-    } catch (error: any) {
+      
+      const userDocRef = doc(firestoreService, 'users', userCredential.user.uid);
+      console.log(userDocRef.id);
+      const userDoc = await getDoc(userDocRef);
+
+      console.log(userDoc.exists())
+      
+        if (userDoc.exists()) {
+          const additionalData = userDoc.data();
+          const completeUser = {
+            ...additionalData,
+          } as User;
+
+          console.log(completeUser)
+
+          return completeUser;
+      } else {
+        return userCredential.user;
+      }
+    }
+      catch (error: any) {
       return rejectWithValue(error.message);
     }
   }

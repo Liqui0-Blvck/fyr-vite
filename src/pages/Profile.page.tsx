@@ -16,7 +16,6 @@ import { TIcons } from '../types/icons.type';
 import Label from '../components/form/Label';
 import Input from '../components/form/Input';
 import Select from '../components/form/Select';
-import rolesDb from '../mocks/db/roles.db';
 import Avatar from '../components/Avatar';
 import useSaveBtn from '../hooks/useSaveBtn';
 import FieldWrap from '../components/form/FieldWrap';
@@ -27,6 +26,8 @@ import RichText from '../components/RichText';
 import Radio, { RadioGroup } from '../components/form/Radio';
 import useDarkMode from '../hooks/useDarkMode';
 import { TDarkMode } from '../types/darkMode.type';
+import { useAppSelector } from '../store';
+import { RootState } from '../store/rootReducer';
 
 type TTab = {
 	text:
@@ -93,8 +94,11 @@ const ProfilePage = () => {
 	const { setDarkModeStatus } = useDarkMode();
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { userData, isLoading } = useAuth();
+	// const { userData, isLoading } = useAuth();
 	const [activeTab, setActiveTab] = useState<TTab>(TAB.EDIT);
+	const { user } = useAppSelector((state: RootState) => state.auth.session)
+
+	console.log(user)
 
 	const defaultProps: IButtonProps = {
 		color: 'zinc',
@@ -113,25 +117,25 @@ const ProfilePage = () => {
 		enableReinitialize: true,
 		initialValues: {
 			fileUpload: '',
-			username: userData?.username,
-			email: userData?.email,
-			firstName: userData?.firstName,
-			lastName: userData?.lastName,
-			position: userData?.position,
-			role: userData?.role,
-			oldPassword: '',
-			newPassword: '',
-			newPasswordConfirmation: '',
-			twitter: userData?.socialProfiles?.twitter,
-			facebook: userData?.socialProfiles?.facebook,
-			instagram: userData?.socialProfiles?.instagram,
-			github: userData?.socialProfiles?.github,
-			twoFactorAuth: userData?.twoFactorAuth,
-			weeklyNewsletter: userData?.newsletter?.weeklyNewsletter || false,
-			lifecycleEmails: userData?.newsletter?.lifecycleEmails || false,
-			promotionalEmails: userData?.newsletter?.promotionalEmails || false,
-			productUpdates: userData?.newsletter?.productUpdates || false,
-			bio: (userData?.bio && (JSON.parse(userData.bio) as Descendant[])) || [],
+			username: user?.displayName,
+			email: user?.email,
+			// firstName: user?.,
+			// lastName: user?.lastName,
+			// position: user?.position,
+			// role: user?.role,
+			// oldPassword: '',
+			// newPassword: '',
+			// newPasswordConfirmation: '',
+			// twitter: user?.socialProfiles?.twitter,
+			// facebook: user?.socialProfiles?.facebook,
+			// instagram: user?.socialProfiles?.instagram,
+			// github: user?.socialProfiles?.github,
+			// twoFactorAuth: user?.twoFactorAuth,
+			// weeklyNewsletter: user?.newsletter?.weeklyNewsletter || false,
+			// lifecycleEmails: user?.newsletter?.lifecycleEmails || false,
+			// promotionalEmails: user?.newsletter?.promotionalEmails || false,
+			// productUpdates: user?.newsletter?.productUpdates || false,
+			// bio: (user?.bio && (JSON.parse(user.bio) as Descendant[])) || [],
 			gender: 'Male',
 			theme: 'dark',
 			birth: '1987-12-21',
@@ -155,9 +159,12 @@ const ProfilePage = () => {
 	});
 
 	return (
-		<PageWrapper name={formik.values.firstName}>
-			<Subheader>
-				<SubheaderLeft>
+		<PageWrapper name={'formik.values.firstName'}>
+			<div>
+				Hola
+			</div>
+			{/* <Subheader> */}
+				{/* <SubheaderLeft>
 					{`${userData?.firstName} ${userData?.lastName}`}{' '}
 					<Badge
 						color='blue'
@@ -930,7 +937,7 @@ const ProfilePage = () => {
 						</CardFooterChild>
 					</CardFooter>
 				</Card>
-			</Container>
+			</Container> */}
 		</PageWrapper>
 	);
 };

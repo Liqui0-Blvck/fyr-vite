@@ -45,24 +45,24 @@ const SearchPartial = () => {
 	);
 
 	const list = [
-		...Object.values(componentsPages.uiPages.subPages).map((i) => ({
-			...i,
-			category: 'Component',
-		})),
-		...Object.values(componentsPages.formPages.subPages).map((i) => ({
-			...i,
-			category: 'Form',
-		})),
-		...Object.values(componentsPages.integratedPages.subPages).map((i) => ({
-			...i,
-			category: 'Other',
-		})),
+		// ...Object.values(componentsPages.uiPages.subPages).map((i) => ({
+		// 	...i,
+		// 	category: 'Component',
+		// })),
+		// ...Object.values(componentsPages.formPages.subPages).map((i) => ({
+		// 	...i,
+		// 	category: 'Form',
+		// })),
+		// ...Object.values(componentsPages.integratedPages.subPages).map((i) => ({
+		// 	...i,
+		// 	category: 'Other',
+		// })),
 	];
-	const result = list.filter(
-		(key) =>
-			key.text.toLowerCase().includes(formik.values.searchField.toLowerCase()) ||
-			key.category.toLowerCase().includes(formik.values.searchField.toLowerCase()),
-	);
+	// const result = list.filter(
+	// 	(key) =>
+	// 		key.text.toLowerCase().includes(formik.values.searchField.toLowerCase()) ||
+	// 		key.category.toLowerCase().includes(formik.values.searchField.toLowerCase()),
+	// );
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const focusInput = () => {
@@ -109,7 +109,7 @@ const SearchPartial = () => {
 					className='absolute top-0 z-10 h-auto w-full rounded-lg bg-white shadow-2xl outline outline-8 outline-white ring-2 ring-gray-100 ring-offset-8 dark:bg-zinc-950 dark:outline-zinc-950 dark:ring-zinc-800/50 max-sm:hidden'
 					style={{ paddingTop: domRect?.height }}>
 					<div className='max-h-96 divide-y divide-dashed divide-zinc-500/50 overflow-auto bg-white px-4 dark:bg-zinc-950 [&>*]:py-4'>
-						{result.length ? (
+						{/* {result.length ? (
 							result.map((i) => (
 								<Link
 									key={i.id}
@@ -152,7 +152,7 @@ const SearchPartial = () => {
 							))
 						) : (
 							<div className='flex gap-2 text-zinc-500'>No result.</div>
-						)}
+						)} */}
 					</div>
 				</div>
 			)}
@@ -180,7 +180,7 @@ const SearchPartial = () => {
 					{formik.values.searchField && (
 						<div className='z-10 h-auto w-full bg-white dark:bg-zinc-950 dark:outline-zinc-950 dark:ring-zinc-800/50 sm:hidden'>
 							<div className='max-h-96 divide-y divide-dashed divide-zinc-500/50 overflow-auto bg-white dark:bg-zinc-950 [&>*]:py-4'>
-								{result.length ? (
+								{/* {result.length ? (
 									result.map((i) => (
 										<Link
 											key={i.id}
@@ -226,7 +226,7 @@ const SearchPartial = () => {
 									))
 								) : (
 									<div className='flex gap-2 text-zinc-500'>No result.</div>
-								)}
+								)} */}
 							</div>
 						</div>
 					)}

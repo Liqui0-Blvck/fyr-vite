@@ -4,6 +4,8 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../../context/authContext';
 import { authPages } from '../../../config/pages.config';
 import useDocumentTitle from '../../../hooks/useDocumentTitle';
+import { useAppSelector } from '../../../store';
+import { RootState } from '../../../store/rootReducer';
 
 interface IPageWrapperProps {
 	children: ReactNode;
@@ -16,8 +18,10 @@ const PageWrapper: FC<IPageWrapperProps> = (props) => {
 	const { children, className, isProtectedRoute, title, name, ...rest } = props;
 
 	useDocumentTitle({ title, name });
+	const { user } = useAppSelector((state: RootState) => state.auth.session)
 
 	const { usernameStorage } = useAuth();
+
 	if (isProtectedRoute && !usernameStorage) {
 		// user is not authenticated
 		return <Navigate to={authPages.loginPage.to} />;

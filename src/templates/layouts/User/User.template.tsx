@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 const UserTemplate = () => {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch()
-	const { status } = useAppSelector((state: RootState) => state.auth.session);
 	const navigate = useNavigate()
 
 	const handleLogout = async () => {
@@ -21,7 +20,6 @@ const UserTemplate = () => {
 		await dispatch(logout()).unwrap().then(() => {
 			navigate('/login')
 		})
-
 		setLoading(false);
 	}
 

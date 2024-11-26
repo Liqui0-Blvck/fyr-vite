@@ -9,36 +9,28 @@ import Input from '../../components/form/Input';
 import FieldWrap from '../../components/form/FieldWrap';
 import Icon from '../../components/icon/Icon';
 import Validation from '../../components/form/Validation';
-import { useAxiosFunction } from '../../hooks/useAxiosFunction';
 
 type TValues = {
-	username: string;
+	email: string;
 	password: string;
 };
 
 const LoginPage = () => {
 	const { onLogin } = useAuth();
-	const { response, axiosFetch } = useAxiosFunction()
 
-	useEffect(() => {
-		axiosFetch({
-			method: 'GET',
-			url: '/api/registros/operarios'
-		})
-	}, [])
 
 	const [passwordShowStatus, setPasswordShowStatus] = useState<boolean>(false);
 
 	const formik = useFormik({
 		initialValues: {
-			username: '',
+			email: '',
 			password: '',
 		},
 		validate: (values: TValues) => {
 			const errors: Partial<TValues> = {};
 
-			if (!values.username) {
-				errors.username = 'Required';
+			if (!values.email) {
+				errors.email = 'Required';
 			}
 
 			if (!values.password) {
@@ -48,7 +40,7 @@ const LoginPage = () => {
 			return errors;
 		},
 		onSubmit: (values: TValues) => {
-			onLogin(values.username, values.password)
+			onLogin(values.email, values.password)
 		},
 	});
 
@@ -70,18 +62,18 @@ const LoginPage = () => {
 							})}>
 							<Validation
 								isValid={formik.isValid}
-								isTouched={formik.touched.username}
-								invalidFeedback={formik.errors.username}
+								isTouched={formik.touched.email}
+								invalidFeedback={formik.errors.email}
 								validFeedback='Good'>
 								<FieldWrap
 									firstSuffix={<Icon icon='HeroEnvelope' className='mx-2' />}>
 									<Input
 										dimension='lg'
-										id='username'
-										autoComplete='username'
-										name='username'
-										placeholder='Email or username'
-										value={formik.values.username}
+										id='email'
+										autoComplete='email'
+										name='email'
+										placeholder='Email'
+										value={formik.values.email}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 									/>
@@ -128,14 +120,14 @@ const LoginPage = () => {
 								variant='solid'
 								className='w-full font-semibold'
 								onClick={() => formik.handleSubmit()}>
-								Sign in
+								Ingresa a tu cuenta
 							</Button>
 						</div>
 					</form>
 					<div>
-						<span className='text-zinc-500'>
+						{/* <span className='text-zinc-500'>
 							This site is protected by reCAPTCHA and the Google Privacy Policy.
-						</span>
+						</span> */}
 					</div>
 					<div>
 						<span className='flex gap-2 text-sm'>

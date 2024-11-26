@@ -1,6 +1,32 @@
 
 
+
+
 export const appPages = {
+	homePage: {
+		id: 'homePage',
+		to: '/',
+		text: 'Home',
+		icon: 'HeroHome',
+	},
+	prospectPage: {
+		id: 'prospectPage',
+		to: '/prospect',
+		text: 'Prospect',
+		icon: 'HeroUser',
+	},
+	calendarPage: {
+		id: 'calendarPage',
+		to: '/calendar',
+		text: 'Calendar',
+		icon: 'HeroCalendar',
+	},
+	marketingPage: {
+		id: 'marketingPage',
+		to: '/marketing',
+		text: 'Marketing',
+		icon: 'HeroSquare3Stack3D',
+	}
 };
 
 export const componentsPages = {
@@ -15,8 +41,8 @@ export const authPages = {
 	},
 	profilePage: {
 		id: 'profilePage',
-		to: '/profile',
-		text: 'Profile',
+		to: '/perfil',
+		text: 'Perfil',
 		icon: 'HeroUser',
 	},
 	restorePage: {

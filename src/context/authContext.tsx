@@ -2,11 +2,9 @@ import React, { createContext, FC, ReactNode, useContext, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useCookieStorage from '../hooks/useLocalStorage';
 import { authPages } from '../config/pages.config';
-import useUserAPI from '../mocks/hooks/useUserAPI';
-import { TUser } from '../mocks/db/users.db';
-import { useAxiosFunction } from '../hooks/useAxiosFunction';
-import { message } from 'antd'
 import toast from 'react-hot-toast';
+import { useAppDispatch } from '../store';
+import { login } from '../store/slices/auth/authSlices';
 
 export interface IAuthContextProps {
 	usernameStorage: string | ((newValue: string | null) => void) | null;
@@ -22,23 +20,20 @@ interface IAuthProviderProps {
 }
 export const AuthProvider: FC<IAuthProviderProps> = ({ children }) => {
 	const [usernameStorage, setUserName] = useCookieStorage('user', null);
-	const { error ,axiosFetch } = useAxiosFunction()
+	const dispatch = useAppDispatch()
 
 	const navigate = useNavigate();
 
 	// call this function when you want to authenticate the user
-	const onLogin = async (username: string, password: string) => {
-		const body = JSON.stringify({
-			username: username,
-			password: password
+	const onLogin = async (email: string, password: string) => {
+		dispatch(login({ email, password })).unwrap().then((res) => {
+			if (res) {
+				console.log(res)
+				const data = JSON.stringify(res);
+				setUserName(data);
+				navigate(`../${authPages.profilePage.to}`, { replace: true });
+			}
 		})
-		axiosFetch({
-			method: 'POST',
-			url: 'api/token/',
-			requestData: body
-		})
-
-		error ? toast.error(error) : toast.success()
 	};
 
 	// call this function to sign out logged-in user
