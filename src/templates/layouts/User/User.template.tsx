@@ -5,10 +5,27 @@ import { NavButton, NavItem, NavSeparator } from '../../../components/layouts/Na
 import { appPages, authPages } from '../../../config/pages.config';
 import User from '../../../components/layouts/User/User';
 import { useAuth } from '../../../context/authContext';
+import { useAppDispatch, useAppSelector } from '../../../store/hook';
+import { RootState } from 'src/store/rootReducer';
+import { logout } from '../../../store/slices/auth/authSlices';
+import { useNavigate } from 'react-router-dom';
 
 const UserTemplate = () => {
 	const [loading, setLoading] = useState(false);
-	// const { isLoading, userData, onLogout } = useAuth();
+	const dispatch = useAppDispatch()
+	const { status } = useAppSelector((state: RootState) => state.auth.session);
+	const navigate = useNavigate()
+
+	const handleLogout = async () => {
+		setLoading(true);
+		await dispatch(logout()).unwrap().then(() => {
+			navigate('/login')
+		})
+
+		setLoading(false);
+	}
+
+
 
 	return (
 		<User
@@ -30,7 +47,7 @@ const UserTemplate = () => {
 				</Badge>
 				<NavButton icon='HeroPlusCircle' title='New Mail' onClick={() => {}} />
 			</NavItem> */}
-			<NavItem text='Logout' icon='HeroArrowRightOnRectangle'  />
+			<NavItem text='Logout' icon='HeroArrowRightOnRectangle' onClick={() => handleLogout()} />
 		</User>
 	);
 };
