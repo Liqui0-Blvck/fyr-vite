@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/hook';
 import { RootState } from 'src/store/rootReducer';
 import { logout } from '../../../store/slices/auth/authSlices';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const UserTemplate = () => {
 	const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const UserTemplate = () => {
 	const handleLogout = async () => {
 		setLoading(true);
 		await dispatch(logout()).unwrap().then(() => {
+			Cookies.remove('user');
 			navigate('/login')
 		})
 		setLoading(false);

@@ -139,3 +139,61 @@
 		}
 	}
 }
+
+
+
+
+/* Fondo oscuro para toda la página */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Estilo de cada punto */
+.dot {
+  width: 15px;
+  height: 15px;
+  margin: 0 5px;
+  /* background-color: #27272A; Color del punto */
+  border-radius: 50%;
+  animation: bounce 1.5s infinite;
+}
+
+/* Animaciones con retraso para cada punto */
+.dot1 {
+  animation-delay: 0s;
+}
+.dot2 {
+  animation-delay: 0.2s;
+}
+.dot3 {
+  animation-delay: 0.4s;
+}
+.dot4 {
+  animation-delay: 0.6s;
+}
+.dot5 {
+  animation-delay: 0.8s;
+}
+.dot6 {
+  animation-delay: 1s;
+}
+
+/* Animación de salto para los puntos */
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+}
+

@@ -12,9 +12,9 @@ const useSaveBtn = ({
 	isDirty: boolean;
 }) => {
 	const textFn = () => {
-		if (isSaving) return SAVE_BTN_STATUS.SAVING;
-		if (!isSaving && isNewItem) return SAVE_BTN_STATUS.PUBLISH;
-		if (!isSaving && !isNewItem && !isDirty) return SAVE_BTN_STATUS.SAVED;
+		if (isSaving) return SAVE_BTN_STATUS.SAVING
+		if (!isSaving && isNewItem) return SAVE_BTN_STATUS.PUBLISH
+		if (!isSaving && !isNewItem && !isDirty) return SAVE_BTN_STATUS.SAVED ;
 		return SAVE_BTN_STATUS.SAVE;
 	};
 	const saveBtnText: TSaveBtnStatusValue = textFn();

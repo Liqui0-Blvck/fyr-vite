@@ -35,15 +35,12 @@ const initialState: AuthState = {
 // AsyncThunk para iniciar sesión
 export const login = createAsyncThunk(
   `${SLICE_BASE_NAME}/login`,
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue, dispatch }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       
       const userDocRef = doc(firestoreService, 'users', userCredential.user.uid);
-      console.log(userDocRef.id);
       const userDoc = await getDoc(userDocRef);
-
-      console.log(userDoc.exists())
       
         if (userDoc.exists()) {
           const additionalData = userDoc.data();
@@ -51,7 +48,7 @@ export const login = createAsyncThunk(
             ...additionalData,
           } as User;
 
-          console.log(completeUser)
+          dispatch(authenticate());
 
           return completeUser;
       } else {
@@ -74,23 +71,44 @@ export const logout = createAsyncThunk(`${SLICE_BASE_NAME}/logout`, async (_, { 
   }
 });
 
-// AsyncThunk para escuchar cambios en el usuario autenticado
-export const fetchUser = createAsyncThunk(`${SLICE_BASE_NAME}/fetchUser`, async (_, { rejectWithValue }) => {
-  return new Promise<User | null>((resolve, reject) => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        resolve(user);
-      } else {
-        resolve(null);
+
+// AsyncThunk para obtener el usuario
+export const fetchUser = createAsyncThunk(`${SLICE_BASE_NAME}/fetchUser`, async (uid: string | null, { rejectWithValue, dispatch }) => {
+  try {
+    if (uid) {
+      const userDocRef = doc(firestoreService, 'users', uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        const additionalData = userDoc.data();
+        const completeUser = {
+          ...additionalData,
+        } as User;
+
+        dispatch(authenticate());
+
+        return completeUser;
       }
-    }, (error) => reject(rejectWithValue(error.message)));
-  });
+    }
+
+    return null;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
 });
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    authenticate: (state) => {
+      state.isAuthenticated = true;
+    },
+    clearUser: (state) => {
+      state.isAuthenticated = false;
+      state.user = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       // Login
@@ -130,5 +148,7 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const { authenticate, clearUser } = authSlice.actions;
 
 export default authSlice.reducer;
