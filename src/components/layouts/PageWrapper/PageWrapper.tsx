@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import classNames from "classnames";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../../store";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../../store/hook";
 import { RootState } from "../../../store/rootReducer";
 import useDocumentTitle from "../../../hooks/useDocumentTitle";
 import { appPages, authPages } from "../../../config/pages.config";
@@ -52,50 +52,9 @@ const PageWrapper: FC<IPageWrapperProps> = ({
   const navigate = useNavigate();
 
   useDocumentTitle({ title, name });
+  const { session } = useAppSelector((state: RootState) => state.auth);
 
-  // Rutas autorizadas
-  const appPagesRoutes = extractRoutes(appPages);
-  const authPagesRoutes = extractRoutes(authPages);
-  const isAuthorizedPage = appPagesRoutes.includes(pathname);
-  const isAuthorizedAuthPage = authPagesRoutes.includes(pathname);
 
-  // Estado de autenticación desde Redux
-  const { isAuthenticated } = useAppSelector((state: RootState) => state.auth.session);
-
-  // Estado para bloquear el renderizado hasta que la lógica esté completa
-  const [isAuthorizationReady, setAuthorizationReady] = useState(false);
-
-  useEffect(() => {
-    // Manejo de autorización para rutas protegidas
-    const checkAuthorization = () => {
-      if (!isProtectedRoute) {
-        if (!isAuthenticated) {
-          // Redirigir al login si no está autenticado
-          navigate(authPages.loginPage.to, { replace: true });
-        } else if (!isAuthorizedPage && !isAuthorizedAuthPage) {
-          // Redirigir a 404 si no tiene permiso
-          navigate("/404", { replace: true });
-        }
-      } else if (isAuthenticated && isAuthorizedPage) {
-        // Si está autenticado y en una página autorizada, redirigir al dashboard
-        navigate(appPages.homePage.to, { replace: true });
-      } else if (!isAuthorizedPage && !isAuthorizedAuthPage) {
-        // Redirigir a la página actual si no está autorizado
-        navigate(pathname, { replace: true });
-      }
-    };
-
-    // Ejecutar la lógica de autorización y desbloquear el renderizado
-    if (isAuthenticated !== undefined) {
-      checkAuthorization();
-      setAuthorizationReady(true); // Indica que la lógica está completa
-    }
-  }, [isAuthenticated, isProtectedRoute, isAuthorizedPage, isAuthorizedAuthPage, pathname, navigate]);
-
-  // Bloquear el renderizado hasta que la autorización esté lista
-  if (!isAuthorizationReady) {
-    return <p>Cargando...</p>; // Componente de carga o vacío
-  }
 
   return (
     <main

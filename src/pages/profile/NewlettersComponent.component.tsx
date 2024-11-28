@@ -1,13 +1,21 @@
-import { FormikProps } from 'formik'
+import { FormikProps, useFormik } from 'formik'
 import React, { FC } from 'react'
 import Checkbox from '../../components/form/Checkbox'
 import Label from '../../components/form/Label'
 
-interface NewlettersComponentProps {
-  formik: FormikProps<any>
-}
 
-const NewlettersComponent: FC<NewlettersComponentProps> = ({ formik }) => {
+const NewlettersComponent = () => {
+  const formik = useFormik({
+    initialValues: {
+      weeklyNewsletter: true,
+      lifecycleEmails: true,
+      promotionalEmails: true,
+      productUpdates: true
+    },
+    onSubmit: (values) => {
+
+    }
+  })
   return (
   <>
     <div className='text-4xl font-semibold'>Newsletter</div>

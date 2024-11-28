@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useCookieStorage from '../hooks/useLocalStorage';
 import { authPages } from '../config/pages.config';
 import toast from 'react-hot-toast';
-import { useAppDispatch } from '../store';
+import { useAppDispatch } from '../store/hook';
 import { login } from '../store/slices/auth/authSlices';
 import Cookies from 'js-cookie';
 

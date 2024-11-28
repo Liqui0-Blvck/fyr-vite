@@ -1,13 +1,19 @@
-import { FormikFormProps, FormikState } from 'formik'
+import { FormikFormProps, FormikState, useFormik } from 'formik'
 import React, { FC } from 'react'
 import Label from '../../components/form/Label'
 import Radio, { RadioGroup } from '../../components/form/Radio'
 
-interface IThemeComponentProps {
-  formik: any
-}
 
-const ThemeComponent: FC<IThemeComponentProps> = ({ formik }) => {
+const ThemeComponent = () => {
+  const formik = useFormik({
+    initialValues:{
+      theme: 'dark'
+    },
+    onSubmit: (values) => {
+      console.log(values)
+    }
+  })
+
 
   return (
   <>

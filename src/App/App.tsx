@@ -9,13 +9,13 @@ import FooterRouter from "../components/router/FooterRouter";
 import useFontSize from "../hooks/useFontSize";
 import getOS from "../utils/getOS.util";
 import Toast, { Toaster } from "react-hot-toast";
-import { useAppSelector } from "../store";
 import { RootState } from "../store/rootReducer";
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import { authPages } from "../config/pages.config";
 import useAuthStateSync from "../hooks/useAuthState";
 import SnakeToBrain from "../components/SnakeToBrain";
 import Loading from "../components/Loading";
+import { useAppSelector } from "../store/hook";
 
 const App = () => {
   getOS();

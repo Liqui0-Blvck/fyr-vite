@@ -1,36 +1,19 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import {  signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import {  EmailAuthProvider, getAuth, reauthenticateWithCredential, signInWithEmailAndPassword, signOut, updatePassword } from 'firebase/auth';
 import { SLICE_BASE_NAME } from './constants';
 import { auth, firestoreService } from '../../../config/firebase.config';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { clearUser, setUser, User } from './userSlice';
 
-export interface User {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-  phoneNumber: string | null;
-  first_name?: string | null;
-  second_name?: string | null;
-  last_name?: string | null;
-  second_last_name?: string | null;
-  birth?: string
-  gender?: string
-  role?: string;
-  createdAt?: string;
-  notificationToken?: string;
-  address?: string;
-}
+
 
 export interface AuthState {
-  user: User | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   isAuthenticated?: boolean;
 }
 
 const initialState: AuthState = {
-  user: null,
   status: 'idle',
   error: null,
   isAuthenticated: false,
@@ -54,8 +37,7 @@ export const login = createAsyncThunk(
           } as User;
 
           dispatch(authenticate());
-
-          return completeUser;
+          dispatch(setUser(completeUser));
       } else {
         return userCredential.user;
       }
@@ -67,40 +49,52 @@ export const login = createAsyncThunk(
 );
 
 // AsyncThunk para cerrar sesión
-export const logout = createAsyncThunk(`${SLICE_BASE_NAME}/logout`, async (_, { rejectWithValue }) => {
+export const logout = createAsyncThunk(`${SLICE_BASE_NAME}/logout`, async (_, { rejectWithValue, dispatch }) => {
   try {
     await signOut(auth);
+    dispatch(clearUser())
     return null;
   } catch (error: any) {
     return rejectWithValue(error.message);
   }
 });
 
+interface ChangePasswordPayload {
+  newPassword: string;
+  oldPassword: string;
+}
 
-// AsyncThunk para obtener el usuario
-export const fetchUser = createAsyncThunk(`${SLICE_BASE_NAME}/fetchUser`, async (uid: string | null, { rejectWithValue, dispatch }) => {
-  try {
-    if (uid) {
-      const userDocRef = doc(firestoreService, 'users', uid);
-      const userDoc = await getDoc(userDocRef);
+// Thunk para actualizar la contraseña
+export const changePassword = createAsyncThunk(
+  'auth/changePassword',
+  async (passwords: ChangePasswordPayload, { rejectWithValue, getState }) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-      if (userDoc.exists()) {
-        const additionalData = userDoc.data();
-        const completeUser = {
-          ...additionalData,
-        } as User;
-
-        dispatch(authenticate());
-
-        return completeUser;
-      }
+    if (!user) {
+      return rejectWithValue('No user is authenticated');
     }
 
-    return null;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+    try {
+      // Verificamos si el usuario está autenticado correctamente antes de cambiar la contraseña
+      const credential = EmailAuthProvider.credential(user.email!, passwords.oldPassword); // Usamos la contraseña actual para reautenticar al usuario
+
+      console.log(credential)
+      // Reautenticamos al usuario con las credenciales actuales
+      await reauthenticateWithCredential(user, credential);
+
+      // Cambiamos la contraseña después de la reautenticación
+      await updatePassword(user, passwords.newPassword);
+
+      return 'Password changed successfully'; // Retorna un mensaje de éxito
+    } catch (error: any) {
+      // Si hay un error, lo capturamos y lo retornamos
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
+
+
 
 const authSlice = createSlice({
   name: 'auth',
@@ -109,10 +103,6 @@ const authSlice = createSlice({
     authenticate: (state) => {
       state.isAuthenticated = true;
     },
-    clearUser: (state) => {
-      state.isAuthenticated = false;
-      state.user = null;
-    }
   },
   extraReducers: (builder) => {
     builder
@@ -121,9 +111,8 @@ const authSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(login.fulfilled, (state) => {
         state.status = 'succeeded';
-        state.user = action.payload;
         state.error = null;
       })
       .addCase(login.rejected, (state, action: PayloadAction<any>) => {
@@ -133,27 +122,15 @@ const authSlice = createSlice({
       // Logout
       .addCase(logout.fulfilled, (state) => {
         state.status = 'succeeded';
-        state.user = null;
       })
       .addCase(logout.rejected, (state, action: PayloadAction<any>) => {
         state.status = 'failed';
         state.error = action.payload;
       })
-      // Fetch user
-      .addCase(fetchUser.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User | null>) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-      })
-      .addCase(fetchUser.rejected, (state, action: PayloadAction<any>) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      });
+
   },
 });
 
-export const { authenticate, clearUser } = authSlice.actions;
+export const { authenticate } = authSlice.actions;
 
 export default authSlice.reducer;

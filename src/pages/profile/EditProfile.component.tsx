@@ -1,19 +1,22 @@
-import React, { FC, useState } from 'react'
-import { FormikProps, useFormik } from "formik";
+import React, { useState } from 'react'
 import Avatar from '../../components/Avatar';
-import { useAppSelector } from '../../store';
 import Label from '../../components/form/Label';
 import Input from '../../components/form/Input';
 import FieldWrap from '../../components/form/FieldWrap';
 import Icon from '../../components/icon/Icon';
 import Radio, { RadioGroup } from '../../components/form/Radio';
 import useSaveBtn from '../../hooks/useSaveBtn';
+import Select from '../../components/form/Select';
+import { RootState } from '../../store/rootReducer';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import Validation from '../../components/form/Validation';
+import Button from '../../components/ui/Button';
+import { useFormik } from 'formik';
+import { updateProfileData } from '../../store/slices/auth/userSlice';
+import toast from 'react-hot-toast';
+import { validationEditProfileSchema } from '../../utils/validationSchemas.util';
 
-interface SectionProps {
-  formik: any
-}
-
-interface FormValues {
+interface EditProfileProps {
   first_name: string;
   second_name: string;
   last_name: string;
@@ -26,18 +29,64 @@ interface FormValues {
   photoURL: string
 }
 
-const EditProfile: FC<SectionProps> = ({ formik }) => {
-  const { user } = useAppSelector((state) => state.auth.session)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+const rolesDb = [
+  { id: 'admin', name: 'Admin' },
+  { id: 'user', name: 'User' },
+  { id: 'guest', name: 'Guest' },
+]
+
+const EditProfile = () => {
+  const { user } = useAppSelector((state: RootState) => state.auth.user)
+  const [isSaving, setIsSaving] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
+
+  const formik = useFormik({
+    enableReinitialize: true,
+		initialValues: {
+			first_name: user?.first_name || '',
+      second_name: user?.second_name || '',
+      last_name: user?.last_name || '',
+      second_last_name: user?.second_last_name || '',
+      email: user?.email || '',
+      phone_number: user?.phoneNumber || '',
+      birth: user?.birth || '',
+      gender: user?.gender || '',
+      role: user?.role || '',
+      photoURL: user?.photoURL || '',
+			position: user?.position || '',
+    },
+    validationSchema: validationEditProfileSchema,
+    onSubmit: async (values) => {
+      await dispatch(updateProfileData({
+        first_name: values.first_name,
+        second_name: values.second_name,
+        last_name: values.last_name,
+        second_last_name: values.second_last_name,
+        email: values.email,
+        phoneNumber: values.phone_number,
+        birth: values.birth,
+        gender: values.gender,
+        role: values.role,
+        position: values.position
+      })).unwrap().then(() => {
+        toast.success('Perfil actualizado correctamente')
+      })
+    }
+  })
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0]
     if (file) {
       const url = URL.createObjectURL(file);
-      setPreviewUrl(url)
       formik.setFieldValue('photoURL', url);
     }
-  };
+  }
+
+  const { saveBtnText, saveBtnColor, saveBtnDisable } = useSaveBtn({
+		isNewItem: false,
+		isSaving,
+		isDirty: formik.dirty,
+	});
 
   return (
   <>
@@ -74,123 +123,150 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
       </div>
     </div>
     <div className='grid grid-cols-12 gap-4'>
+      {/* Nombre */}
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='first_name'>Nombre</Label>
-        <FieldWrap
-          firstSuffix={
-            <Icon icon='HeroUser' className='mx-2' />
-          }>
-          <Input
-            id='first_name'
-            name='first_name'
-            onChange={formik.handleChange}
-            value={formik.values.first_name}
-            autoComplete='first_name'
-          />
-        </FieldWrap>
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.first_name}
+          invalidFeedback={formik.errors.first_name}
+        >
+          <FieldWrap firstSuffix={<Icon icon='HeroUser' className='mx-2' />}>
+            <Input
+              id='first_name'
+              name='first_name'
+              onChange={formik.handleChange}
+              value={formik.values.first_name}
+              autoComplete='first_name'
+            />
+          </FieldWrap>
+        </Validation>
       </div>
 
+      {/* Segundo Nombre */}
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='second_name'>Segundo nombre</Label>
-        <FieldWrap
-          firstSuffix={
-            <Icon icon='HeroUser' className='mx-2' />
-          }>
-          <Input
-            id='second_name'
-            name='second_name'
-            onChange={formik.handleChange}
-            value={formik.values.second_name}
-            autoComplete='second_name'
-          />
-        </FieldWrap>
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.second_name}
+          invalidFeedback={formik.errors.second_name}
+        >
+          <FieldWrap firstSuffix={<Icon icon='HeroUser' className='mx-2' />}>
+            <Input
+              id='second_name'
+              name='second_name'
+              onChange={formik.handleChange}
+              value={formik.values.second_name}
+              autoComplete='second_name'
+            />
+          </FieldWrap>
+        </Validation>
       </div>
 
+      {/* Apellido Paterno */}
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='last_name'>Apellido Paterno</Label>
-        <FieldWrap
-          firstSuffix={
-            <Icon icon='HeroUser' className='mx-2' />
-          }>
-          <Input
-            id='last_name'
-            name='last_name'
-            onChange={formik.handleChange}
-            value={formik.values.last_name}
-            autoComplete='last_name'
-          />
-        </FieldWrap>
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.last_name}
+          invalidFeedback={formik.errors.last_name}
+        >
+          <FieldWrap firstSuffix={<Icon icon='HeroUser' className='mx-2' />}>
+            <Input
+              id='last_name'
+              name='last_name'
+              onChange={formik.handleChange}
+              value={formik.values.last_name}
+              autoComplete='last_name'
+            />
+          </FieldWrap>
+        </Validation>
       </div>
 
+      {/* Apellido Materno */}
       <div className='col-span-12 lg:col-span-6'>
-        <Label htmlFor='second_last_name'>Apellido Paterno</Label>
-        <FieldWrap
-          firstSuffix={
-            <Icon icon='HeroUser' className='mx-2' />
-          }>
-          <Input
-            id='second_last_name'
-            name='second_last_name'
-            onChange={formik.handleChange}
-            value={formik.values.second_last_name}
-            autoComplete='second_last_name'
-          />
-        </FieldWrap>
+        <Label htmlFor='second_last_name'>Apellido Materno</Label>
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.second_last_name}
+          invalidFeedback={formik.errors.second_last_name}
+        >
+          <FieldWrap firstSuffix={<Icon icon='HeroUser' className='mx-2' />}>
+            <Input
+              id='second_last_name'
+              name='second_last_name'
+              onChange={formik.handleChange}
+              value={formik.values.second_last_name}
+              autoComplete='second_last_name'
+            />
+          </FieldWrap>
+        </Validation>
       </div>
 
+      {/* Email */}
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='email'>Email</Label>
-        <FieldWrap
-          firstSuffix={
-            <Icon
-              icon='HeroEnvelope'
-              className='mx-2'
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.email}
+          invalidFeedback={formik.errors.email}
+        >
+          <FieldWrap firstSuffix={<Icon icon='HeroEnvelope' className='mx-2' />}>
+            <Input
+              id='email'
+              name='email'
+              onChange={formik.handleChange}
+              value={formik.values.email!}
+              autoComplete='email'
             />
-          }>
-          <Input
-            id='email'
-            name='email'
-            onChange={formik.handleChange}
-            value={formik.values.email!}
-            autoComplete='email'
-          />
-        </FieldWrap>
+          </FieldWrap>
+        </Validation>
       </div>
 
+      {/* Número de celular */}
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='phone_number'>N° Celular</Label>
-        <FieldWrap
-          firstSuffix={
-            <Icon
-              icon='HeroPhone'
-              className='mx-2'
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.phone_number}
+          invalidFeedback={formik.errors.phone_number}
+        >
+          <FieldWrap firstSuffix={<Icon icon='HeroPhone' className='mx-2' />}>
+            <Input
+              id='phone_number'
+              name='phone_number'
+              onChange={formik.handleChange}
+              value={formik.values.phone_number!}
+              autoComplete='phone_number'
             />
-          }>
-          <Input
-            id='phone_number'
-            name='phone_number'
-            onChange={formik.handleChange}
-            value={formik.values.phone_number!}
-            autoComplete='phone_number'
-          />
-        </FieldWrap>
+          </FieldWrap>
+        </Validation>
       </div>
 
+      {/* Fecha de Nacimiento */}
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='birth'>Fecha Nacimiento</Label>
-        <Input
-          type='date'
-          id='birth'
-          name='birth'
-          onChange={formik.handleChange}
-          value={formik.values.birth}
-          autoComplete='bday'
-        />
+        <Validation
+          isValid={formik.isValid}
+          isTouched={formik.touched.birth}
+          invalidFeedback={formik.errors.birth}
+        >
+          <Input
+            type='date'
+            id='birth'
+            name='birth'
+            onChange={formik.handleChange}
+            value={formik.values.birth}
+            autoComplete='bday'
+          />
+        </Validation>
       </div>
+
+      {/* Género */}
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='gender'>Género</Label>
         <RadioGroup isInline>
-          {['Male', 'Female'].map((i) => (
+          {['Masculino', 'Femenino'].map((i) => (
             <Radio
               key={i}
               label={i}
@@ -203,26 +279,19 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
         </RadioGroup>
       </div>
 
-      {/* <div className='col-span-12'>
-        <Label htmlFor='position'>Role</Label>
+      {/* Rol */}
+      <div className='col-span-12 lg:col-span-6'>
+        <Label htmlFor='position'>Rol</Label>
         <FieldWrap
-          firstSuffix={
-            <Icon
-              icon='HeroShieldCheck'
-              className='mx-2'
-            />
-          }
-          lastSuffix={
-            <Icon
-              icon='HeroChevronDown'
-              className='mx-2'
-            />
-          }>
+          firstSuffix={<Icon icon='HeroShieldCheck' className='mx-2' />}
+          lastSuffix={<Icon icon='HeroChevronDown' className='mx-2' />}
+        >
           <Select
             name='role'
             onChange={formik.handleChange}
             value={formik.values.role}
-            placeholder='Select role'>
+            placeholder='Select role'
+          >
             {rolesDb.map((role) => (
               <option key={role.id} value={role.id}>
                 {role.name}
@@ -230,17 +299,12 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
             ))}
           </Select>
         </FieldWrap>
-      </div> */}
-      {/* <div className='col-span-12'>
-        <Label htmlFor='position'>Position</Label>
+      </div>
 
-        <FieldWrap
-          firstSuffix={
-            <Icon
-              icon='HeroBriefcase'
-              className='mx-2'
-            />
-          }>
+      {/* Position */}
+      <div className='col-span-12 lg:col-span-6'>
+        <Label htmlFor='position'>Position</Label>
+        <FieldWrap firstSuffix={<Icon icon='HeroBriefcase' className='mx-2' />}>
           <Input
             id='position'
             name='position'
@@ -248,21 +312,19 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
             value={formik.values.position}
           />
         </FieldWrap>
-      </div> */}
-      {/* <div className='col-span-12'>
-        <Label htmlFor='bio'>Bio</Label>
-        <RichText
-          id='bio'
-          value={formik.values.bio}
-          handleChange={(event) => {
-            formik
-              .setFieldValue('bio', event)
-              .then(() => {})
-              .catch(() => {});
-          }}
-        />
-      </div> */}
+      </div>
+
+      <Button
+        className='col-span-12 lg:col-span-3 lg:col-start-10'
+        icon='HeroServer'
+        variant='solid'
+        color={saveBtnColor}
+        isDisable={saveBtnDisable}
+        onClick={() => formik.handleSubmit()}>
+        {saveBtnText}
+      </Button>
     </div>
+    
   </>
   )
 }

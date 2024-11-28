@@ -1,14 +1,11 @@
 import { FormikProps } from 'formik'
 import React, { FC } from 'react'
 import Button from '../../components/ui/Button'
-import { useAppSelector } from '../../store'
+import { useAppSelector } from '../../store/hook'
 
-interface TwoFactorConfigProps {
-  formik: FormikProps<any>
-}
 
-const TwoFactorConfig: FC<TwoFactorConfigProps> = ({ formik }) => {
-  const { user } = useAppSelector((state) => state.auth.session)
+const TwoFactorConfig = () => {
+  const { user } = useAppSelector((state) => state.auth.user)
   return (
   <>
     <div className='text-4xl font-semibold'>2FA</div>

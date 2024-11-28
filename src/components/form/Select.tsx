@@ -56,8 +56,8 @@ const Select: FC<ISelectProps> = (props) => {
 				[`dark:hover:border-${color as TColors}-${colorIntensity as TColorIntensity}`],
 				'disabled:!border-zinc-500',
 				// Focus
-				'focus:border-zinc-300 dark:focus:border-zinc-800',
-				'focus:bg-transparent dark:focus:bg-transparent',
+				'focus:border-zinc-300 dark:focus:border-zinc-700',
+				'focus:bg-transparent dark:focus:bg-zinc-800'
 			),
 			validation: classNames({
 				'!border-red-500 ring-4 ring-red-500/30': !isValid && isTouched && invalidFeedback,

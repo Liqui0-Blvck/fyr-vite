@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { Descendant } from 'slate';
 import PageWrapper from '../../components/layouts/PageWrapper/PageWrapper';
-import { useAuth } from '../../context/authContext';
 import Container from '../../components/layouts/Container/Container';
 import Subheader, {
 	SubheaderLeft,
@@ -12,21 +10,11 @@ import Subheader, {
 } from '../../components/layouts/Subheader/Subheader';
 import Card, { CardBody, CardFooter, CardFooterChild } from '../../components/ui/Card';
 import Button, { IButtonProps } from '../../components/ui/Button';
-import { TIcons } from '../../types/icons.type';
-import Label from '../../components/form/Label';
-import Input from '../../components/form/Input';
-import Select from '../../components/form/Select';
-import Avatar from '../../components/Avatar';
 import useSaveBtn from '../../hooks/useSaveBtn';
-import FieldWrap from '../../components/form/FieldWrap';
 import Icon from '../../components/icon/Icon';
-import Checkbox from '../../components/form/Checkbox';
 import Badge from '../../components/ui/Badge';
-import RichText from '../../components/RichText';
-import Radio, { RadioGroup } from '../../components/form/Radio';
 import useDarkMode from '../../hooks/useDarkMode';
 import { TDarkMode } from '../../types/darkMode.type';
-import { useAppSelector } from '../../store';
 import { RootState } from '../../store/rootReducer';
 import EditProfile from './EditProfile.component';
 import PasswordComponent from './Password.component';
@@ -34,6 +22,11 @@ import TwoFactorConfig from './TwoFactorConfig.component';
 import NewlettersComponent from './NewlettersComponent.component';
 import SessionsComponent from './SessionsComponent.component';
 import ThemeComponent from './ThemeComponent.component';
+import { updateProfileData } from '../../store/slices/auth/userSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import toast from 'react-hot-toast';
+import { TIcons } from '../../types/icons.type';
+
 
 type TTab = {
 	text:
@@ -83,12 +76,12 @@ const TAB: TTabs = {
 
 const ProfilePage = () => {
 	const { i18n } = useTranslation();
-
 	const { setDarkModeStatus } = useDarkMode();
-
+	const [isSaving, setIsSaving] = useState<boolean>(false);
 	const [activeTab, setActiveTab] = useState<TTab>(TAB.EDIT);
-	const { user } = useAppSelector((state: RootState) => state.auth.session)
+	const { user } = useAppSelector((state: RootState) => state.auth.user)
 
+	const dispatch = useAppDispatch()
 
 	const defaultProps: IButtonProps = {
 		color: 'zinc',
@@ -100,63 +93,16 @@ const ProfilePage = () => {
 		colorIntensity: '500',
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [isSaving, setIsSaving] = useState<boolean>(false);
-
-	const formikEditProfile = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-
-      
-    },
-    onSubmit: (values) => {
-      console.log(values)
-    }
-  }) 
-
-	const formik = useFormik({
-		enableReinitialize: true,
-		initialValues: {
-			first_name: user?.first_name || '',
-      second_name: user?.second_name || '',
-      last_name: user?.last_name || '',
-      second_last_name: user?.second_last_name || '',
-      email: user?.email || '',
-      phone_number: user?.phoneNumber || '',
-      birth: user?.birth || '',
-      gender: user?.gender || '',
-      role: user?.role || '',
-      photoURL: user?.photoURL || '',
-
-			oldPassword: '',
-			newPassword: '',
-			newPasswordConfirmation: '',
 
 
-			// twoFactorAuth: user?.twoFactorAuth,
-			// weeklyNewsletter: user?.newsletter?.weeklyNewsletter || false,
-			// lifecycleEmails: user?.newsletter?.lifecycleEmails || false,
-			// promotionalEmails: user?.newsletter?.promotionalEmails || false,
-			// productUpdates: user?.newsletter?.productUpdates || false,
-			// bio: (user?.bio && (JSON.parse(user.bio) as Descendant[])) || [],
-
-			theme: 'dark',
-		},
-		onSubmit: () => {},
-	});
-
-	useEffect(() => {
-		setDarkModeStatus(formik.values.theme as TDarkMode);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [formik.values.theme]);
+	// useEffect(() => {
+	// 	setDarkModeStatus(formik.values.theme as TDarkMode);
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [formik.values.theme]);
 
 
 
-	const { saveBtnText, saveBtnColor, saveBtnDisable } = useSaveBtn({
-		isNewItem: false,
-		isSaving,
-		isDirty: formik.dirty,
-	});
+
 
 	return (
 		<PageWrapper name={user?.displayName!}>
@@ -171,16 +117,6 @@ const ProfilePage = () => {
 						Editar Usuario
 					</Badge>
 				</SubheaderLeft>
-				<SubheaderRight>
-					<Button
-						icon='HeroServer'
-						variant='solid'
-						color={saveBtnColor}
-						isDisable={saveBtnDisable}
-						onClick={() => formik.handleSubmit()}>
-						{saveBtnText}
-					</Button>
-				</SubheaderRight>
 			</Subheader>
 			
 			<Container className='h-full'>
@@ -215,47 +151,28 @@ const ProfilePage = () => {
 							</div>
 							<div className='col-span-12 flex flex-col gap-4 sm:col-span-8 md:col-span-9'>
 								{activeTab === TAB.EDIT && (
-									<EditProfile formik={formik}/>
+									<EditProfile/>
 								)}
 								
 								{activeTab === TAB.PASSWORD && (
-									<PasswordComponent formik={formik}/>
+									<PasswordComponent/>
 								)}
 								{activeTab === TAB['2FA'] && (
-									<TwoFactorConfig formik={formik}/>
+									<TwoFactorConfig/>
 								)}
 								{activeTab === TAB.NEWSLETTER && (
-									<NewlettersComponent formik={formik}/>
+									<NewlettersComponent/>
 								)}
 								{activeTab === TAB.SESSIONS && (
 									<SessionsComponent />
 								)}
 								
 								{activeTab === TAB.THEME && (
-									<ThemeComponent formik={formik}/>
+									<ThemeComponent/>
 								)}
 							</div>
 						</div>
 					</CardBody>
-					<CardFooter>
-						<CardFooterChild>
-							<div className='flex items-center gap-2'>
-								<Icon icon='HeroDocumentCheck' size='text-2xl' />
-								<span className='text-zinc-500'>Ultimo guardado:</span>
-								<b>{dayjs().locale(i18n.language).format('LLL')}</b>
-							</div>
-						</CardFooterChild>
-						<CardFooterChild>
-							<Button
-								icon='HeroServer'
-								variant='solid'
-								color={saveBtnColor}
-								isDisable={saveBtnDisable}
-								onClick={() => formik.handleSubmit()}>
-								{saveBtnText}
-							</Button>
-						</CardFooterChild>
-					</CardFooter>
 				</Card>
 			</Container>
 		</PageWrapper>
