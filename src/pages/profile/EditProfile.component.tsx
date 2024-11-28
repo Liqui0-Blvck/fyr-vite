@@ -1,5 +1,5 @@
-import React, { FC } from 'react'
-import { FormikProps } from "formik";
+import React, { FC, useState } from 'react'
+import { FormikProps, useFormik } from "formik";
 import Avatar from '../../components/Avatar';
 import { useAppSelector } from '../../store';
 import Label from '../../components/form/Label';
@@ -7,13 +7,37 @@ import Input from '../../components/form/Input';
 import FieldWrap from '../../components/form/FieldWrap';
 import Icon from '../../components/icon/Icon';
 import Radio, { RadioGroup } from '../../components/form/Radio';
+import useSaveBtn from '../../hooks/useSaveBtn';
 
 interface SectionProps {
-  formik: FormikProps<any>;
+  formik: any
+}
+
+interface FormValues {
+  first_name: string;
+  second_name: string;
+  last_name: string;
+  second_last_name: string;
+  email: string;
+  phone_number: string;
+  birth: string
+  gender: string
+  role: string
+  photoURL: string
 }
 
 const EditProfile: FC<SectionProps> = ({ formik }) => {
   const { user } = useAppSelector((state) => state.auth.session)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0]
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url)
+      formik.setFieldValue('photoURL', url);
+    }
+  };
 
   return (
   <>
@@ -21,14 +45,11 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
     <div className='flex w-full gap-4'>
       <div className='flex-shrink-0'>
         <Avatar
-          src={user?.photoURL ? user.photoURL : ''}
+          src={formik.values.photoURL ? formik.values.photoURL : ''}
           className='!w-24'
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           name={`${user?.displayName}`}
         />
-        <div>
-
-        </div>
       </div>
       <div className='flex grow items-center'>
         <div>
@@ -43,8 +64,10 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
               id='fileUpload'
               name='fileUpload'
               type='file'
-              onChange={formik.handleChange}
-              value={formik.values.fileUpload}
+              onChange={(e) => {
+                formik.handleChange('photoURL')
+                handleFileChange(e)
+              }}
             />
           </div>
         </div>
@@ -52,20 +75,69 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
     </div>
     <div className='grid grid-cols-12 gap-4'>
       <div className='col-span-12 lg:col-span-6'>
-        <Label htmlFor='username'>Nombre</Label>
+        <Label htmlFor='first_name'>Nombre</Label>
         <FieldWrap
           firstSuffix={
             <Icon icon='HeroUser' className='mx-2' />
           }>
           <Input
-            id='username'
-            name='username'
+            id='first_name'
+            name='first_name'
             onChange={formik.handleChange}
-            value={formik.values.username!}
-            autoComplete='username'
+            value={formik.values.first_name}
+            autoComplete='first_name'
           />
         </FieldWrap>
       </div>
+
+      <div className='col-span-12 lg:col-span-6'>
+        <Label htmlFor='second_name'>Segundo nombre</Label>
+        <FieldWrap
+          firstSuffix={
+            <Icon icon='HeroUser' className='mx-2' />
+          }>
+          <Input
+            id='second_name'
+            name='second_name'
+            onChange={formik.handleChange}
+            value={formik.values.second_name}
+            autoComplete='second_name'
+          />
+        </FieldWrap>
+      </div>
+
+      <div className='col-span-12 lg:col-span-6'>
+        <Label htmlFor='last_name'>Apellido Paterno</Label>
+        <FieldWrap
+          firstSuffix={
+            <Icon icon='HeroUser' className='mx-2' />
+          }>
+          <Input
+            id='last_name'
+            name='last_name'
+            onChange={formik.handleChange}
+            value={formik.values.last_name}
+            autoComplete='last_name'
+          />
+        </FieldWrap>
+      </div>
+
+      <div className='col-span-12 lg:col-span-6'>
+        <Label htmlFor='second_last_name'>Apellido Paterno</Label>
+        <FieldWrap
+          firstSuffix={
+            <Icon icon='HeroUser' className='mx-2' />
+          }>
+          <Input
+            id='second_last_name'
+            name='second_last_name'
+            onChange={formik.handleChange}
+            value={formik.values.second_last_name}
+            autoComplete='second_last_name'
+          />
+        </FieldWrap>
+      </div>
+
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='email'>Email</Label>
         <FieldWrap
@@ -84,28 +156,25 @@ const EditProfile: FC<SectionProps> = ({ formik }) => {
           />
         </FieldWrap>
       </div>
-      {/* <div className='col-span-12 lg:col-span-6'>
-        <Label htmlFor='firstName'>First Name</Label>
-        <Input
-          id='firstName'
-          name='firstName'
-          onChange={formik.handleChange}
-          value={formik.values.username}
-          autoComplete='given-name'
-          autoCapitalize='words'
-        />
-      </div> */}
-      {/* <div className='col-span-12 lg:col-span-6'>
-        <Label htmlFor='lastName'>Last Name</Label>
-        <Input
-          id='lastName'
-          name='lastName'
-          onChange={formik.handleChange}
-          value={formik.values.lastName}
-          autoComplete='family-name'
-          autoCapitalize='words'
-        />
-      </div> */}
+
+      <div className='col-span-12 lg:col-span-6'>
+        <Label htmlFor='phone_number'>N° Celular</Label>
+        <FieldWrap
+          firstSuffix={
+            <Icon
+              icon='HeroPhone'
+              className='mx-2'
+            />
+          }>
+          <Input
+            id='phone_number'
+            name='phone_number'
+            onChange={formik.handleChange}
+            value={formik.values.phone_number!}
+            autoComplete='phone_number'
+          />
+        </FieldWrap>
+      </div>
 
       <div className='col-span-12 lg:col-span-6'>
         <Label htmlFor='birth'>Fecha Nacimiento</Label>

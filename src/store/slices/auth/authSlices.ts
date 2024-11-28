@@ -10,7 +10,12 @@ export interface User {
   displayName: string | null;
   photoURL: string | null;
   phoneNumber: string | null;
-  name?: string;
+  first_name?: string | null;
+  second_name?: string | null;
+  last_name?: string | null;
+  second_last_name?: string | null;
+  birth?: string
+  gender?: string
   role?: string;
   createdAt?: string;
   notificationToken?: string;

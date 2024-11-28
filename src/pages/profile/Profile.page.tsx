@@ -103,28 +103,44 @@ const ProfilePage = () => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isSaving, setIsSaving] = useState<boolean>(false);
 
+	const formikEditProfile = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+
+      
+    },
+    onSubmit: (values) => {
+      console.log(values)
+    }
+  }) 
+
 	const formik = useFormik({
 		enableReinitialize: true,
 		initialValues: {
-			fileUpload: '',
-			username: user?.displayName,
-			email: user?.email,
-			// firstName: user?.,
-			// lastName: user?.lastName,
-			// position: user?.position,
-			// role: user?.role,
+			first_name: user?.first_name || '',
+      second_name: user?.second_name || '',
+      last_name: user?.last_name || '',
+      second_last_name: user?.second_last_name || '',
+      email: user?.email || '',
+      phone_number: user?.phoneNumber || '',
+      birth: user?.birth || '',
+      gender: user?.gender || '',
+      role: user?.role || '',
+      photoURL: user?.photoURL || '',
+
 			oldPassword: '',
 			newPassword: '',
 			newPasswordConfirmation: '',
+
+
 			// twoFactorAuth: user?.twoFactorAuth,
 			// weeklyNewsletter: user?.newsletter?.weeklyNewsletter || false,
 			// lifecycleEmails: user?.newsletter?.lifecycleEmails || false,
 			// promotionalEmails: user?.newsletter?.promotionalEmails || false,
 			// productUpdates: user?.newsletter?.productUpdates || false,
 			// bio: (user?.bio && (JSON.parse(user.bio) as Descendant[])) || [],
-			gender: 'Male',
+
 			theme: 'dark',
-			birth: '1987-12-21',
 		},
 		onSubmit: () => {},
 	});
@@ -143,7 +159,7 @@ const ProfilePage = () => {
 	});
 
 	return (
-		<PageWrapper name={formik.values?.username!}>
+		<PageWrapper name={user?.displayName!}>
 			<Subheader>
 				<SubheaderLeft>
 					{`${user?.displayName}`}{' '}
