@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getAuth, updateProfile } from "firebase/auth";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc } from "firebase/firestore";
 import { firestoreService } from "../../../config/firebase.config";
 import { authenticate } from "./authSlices";
 
@@ -23,15 +23,30 @@ export interface User {
   position: string;
 }
 
+export interface LogsUserSession {
+  id?: string
+  ip: string;
+  device: {
+    browser: string;
+    os: string;
+    osVersion: string;
+    deviceType: string;
+    version: string
+  }
+  timestamp: string;
+}
+
 
 export interface UserState {
   user: User | null;
+  sessions: LogsUserSession[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: UserState = {
   user: null,
+  sessions: [],
   status: 'idle',
   error: null,
 };
@@ -74,14 +89,53 @@ export const updateProfileData = createAsyncThunk(
     const userDocRef = doc(firestoreService, 'users', user.uid)
 
     try {
-      await setDoc(userDocRef, profileData, { merge: true }); // merge: true asegura que no sobreescriba otros campos
+      await setDoc(userDocRef, {...profileData, uid: user.uid }, { merge: true }); // merge: true asegura que no sobreescriba otros campos
 
-      return { ...profileData };
+      return { ...profileData, uid: user.uid }; // Retornamos el perfil actualizado
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
 );
+
+export const fetchUserLogs = createAsyncThunk(
+  'auth/fetchUserLogs',
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      // Realizamos la consulta para obtener todos los logs
+      const logsQuery = collection(firestoreService, 'users', userId, 'logs');
+      const querySnapshot = await getDocs(logsQuery);
+      
+      const logsArray: LogsUserSession[] = [];
+
+      // Iteramos sobre los resultados de la consulta
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        // Validamos que los campos existan antes de agregarlos al array
+        const log: LogsUserSession = {
+          id: doc.id,
+          ip: data.ip || 'N/A', // Si no hay IP, ponemos 'N/A'
+          device: {
+            browser: data.device?.browser || 'Unknown', // Asignar valores por defecto
+            os: data.device?.os || 'Unknown',
+            osVersion: data.device?.osVersion || 'Unknown',
+            deviceType: data.device?.deviceType || 'Unknown',
+            version: data.device?.version || 'Unknown',
+          },
+          timestamp: data.timestamp || new Date().toISOString(), // Si no hay timestamp, usamos la hora actual
+        };
+
+        logsArray.push(log);
+      });
+
+      return logsArray; // Retornamos los logs obtenidos
+    } catch (error: any) {
+      return rejectWithValue(error.message); // En caso de error, retornamos el error
+    }
+  }
+);
+
 
 const UserSlice = createSlice({
   name: 'profile',
@@ -124,6 +178,19 @@ const UserSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action: PayloadAction<any>) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+
+      .addCase(fetchUserLogs.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchUserLogs.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.sessions = action.payload; // Guardamos los logs en el estado
+      })
+      .addCase(fetchUserLogs.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string; // Guardamos el error si ocurre
       });
   },
 });

@@ -2,8 +2,9 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import {  EmailAuthProvider, getAuth, reauthenticateWithCredential, signInWithEmailAndPassword, signOut, updatePassword } from 'firebase/auth';
 import { SLICE_BASE_NAME } from './constants';
 import { auth, firestoreService } from '../../../config/firebase.config';
-import { doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { clearUser, setUser, User } from './userSlice';
+import { UAParser } from 'ua-parser-js';
 
 
 
@@ -38,6 +39,7 @@ export const login = createAsyncThunk(
 
           dispatch(authenticate());
           dispatch(setUser(completeUser));
+          dispatch(logUserLogin({ userId: userCredential.user.uid, userAgent: navigator.userAgent }));
       } else {
         return userCredential.user;
       }
@@ -94,6 +96,81 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+
+const getIp = async () => {
+  const response = await fetch('https://api.ipify.org?format=json');
+  const data = await response.json();
+  return data.ip;
+};
+
+// Función para limpiar los logs más antiguos a los últimos 7 días
+const cleanOldLogs = async (userId: string) => {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); // Fecha de hace 7 días
+
+  const logsSnapshot = await getDocs(
+    query(collection(firestoreService, 'users', userId, 'logs'), where('timestamp', '<', sevenDaysAgo.toISOString()))
+  );
+
+  // Eliminar logs antiguos
+  logsSnapshot.forEach(async (doc) => {
+    await deleteDoc(doc.ref);
+  });
+};
+
+
+// `createAsyncThunk` para verificar la IP y el navegador y actualizar o crear el registro
+export const logUserLogin = createAsyncThunk(
+  'auth/logUserLogin',
+  async ({ userId, userAgent }: { userId: string; userAgent: string }, { rejectWithValue }) => {
+    try {
+      const ip = await getIp(); // Obtiene la IP
+      const timestamp = new Date().toISOString(); // Hora de inicio de sesión
+      const parser = new UAParser();
+      const deviceInfo = parser.setUA(userAgent).getResult(); // Analiza el userAgent
+
+      const deviceData = {
+        browser: deviceInfo.browser.name,
+        os: deviceInfo.os.name,
+        osVersion: deviceInfo.os.version,
+        deviceType: deviceInfo.device.type || 'unknown',
+        version: deviceInfo.browser.version,
+      };
+
+      // Consulta si ya existe un registro con la misma IP y navegador
+      const logsQuery = query(
+        collection(firestoreService, 'users', userId, 'logs'),
+        where('ip', '==', ip),
+        where('device.browser', '==', deviceData.browser),
+        where('device.version', '==', deviceData.version) // Asegúrate de comparar la versión también
+      );
+
+      const querySnapshot = await getDocs(logsQuery);
+
+      if (!querySnapshot.empty) {
+        // Si ya existe un registro, actualizamos el `timestamp`
+        const existingLogDoc = querySnapshot.docs[0]; // Tomamos el primer documento encontrado
+        await updateDoc(existingLogDoc.ref, {
+          timestamp, // Actualizamos solo la hora de inicio de sesión
+        });
+
+        return { id: existingLogDoc.id, timestamp }; // Devolvemos el ID y el nuevo timestamp
+      } else {
+        // Si no existe un registro con la misma IP y navegador, creamos uno nuevo
+        const newLogData = {
+          ip,
+          device: deviceData,
+          timestamp,
+        };
+
+        const logRef = await addDoc(collection(firestoreService, 'users', userId, 'logs'), newLogData);
+        return { id: logRef.id, timestamp }; // Devolvemos el ID del nuevo log y el timestamp
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message); // En caso de error, retornamos el error
+    }
+  }
+);
 
 
 const authSlice = createSlice({

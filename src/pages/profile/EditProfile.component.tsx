@@ -137,8 +137,7 @@ const EditProfile = () => {
               name='first_name'
               onChange={formik.handleChange}
               value={formik.values.first_name}
-              autoComplete='first_name'
-            />
+              />
           </FieldWrap>
         </Validation>
       </div>
@@ -157,8 +156,7 @@ const EditProfile = () => {
               name='second_name'
               onChange={formik.handleChange}
               value={formik.values.second_name}
-              autoComplete='second_name'
-            />
+              />
           </FieldWrap>
         </Validation>
       </div>
@@ -177,8 +175,7 @@ const EditProfile = () => {
               name='last_name'
               onChange={formik.handleChange}
               value={formik.values.last_name}
-              autoComplete='last_name'
-            />
+              />
           </FieldWrap>
         </Validation>
       </div>
@@ -197,8 +194,7 @@ const EditProfile = () => {
               name='second_last_name'
               onChange={formik.handleChange}
               value={formik.values.second_last_name}
-              autoComplete='second_last_name'
-            />
+              />
           </FieldWrap>
         </Validation>
       </div>
@@ -216,9 +212,7 @@ const EditProfile = () => {
               id='email'
               name='email'
               onChange={formik.handleChange}
-              value={formik.values.email!}
-              autoComplete='email'
-            />
+              value={formik.values.email}/>
           </FieldWrap>
         </Validation>
       </div>
@@ -236,9 +230,7 @@ const EditProfile = () => {
               id='phone_number'
               name='phone_number'
               onChange={formik.handleChange}
-              value={formik.values.phone_number!}
-              autoComplete='phone_number'
-            />
+              value={formik.values.phone_number}/>
           </FieldWrap>
         </Validation>
       </div>
@@ -257,8 +249,7 @@ const EditProfile = () => {
             name='birth'
             onChange={formik.handleChange}
             value={formik.values.birth}
-            autoComplete='bday'
-          />
+            />
         </Validation>
       </div>
 

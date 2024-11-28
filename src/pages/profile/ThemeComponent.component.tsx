@@ -1,10 +1,14 @@
 import { FormikFormProps, FormikState, useFormik } from 'formik'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import Label from '../../components/form/Label'
 import Radio, { RadioGroup } from '../../components/form/Radio'
+import { TDarkMode } from '../../types/darkMode.type'
+import useDarkMode from '../../hooks/useDarkMode'
 
 
 const ThemeComponent = () => {
+	const { setDarkModeStatus } = useDarkMode();
+
   const formik = useFormik({
     initialValues:{
       theme: 'dark'
@@ -13,6 +17,11 @@ const ThemeComponent = () => {
       console.log(values)
     }
   })
+
+  useEffect(() => {
+  setDarkModeStatus(formik.values.theme as TDarkMode);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [formik.values.theme]);
 
 
   return (
