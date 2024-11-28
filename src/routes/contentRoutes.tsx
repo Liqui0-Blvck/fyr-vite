@@ -6,7 +6,7 @@ import LoginPage from '../pages/auth/Login.page';
 
 
 
-const ProfilePage = lazy(() => import('../pages/Profile.page'));
+const ProfilePage = lazy(() => import('../pages/profile/Profile.page'));
 
 
 
