@@ -69,13 +69,9 @@ const TAB: TTabs = {
 
 const ProfilePage = () => {
 	const { i18n } = useTranslation();
-	const { setDarkModeStatus } = useDarkMode();
-	const [isSaving, setIsSaving] = useState<boolean>(false);
 	const [activeTab, setActiveTab] = useState<TTab>(TAB.EDIT);
 	const { user } = useAppSelector((state: RootState) => state.auth.user)
-
-	const dispatch = useAppDispatch()
-
+	
 	const defaultProps: IButtonProps = {
 		color: 'zinc',
 	};
@@ -85,17 +81,6 @@ const ProfilePage = () => {
 		color: 'blue',
 		colorIntensity: '500',
 	};
-
-
-
-	// useEffect(() => {
-	// 	setDarkModeStatus(formik.values.theme as TDarkMode);
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [formik.values.theme]);
-
-
-
-
 
 	return (
 		<PageWrapper name={user?.displayName!}>

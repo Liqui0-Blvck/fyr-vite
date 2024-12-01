@@ -12,13 +12,13 @@ export const appPages = {
 	prospectPage: {
 		id: 'prospectPage',
 		to: '/prospect',
-		text: 'Prospect',
+		text: 'Prospectos',
 		icon: 'HeroUser',
 	},
 	calendarPage: {
 		id: 'calendarPage',
 		to: '/calendar',
-		text: 'Calendar',
+		text: 'Calendario',
 		icon: 'HeroCalendar',
 	},
 	marketingPage: {

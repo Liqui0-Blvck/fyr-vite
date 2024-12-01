@@ -3,6 +3,7 @@ import { RouteProps } from 'react-router-dom';
 import { appPages, authPages} from '../config/pages.config';
 import NotFoundPage from '../pages/NotFound.page';
 import LoginPage from '../pages/auth/Login.page';
+import CustomerDashboardPage from '../pages/customDashboardPages/CustomerDashboard.page';
 
 
 
@@ -19,6 +20,8 @@ const ProfilePage = lazy(() => import('../pages/profile/Profile.page'));
 const UnderConstructionPage = lazy(() => import('../pages/UnderConstruction.page'));
 
 const contentRoutes: RouteProps[] = [
+
+	{path: appPages.homePage.to, element: <CustomerDashboardPage/>},
 	
 
 
