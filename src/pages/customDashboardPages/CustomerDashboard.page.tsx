@@ -101,29 +101,20 @@ const CustomerDashboardPage = () => {
 			<Container breakpoint={null} className='h-full w-full'>
 				{activeTab === TABS.OVERVIEW && (
 					<div className='grid grid-cols-12 gap-4'>
-						<div className='col-span-12 sm:col-span-6 2xl:col-span-2'>
+						<div className='col-span-12 sm:col-span-6 2xl:col-span-3'>
 							<Mini1Partial />
 						</div>
-						<div className='col-span-12 sm:col-span-6 2xl:col-span-2'>
+						<div className='col-span-12 sm:col-span-6 2xl:col-span-3'>
 							<Mini2Partial />
 						</div>
-						<div className='col-span-12 sm:col-span-6 2xl:col-span-2'>
+						<div className='col-span-12 sm:col-span-6 2xl:col-span-3'>
 							<Mini3Partial />
 						</div>
-						<div className='col-span-12 sm:col-span-6 2xl:col-span-2'>
+						<div className='col-span-12 sm:col-span-6 2xl:col-span-3'>
 							<Mini4Partial />
 						</div>
-						<div className='col-span-12 sm:col-span-6 2xl:col-span-2'>
-							<Mini5Partial />
-						</div>
-						<div className='col-span-12 sm:col-span-6 2xl:col-span-2'>
-							<Mini6Partial />
-						</div>
 
-						<div className='col-span-12 2xl:col-span-3'>
-							<MapPartial />
-						</div>
-						<div className='col-span-12 2xl:col-span-3'>
+						<div className='col-span-12 2xl:col-span-6'>
 							<ChartPartial />
 						</div>
 						<div className='col-span-12 2xl:col-span-6'>
