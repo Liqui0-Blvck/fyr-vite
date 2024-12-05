@@ -1,9 +1,12 @@
-export type TProspect = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
+
+export interface Lead {
+  id?: string; // ID único para el lead (podrías generarlo con Firebase)
+  nombre: string; // Nombre del lead
+  numeroTelefono: string; // Número de teléfono
+  email: string; // Dirección de correo electrónico
+  estado?: string; // Estado del lead (interesado, desinteresado, frío, caliente)
+  fechaCreacion?: string; // Fecha en que se creó el lead
+  fechaUltimaInteraccion?: string; // Fecha de la última interacción
+  notas?: string; // Notas adicionales sobre el lead
+  fuente?: string; // Fuente de dónde proviene el lead (publicidad, referencia, etc.)
 }

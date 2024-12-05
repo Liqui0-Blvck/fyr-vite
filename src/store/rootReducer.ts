@@ -1,10 +1,11 @@
 // rootReducer.ts
 import { combineReducers, Reducer, AnyAction } from 'redux';
 import auth, { AuthStates } from './slices/auth';
-import user, { UserState } from './slices/auth/userSlice';
+import prospect, { ProspectsState } from './slices/prospect/prospectSlice';
 
 export type RootState = {
   auth: AuthStates,
+  prospect: ProspectsState
 };
 
 export interface AsyncReducers {
@@ -12,7 +13,8 @@ export interface AsyncReducers {
 }
 
 const staticReducers = {
-  auth
+  auth,
+  prospect
 };
 
 const rootReducer = (asyncReducers?: AsyncReducers) => (

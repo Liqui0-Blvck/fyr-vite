@@ -38,3 +38,13 @@ export const passwordValidationSchema = Yup.object({
     .oneOf([Yup.ref('newPassword'), undefined], 'Las contraseñas no coinciden.')
     .required('La confirmación de la nueva contraseña es requerida.')
 });
+
+
+
+export const addProspectSchema = Yup.object().shape({
+  nombre: Yup.string().required('El nombre es requerido'),
+  email: Yup.string().email('Correo inválido').required('El correo es requerido'),
+  numeroTelefono: Yup.string()
+  .matches(/^\+569\d{8}$/, 'El número de teléfono debe ser chileno (+569 seguido de 8 dígitos)')
+  .required('El número de teléfono es requerido'),
+});

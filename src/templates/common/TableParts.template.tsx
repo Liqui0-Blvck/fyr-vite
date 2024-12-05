@@ -7,6 +7,7 @@ import { CardFooter, CardFooterChild } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/form/Input';
 import Select from '../../components/form/Select';
+import { PaginationInfo } from 'src/store/slices/prospect/prospectSlice';
 
 interface ITableHeaderTemplateProps {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,66 +92,95 @@ export const TableBodyTemplate: FC<ITableBodyTemplateProps> = ({ table }) => {
 interface ITableFooterTemplateProps {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	table: TTableProps<any>;
+	isManualPagination?: boolean;
+	back?: () => void  
+	next?: () => void
+	pageIndex?: number
+	lastVisible?: PaginationInfo
 }
-export const TableFooterTemplate: FC<ITableFooterTemplateProps> = ({ table }) => {
-	return (
-		<TFoot>
-			{table.getFooterGroups().map((footerGroup) => (
-				<Tr key={footerGroup.id}>
-					{footerGroup.headers.map((header) => (
-						<Th
-							key={header.id}
-							isColumnBorder={false}
-							className={classNames({
-								'text-left': header.id !== 'Actions',
-								'text-right': header.id === 'Actions',
-							})}>
-							{header.isPlaceholder ? null : (
-								<div
-									key={header.id}
-									aria-hidden='true'
-									{...{
-										className: header.column.getCanSort()
-											? 'cursor-pointer select-none flex items-center'
-											: '',
-										onClick: header.column.getToggleSortingHandler(),
-									}}>
-									{flexRender(
-										header.column.columnDef.footer,
-										header.getContext(),
-									)}
-									{{
-										asc: (
-											<Icon
-												icon='HeroChevronUp'
-												className='ltr:ml-1.5 rtl:mr-1.5'
-											/>
-										),
-										desc: (
-											<Icon
-												icon='HeroChevronDown'
-												className='ltr:ml-1.5 rtl:mr-1.5'
-											/>
-										),
-									}[header.column.getIsSorted() as string] ?? null}
-								</div>
-							)}
-						</Th>
-					))}
-				</Tr>
-			))}
-		</TFoot>
-	);
+export const TableFooterTemplate: FC<ITableFooterTemplateProps> = ({ table, lastVisible, isManualPagination, back, next, pageIndex }) => {
+  return (
+    <TFoot>
+      <Tr>
+        <Td colSpan={table.getHeaderGroups()[0].headers.length}>
+          {/* Paginación */}
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              isDisable={
+								isManualPagination
+									? pageIndex === 0
+									: !table.getCanPreviousPage() 
+							}
+              onClick={() => {
+								if (back) {
+									isManualPagination ? back() : table.previousPage()
+								}
+							}}
+            >
+              Anterior
+            </Button>
+            {
+							isManualPagination 
+							? (
+								<span>
+									Página {pageIndex! + 1}
+								</span>
+							)
+							: (
+								<span>
+									Página{' '}
+									<strong>
+										{table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+									</strong>
+								</span>
+							)
+							 
+						}
+            <Button
+              variant="outline"
+              isDisable={
+								isManualPagination
+								? !lastVisible 
+								: !table.getCanNextPage()
+							}
+              onClick={() => {
+								if (next) {
+									isManualPagination ? next() : table.nextPage()
+								}
+							}}
+            >
+              Siguiente
+            </Button>
+          </div>
+        </Td>
+      </Tr>
+    </TFoot>
+  );
 };
+
 
 interface ITableTemplateProps extends Partial<ITableProps> {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	table: TTableProps<any>;
 	hasHeader?: boolean;
 	hasFooter?: boolean;
+	prevPage?: () => void
+	nextPage?: () => void
+	pageIndex?: number,
+	lastVisible?: PaginationInfo
 }
 const TableTemplate: FC<ITableTemplateProps> = (props) => {
-	const { children, hasHeader, hasFooter, table, ...rest } = props;
+	const { 
+		children, 
+		hasHeader,
+		prevPage,
+		nextPage,
+		pageIndex,
+		lastVisible, 
+		hasFooter, 
+		table, 
+		...rest } = props;
 
 	return (
 		<Table {...rest}>
@@ -158,7 +188,15 @@ const TableTemplate: FC<ITableTemplateProps> = (props) => {
 				<>
 					{hasHeader && <TableHeaderTemplate table={table} />}
 					<TableBodyTemplate table={table} />
-					{hasFooter && <TableFooterTemplate table={table} />}
+					{hasFooter && 
+					<TableFooterTemplate
+						table={table} 
+						isManualPagination={true} 
+						back={prevPage} 
+						next={nextPage} 
+						lastVisible={lastVisible}
+						pageIndex={pageIndex}/>
+					}
 				</>
 			)}
 		</Table>

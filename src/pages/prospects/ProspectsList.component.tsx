@@ -1,17 +1,13 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  Column,
-  ColumnDef,
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { TProspect } from '../../types/app/Prospect.type'
-import Table from '../../components/ui/Table'
-import Card, { CardBody } from '../../components/ui/Card'
+import { Lead } from '../../types/app/Prospect.type'
+import Card, { CardBody, } from '../../components/ui/Card'
 import TableTemplate from '../../templates/common/TableParts.template'
 import PageWrapper from '../../components/layouts/PageWrapper/PageWrapper'
 import Subheader, { SubheaderLeft, SubheaderRight } from '../../components/layouts/Subheader/Subheader'
@@ -22,104 +18,115 @@ import Button from '../../components/ui/Button'
 import Container from '../../components/layouts/Container/Container'
 import Dropdown, { DropdownMenu, DropdownToggle } from '../../components/ui/Dropdown'
 import Modal, { ModalBody, ModalHeader } from '../../components/ui/Modal'
-
-const prospects: TProspect[] = [
-  {
-    id: '1',
-    firstName: 'John',
-    lastName: 'Doe',
-    age: 32,
-    visits: 10,
-    status: 'active',
-    progress: 50,
-  },
-  {
-    id: '2',
-    firstName: 'Jane',
-    lastName: 'Doe',
-    age: 31,
-    visits: 20,
-    status: 'inactive',
-    progress: 70,
-  },
-  {
-    id: '3',
-    firstName: 'Jim',
-    lastName: 'Doe',
-    age: 30,
-    visits: 30,
-    status: 'active',
-    progress: 30,
-  },
-  {
-    id: '4',
-    firstName: 'Jill',
-    lastName: 'Doe',
-    age: 29,
-    visits: 40,
-    status: 'inactive',
-    progress: 90,
-  }
-]
+import ProspectForm from './ProspectForm.form'
+import { useAppDispatch, useAppSelector } from '../../store/hook'
+import { RootState } from '../../store/rootReducer'
+import { fetchLeads } from '../../store/slices/prospect/prospectSlice'
+import { motion, AnimatePresence } from 'framer-motion'
+import FilterCard from './ProspectFilter.filters'
 
 
 const ProspectsList = () => {
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
-  // const { prospects } = useAppSelector((state: RootState) => state.prospect)
-
-  const [openModalProspect, setOpenModalProspect] = useState(false)
-  const [openModalMassiveProspect, setOpenModalMassiveProspect] = useState(false)
+  const { leads: prospects, lastVisible } = useAppSelector((state: RootState) => state.prospect)
+  const dispatch = useAppDispatch()
 
 
 
+  const [pageIndex, setPageIndex] = useState(0); // Estado para manejar la página actual
+  const pageSize = 10; // Número de registros por página
 
-  const columnHelper = createColumnHelper<TProspect>();
+  // Llamada inicial para cargar los leads cuando cambia el filtro o la página
+  useEffect(() => {
+    dispatch(fetchLeads({
+      search: globalFilter,
+      pageSize: pageSize,
+      append: false, // No acumulamos registros, siempre reemplazamos
+      filters: [],
+      pageIndex: pageIndex,
+    }));
+  }, [globalFilter, pageIndex]);
 
+
+
+  const nextPage = () => {
+    if (lastVisible) {
+      setPageIndex((prev) => prev + 1); // Incrementa el índice de página
+    }
+  };
+
+  const prevPage = () => {
+    if (pageIndex > 0) {
+      setPageIndex((prev) => prev - 1); // Decrementa el índice de página
+    }
+  };
+
+
+  const [openModalProspect, setOpenModalProspect] = useState<boolean>(false)
+  const [openModalMassiveProspect, setOpenModalMassiveProspect] = useState<boolean>(false)
+
+  const [showFilters, setSHowFilters] = useState<boolean>(false)
+
+
+  const columnHelper = createColumnHelper<Lead>();
   const columns = [
+    columnHelper.accessor('nombre', {
+      cell: (info) => (
+        <div>
+          <span>{info.row.original.nombre}</span>
+        </div>
+      ),
+      header: 'Nombre',
+    }),
+    columnHelper.accessor('email', {
+      cell: (info) => (
+        <div>
+          <span>{info.row.original.email}</span>
+        </div>
+      ),
+      header: 'Correo',
+    }),
 
-    columnHelper.accessor('firstName', {
+    columnHelper.accessor('estado', {
       cell: (info) => (
         <div>
-          <span>{info.row.original.firstName}</span>
+          <span>{info.row.original.estado}</span>
         </div>
       ),
-      header: 'First Name',
+      header: 'Estado',
     }),
-    columnHelper.accessor('age', {
+    columnHelper.accessor('numeroTelefono', {
       cell: (info) => (
         <div>
-          <span>{info.row.original.age}</span>
+          <span>{info.row.original.numeroTelefono}</span>
         </div>
       ),
-      header: 'Age',
+      header: 'N° Teléfono',
     }),
-    columnHelper.accessor('progress', {
+    columnHelper.accessor('fuente', {
       cell: (info) => (
         <div>
-          <span>{info.row.original.progress}</span>
+          <span>{info.row.original.fuente ? info.row.original.fuente : 'No se sabe donde salio'}</span>
         </div>
       ),
-      header: 'Progreso',
+      header: 'Fuente',
     }),
     columnHelper.display({
       cell: (_info) => (
-        <div className='flex items-center gap-2'>
-          {/* {info.row.original.socialAuth?.google && (
-            <Tooltip text='Google'>
-              <Icon size='text-xl' icon='CustomGoogle' />
-            </Tooltip>
-          )}
-          {info.row.original.socialAuth?.facebook && (
-            <Tooltip text='Facebook'>
-              <Icon size='text-xl' icon='CustomFacebook' />
-            </Tooltip>
-          )}
-          {info.row.original.socialAuth?.apple && (
-            <Tooltip text='Apple'>
-              <Icon size='text-xl' icon='CustomApple' />
-            </Tooltip>
-          )} */}
+        <div className='flex items-center justify-center flex-wrap'>
+          <Button icon='HeroEye' color='emerald'>
+            Ver
+          </Button>
+
+          <Button icon='HeroPencil'>
+            Editar
+          </Button>
+
+          <Button icon='HeroTrash' color='red'>
+            Eliminar
+          </Button>
+
         </div>
       ),
       header: 'Acciones',
@@ -132,17 +139,18 @@ const ProspectsList = () => {
     columns,
     state: {
       rowSelection,
-      globalFilter
+      globalFilter,
+      pagination: {
+        pageIndex: 0, // Página inicial
+        pageSize: 10,  // Número de registros por página
+      },
     },
-    enableGlobalFilter: true,
-		onGlobalFilterChange: setGlobalFilter,
-    enableRowSelection: true, 
-    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    manualPagination: true, // Usamos paginación manual
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true,
-  })
+  });
 
 
   return (
@@ -157,7 +165,7 @@ const ProspectsList = () => {
               <span>Agregar Prospectos</span>
             </ModalHeader>
             <ModalBody>
-              <h1>Contenido</h1>
+              <ProspectForm isOpen={setOpenModalProspect} />
             </ModalBody>
           </Modal>
         )
@@ -193,14 +201,15 @@ const ProspectsList = () => {
 							onChange={(e) => setGlobalFilter(e.target.value)}
 						/>
 					</FieldWrap>
+          <Button 
+            variant={showFilters ? 'solid' : 'outline'} 
+            icon='HeroFilter'
+            onClick={() => setSHowFilters(!showFilters)}
+            >
+            Filtros
+          </Button>
 				</SubheaderLeft>
 				<SubheaderRight>
-					{/* <Link to={`new`}>
-						<Button variant='solid' icon='HeroPlus'>
-							Agregar Prospecto
-						</Button>
-					</Link> */}
-
           <Dropdown>
             <DropdownToggle>
               <Button variant='solid'>Acciones</Button>
@@ -228,11 +237,24 @@ const ProspectsList = () => {
           </Dropdown>
 				</SubheaderRight>
 			</Subheader>
-      <Container>
+      <Container className={`${showFilters ? 'flex gap-4 ' : ''}`}>
+        <AnimatePresence>
+          {showFilters && (
+            <FilterCard onFilter={() => {}}/>
+          )}
+        </AnimatePresence>
+
         <Card>
-          <CardBody className='overflow-auto'>
-						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} />
-					</CardBody>
+          <CardBody className={`overflow-auto`}>
+            <TableTemplate 
+              className='table-fixed max-md:min-w-[70rem]' 
+              table={table} 
+              nextPage={nextPage}
+              prevPage={prevPage}
+              pageIndex={pageIndex}
+              lastVisible={lastVisible!}
+            />
+          </CardBody>
         </Card>
       </Container>
     </PageWrapper>
