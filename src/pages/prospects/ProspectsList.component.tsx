@@ -7,8 +7,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { Lead } from '../../types/app/Prospect.type'
-import Card, { CardBody, } from '../../components/ui/Card'
-import TableTemplate from '../../templates/common/TableParts.template'
+import Card, { CardBody, CardFooter, } from '../../components/ui/Card'
+import TableTemplate, { TableCardFooterTemplate } from '../../templates/common/TableParts.template'
 import PageWrapper from '../../components/layouts/PageWrapper/PageWrapper'
 import Subheader, { SubheaderLeft, SubheaderRight } from '../../components/layouts/Subheader/Subheader'
 import FieldWrap from '../../components/form/FieldWrap'
@@ -27,7 +27,8 @@ import FilterCard from './ProspectFilter.filters'
 
 import {format} from '@formkit/tempo'
 import { Link, useNavigate } from 'react-router-dom'
-import { appPages } from 'src/config/pages.config'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
+import { firestoreService } from '../../config/firebase.config'
 
 
 const ProspectsList = () => {
@@ -67,18 +68,29 @@ const ProspectsList = () => {
   }, [filters, globalFilter, pageIndex]);
 
 
+  useEffect(() => {
+    // Suscripción en tiempo real
+    const leadsRef = collection(firestoreService, 'prospects');
+    const q = query(leadsRef, orderBy('nombre'), orderBy('fechaCreacion', 'desc'));
 
-  const nextPage = () => {
-    if (lastVisible) {
-      setPageIndex((prev) => prev + 1); // Incrementa el índice de página
-    }
-  };
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const newLeads = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-  const prevPage = () => {
-    if (pageIndex > 0) {
-      setPageIndex((prev) => prev - 1); // Decrementa el índice de página
-    }
-  };
+      // Disparar acción para actualizar el estado con los nuevos leads
+      dispatch({
+        type: 'prospects/setLeads',
+        payload: newLeads,
+      });
+    });
+
+    // Limpiar la suscripción cuando el componente se desmonte
+    return () => {
+      unsubscribe(); // Desuscribirse para evitar fugas de memoria
+    };
+  }, [dispatch]);
 
 
   const [openModalProspect, setOpenModalProspect] = useState<boolean>(false)
@@ -147,16 +159,12 @@ const ProspectsList = () => {
     state: {
       rowSelection,
       globalFilter,
-      pagination: {
-        pageIndex: 0, // Página inicial
-        pageSize: 10,  // Número de registros por página
-      },
     },
     onGlobalFilterChange: setGlobalFilter,
-    manualPagination: true, // Usamos paginación manual
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    
   });
 
 
@@ -255,13 +263,13 @@ const ProspectsList = () => {
           <CardBody className={`overflow-auto`}>
             <TableTemplate 
               className='table-fixed max-md:min-w-[70rem]' 
-              table={table} 
-              nextPage={nextPage}
-              prevPage={prevPage}
-              pageIndex={pageIndex}
-              lastVisible={lastVisible!}
+              table={table}
+              hasFooter={false} 
             />
           </CardBody>
+          <CardFooter>
+            <TableCardFooterTemplate table={table} />
+          </CardFooter>
         </Card>
       </Container>
     </PageWrapper>

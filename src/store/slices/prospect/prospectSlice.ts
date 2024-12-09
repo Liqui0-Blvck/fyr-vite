@@ -38,7 +38,7 @@ interface FetchLeadsParams {
 
 interface FetchLeadsResult {
   leads: Lead[];
-  lastVisible: PaginationInfo | null;
+  lastVisible?: PaginationInfo | null;
 }
 
 const initialState: ProspectsState = {
@@ -119,10 +119,9 @@ export const updateLead = createAsyncThunk<
   }
 );
 
-
 export const fetchLeads = createAsyncThunk<FetchLeadsResult, FetchLeadsParams>(
   'prospects/fetchLeads',
-  async ({ search, pageSize, append, filters, pageIndex }, { getState, rejectWithValue, dispatch }) => {
+  async ({ search, pageSize, filters }, { rejectWithValue }) => {
     try {
       const leadsRef = collection(firestoreService, 'prospects');
       let q = query(
@@ -134,9 +133,8 @@ export const fetchLeads = createAsyncThunk<FetchLeadsResult, FetchLeadsParams>(
 
       // Filtro de búsqueda
       if (search) {
-        q = query(q, where('nombre', '>=', search.toLowerCase()), where('nombre', '<=', search.toLowerCase() + '\uf8ff'), limit(pageSize));
+        q = query(q, where('nombre', '>=', search.toLowerCase()), where('nombre', '<=', search.toLowerCase() + '\uf8ff'));
       }
-
 
       if (filters) {
         // Filtro por estado
@@ -151,63 +149,31 @@ export const fetchLeads = createAsyncThunk<FetchLeadsResult, FetchLeadsParams>(
 
         // Filtro por fecha de creación
         if (filters.fechaCreacion) {
-          q = query(q, where('fechaCreacion', '==', filters.fechaCreacion), limit(pageSize));
+          q = query(q, where('fechaCreacion', '==', filters.fechaCreacion));
         }
 
         // Filtro por última interacción
         if (filters.fechaUltimaInteraccion) {
-          q = query(q, where('fechaUltimaInteraccion', '==', filters.fechaUltimaInteraccion), limit(pageSize));
+          q = query(q, where('fechaUltimaInteraccion', '==', filters.fechaUltimaInteraccion));
         }
       }
 
-
-      // if (filters.estado) {
-      // if (filters) {
-      //   if (filters.estado)
-      //   // Filtramos los valores vacíos
-      //   const validFilters = filters.filter((filter) => filter !== '');
-      //   console.log(validFilters);
-      
-      
-      //   // Aplicar filtros solo si existen valores
-      //   if (validFilters.length > 0) {
-      //     // Filtro por estado
-      //     q = query(q, where('estado', 'in', validFilters));
-      //     q = query(q, where('fuente', 'in', validFilters));
-      //     q = query(q, where('fechaCreacion', 'in', validFilters));
-      //     q = query(q, where('fechaUltimaInteraccion', 'in', validFilters));
-          
-      //   }
-      // }
-      
-
-      // Paginación
-      const state = getState() as RootState;
-      const lastVisible = state.prospect.lastVisible; // El último documento de la página anterior
-
-      // Paginación usando `startAfter`
-      if (pageIndex! > 0 && lastVisible) {
-        q = query(q, startAfter(lastVisible.nombre, lastVisible.fechaCreacion));
-      }
-
+      // Obtener los leads desde Firestore
       const snapshot = await getDocs(q);
       const leads = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Lead[];
 
-      const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-      const newLastVisible = lastDoc
-        ? { nombre: lastDoc.get('nombre'), fechaCreacion: lastDoc.get('fechaCreacion') }
-        : null;
-
-      return { leads, lastVisible: newLastVisible };
+      // Retornar los leads obtenidos
+      return { leads };
     } catch (error: any) {
       console.error('Error al obtener leads:', error);
       return rejectWithValue('No se pudo obtener los leads');
     }
   }
 );
+
 
 
 // Agregar leads a Firestore
@@ -487,11 +453,7 @@ const prospectsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchLeads.fulfilled, (state, action) => {
-        const { leads, lastVisible } = action.payload;
-        state.leads = action.meta.arg.append ? [...state.leads, ...leads] : leads;
-        state.lastVisible = lastVisible;
-        state.loading = false;
-        state.hasMore = leads.length > 0;
+        state.leads = action.payload.leads;
       })
       .addCase(fetchLeads.rejected, (state, action) => {
         state.error = action.payload as string;
