@@ -25,14 +25,32 @@ import { fetchLeads } from '../../store/slices/prospect/prospectSlice'
 import { motion, AnimatePresence } from 'framer-motion'
 import FilterCard from './ProspectFilter.filters'
 
+import {format} from '@formkit/tempo'
+import { Link, useNavigate } from 'react-router-dom'
+import { appPages } from 'src/config/pages.config'
+
 
 const ProspectsList = () => {
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
   const { leads: prospects, lastVisible } = useAppSelector((state: RootState) => state.prospect)
+  const navigation = useNavigate()
+  const [filters, setFilters] = useState({
+    estado: '',
+    fuente: '',
+    fechaCreacion: '',
+    fechaUltimaInteraccion: '',
+  });
+
+  const handleFilterChange = (newFilters: Partial<typeof filters>) => {
+    // Actualizamos el estado con los nuevos filtros
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...newFilters,
+    }));
+  };
+
   const dispatch = useAppDispatch()
-
-
 
   const [pageIndex, setPageIndex] = useState(0); // Estado para manejar la página actual
   const pageSize = 10; // Número de registros por página
@@ -43,10 +61,10 @@ const ProspectsList = () => {
       search: globalFilter,
       pageSize: pageSize,
       append: false, // No acumulamos registros, siempre reemplazamos
-      filters: [],
+      filters: filters,
       pageIndex: pageIndex,
     }));
-  }, [globalFilter, pageIndex]);
+  }, [filters, globalFilter, pageIndex]);
 
 
 
@@ -73,16 +91,16 @@ const ProspectsList = () => {
   const columns = [
     columnHelper.accessor('nombre', {
       cell: (info) => (
-        <div>
-          <span>{info.row.original.nombre}</span>
-        </div>
+        <Link to={`/prospect/${info.row.original.id}`}>
+          <span >{info.row.original.nombre}</span>
+        </Link>
       ),
       header: 'Nombre',
     }),
     columnHelper.accessor('email', {
       cell: (info) => (
         <div>
-          <span>{info.row.original.email}</span>
+          <span >{info.row.original.email}</span>
         </div>
       ),
       header: 'Correo',
@@ -91,7 +109,7 @@ const ProspectsList = () => {
     columnHelper.accessor('estado', {
       cell: (info) => (
         <div>
-          <span>{info.row.original.estado}</span>
+          <span >{info.row.original.estado}</span>
         </div>
       ),
       header: 'Estado',
@@ -99,7 +117,7 @@ const ProspectsList = () => {
     columnHelper.accessor('numeroTelefono', {
       cell: (info) => (
         <div>
-          <span>{info.row.original.numeroTelefono}</span>
+          <span >{info.row.original.numeroTelefono}</span>
         </div>
       ),
       header: 'N° Teléfono',
@@ -107,30 +125,19 @@ const ProspectsList = () => {
     columnHelper.accessor('fuente', {
       cell: (info) => (
         <div>
-          <span>{info.row.original.fuente ? info.row.original.fuente : 'No se sabe donde salio'}</span>
+          <span >{info.row.original.fuente ? info.row.original.fuente : 'No se sabe donde salio'}</span>
         </div>
       ),
       header: 'Fuente',
     }),
-    columnHelper.display({
-      cell: (_info) => (
-        <div className='flex items-center justify-center flex-wrap'>
-          <Button icon='HeroEye' color='emerald'>
-            Ver
-          </Button>
-
-          <Button icon='HeroPencil'>
-            Editar
-          </Button>
-
-          <Button icon='HeroTrash' color='red'>
-            Eliminar
-          </Button>
-
+    columnHelper.accessor('fechaCreacion', {
+      cell: (info) => (
+        <div>
+          <span >{format(info.row.original.fechaCreacion!, { date: 'full' }, 'es' )}</span>
         </div>
       ),
-      header: 'Acciones',
-    }),
+      header: 'Fecha Creación',
+    })
   ]
 
 
@@ -240,7 +247,7 @@ const ProspectsList = () => {
       <Container className={`${showFilters ? 'flex gap-4 ' : ''}`}>
         <AnimatePresence>
           {showFilters && (
-            <FilterCard onFilter={() => {}}/>
+            <FilterCard onFilter={handleFilterChange}/>
           )}
         </AnimatePresence>
 

@@ -16,15 +16,23 @@ const ProfilePage = lazy(() => import('../pages/profile/Profile.page'));
  */
 const UnderConstructionPage = lazy(() => import('../pages/UnderConstruction.page'));
 const CustomDashboardPage = lazy(() => import('../pages/customDashboardPages/CustomerDashboard.page'));
-const ProspectPage = lazy(() => import('../pages/prospects/Prospects.page'));
 
+
+// Pages Prospects
+const ProspectPage = lazy(() => import('../pages/prospects/Prospects.page'));
+const DetailProspectPage = lazy(() => import('../pages/prospects/detailPages/DetailProspect.page'));
 
 
 
 const contentRoutes: RouteProps[] = [
 
 	{path: appPages.homePage.to, element: <CustomDashboardPage/>},
+
+
+
+	// prospects urls
 	{path: appPages.prospectPage.to, element: <ProspectPage/>},
+	{path: appPages.prospectPage.subPages.detail_page.to, element: <DetailProspectPage/>},
 	
 
 

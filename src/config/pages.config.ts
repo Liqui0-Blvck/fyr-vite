@@ -14,6 +14,14 @@ export const appPages = {
 		to: '/prospect',
 		text: 'Prospectos',
 		icon: 'HeroUser',
+		subPages: {
+			detail_page: {
+				id: 'detail_page',
+				to: '/prospect/:id',
+				text: 'Detalle Prospecto',
+				icon: 'HeroUser',
+			}
+		}
 	},
 	calendarPage: {
 		id: 'calendarPage',

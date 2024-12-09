@@ -16,7 +16,7 @@ export interface PaginationInfo {
 export interface ProspectsState {
   leads: Lead[];
   lead: Lead | null;
-  interacciones: Interaction[];
+  interactions: Interaction[];
   eventos: Event[];
   notes: Notes[];
   loading: boolean;
@@ -33,7 +33,7 @@ interface FetchLeadsParams {
   pageSize: number;
   pageIndex?: number;
   append?: boolean;
-  filters?: string[];
+  filters?: Record<string, string>;
 }
 
 interface FetchLeadsResult {
@@ -43,7 +43,7 @@ interface FetchLeadsResult {
 
 const initialState: ProspectsState = {
   leads: [],
-  interacciones: [],
+  interactions: [],
   eventos: [],
   notes: [],
   lead: null,
@@ -66,7 +66,7 @@ export const getLead = createAsyncThunk<Lead, string | string[], { rejectValue: 
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        console.warn(`No se encontró ningún lead con leadId: ${leadID}`);
+        console.log(`No se encontró ningún lead con leadId: ${leadID}`);
         return rejectWithValue('El lead no existe.');
       }
 
@@ -97,7 +97,7 @@ export const updateLead = createAsyncThunk<
 
       // Verifica si el documento existe
       if (querySnapshot.empty) {
-        console.warn(`No se encontró ningún lead con leadId: ${leadID}`);
+        console.log(`No se encontró ningún lead con leadId: ${leadID}`);
         return rejectWithValue('El lead no existe.');
       }
 
@@ -134,13 +134,52 @@ export const fetchLeads = createAsyncThunk<FetchLeadsResult, FetchLeadsParams>(
 
       // Filtro de búsqueda
       if (search) {
-        q = query(q, where('nombre', '>=', search.toLowerCase()), where('nombre', '<=', search.toLowerCase() + '\uf8ff'));
+        q = query(q, where('nombre', '>=', search.toLowerCase()), where('nombre', '<=', search.toLowerCase() + '\uf8ff'), limit(pageSize));
       }
 
-      // Filtros adicionales
-      if (filters && filters.length > 0) {
-        q = query(q, where('estado', 'in', filters.slice(0, 10)));
+
+      if (filters) {
+        // Filtro por estado
+        if (filters.estado) {
+          q = query(q, where('estado', '==', filters.estado));
+        }
+
+        // Filtro por fuente
+        if (filters.fuente) {
+          q = query(q, where('fuente', '==', filters.fuente));
+        }
+
+        // Filtro por fecha de creación
+        if (filters.fechaCreacion) {
+          q = query(q, where('fechaCreacion', '==', filters.fechaCreacion), limit(pageSize));
+        }
+
+        // Filtro por última interacción
+        if (filters.fechaUltimaInteraccion) {
+          q = query(q, where('fechaUltimaInteraccion', '==', filters.fechaUltimaInteraccion), limit(pageSize));
+        }
       }
+
+
+      // if (filters.estado) {
+      // if (filters) {
+      //   if (filters.estado)
+      //   // Filtramos los valores vacíos
+      //   const validFilters = filters.filter((filter) => filter !== '');
+      //   console.log(validFilters);
+      
+      
+      //   // Aplicar filtros solo si existen valores
+      //   if (validFilters.length > 0) {
+      //     // Filtro por estado
+      //     q = query(q, where('estado', 'in', validFilters));
+      //     q = query(q, where('fuente', 'in', validFilters));
+      //     q = query(q, where('fechaCreacion', 'in', validFilters));
+      //     q = query(q, where('fechaUltimaInteraccion', 'in', validFilters));
+          
+      //   }
+      // }
+      
 
       // Paginación
       const state = getState() as RootState;
@@ -169,7 +208,6 @@ export const fetchLeads = createAsyncThunk<FetchLeadsResult, FetchLeadsParams>(
     }
   }
 );
-
 
 
 // Agregar leads a Firestore
@@ -244,7 +282,8 @@ export const addNote = createAsyncThunk(
     try {
       const noteRef = await addDoc(collection(firestoreService, 'notes'), {
         ...note,
-        date: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
       return { ...note, id: noteRef.id };
     } catch (error: any) {
@@ -263,9 +302,10 @@ export const getNotesByLead = createAsyncThunk(
         query(
           collection(firestoreService, 'notes'),
           where('leadID', '==', leadID),
-          where('userID', '==', userID)
+          where('userID', '==', userID),
+          orderBy('updatedAt', 'desc')
         )
-      );
+      )
 
       const notes = notesSnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -275,6 +315,130 @@ export const getNotesByLead = createAsyncThunk(
       return notes;
     } catch (error: any) {
       console.error('Error al obtener las notas:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateNote = createAsyncThunk<Notes, Notes, { rejectValue: string }>(
+  'notes/updateNote',
+  async (note, { rejectWithValue }) => {
+    try {
+      const noteRef = collection(firestoreService, 'notes'); // Referencia a la colección 'notes'
+
+      console.log(note.id)
+      // Realiza la consulta para buscar la nota por ID
+      const q = query(noteRef, where('id', '==', note.id));
+      console.log(q)
+      const querySnapshot = await getDocs(q);
+
+      console.log(querySnapshot)
+
+      // Si no se encuentra ningún documento, devolvemos un error
+      if (querySnapshot.empty) {
+        console.log(`No se encontró ninguna nota con ID: ${note.id}`);
+        return rejectWithValue('La nota no existe.');
+        
+      }
+
+      console.log(note)
+
+      // Si encontramos el documento, obtenemos el ID del documento en Firestore
+      const docId = querySnapshot.docs[0].id;
+      const docRef = doc(firestoreService, 'notes', docId); // Referencia al documento encontrado en 'notes'
+
+      console.log(docRef)
+
+      // Actualizamos los campos de la nota
+      await updateDoc(docRef, {
+        content: note.content,      // Actualizamos el contenido de la nota
+        updatedAt: note.updatedAt,  // Actualizamos la fecha de la última modificación
+      });
+
+      // Retornamos la nota actualizada (esto es lo que se pasa en la acción fulfilled)
+      return note;
+    } catch (error: any) {
+      console.error('Error al actualizar la nota:', error);
+      return rejectWithValue(error.message); // Retorna el error si ocurre
+    }
+  }
+);
+
+export const deleteNote = createAsyncThunk<string, { leadID: string; userID: string, noteID: string }, { rejectValue: string }>(
+  'notes/deleteNote',
+  async ({ leadID, userID, noteID }, { rejectWithValue, dispatch }) => {
+    try {
+      // Referencia a la colección de notas
+      const notesRef = collection(firestoreService, 'notes');
+      
+      // Consultamos las notas que coinciden con el leadID y el userID
+      const q = query(
+        notesRef,
+        where('id', '==', noteID),
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      // Si no encontramos ninguna nota, lanzamos un error
+      if (querySnapshot.empty) {
+        console.warn(`No se encontró ninguna nota con leadID: ${leadID} y userID: ${userID}`);
+        return rejectWithValue('La nota no existe o no pertenece a este usuario.');
+      }
+
+      // Creamos un array de promesas para eliminar las notas encontradas
+      const deletePromises = querySnapshot.docs.map(async (docSnapshot) => {
+        await deleteDoc(docSnapshot.ref); // Eliminamos el documento de Firestore
+        return docSnapshot.id; // Devolvemos el ID del documento eliminado
+      });
+
+      // Esperamos que todas las promesas de eliminación se resuelvan
+      const deletedDocIds = await Promise.all(deletePromises);
+      
+      dispatch(getNotesByLead({ leadID, userID })); // Actualizamos las notas en el estado de Redux
+      return deletedDocIds[0]; // Devolvemos el ID del documento eliminado
+    } catch (error: any) {
+      console.error(`Error al eliminar la nota con leadID ${leadID} y userID ${userID}:`, error);
+      return rejectWithValue(error.message); // Retorna el error si ocurre
+    }
+  }
+);
+
+
+// Thunk para agregar una interacción a Firebase
+export const addInteraction = createAsyncThunk(
+  'interactions/addInteraction',
+  async (interaction: Interaction, { rejectWithValue }) => {
+    try {
+      const interactionRef = await addDoc(collection(firestoreService, 'interactions'), interaction);
+      return { ...interaction, uid: interactionRef.id }; // Retornamos la interacción con el ID asignado
+    } catch (error: any) {
+      console.error('Error al agregar la interacción:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Thunk para obtener las interacciones según el ID del usuario y del lead
+export const fetchInteractionsProspect = createAsyncThunk(
+  'interactions/fetchInteractionsProspect',
+  async ({ userID, leadID }: { userID: string; leadID: string | string[] }, { rejectWithValue, dispatch }) => {
+    try {
+      const interactionsQuery = query(
+        collection(firestoreService, 'interactions'),
+        where('userID', '==', userID),
+        where('leadID', '==', leadID)
+      );
+      
+      const interactionsSnapshot = await getDocs(interactionsQuery);
+      const interactions = interactionsSnapshot.docs.map((doc) => ({
+        uid: doc.id,
+        ...doc.data(),
+      })) as Interaction[];
+
+      dispatch(ADD_INTERACTIONS(interactions));
+      return interactions;
+    } catch (error: any) {
+      console.error('Error al obtener las interacciones:', error);
       return rejectWithValue(error.message);
     }
   }
@@ -297,8 +461,8 @@ const prospectsSlice = createSlice({
     DELETE_PROSPECT: (state, action: PayloadAction<string>) => {
       state.leads = state.leads.filter((lead) => lead.id !== action.payload);
     },
-    ADD_INTERACTION: (state, action: PayloadAction<Interaction>) => {
-      state.interacciones.push(action.payload);
+    ADD_INTERACTIONS: (state, action: PayloadAction<Interaction[]>) => {
+      state.interactions = action.payload;
     },
     ADD_EVENT: (state, action: PayloadAction<Event>) => {
       state.eventos.push(action.payload);
@@ -391,7 +555,7 @@ export const {
   appendLeads,
   ADD_PROSPECT,
   DELETE_PROSPECT,
-  ADD_INTERACTION,
+  ADD_INTERACTIONS,
   ADD_EVENT,
   ADD_NOTAS,
   ADD_SUCCESSFUL_LEADS,

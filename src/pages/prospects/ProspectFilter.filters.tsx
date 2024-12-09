@@ -26,6 +26,7 @@ const FilterCard: React.FC<FilterCardProps> = ({ onFilter }) => {
     });
   };
 
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }} 
@@ -48,8 +49,8 @@ const FilterCard: React.FC<FilterCardProps> = ({ onFilter }) => {
             >
               <option value="">Selecciona un estado</option>
               <option value="interesado">Interesado</option>
-              <option value="esperando">Desinteresado</option>
-              <option value="desinteresado">Desinteresado</option>
+              <option value="esperando">Esperando</option>
+              <option value="no-interesado">No Interesado</option>
             </Select>
           </div>
 
@@ -71,9 +72,9 @@ const FilterCard: React.FC<FilterCardProps> = ({ onFilter }) => {
 
           {/* Filtro por Fecha de Creación */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Fecha de Creación</label>
+            <label htmlFor='fecha_creacion' className="block text-sm font-medium mb-2">Fecha de Creación</label>
             <Input
-              name=''
+              name='fecha_creacion'
               type="date"
               value={fechaCreacion}
               onChange={(e) => setFechaCreacion(e.target.value)}

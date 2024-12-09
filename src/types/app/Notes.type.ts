@@ -1,6 +1,7 @@
 export interface Notes {
   id?: string;
-  title: string;
+  updatedAt?: string;
+  createdAt?: string;
   content: string;
   date?: string | Date | undefined
   leadID: string | string[];
