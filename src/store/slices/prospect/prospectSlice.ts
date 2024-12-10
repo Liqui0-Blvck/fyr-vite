@@ -415,26 +415,14 @@ const prospectsSlice = createSlice({
   name: 'prospects',
   initialState,
   reducers: {
-    setLeads: (state, action: PayloadAction<Lead[]>) => {
-      state.leads = action.payload;
-    },
-    appendLeads: (state, action: PayloadAction<Lead[]>) => {
-      state.leads.push(...action.payload);
-    },
-    ADD_PROSPECT: (state, action: PayloadAction<Lead>) => {
-      state.leads.push(action.payload);
-    },
-    DELETE_PROSPECT: (state, action: PayloadAction<string>) => {
-      state.leads = state.leads.filter((lead) => lead.id !== action.payload);
+    SET_LEAD: (state, action: PayloadAction<Lead>) => {
+      state.lead = action.payload;
     },
     ADD_INTERACTIONS: (state, action: PayloadAction<Interaction[]>) => {
       state.interactions = action.payload;
     },
-    ADD_EVENT: (state, action: PayloadAction<Event>) => {
-      state.eventos.push(action.payload);
-    },
-    ADD_NOTAS: (state, action: PayloadAction<Notes>) => {
-      state.notes.push(action.payload);
+    DELETE_PROSPECT: (state, action: PayloadAction<string>) => {
+      state.leads = state.leads.filter((lead) => lead.id !== action.payload);
     },
     ADD_SUCCESSFUL_LEADS: (state) => {
       state.successFullLeads += 1;
@@ -513,13 +501,9 @@ const prospectsSlice = createSlice({
 });
 
 export const {
-  setLeads,
-  appendLeads,
-  ADD_PROSPECT,
+  SET_LEAD,
   DELETE_PROSPECT,
   ADD_INTERACTIONS,
-  ADD_EVENT,
-  ADD_NOTAS,
   ADD_SUCCESSFUL_LEADS,
   ADD_FAILED_LEADS,
   RESET_LEADS_COUNT,

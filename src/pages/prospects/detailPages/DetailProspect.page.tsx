@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper'
 import Subheader, { SubheaderLeft, SubheaderRight } from '../../../components/layouts/Subheader/Subheader'
 import Container from '../../../components/layouts/Container/Container'
@@ -13,6 +13,12 @@ import ProspectButtonsPartial, { ButtonsProspect, TButtons } from './ButtonsPros
 import PersonalInfo from './PersonalInfo.component'
 import NotesComponent from './Notes.component'
 import InteractionsList from './InteractionsList.component'
+import { useAppDispatch, useAppSelector } from '../../../store/hook'
+import { RootState } from '../../../store/rootReducer'
+import { getLead, SET_LEAD } from 'src/store/slices/prospect/prospectSlice'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { firestoreService } from '../../../config/firebase.config'
+import InvestmentList from './InvestmentList.component'
 
 const teams = [
   { id: "1", name: "Equipo de Ventas" },
@@ -44,7 +50,29 @@ const DetailProspect = () => {
   const [openModalTransfer, setOpenModalTransfer] = useState<boolean>(false)
   const [selectedTeam, setSelectedTeam] = useState<string | undefined>()
   const [activeButton, setActiveButton] = useState<TButtons>(ButtonsProspect.INFORMACION_PERSONAL)
+  const { lead: prospecto } = useAppSelector((state: RootState) => state.prospect)
+  
+  useEffect(() => {
+    if (id) {
+      const leadRef = collection(firestoreService, 'prospects');
+      const q = query(leadRef, where('id', '==', id));
 
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        if (!querySnapshot.empty) {
+          // Tomar el primer documento y actualizar el estado
+          const leadData = querySnapshot.docs[0].data();
+          console.log(leadData)
+          // SET_LEAD(leadData);
+        }
+      }, (error) => {
+        console.error('Error al obtener el lead:', error);
+      });
+
+      // Limpiar el suscriptor cuando el componente se desmonte
+      return () => unsubscribe();
+    }
+  }, [id]);
+  
   const handleTransfer = () => {
     console.log('Transfer')
   }
@@ -211,6 +239,24 @@ const DetailProspect = () => {
             {
               activeButton?.text === 'Interacciones' && (
                 <InteractionsList />
+              )
+            }
+            {
+              prospecto?.estado === 'interesado' && (
+                <>
+                  {
+                    activeButton?.text === 'Inversiones' && (
+                      <InvestmentList />
+                    )
+                  }
+                  {
+                    activeButton?.text === 'Estrategias' && (
+                      <div>
+                        <h2>Estrategias</h2>
+                      </div>
+                    )
+                  }
+                </>
               )
             }
           </CardBody>
