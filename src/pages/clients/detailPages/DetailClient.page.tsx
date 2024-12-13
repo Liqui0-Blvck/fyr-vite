@@ -103,15 +103,6 @@ const DetailClient = () => {
         <SubheaderRight>
 
           <Button
-            icon='HeroUserPlus'
-            className='!px-0'
-            color='blue'
-            onClick={handleConvertToClient}
-            >
-            Convertir a Cliente
-          </Button>
-
-          <Button
             icon='HeroArrowRight'
             className='!px-0'
             color='emerald'

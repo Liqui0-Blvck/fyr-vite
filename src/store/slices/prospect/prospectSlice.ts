@@ -240,7 +240,9 @@ export const addProspectsToFirestore = createAsyncThunk<
             ...prospect,
             id: generateUID(), 
             createdAt: new Date().toISOString(), 
-            updatedAt: new Date().toISOString() };
+            updatedAt: new Date().toISOString(),
+            status: 'esperando'
+          };
           await addDoc(collection(firestoreService, 'prospects'), leadData);
           dispatch(ADD_SUCCESSFUL_PROSPECTS());
           dispatch(fetchProspects({ pageSize: 1000, append: false }));

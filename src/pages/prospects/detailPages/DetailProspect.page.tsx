@@ -93,8 +93,7 @@ const DetailProspect = () => {
 
   const handleConvertToClient = () => {
     setLoadingTimeOut(true)
-    console.log("prospect", id)
-    console.log("user", user?.uid)
+    setLoadingModal(true)
     const timeOut = setTimeout(() => {
       dispatch(transferProspectToClient({ prospectID: id!, userID: user?.uid!})).unwrap()
       toast.success('Prospecto convertido a cliente')
@@ -171,7 +170,7 @@ const DetailProspect = () => {
                       <p className='text-center'>
                         Convirtiendo prospecto a cliente...
                       </p>
-                      <Loading />
+                      <Loading className='h-20 w-full flex items-center justify-center'/>
                     </>
                     )
                   : (
@@ -192,6 +191,7 @@ const DetailProspect = () => {
                   Cancelar
                 </Button>
                 <Button
+                  variant='solid'
                   onClick={handleConvertToClient}
                   >
                   Convertir
