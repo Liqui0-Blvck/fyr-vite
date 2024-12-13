@@ -23,6 +23,20 @@ export const appPages = {
 			}
 		}
 	},
+	clientPage: {
+		id: 'clientPage',
+		to: '/client',
+		text: 'Clientes',
+		icon: 'HeroUser',
+		subPages: {
+			detail_page: {
+				id: 'detail_page',
+				to: '/client/:id',
+				text: 'Detalle Cliente',
+				icon: 'HeroUser',
+			}
+		}
+	},
 	calendarPage: {
 		id: 'calendarPage',
 		to: '/calendar',

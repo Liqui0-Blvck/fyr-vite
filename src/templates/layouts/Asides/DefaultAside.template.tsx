@@ -26,6 +26,7 @@ const DefaultAsideTemplate = () => {
 				<Nav>
 					<NavItem {...appPages.homePage}/>
 					<NavItem {...appPages.prospectPage}/>
+					<NavItem {...appPages.clientPage}/>
 					<NavItem {...appPages.calendarPage}/>
 					<NavItem {...appPages.marketingPage}/>
 				</Nav>

@@ -2,10 +2,12 @@
 import { combineReducers, Reducer, AnyAction } from 'redux';
 import auth, { AuthStates } from './slices/auth';
 import prospect, { ProspectsState } from './slices/prospect/prospectSlice';
+import client, { ClientsState } from './slices/clients/clientSlice';
 
 export type RootState = {
   auth: AuthStates,
-  prospect: ProspectsState
+  prospect: ProspectsState,
+  client: ClientsState
 };
 
 export interface AsyncReducers {
@@ -14,7 +16,8 @@ export interface AsyncReducers {
 
 const staticReducers = {
   auth,
-  prospect
+  prospect,
+  client
 };
 
 const rootReducer = (asyncReducers?: AsyncReducers) => (

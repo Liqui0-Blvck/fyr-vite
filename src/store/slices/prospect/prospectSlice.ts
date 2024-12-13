@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { firestoreService } from '../../../config/firebase.config';
 import { RootState } from '../../store';
-import { Lead } from '../../../types/app/Prospect.type';
+import { Prospect } from '../../../types/app/Prospect.type';
 import { Event } from '../../../types/app/Events.type';
 import { Interaction } from '../../../types/app/Interaction.type';
 import { Notes } from '../../../types/app/Notes.type';
-import { collection, doc, query, where, getDocs, deleteDoc, orderBy , addDoc, startAfter, limit, updateDoc } from 'firebase/firestore';
+import { collection, doc, query, where, getDocs, deleteDoc, orderBy , addDoc, startAfter, limit, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+import { generateUID } from '../../../utils/generateUID';
 
 export interface PaginationInfo {
   id?: string;
@@ -14,21 +15,21 @@ export interface PaginationInfo {
 }
 
 export interface ProspectsState {
-  leads: Lead[];
-  lead: Lead | null;
+  prospects: Prospect[];
+  prospect: Prospect | null;
   interactions: Interaction[];
   eventos: Event[];
   notes: Notes[];
   loading: boolean;
   error: string | null;
-  errorLeads: { message: string; lead: Lead }[];
-  successFullLeads: number;
-  failedLeads: number;
+  errorProspects: { message: string; prospect: Prospect }[];
+  successFullProspects: number;
+  failedProspects: number;
   lastVisible: PaginationInfo | null;
   hasMore: boolean;
 }
 
-interface FetchLeadsParams {
+interface FetchProspectParams {
   search?: string;
   pageSize: number;
   pageIndex?: number;
@@ -36,69 +37,113 @@ interface FetchLeadsParams {
   filters?: Record<string, string>;
 }
 
-interface FetchLeadsResult {
-  leads: Lead[];
+interface FetchProspectResult {
+  prospects: Prospect[];
   lastVisible?: PaginationInfo | null;
 }
 
 const initialState: ProspectsState = {
-  leads: [],
+  prospects: [],
   interactions: [],
   eventos: [],
   notes: [],
-  lead: null,
+  prospect: null,
   loading: false,
   error: null,
-  errorLeads: [],
-  successFullLeads: 0,
-  failedLeads: 0,
+  errorProspects: [],
+  successFullProspects: 0,
+  failedProspects: 0,
   lastVisible: null,
   hasMore: true,
 };
 
 
-export const getLead = createAsyncThunk<Lead, string | string[], { rejectValue: string }>(
-  'prospects/getLeadByLeadId',
-  async (leadID, { rejectWithValue }) => {
+export const transferProspectToClient = createAsyncThunk<
+  void, 
+  { prospectID: string; userID: string }, 
+  { rejectValue: string }
+>(
+  'prospects/transferProspectToClient',
+  async ({ prospectID, userID }, { rejectWithValue, dispatch }) => {
     try {
+      // Reference to the 'prospects' collection
       const leadRef = collection(firestoreService, 'prospects');
-      const q = query(leadRef, where('id', '==', leadID));
+      const q = query(leadRef, where('id', '==', prospectID));
       const querySnapshot = await getDocs(q);
 
+      // Check if the prospect exists
       if (querySnapshot.empty) {
-        console.log(`No se encontró ningún lead con leadId: ${leadID}`);
+        console.log(`No se encontró ningún lead con leadId: ${prospectID}`);
         return rejectWithValue('El lead no existe.');
       }
 
-      const lead = querySnapshot.docs[0].data() as Lead;
+      // Get the prospect data
+      const prospectDoc = querySnapshot.docs[0];
+      const prospectData = prospectDoc.data() as Prospect; // Retrieve the prospect data
+
+      // Reference to the 'clients' collection
+      const clientRef = doc(firestoreService, 'clients', prospectID);
+
+      // Transfer prospect data to the 'clients' collection
+      await setDoc(clientRef, {
+        ...prospectData,
+      });
+
+      // Delete the prospect from the 'prospects' collection after transfer
+      await deleteDoc(prospectDoc.ref);
+
+      // Optionally, you can dispatch other actions or update your Redux state
+      // dispatch(fetchClients()); // e.g., refresh the clients list
+
+    } catch (error: any) {
+      console.error('Error transferring prospect to client:', error);
+      return rejectWithValue('Error transferring the prospect to client.');
+    }
+  }
+);
+
+export const getProspectByID = createAsyncThunk<Prospect, string | string[], { rejectValue: string }>(
+  'prospects/getProspectByID',
+  async (prospectID, { rejectWithValue }) => {
+    try {
+      const prospectRef = collection(firestoreService, 'prospects');
+      const q = query(prospectRef, where('id', '==', prospectID));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.log(`No se encontró ningún prospecto con id: ${prospectID}`);
+        return rejectWithValue('El lead no existe.');
+      }
+
+      const lead = querySnapshot.docs[0].data() as Prospect;
 
       return lead
     } catch (error: any) {
-      console.error(`Error al obtener el lead con leadId ${leadID}:`, error);
+      console.error(`Error al obtener el lead con id ${prospectID}:`, error);
       return rejectWithValue('Error al obtener el lead.');
     }
   }
 );
 
-export const updateLead = createAsyncThunk<
-  Lead,
-  { leadID: string | string[]; updatedData: Partial<Lead> },
+export const updateProspect = createAsyncThunk<
+  Prospect,
+  { prospectID: string | string[]; updatedData: Partial<Prospect> },
   { rejectValue: string }
 >(
   'prospects/updateLead',
-  async ({ leadID, updatedData }, { rejectWithValue, dispatch }) => {
+  async ({ prospectID, updatedData }, { rejectWithValue, dispatch }) => {
     try {
       // Referencia a la colección de leads
       const leadRef = collection(firestoreService, 'prospects');
 
-      // Consulta para encontrar el documento cuyo campo 'id' coincida con 'leadID'
-      const q = query(leadRef, where('id', '==', leadID));
+      // Consulta para encontrar el documento cuyo campo 'id' coincida con 'prospectID'
+      const q = query(leadRef, where('id', '==', prospectID));
       const querySnapshot = await getDocs(q);
 
       // Verifica si el documento existe
       if (querySnapshot.empty) {
-        console.log(`No se encontró ningún lead con leadId: ${leadID}`);
-        return rejectWithValue('El lead no existe.');
+        console.log(`No se encontró ningún prospecto con id: ${prospectID}`);
+        return rejectWithValue('El prospecto no existe.');
       }
 
       // Obtén el ID real del documento en Firestore
@@ -109,67 +154,67 @@ export const updateLead = createAsyncThunk<
       await updateDoc(docRef, updatedData);
 
       // Retorna los datos actualizados incluyendo el ID del documento
-      dispatch(getLead(leadID));
-      dispatch(fetchLeads({ pageSize: 10, append: false }));
-      return { ...updatedData, id: leadID } as Lead;
+      dispatch(getProspectByID(prospectID));
+      dispatch(fetchProspects({ pageSize: 10, append: false }));
+      return { ...updatedData, id: prospectID } as Prospect;
     } catch (error: any) {
-      console.error(`Error al actualizar el lead con leadId ${leadID}:`, error);
-      return rejectWithValue('Error al actualizar el lead.');
+      console.error(`Error al actualizar el prospecto con ID ${prospectID}:`, error);
+      return rejectWithValue('Error al actualizar el prospect.');
     }
   }
 );
 
-export const fetchLeads = createAsyncThunk<FetchLeadsResult, FetchLeadsParams>(
-  'prospects/fetchLeads',
+export const fetchProspects = createAsyncThunk<FetchProspectResult, FetchProspectParams>(
+  'prospects/fetchProspects',
   async ({ search, pageSize, filters }, { rejectWithValue }) => {
     try {
-      const leadsRef = collection(firestoreService, 'prospects');
+      const prospectRef = collection(firestoreService, 'prospects');
       let q = query(
-        leadsRef,
-        orderBy('nombre'),
-        orderBy('fechaCreacion', 'desc'),
+        prospectRef,
+        orderBy('name'),
+        orderBy('createdAt', 'desc'),
         limit(pageSize)
       );
 
       // Filtro de búsqueda
       if (search) {
-        q = query(q, where('nombre', '>=', search.toLowerCase()), where('nombre', '<=', search.toLowerCase() + '\uf8ff'));
+        q = query(q, where('name', '>=', search.toLowerCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'));
       }
 
       if (filters) {
         // Filtro por estado
         if (filters.estado) {
-          q = query(q, where('estado', '==', filters.estado));
+          q = query(q, where('status', '==', filters.estado));
         }
 
         // Filtro por fuente
         if (filters.fuente) {
-          q = query(q, where('fuente', '==', filters.fuente));
+          q = query(q, where('source', '==', filters.fuente));
         }
 
         // Filtro por fecha de creación
         if (filters.fechaCreacion) {
-          q = query(q, where('fechaCreacion', '==', filters.fechaCreacion));
+          q = query(q, where('createdAt', '==', filters.fechaCreacion));
         }
 
         // Filtro por última interacción
         if (filters.fechaUltimaInteraccion) {
-          q = query(q, where('fechaUltimaInteraccion', '==', filters.fechaUltimaInteraccion));
+          q = query(q, where('updatedAt', '==', filters.fechaUltimaInteraccion));
         }
       }
 
       // Obtener los leads desde Firestore
       const snapshot = await getDocs(q);
-      const leads = snapshot.docs.map((doc) => ({
+      const prospects = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      })) as Lead[];
+      })) as Prospect[];
 
       // Retornar los leads obtenidos
-      return { leads };
+      return { prospects };
     } catch (error: any) {
-      console.error('Error al obtener leads:', error);
-      return rejectWithValue('No se pudo obtener los leads');
+      console.error('Error al obtener prospectos:', error);
+      return rejectWithValue('No se pudo obtener los prospectos');
     }
   }
 );
@@ -177,32 +222,37 @@ export const fetchLeads = createAsyncThunk<FetchLeadsResult, FetchLeadsParams>(
 
 
 // Agregar leads a Firestore
-export const addLeadsToFirestore = createAsyncThunk<
+export const addProspectsToFirestore = createAsyncThunk<
   void,
-  Lead[],
-  { state: RootState; rejectValue: { message: string; lead: Lead }[] }
+  Prospect[],
+  { state: RootState; rejectValue: { message: string; prospect: Prospect }[] }
 >(
-  'prospects/addLeadsToFirestore',
-  async (leads, { getState, rejectWithValue, dispatch }) => {
-    const existingLeads = getState().prospect.leads;
-    const errors: { message: string; lead: Lead }[] = [];
+  'prospects/addProspectsToFirestore',
+  async (prospects, { getState, rejectWithValue, dispatch }) => {
+    const existingProspects = getState().prospect.prospects;
+    const errors: { message: string; prospect: Prospect }[] = [];
 
-    for (const lead of leads) {
-      const leadExists = existingLeads.some((existing) => existing.email === lead.email);
-      if (!leadExists) {
+    for (const prospect of prospects) {
+      const prospectExists = existingProspects.some((existing) => existing.email === prospect.email);
+      if (!prospectExists) {
         try {
-          const leadData = { ...lead, nombre: lead.nombre.trim().toLowerCase() };
+          const leadData = { 
+            ...prospect,
+            id: generateUID(), 
+            createdAt: new Date().toISOString(), 
+            updatedAt: new Date().toISOString() };
           await addDoc(collection(firestoreService, 'prospects'), leadData);
-          dispatch(ADD_SUCCESSFUL_LEADS());
+          dispatch(ADD_SUCCESSFUL_PROSPECTS());
+          dispatch(fetchProspects({ pageSize: 1000, append: false }));
         } catch (error: any) {
-          console.error('Error al agregar lead a Firestore:', error.message);
-          errors.push({ message: error.message, lead });
-          dispatch(ADD_FAILED_LEADS());
+          console.error('Error al agregar prospecto a Firestore:', error.message);
+          errors.push({ message: error.message, prospect });
+          dispatch(ADD_FAILED_PROSPECTS());
         }
       } else {
-        console.warn(`El lead con el email ${lead.email} ya existe en el sistema.`);
-        dispatch(ADD_FAILED_LEADS());
-        errors.push({ message: `El lead con el email ${lead.email} ya existe en el sistema.`, lead });
+        console.warn(`El prospecto con el email ${prospect.email} ya existe en el sistema.`);
+        dispatch(ADD_FAILED_PROSPECTS());
+        errors.push({ message: `El prospecto con el email ${prospect.email} ya existe en el sistema.`, prospect });
       }
     }
 
@@ -213,33 +263,33 @@ export const addLeadsToFirestore = createAsyncThunk<
 );
 
 // Eliminar lead por ID
-export const deleteLead = createAsyncThunk<string, string, { rejectValue: string }>(
-  'prospects/deleteLeadByLeadId',
-  async (leadId, { rejectWithValue, dispatch }) => {
-    try {
-      dispatch(DELETE_PROSPECT(leadId));
-      const prospectsRef = collection(firestoreService, 'prospects');
-      const q = query(prospectsRef, where('id', '==', leadId));
-      const querySnapshot = await getDocs(q);
+// export const deleteLead = createAsyncThunk<string, string, { rejectValue: string }>(
+//   'prospects/deleteLeadByLeadId',
+//   async (leadId, { rejectWithValue, dispatch }) => {
+//     try {
+//       dispatch(DELETE_PROSPECT(leadId));
+//       const prospectsRef = collection(firestoreService, 'prospects');
+//       const q = query(prospectsRef, where('id', '==', leadId));
+//       const querySnapshot = await getDocs(q);
 
-      if (querySnapshot.empty) {
-        console.warn(`No se encontró ningún lead con leadId: ${leadId}`);
-        return rejectWithValue('El lead no existe.');
-      }
+//       if (querySnapshot.empty) {
+//         console.warn(`No se encontró ningún lead con leadId: ${leadId}`);
+//         return rejectWithValue('El lead no existe.');
+//       }
 
-      const deletePromises = querySnapshot.docs.map(async (docSnapshot) => {
-        await deleteDoc(docSnapshot.ref);
-        return docSnapshot.id;
-      });
+//       const deletePromises = querySnapshot.docs.map(async (docSnapshot) => {
+//         await deleteDoc(docSnapshot.ref);
+//         return docSnapshot.id;
+//       });
 
-      const deletedDocIds = await Promise.all(deletePromises);
-      return deletedDocIds[0];
-    } catch (error: any) {
-      console.error(`Error al eliminar el lead con leadId ${leadId}:`, error);
-      return rejectWithValue('Error al eliminar el lead.');
-    }
-  }
-);
+//       const deletedDocIds = await Promise.all(deletePromises);
+//       return deletedDocIds[0];
+//     } catch (error: any) {
+//       console.error(`Error al eliminar el lead con leadId ${leadId}:`, error);
+//       return rejectWithValue('Error al eliminar el lead.');
+//     }
+//   }
+// );
 
 // Agregar una nota a Firebase
 export const addNote = createAsyncThunk(
@@ -410,40 +460,43 @@ export const fetchInteractionsProspect = createAsyncThunk(
   }
 );
 
+
+
+
 // Slice de Redux
 const prospectsSlice = createSlice({
   name: 'prospects',
   initialState,
   reducers: {
-    SET_LEAD: (state, action: PayloadAction<Lead>) => {
-      state.lead = action.payload;
+    SET_PROSPECT: (state, action: PayloadAction<Prospect>) => {
+      state.prospect = action.payload;
     },
     ADD_INTERACTIONS: (state, action: PayloadAction<Interaction[]>) => {
       state.interactions = action.payload;
     },
-    DELETE_PROSPECT: (state, action: PayloadAction<string>) => {
-      state.leads = state.leads.filter((lead) => lead.id !== action.payload);
+    // DELETE_PROSPECT: (state, action: PayloadAction<string>) => {
+    //   state.leads = state.leads.filter((lead) => lead.id !== action.payload);
+    // },
+    ADD_SUCCESSFUL_PROSPECTS: (state) => {
+      state.successFullProspects += 1;
     },
-    ADD_SUCCESSFUL_LEADS: (state) => {
-      state.successFullLeads += 1;
+    ADD_FAILED_PROSPECTS: (state) => {
+      state.failedProspects += 1;
     },
-    ADD_FAILED_LEADS: (state) => {
-      state.failedLeads += 1;
-    },
-    RESET_LEADS_COUNT: (state) => {
-      state.successFullLeads = 0;
-      state.failedLeads = 0;
+    RESET_PROSPECT_COUNT: (state) => {
+      state.successFullProspects = 0;
+      state.failedProspects = 0;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchLeads.pending, (state) => {
+      .addCase(fetchProspects.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchLeads.fulfilled, (state, action) => {
-        state.leads = action.payload.leads;
+      .addCase(fetchProspects.fulfilled, (state, action) => {
+        state.prospects = action.payload.prospects;
       })
-      .addCase(fetchLeads.rejected, (state, action) => {
+      .addCase(fetchProspects.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
       })
@@ -471,29 +524,29 @@ const prospectsSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(getLead.pending, (state) => {
+      .addCase(getProspectByID.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getLead.fulfilled, (state, action: PayloadAction<Lead>) => {
+      .addCase(getProspectByID.fulfilled, (state, action: PayloadAction<Prospect>) => {
         state.loading = false;
-        state.lead = action.payload;
+        state.prospect = action.payload;
       })
-      .addCase(getLead.rejected, (state, action) => {
+      .addCase(getProspectByID.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Error al obtener el lead.';
       })
-      .addCase(updateLead.pending, (state) => {
+      .addCase(updateProspect.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateLead.fulfilled, (state, action: PayloadAction<Lead>) => {
+      .addCase(updateProspect.fulfilled, (state, action: PayloadAction<Prospect>) => {
         state.loading = false;
-        if (state.lead && state.lead.id === action.payload.id) {
-          state.lead = { ...state.lead, ...action.payload };
+        if (state.prospect && state.prospect.id === action.payload.id) {
+          state.prospect = { ...state.prospect, ...action.payload };
         }
       })
-      .addCase(updateLead.rejected, (state, action) => {
+      .addCase(updateProspect.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Error al actualizar el lead.';
       })
@@ -501,12 +554,12 @@ const prospectsSlice = createSlice({
 });
 
 export const {
-  SET_LEAD,
-  DELETE_PROSPECT,
+  SET_PROSPECT,
+  // DELETE_PROSPECT,
   ADD_INTERACTIONS,
-  ADD_SUCCESSFUL_LEADS,
-  ADD_FAILED_LEADS,
-  RESET_LEADS_COUNT,
+  ADD_SUCCESSFUL_PROSPECTS,
+  ADD_FAILED_PROSPECTS,
+  RESET_PROSPECT_COUNT,
 } = prospectsSlice.actions;
 
 export default prospectsSlice.reducer;

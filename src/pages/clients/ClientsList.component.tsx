@@ -6,7 +6,6 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { Prospect } from '../../types/app/Prospect.type'
 import Card, { CardBody, CardFooter, } from '../../components/ui/Card'
 import TableTemplate, { TableCardFooterTemplate } from '../../templates/common/TableParts.template'
 import PageWrapper from '../../components/layouts/PageWrapper/PageWrapper'
@@ -17,36 +16,29 @@ import Input from '../../components/form/Input'
 import Button from '../../components/ui/Button'
 import Container from '../../components/layouts/Container/Container'
 import Dropdown, { DropdownMenu, DropdownToggle } from '../../components/ui/Dropdown'
-import Modal, { ModalBody, ModalFooter, ModalHeader } from '../../components/ui/Modal'
-import ProspectForm from './ProspectForm.form'
 import { useAppDispatch, useAppSelector } from '../../store/hook'
 import { RootState } from '../../store/rootReducer'
-import { fetchProspects } from '../../store/slices/prospect/prospectSlice'
 import { motion, AnimatePresence } from 'framer-motion'
-import FilterCard from './ProspectFilter.filters'
+import FilterCard from './ClientFilter.filters'
 
 import {format} from '@formkit/tempo'
 import { Link, useNavigate } from 'react-router-dom'
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { firestoreService } from '../../config/firebase.config'
-import ModalExcel from './components/ModalExcel.component'
+import { fetchClients } from '../../store/slices/clients/clientSlice'
+import { Client } from '../../types/app/Client.type'
 
 
-// DROPZONE
-
-
-
-
-const ProspectsList = () => {
+const ClientsList = () => {
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
-  const { prospects, lastVisible } = useAppSelector((state: RootState) => state.prospect)
+  const { clients } = useAppSelector((state: RootState) => state.client)
   const navigation = useNavigate()
   const [filters, setFilters] = useState({
-    status: '',
-    source: '',
-    createdAt: '',
-    updatedAt: '',
+    estado: '',
+    fuente: '',
+    fechaCreacion: '',
+    fechaUltimaInteraccion: '',
   });
 
   const handleFilterChange = (newFilters: Partial<typeof filters>) => {
@@ -64,7 +56,7 @@ const ProspectsList = () => {
 
   // Llamada inicial para cargar los leads cuando cambia el filtro o la página
   useEffect(() => {
-    dispatch(fetchProspects({
+    dispatch(fetchClients({
       search: globalFilter,
       pageSize: pageSize,
       append: false, // No acumulamos registros, siempre reemplazamos
@@ -76,19 +68,19 @@ const ProspectsList = () => {
 
   useEffect(() => {
     // Suscripción en tiempo real
-    const prospectRef = collection(firestoreService, 'prospects');
-    const q = query(prospectRef, orderBy('name'), orderBy('createdAt', 'desc'));
+    const clientRef = collection(firestoreService, 'clients');
+    const q = query(clientRef, orderBy('clients'), orderBy('createdAt', 'desc'));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newProspect = snapshot.docs.map((doc) => ({
+      const newClient = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
 
       // Disparar acción para actualizar el estado con los nuevos leads
       dispatch({
-        type: 'prospects/setProspect',
-        payload: newProspect,
+        type: 'clients/setClients',
+        payload: newClient,
       });
     });
 
@@ -102,12 +94,10 @@ const ProspectsList = () => {
   const [openModalProspect, setOpenModalProspect] = useState<boolean>(false)
   const [openModalMassiveProspect, setOpenModalMassiveProspect] = useState<boolean>(false)
 
-  
-
   const [showFilters, setSHowFilters] = useState<boolean>(false)
 
 
-  const columnHelper = createColumnHelper<Prospect>();
+  const columnHelper = createColumnHelper<Client>();
   const columns = [
     columnHelper.accessor('name', {
       cell: (info) => (
@@ -150,10 +140,10 @@ const ProspectsList = () => {
       ),
       header: 'Fuente',
     }),
-    columnHelper.accessor('createdAt', {
+    columnHelper.accessor('creationDate', {
       cell: (info) => (
         <div>
-          <span >{format(info.row.original.createdAt!, { date: 'full' }, 'es' )}</span>
+          <span >{format(info.row.original.creationDate!, { date: 'full' }, 'es' )}</span>
         </div>
       ),
       header: 'Fecha Creación',
@@ -162,7 +152,7 @@ const ProspectsList = () => {
 
 
   const table = useReactTable({
-    data: prospects,
+    data: clients,
     columns,
     state: {
       rowSelection,
@@ -176,10 +166,9 @@ const ProspectsList = () => {
   });
 
 
-
   return (
     <PageWrapper title='Prospectos'>
-      {
+      {/* {
         openModalProspect && (
           <Modal
             isOpen={openModalProspect}
@@ -196,9 +185,11 @@ const ProspectsList = () => {
       }
       {
         openModalMassiveProspect && (
-          <ModalExcel openModalMassiveProspect setOpenModalMassiveProspect={setOpenModalMassiveProspect}/>
+          <div>
+            <h1>Modal de Prospectos Masivos</h1>
+          </div>
         )
-      }
+      } */}
       <Subheader>
 				<SubheaderLeft>
 					<FieldWrap
@@ -283,4 +274,4 @@ const ProspectsList = () => {
   )
 }
 
-export default ProspectsList
+export default ClientsList

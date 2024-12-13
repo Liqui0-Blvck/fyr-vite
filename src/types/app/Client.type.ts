@@ -1,5 +1,4 @@
-
-export interface Prospect {
+export interface Client {
   id?: string; 
   name: string; 
   phoneNumber: string; 

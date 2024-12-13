@@ -10,6 +10,7 @@ export interface Investment {
   comments?: string;               // Comments about the investment
   status: 'Active' | 'Closed' | 'In Progress'; // Investment status
   contract?: string;               // Link or ID of the contract related to the investment
+  strategyID: string;              // ID of the strategy associated with the investment
   notes?: string;                  // Additional comments about the investment
   documents?: Array<{              // Files related to the investment
     id: string;                    // Unique ID for the file
@@ -17,6 +18,13 @@ export interface Investment {
     description?: string;          // Description of the file
     type: 'Performance' | 'Contract' | 'Other'; // Type of the file
     uploadDate: string;            // Date the file was uploaded
+  }>;
+  timeline?: Array<{               // Timeline of the investment
+    id: string;                    // Unique ID for the timeline item
+    date: string;                  // Date of the timeline item
+    description: string;           // Description of the timeline item
+    type: 'Event' | 'Document';    // Type of the timeline item
+    documentID?: string;           // ID of the document related to the timeline item
   }>;
   createdAt: string;               // Date of creation
   updatedAt: string;               // Date of last update

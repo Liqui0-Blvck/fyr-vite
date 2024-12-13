@@ -3,7 +3,7 @@ import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper'
 import Subheader, { SubheaderLeft, SubheaderRight } from '../../../components/layouts/Subheader/Subheader'
 import Container from '../../../components/layouts/Container/Container'
 import Card, { CardBody } from '../../../components/ui/Card'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Button from '../../../components/ui/Button'
 import { appPages } from '../../../config/pages.config'
 import Modal, { ModalBody, ModalFooter, ModalHeader } from '../../../components/ui/Modal'
@@ -21,7 +21,6 @@ import { firestoreService } from '../../../config/firebase.config'
 import InvestmentList from './InvestmentList.component'
 import Strategies from './Strategies.component'
 import toast from 'react-hot-toast'
-import Loading from '../../../components/Loading'
 
 const teams = [
   { id: "1", name: "Equipo de Ventas" },
@@ -47,34 +46,28 @@ const users = {
 
 
 
-const DetailProspect = () => {
+const DetailClient = () => {
   const { id } = useParams()
   const label_id = useId()
   const [openModalTransfer, setOpenModalTransfer] = useState<boolean>(false)
   const [selectedTeam, setSelectedTeam] = useState<string | undefined>()
   const [activeButton, setActiveButton] = useState<TButtons>(ButtonsProspect.INFORMACION_PERSONAL)
-  const { prospect } = useAppSelector((state: RootState) => state.prospect)
+  const { client } = useAppSelector((state: RootState) => state.client)
   const { user } = useAppSelector((state: RootState) => state.auth.user)
   const dispatch = useAppDispatch()
-  const [loadingTimeOut, setLoadingTimeOut] = useState<boolean>(false)
-  const [openModalLoading, setOpenModalLoading] = useState<boolean>(false)
-  const [loadingModal, setLoadingModal] = useState<boolean>(false)
-  const navigate = useNavigate()
   
   useEffect(() => {
     if (id) {
-      const prospectRef = collection(firestoreService, 'prospects');
-      const q = query(prospectRef, where('id', '==', id));
+      const clientRef = collection(firestoreService, 'clients');
+      const q = query(clientRef, where('id', '==', id));
 
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         if (!querySnapshot.empty) {
           // Tomar el primer documento y actualizar el estado
-          const prospectData = querySnapshot.docs[0].data();
-          console.log(prospectData)
-          // SET_LEAD(leadData);
+          const clientData = querySnapshot.docs[0].data();
         }
       }, (error) => {
-        console.error('Error al obtener el prospecto:', error);
+        console.error('Error al obtener el lead:', error);
       });
 
       // Limpiar el suscriptor cuando el componente se desmonte
@@ -92,18 +85,8 @@ const DetailProspect = () => {
   }
 
   const handleConvertToClient = () => {
-    setLoadingTimeOut(true)
-    console.log("prospect", id)
-    console.log("user", user?.uid)
-    const timeOut = setTimeout(() => {
-      dispatch(transferProspectToClient({ prospectID: id!, userID: user?.uid!})).unwrap()
-      toast.success('Prospecto convertido a cliente')
-      navigate(`/client/${id}`)
-      setLoadingModal(true)
-    }, 3000)
-
-    setLoadingTimeOut(false)
-    return () => clearTimeout(timeOut)
+    dispatch(transferProspectToClient({ prospectID: id!, userID: user?.uid!})).unwrap()
+    toast.success('Prospecto convertido a cliente')
   }
 
   return (
@@ -123,9 +106,7 @@ const DetailProspect = () => {
             icon='HeroUserPlus'
             className='!px-0'
             color='blue'
-            onClick={() => {
-              setOpenModalLoading(true)
-            }}
+            onClick={handleConvertToClient}
             >
             Convertir a Cliente
           </Button>
@@ -154,52 +135,6 @@ const DetailProspect = () => {
         <ProspectButtonsPartial activeTab={activeButton!} setActiveTab={setActiveButton} />
       </Subheader>
       <Container>
-        {
-          openModalLoading && (
-            <Modal
-              isOpen={openModalLoading}
-              setIsOpen={setOpenModalLoading}            
-            >
-              <ModalHeader className='px-10'>
-                <span>Convertir a Cliente</span>
-              </ModalHeader>
-              <ModalBody>
-               {
-                loadingModal 
-                  ? (
-                    <>
-                      <p className='text-center'>
-                        Convirtiendo prospecto a cliente...
-                      </p>
-                      <Loading />
-                    </>
-                    )
-                  : (
-                    <div className='flex flex-col gap-8 px-6'>
-                      <p className='text-center'>
-                        ¿Estás seguro de convertir a este prospecto en cliente?
-                      </p>
-                    </div>
-                  )
-               }
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  variant='outline'
-                  color='red'
-                  onClick={() => setOpenModalLoading(false)}
-                  >
-                  Cancelar
-                </Button>
-                <Button
-                  onClick={handleConvertToClient}
-                  >
-                  Convertir
-                </Button>
-              </ModalFooter>
-            </Modal>
-          )
-        }
         {
           openModalTransfer && (
             <Modal
@@ -323,19 +258,13 @@ const DetailProspect = () => {
               )
             }
             {
-              prospect?.status === 'interesado' && (
-                <>
-                  {
-                    activeButton?.text === 'Inversiones' && (
-                      <InvestmentList />
-                    )
-                  }
-                  {
-                    activeButton?.text === 'Estrategias' && (
-                     <Strategies />
-                    )
-                  }
-                </>
+              activeButton?.text === 'Inversiones' && (
+                <InvestmentList />
+              )
+            }
+            {
+              activeButton?.text === 'Estrategias' && (
+                <Strategies />
               )
             }
           </CardBody>
@@ -345,4 +274,4 @@ const DetailProspect = () => {
   )
 }
 
-export default DetailProspect
+export default DetailClient

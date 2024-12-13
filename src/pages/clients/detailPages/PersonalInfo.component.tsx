@@ -8,21 +8,20 @@ import Select from '../../../components/form/Select'
 import { useAppDispatch, useAppSelector } from '../../../store/hook'
 import { RootState } from '../../../store/rootReducer'
 import { useParams } from 'react-router-dom'
-import { getProspectByID, updateProspect } from '../../../store/slices/prospect/prospectSlice'
 import { format } from '@formkit/tempo'
 import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper'
-import { getClient } from '../../../store/slices/clients/clientSlice'
 import { useSubmitButton } from '../../../hooks/useSubmitButton'
+import { getClient, updateClient } from '../../../store/slices/clients/clientSlice'
 
 const PersonalInfo = () => {
   const { id } = useParams()
   const [isEditing, setIsEditing] = useState(false)
-  const { prospect } = useAppSelector((state: RootState) => state.prospect)
+  const { client } = useAppSelector((state: RootState) => state.client)
   const dispatch = useAppDispatch()
   const { isSubmitting, handleSubmit } = useSubmitButton()
 
   useEffect(() => {
-    dispatch(getProspectByID(id!))
+    dispatch(getClient(id!))
   }, [])
 
 
@@ -30,19 +29,19 @@ const PersonalInfo = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: prospect?.name || '',
-      phoneNumber: prospect?.phoneNumber || '',
-      email: prospect?.email || '',
-      status: prospect?.status || '',
-      createdAt: prospect?.createdAt || '',
-      updatedAt: prospect?.updatedAt || '',
-      source: prospect?.source || '',
+      name: client?.name || '',
+      phoneNumber: client?.phoneNumber || '',
+      email: client?.email || '',
+      status: client?.status || '',
+      createdAt: client?.createdAt || '',
+      updatedAt: client?.updatedAt || '',
+      source: client?.source || '',
     },
     onSubmit: (values) => {
       try {
         handleSubmit(async () => {
-          await dispatch(updateProspect({
-            prospectID: id!,
+          await dispatch(updateClient({
+            clientID: id!,
             updatedData: values
           }))
         })
@@ -51,7 +50,7 @@ const PersonalInfo = () => {
       }
     }
   })
-
+  console.log(formik.values.email)
 
   const handleSave = () => {
     console.log('Save')
@@ -107,7 +106,7 @@ const PersonalInfo = () => {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone" className="flex items-center dark:text-zinc-400 text-zinc-500 lg:text-lg md:text-md font-medium text-muted-foreground">
+            <Label htmlFor="phoneNumber" className="flex items-center dark:text-zinc-400 text-zinc-500 lg:text-lg md:text-md font-medium text-muted-foreground">
               <Icon icon='HeroPhone' className='h-6 w-6 mr-2' />
               Número de Teléfono
             </Label>
@@ -156,7 +155,7 @@ const PersonalInfo = () => {
             </Label>
             {isEditing ? (
               <Select
-                id='status'
+                id='source'
                 name='source'
                 value={formik.values.source}
                 onChange={formik.handleChange}
@@ -174,22 +173,14 @@ const PersonalInfo = () => {
               <Icon icon='HeroCalendar' className='h-6 w-6 mr-2' />
               Fecha de Creación
             </Label>
-            {isEditing ? (
-              <Input id="creationDate" name="createdAt" type="date" value={formik.values.createdAt} onChange={formik.handleChange} />
-            ) : (
-              <div className="lg:text-lg md:text-md font-medium">{format(formik.values.createdAt, { date: 'full' }, 'es' )}</div>
-            )}
+            <div className="lg:text-lg md:text-md font-medium">{format(formik.values.createdAt, { date: 'full' }, 'es' )}</div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="updatedAt" className="flex items-center dark:text-zinc-400 text-zinc-500 lg:text-lg md:text-md font-medium text-muted-foreground">
               <Icon icon='HeroClock' className='h-6 w-6 mr-2' />
               Fecha de Última Interacción
             </Label>
-            {isEditing ? (
-              <Input id="updatedAt" name="updatedAt" type="date" value={formik.values.updatedAt} onChange={formik.handleChange} />
-            ) : (
-              <div className="lg:text-lg md:text-md font-medium">{format(formik.values.updatedAt, { date: 'full' }, 'es' )}</div>
-            )}
+            <div className="lg:text-lg md:text-md font-medium">{format(formik.values.updatedAt, { date: 'full' }, 'es' )}</div>
           </div>
         </div>
         {/* {isEditing && (

@@ -3,7 +3,7 @@ import React, { Dispatch, FC, SetStateAction } from 'react'
 import { useSubmitButton } from '../../hooks/useSubmitButton';
 import { addProspectSchema } from '../../utils/validationSchemas.util';
 import { useAppDispatch } from '../../store/hook';
-import { addProspectsToFirestore } from '../../store/slices/prospect/prospectSlice';
+import { addLeadsToFirestore } from '../../store/slices/prospect/prospectSlice';
 import { useNavigate, useNavigation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import classNames from 'classnames';
@@ -14,33 +14,33 @@ import Input from '../../components/form/Input';
 import Button from '../../components/ui/Button';
 import { generateUID } from '../../utils/generateUID';
 
-interface ProspectFormProps {
+interface ClientFormProps {
   isOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const ProspectForm: FC<ProspectFormProps> = ({ isOpen }) => {
+const ClientForm: FC<ClientFormProps> = ({ isOpen }) => {
   const { isSubmitting, handleSubmit } = useSubmitButton()
   const dispatch = useAppDispatch();
 
   const formik = useFormik({
     initialValues: {
-      name: '',
+      nombre: '',
       email: '',
-      phoneNumber: '',
+      numeroTelefono: '',
     },
     validationSchema: addProspectSchema,
     onSubmit: (values) => {
-      const { name, email, phoneNumber } = values;
-      if (name && email && phoneNumber) {
+      const { nombre, email, numeroTelefono } = values;
+      if (nombre && email && numeroTelefono) {
         handleSubmit(async () => {
           try {
-            await dispatch(addProspectsToFirestore([
+            await dispatch(addLeadsToFirestore([
               {
                 id: generateUID(),
-                name,
+                nombre,
                 email,
-                phoneNumber,
-                createdAt: new Date().toISOString(),
+                numeroTelefono,
+                fechaCreacion: new Date().toISOString(),
               },
             ])).unwrap();
             formik.resetForm();
@@ -60,17 +60,17 @@ const ProspectForm: FC<ProspectFormProps> = ({ isOpen }) => {
       <div className={classNames({ 'mb-2': !formik.isValid })}>
         <Validation
           isValid={formik.isValid}
-          isTouched={formik.touched.name}
-          invalidFeedback={formik.errors.name}
+          isTouched={formik.touched.nombre}
+          invalidFeedback={formik.errors.nombre}
         >
           <FieldWrap firstSuffix={<Icon icon="HeroUser" className="mx-2" />}>
             <Input
               dimension="lg"
-              id="name"
-              autoComplete="name"
-              name="name"
-              placeholder="name"
-              value={formik.values.name}
+              id="nombre"
+              autoComplete="nombre"
+              name="nombre"
+              placeholder="Nombre"
+              value={formik.values.nombre}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
@@ -104,20 +104,20 @@ const ProspectForm: FC<ProspectFormProps> = ({ isOpen }) => {
       <div className={classNames({ 'mb-2': !formik.isValid })}>
         <Validation
           isValid={formik.isValid}
-          isTouched={formik.touched.phoneNumber}
-          invalidFeedback={formik.errors.phoneNumber}
+          isTouched={formik.touched.numeroTelefono}
+          invalidFeedback={formik.errors.numeroTelefono}
         >
           <FieldWrap
             firstSuffix={<Icon icon="HeroPhone" className="mx-2" />}
           >
             <Input
               dimension="lg"
-              autoComplete="phoneNumber"
-              id="phoneNumber"
+              autoComplete="numeroTelefono"
+              id="numeroTelefono"
               type='tel'
-              name="phoneNumber"
+              name="numeroTelefono"
               placeholder="Número de teléfono"
-              value={formik.values.phoneNumber}
+              value={formik.values.numeroTelefono}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
@@ -141,4 +141,4 @@ const ProspectForm: FC<ProspectFormProps> = ({ isOpen }) => {
   )
 }
 
-export default ProspectForm
+export default ClientForm
