@@ -94,7 +94,7 @@ const DetailClient = () => {
       <Subheader>
         <SubheaderLeft>
           <Link
-              to={`../${appPages.prospectPage.to}`}>
+              to={`../${appPages.clientPage.to}`}>
               <Button icon='HeroArrowLeft' className='!px-0'>
                 Volver a la lista
               </Button>

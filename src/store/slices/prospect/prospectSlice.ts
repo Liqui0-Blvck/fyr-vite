@@ -87,6 +87,7 @@ export const transferProspectToClient = createAsyncThunk<
       // Transfer prospect data to the 'clients' collection
       await setDoc(clientRef, {
         ...prospectData,
+        updatedAt: new Date().toISOString(),
       });
 
       // Delete the prospect from the 'prospects' collection after transfer

@@ -101,7 +101,7 @@ const ClientsList = () => {
   const columns = [
     columnHelper.accessor('name', {
       cell: (info) => (
-        <Link to={`/prospect/${info.row.original.id}`}>
+        <Link to={`/client/${info.row.original.id}`}>
           <span >{info.row.original.name}</span>
         </Link>
       ),
@@ -140,10 +140,10 @@ const ClientsList = () => {
       ),
       header: 'Fuente',
     }),
-    columnHelper.accessor('creationDate', {
+    columnHelper.accessor('createdAt', {
       cell: (info) => (
         <div>
-          <span >{format(info.row.original.creationDate!, { date: 'full' }, 'es' )}</span>
+          <span >{format(info.row.original.createdAt!, { date: 'full' }, 'es' )}</span>
         </div>
       ),
       header: 'Fecha Creación',
@@ -168,28 +168,7 @@ const ClientsList = () => {
 
   return (
     <PageWrapper title='Prospectos'>
-      {/* {
-        openModalProspect && (
-          <Modal
-            isOpen={openModalProspect}
-            setIsOpen={setOpenModalProspect}
-            >
-            <ModalHeader>
-              <span>Agregar Prospectos</span>
-            </ModalHeader>
-            <ModalBody>
-              <ProspectForm isOpen={setOpenModalProspect} />
-            </ModalBody>
-          </Modal>
-        )
-      }
-      {
-        openModalMassiveProspect && (
-          <div>
-            <h1>Modal de Prospectos Masivos</h1>
-          </div>
-        )
-      } */}
+
       <Subheader>
 				<SubheaderLeft>
 					<FieldWrap
@@ -222,33 +201,6 @@ const ClientsList = () => {
             Filtros
           </Button>
 				</SubheaderLeft>
-				<SubheaderRight>
-          <Dropdown>
-            <DropdownToggle>
-              <Button variant='solid'>Acciones</Button>
-            </DropdownToggle>
-            <DropdownMenu>
-              <div className='flex flex-col w-full h-full gap-5' >
-                <Button 
-                  variant='solid' 
-                  className='w-full' 
-                  icon='HeroPlus'
-                  onClick={() => setOpenModalProspect(true)}
-                  >
-                  Agregar Prospecto
-                </Button>
-                
-                <Button 
-                  variant='solid' 
-                  icon='HeroPlus'
-                  onClick={() => setOpenModalMassiveProspect(true)}
-                  >
-                  Agregar Prospectos Masivos
-                </Button>
-              </div>
-            </DropdownMenu>
-          </Dropdown>
-				</SubheaderRight>
 			</Subheader>
       <Container className={`${showFilters ? 'flex gap-4 ' : ''}`}>
         <AnimatePresence>

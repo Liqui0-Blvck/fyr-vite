@@ -166,16 +166,16 @@ const DetailProspect = () => {
                {
                 loadingModal 
                   ? (
-                    <>
-                      <p className='text-center'>
+                    <div className='h-72 flex flex-col items-center justify-center'>
+                      <p className='text-center text-2xl'>
                         Convirtiendo prospecto a cliente...
                       </p>
                       <Loading className='h-20 w-full flex items-center justify-center'/>
-                    </>
+                    </div>
                     )
                   : (
-                    <div className='flex flex-col gap-8 px-6'>
-                      <p className='text-center'>
+                    <div className='flex flex-col gap-8 px-6 h-72 items-center justify-center'>
+                      <p className='text-center text-2xl'>
                         ¿Estás seguro de convertir a este prospecto en cliente?
                       </p>
                     </div>
@@ -322,22 +322,7 @@ const DetailProspect = () => {
                 <InteractionsList />
               )
             }
-            {
-              prospect?.status === 'interesado' && (
-                <>
-                  {
-                    activeButton?.text === 'Inversiones' && (
-                      <InvestmentList />
-                    )
-                  }
-                  {
-                    activeButton?.text === 'Estrategias' && (
-                     <Strategies />
-                    )
-                  }
-                </>
-              )
-            }
+           
           </CardBody>
         </Card>
       </Container>

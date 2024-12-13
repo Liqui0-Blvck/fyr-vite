@@ -62,7 +62,7 @@ const PersonalInfo = () => {
       <section className='flex justify-between mb-5'>
         <div className='flex flex-col'>
           <h2>Información Personal</h2>
-          <span className='lg:text-lg md:text-md text-zinc-500'>Detalles del client</span>
+          <span className='lg:text-lg md:text-md text-zinc-500'>Detalles del prospecto</span>
         </div>
 
         {

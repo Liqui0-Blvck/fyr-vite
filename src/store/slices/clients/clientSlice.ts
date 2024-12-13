@@ -6,6 +6,7 @@ import { Event } from '../../../types/app/Events.type';
 import { Interaction } from '../../../types/app/Interaction.type';
 import { Notes } from '../../../types/app/Notes.type';
 import { collection, doc, query, where, getDocs, deleteDoc, orderBy , addDoc, startAfter, limit, updateDoc } from 'firebase/firestore';
+import { Investment } from 'src/types/app/Inversion.type';
 
 export interface PaginationInfo {
   id?: string;
@@ -19,6 +20,7 @@ export interface ClientsState {
   interactions: Interaction[];
   eventos: Event[];
   notes: Notes[];
+  investment: Investment[];
   loading: boolean;
   error: string | null;
   errorClients: { message: string; client: Client }[];  // Cambié 'lead' a 'client'
@@ -46,6 +48,7 @@ const initialState: ClientsState = {
   interactions: [],
   eventos: [],
   notes: [],
+  investment: [],
   client: null,
   loading: false,
   error: null,
@@ -365,6 +368,24 @@ export const deleteNote = createAsyncThunk<string, { clientID: string; userID: s
 
 
 
+export const addNewInvestment = createAsyncThunk(
+  'clients/addNewInvestment',
+  async (investment: Investment, { rejectWithValue }) => {
+    try {
+      const investmentRef = await addDoc(collection(firestoreService, 'investments'), {
+        ...investment,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+      return { ...investment, id: investmentRef.id };
+    } catch (error: any) {
+      console.error('Error adding the investment:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+)
+
+
 // Slice de Redux
 const clientsSlice = createSlice({
   name: 'clients',
@@ -451,6 +472,19 @@ const clientsSlice = createSlice({
       .addCase(updateClient.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Error al actualizar el cliente.';
+      })
+      .addCase(addNewInvestment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addNewInvestment.fulfilled, (state) => {
+        state.loading = false;
+        state.
+        
+      })
+      .addCase(addNewInvestment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       })
   },
 });
