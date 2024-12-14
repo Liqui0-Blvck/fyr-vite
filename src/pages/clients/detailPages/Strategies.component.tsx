@@ -9,9 +9,33 @@ import Badge from '../../../components/ui/Badge'
 import { format } from '@formkit/tempo'
 import Button from '../../../components/ui/Button'
 import StrategiesList from './StrategiesList.component'
+import Modal, { ModalBody, ModalHeader } from '../../../components/ui/Modal'
+import StrategiesForm from '../components/strategiesForm.form'
 
 const Strategies = () => {
+  const [openModalForm, setOpenModalForm] = React.useState(false)
+
+
   return (
+    <>
+    {
+      openModalForm && (
+        <Modal
+          isOpen={openModalForm}
+          setIsOpen={setOpenModalForm}
+          >
+          <ModalHeader>
+            <div className='p-5'>
+              <h3>Crear nueva estrategia</h3>
+              <p className='text-base dark:text-zinc-500 text-zinc-400'>Complete los detalles de su nueva estrategia de inversión aquí.</p>
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <StrategiesForm />
+          </ModalBody>
+        </Modal>
+      )
+    }
     <PageWrapper title='Estrategias'>
       <Container>
         <Card>
@@ -112,6 +136,9 @@ const Strategies = () => {
         <div className='flex mt-5 gap-10 justify-center'>
           <Button
             variant='outline'
+            onClick={() => {
+              setOpenModalForm(true)
+            }}
             >
             Crear nueva estrategias
           </Button>
@@ -128,6 +155,7 @@ const Strategies = () => {
         </div>
       </Container>
     </PageWrapper>
+    </>
   )
 }
 

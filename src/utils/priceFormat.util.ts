@@ -1,7 +1,7 @@
-const priceFormat = (price: number): string => {
-	return price.toLocaleString('en-US', {
+const priceFormat = (price: number, currency: string ): string => {
+	return price.toLocaleString('es-ES', {
 		style: 'currency',
-		currency: 'USD',
+		currency: currency,
 	});
 };
 

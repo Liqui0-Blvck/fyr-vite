@@ -16,9 +16,14 @@ interface InvestmentDetailProps {
 }
 
 function differenceInDaysCustom(dateLeft: Date, dateRight: Date): number {
-  const timeDifference = dateLeft.getTime() - dateRight.getTime();  // Get the difference in milliseconds
-  const oneDayInMillis = 1000 * 60 * 60 * 24;  // Number of milliseconds in a day
-  return Math.floor(timeDifference / oneDayInMillis);  // Convert milliseconds to days and round down
+  // Verificar si ambas fechas son válidas
+  if (isNaN(dateLeft.getTime()) || isNaN(dateRight.getTime())) {
+    return 0; // Retornar 0 si alguna de las fechas es inválida
+  }
+
+  const timeDifference = dateLeft.getTime() - dateRight.getTime();  // Diferencia en milisegundos
+  const oneDayInMillis = 1000 * 60 * 60 * 24;  // Milisegundos en un día
+  return Math.floor(timeDifference / oneDayInMillis);  // Convertimos milisegundos a días
 }
 
 
@@ -26,9 +31,34 @@ const InvestmentDetail: FC<InvestmentDetailProps> = ({ onDetail, investment }) =
   const navigate = useNavigate()
 
   const progressPercentage = investment?.maturityDate
-  ? (differenceInDaysCustom(new Date(), new Date(investment.investmentDate)) / differenceInDaysCustom(new Date(investment?.maturityDate), new Date(investment.investmentDate))) * 100
-  : 0
+  ? (() => {
+      // Asegurarnos de que todas las fechas sean válidas
+      const investmentDate = new Date(investment.investmentDate);  // Fecha de inversión
+      const maturityDate = new Date(investment.maturityDate);      // Fecha de vencimiento
+      const currentDate = new Date();                               // Fecha actual
 
+      // Verificar si alguna fecha es inválida
+      if (isNaN(investmentDate.getTime()) || isNaN(maturityDate.getTime()) || isNaN(currentDate.getTime())) {
+        console.error("Una de las fechas es inválida.");
+        return 0; // Si alguna fecha es inválida, retornamos 0%
+      }
+
+      // Asegúrate de que la fecha de inversión no sea mayor que la fecha de vencimiento
+      const totalDays = differenceInDaysCustom(maturityDate, investmentDate);  // Días totales entre inversión y vencimiento
+      const elapsedDays = differenceInDaysCustom(currentDate, investmentDate);  // Días transcurridos desde la inversión
+
+      // Si la fecha actual es anterior a la fecha de inversión, el progreso es 0%
+      if (currentDate < investmentDate) return 0;
+
+      // Calculamos el porcentaje de progreso, asegurándonos de que no sea mayor a 100
+      const progress = (elapsedDays / totalDays) * 100;
+
+      // Si la fecha de vencimiento ya pasó, el progreso debe ser 100%
+      return progress > 100 ? 100 : progress;
+    })()
+  : 0;
+
+  console.log(investment)
   console.log(progressPercentage)
   
   return (
@@ -113,15 +143,15 @@ const InvestmentDetail: FC<InvestmentDetailProps> = ({ onDetail, investment }) =
                 <h4 className="text-sm font-medium text-muted-foreground mb-1">Progreso de la Inversión</h4>
                 <Progress value={progressPercentage} className="w-full" />
                 <div className="flex justify-between text-sm text-muted-foreground mt-1">
-                  <span>{format(new Date(investment?.investmentDate!), { date: 'medium'}, 'es' )}</span>
-                  <span>{investment?.maturityDate ? format(new Date(investment?.maturityDate), { date: 'medium'}, 'es' ) : 'N/A'}</span>
+                  <span>{format(investment?.investmentDate!, { date: 'medium'}, 'es' )}</span>
+                  <span>{investment?.maturityDate ? format(investment?.maturityDate, { date: 'medium'}, 'es' ) : 'N/A'}</span>
                 </div>
               </div>
               <span className='mb-5'/>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground">Fecha de Vencimiento</h4>
-                  <p>{investment?.maturityDate ? format(new Date(investment?.maturityDate), { date: 'full'}, 'es') : 'No especificada'}</p>
+                  <p>{investment?.maturityDate ? format(investment?.maturityDate, { date: 'full'}, 'es') : 'No especificada'}</p>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground">Duración</h4>
@@ -129,11 +159,11 @@ const InvestmentDetail: FC<InvestmentDetailProps> = ({ onDetail, investment }) =
                 </div>
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground">Creado</h4>
-                  <p>{format(new Date(investment?.createdAt!), { date: 'full'}, 'es')}</p>
+                  <p>{format(investment?.createdAt!, { date: 'full'}, 'es')}</p>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground">Última Actualización</h4>
-                  <p>{format(new Date(investment?.updatedAt!), { date: 'full'}, 'es')}</p>
+                  <p>{format(investment?.updatedAt!, { date: 'full'}, 'es')}</p>
                 </div>
               </div>
               <span className='mb-5'/>

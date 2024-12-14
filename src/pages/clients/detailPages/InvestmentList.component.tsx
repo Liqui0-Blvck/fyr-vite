@@ -27,6 +27,8 @@ import { investmentRecords } from '../../../mocks/Data'
 import Modal, { ModalBody, ModalHeader } from '../../../components/ui/Modal'
 import Badge from '../../../components/ui/Badge'
 import InvestmentDetail from './InvestmentDetail.component'
+import InvestmentForm from '../components/InvestmentForm.form'
+import priceFormat from '../../../utils/priceFormat.util'
 
 
 
@@ -34,13 +36,14 @@ import InvestmentDetail from './InvestmentDetail.component'
 const InvestmentList = () => {
   const { user } = useAppSelector((stat : RootState) => stat.auth.user)
   const { id } = useParams<{ id: string }>()
-  // const { interactions } = useAppSelector((state: RootState) => state.prospect)
+  const { investment } = useAppSelector((state: RootState) => state.client)
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
   const dispatch = useAppDispatch()
   const [investmentSelected, setInvestmentSelected] = useState<Investment | null>(null)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [isDetailSelected, setIsDetailSelected] = useState<boolean>(false)
+  const [newInvestment, setNewInvestment] = useState<boolean>(false)
 
 
 
@@ -48,16 +51,16 @@ const InvestmentList = () => {
   const columns = [
     columnHelper.accessor('investmentDate', {
       cell: (info) => (
-        <Link to={`/prospect/${info.row.original.investmentDate}`}>
-          <span >{info.row.original.investmentDate}</span>
-        </Link>
+        <div>
+          <span >{format(info.row.original.investmentDate, { date: 'long' }, 'es')}</span>
+        </div>
       ),
       header: 'Fecha de inversion',
     }),
     columnHelper.accessor('investedAmount', {
       cell: (info) => (
         <div>
-          <span >{info.row.original.investedAmount}</span>
+          <span >{priceFormat(info.row.original.investedAmount, 'CLP')}</span>
         </div>
       ),
       header: 'Monto de inversión',
@@ -108,7 +111,7 @@ const InvestmentList = () => {
   ]
 
   const table = useReactTable({
-		data: investmentRecords,
+		data: investment,
 		columns,
 		state: {
       globalFilter,
@@ -119,13 +122,14 @@ const InvestmentList = () => {
     getPaginationRowModel: getPaginationRowModel(),
 	});
 
-  console.log(isDetailSelected)
+  
 
   if (isDetailSelected) {
     return (
       <InvestmentDetail onDetail={setIsDetailSelected} investment={investmentSelected}/>
     )
   }
+
 
   return (
     <>
@@ -200,6 +204,25 @@ const InvestmentList = () => {
       )
     }
 
+    {
+      newInvestment && (
+        <Modal
+          isOpen={newInvestment}
+          setIsOpen={setNewInvestment}
+        >
+          <ModalHeader>
+            <div className='flex flex-col p-5'>
+              <h3>Nueva Inversión</h3>
+              <span className='text-sm text-zinc-600'>Ingrese los detalles de la nueva inversión</span>
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <InvestmentForm isClosed={setNewInvestment}/>
+          </ModalBody>
+        </Modal>
+      )
+    }
+
     <PageWrapper title='Inversiones'>
       <Subheader>
 				<SubheaderLeft>
@@ -226,6 +249,16 @@ const InvestmentList = () => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
+        <SubheaderRight>
+          <Button 
+            variant='solid' 
+            onClick={() => {
+              setNewInvestment(true)
+            }}
+            >
+            Nueva Inversión
+          </Button>
+        </SubheaderRight>
 			</Subheader>
       <Container>
         <Card>

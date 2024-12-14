@@ -6,7 +6,9 @@ import { Event } from '../../../types/app/Events.type';
 import { Interaction } from '../../../types/app/Interaction.type';
 import { Notes } from '../../../types/app/Notes.type';
 import { collection, doc, query, where, getDocs, deleteDoc, orderBy , addDoc, startAfter, limit, updateDoc } from 'firebase/firestore';
-import { Investment } from 'src/types/app/Inversion.type';
+import { Investment } from '../../../types/app/Inversion.type';
+import { investmentRecords } from '../../../mocks/Data';
+import { Strategy } from '../../../types/app/Strategies.type';
 
 export interface PaginationInfo {
   id?: string;
@@ -21,6 +23,7 @@ export interface ClientsState {
   eventos: Event[];
   notes: Notes[];
   investment: Investment[];
+  strategies: Strategy[];
   loading: boolean;
   error: string | null;
   errorClients: { message: string; client: Client }[];  // Cambié 'lead' a 'client'
@@ -48,7 +51,8 @@ const initialState: ClientsState = {
   interactions: [],
   eventos: [],
   notes: [],
-  investment: [],
+  investment: investmentRecords,
+  strategies: [],
   client: null,
   loading: false,
   error: null,
@@ -373,13 +377,28 @@ export const addNewInvestment = createAsyncThunk(
   async (investment: Investment, { rejectWithValue }) => {
     try {
       const investmentRef = await addDoc(collection(firestoreService, 'investments'), {
-        ...investment,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        ...investment
       });
       return { ...investment, id: investmentRef.id };
     } catch (error: any) {
       console.error('Error adding the investment:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+)
+
+export const addNewStrategies = createAsyncThunk(
+  'clients/addNewStrategies',
+  async (strategies: Strategy, { rejectWithValue }) => {
+    try {
+      await addDoc(collection(firestoreService, 'investments'), {
+        ...strategies
+      });
+
+
+      return { ...strategies };
+    } catch (error: any) {
+      console.error('Error adding the strategies:', error);
       return rejectWithValue(error.message);
     }
   }
@@ -410,6 +429,9 @@ const clientsSlice = createSlice({
       state.successFullClients = 0;
       state.failedClients = 0;
     },
+    SET_INVESTMENT: (state, action: PayloadAction<Investment>) => {
+      state.investment.push(action.payload);
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -477,12 +499,23 @@ const clientsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(addNewInvestment.fulfilled, (state) => {
+      .addCase(addNewInvestment.fulfilled, (state, action: PayloadAction<Investment>) => {
         state.loading = false;
-        state.
-        
+        state.investment.push(action.payload);
       })
       .addCase(addNewInvestment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(addNewStrategies.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addNewStrategies.fulfilled, (state, action: PayloadAction<Strategy>) => {
+        state.loading = false;
+        state.strategies.push(action.payload);
+      })
+      .addCase(addNewStrategies.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
@@ -496,6 +529,7 @@ export const {
   ADD_SUCCESSFUL_CLIENTS,
   ADD_FAILED_CLIENTS,
   RESET_CLIENTS_COUNT,
+  SET_INVESTMENT,
 } = clientsSlice.actions;
 
 export default clientsSlice.reducer;

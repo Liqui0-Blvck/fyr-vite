@@ -10,5 +10,5 @@ import { Investment, InvestmentType } from "./Inversion.type";
     risk: 'Low' | 'Medium' | 'High';
     creationDate: string;
     status: 'Active' | 'Paused' | 'Inactive';
-    investments: Investment[]; // Investments associated with this strategy
+    investments?: Investment[]; // Investments associated with this strategy
   }
