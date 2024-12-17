@@ -7,6 +7,11 @@ import { useSubmitButton } from '../../../hooks/useSubmitButton'
 import Textarea from '../../../components/form/Textarea'
 import Select from '../../../components/form/Select'
 import Button from '../../../components/ui/Button'
+import { useAppDispatch, useAppSelector } from '../../../store/hook'
+import { addNewStrategies } from '../../../store/slices/clients/clientSlice'
+import toast from 'react-hot-toast'
+import { generateUID } from '../../../utils/generateUID'
+import { RootState } from '../../../store/rootReducer'
 
 const strategiesTypes = [
   { value: 'Conservador', label: 'Conservador' },
@@ -33,22 +38,39 @@ interface StrategiesFormProps {
 
 const StrategiesForm: FC<StrategiesFormProps> = ({ isClosed }) => {
   const { isSubmitting, handleSubmit } = useSubmitButton()
+  const dispatch = useAppDispatch()
+  const { user } = useAppSelector((state: RootState) => state.auth.user)
 
   const formik = useFormik({
     initialValues: {
       name: '',
       description: '',
-      type: '',
+      type: 'Conservador',
       expectedReturn: 0,
-      risk: 'Low',
-      status: 'Active',
+      risk: 'Bajo',
+      status: 'Inactivo',
     },
     onSubmit: (values) => {
       handleSubmit(async () => {
-
+        await dispatch(addNewStrategies({
+          id: generateUID(),
+          userID: user?.uid!,
+          name: values.name,
+          description: values.description,
+          type: values.type,
+          expectedReturn: values.expectedReturn,
+          risk: values.risk,
+          status: values.status,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+         })).unwrap()
+        toast.success('Estrategia creada con éxito')
+        isClosed(false)
       })
     }
   })
+
+  console.log(formik.values)
 
   return (
     <div className='w-full p-5 flex flex-col gap-6'>

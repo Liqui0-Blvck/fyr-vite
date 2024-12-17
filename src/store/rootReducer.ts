@@ -3,11 +3,13 @@ import { combineReducers, Reducer, AnyAction } from 'redux';
 import auth, { AuthStates } from './slices/auth';
 import prospect, { ProspectsState } from './slices/prospect/prospectSlice';
 import client, { ClientsState } from './slices/clients/clientSlice';
+import calendar, { CalendarsState } from './slices/calendar/calendarSlice';
 
 export type RootState = {
   auth: AuthStates,
   prospect: ProspectsState,
-  client: ClientsState
+  client: ClientsState,
+  calendar: CalendarsState
 };
 
 export interface AsyncReducers {
@@ -17,7 +19,9 @@ export interface AsyncReducers {
 const staticReducers = {
   auth,
   prospect,
-  client
+  client,
+  calendar
+
 };
 
 const rootReducer = (asyncReducers?: AsyncReducers) => (

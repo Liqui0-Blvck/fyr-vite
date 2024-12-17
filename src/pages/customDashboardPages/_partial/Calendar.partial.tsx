@@ -11,7 +11,7 @@ import Card, {
 	CardTitle,
 } from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
-import Calendar, { TViewMode, useCalendarView } from '../../../components/Calendar';
+import Calendar, { TViewMode, useCalendarView } from '../../../components/CalendarOld';
 import Dropdown, {
 	DropdownItem,
 	DropdownMenu,

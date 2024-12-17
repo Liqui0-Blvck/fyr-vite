@@ -1,10 +1,8 @@
 import { useFormik } from 'formik'
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import { useSubmitButton } from '../../hooks/useSubmitButton';
 import { addProspectSchema } from '../../utils/validationSchemas.util';
 import { useAppDispatch } from '../../store/hook';
-import { addLeadsToFirestore } from '../../store/slices/prospect/prospectSlice';
-import { useNavigate, useNavigation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import classNames from 'classnames';
 import Validation from '../../components/form/Validation';
@@ -13,6 +11,7 @@ import Icon from '../../components/icon/Icon';
 import Input from '../../components/form/Input';
 import Button from '../../components/ui/Button';
 import { generateUID } from '../../utils/generateUID';
+import { addProspectsToFirestore } from 'src/store/slices/prospect/prospectSlice';
 
 interface ClientFormProps {
   isOpen: Dispatch<SetStateAction<boolean>>;
@@ -34,13 +33,14 @@ const ClientForm: FC<ClientFormProps> = ({ isOpen }) => {
       if (nombre && email && numeroTelefono) {
         handleSubmit(async () => {
           try {
-            await dispatch(addLeadsToFirestore([
+            await dispatch(addProspectsToFirestore([
               {
                 id: generateUID(),
-                nombre,
+                name: nombre,
                 email,
-                numeroTelefono,
-                fechaCreacion: new Date().toISOString(),
+                phoneNumber: numeroTelefono,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
               },
             ])).unwrap();
             formik.resetForm();

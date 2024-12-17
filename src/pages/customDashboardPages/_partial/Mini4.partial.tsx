@@ -11,7 +11,7 @@ const Mini4Partial = () => {
 					<div className='flex grow items-center'>
 						<div>
 							<div className='text-zinc-500'>Bill & Taxes</div>
-							<div className='text-3xl font-semibold'>{priceFormat(286)}</div>
+							<div className='text-3xl font-semibold'>{priceFormat(286, 'CLP')}</div>
 							<div className='flex items-center gap-2 text-sm text-zinc-500'>
 								<span>since last month</span>
 								<span className='text-emerald-500'>20%</span>

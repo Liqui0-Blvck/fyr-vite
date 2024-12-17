@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import Card, { CardBody } from '../../components/ui/Card';
 import Input from '../../components/form/Input';
 import Button from '../../components/ui/Button';
-import { Lead } from '../../types/app/Prospect.type';
+import { Prospect } from '../../types/app/Prospect.type';
 import Select from '../../components/form/Select';
 
 interface FilterCardProps {
-  onFilter: (filters: Partial<Lead>) => void;
+  onFilter: (filters: Partial<Prospect>) => void;
 }
 
 const FilterCard: React.FC<FilterCardProps> = ({ onFilter }) => {
@@ -19,10 +19,10 @@ const FilterCard: React.FC<FilterCardProps> = ({ onFilter }) => {
   // Manejar el cambio de los filtros
   const handleFilterChange = () => {
     onFilter({
-      estado,
-      fuente,
-      fechaCreacion,
-      fechaUltimaInteraccion,
+      status: estado,
+      source: fuente,
+      createdAt: fechaCreacion,
+      updatedAt: fechaUltimaInteraccion,
     });
   };
 

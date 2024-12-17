@@ -1,20 +1,21 @@
-import { investmentStrategies } from '../../../mocks/Data';
-import { Strategy } from '../../../types/app/Strategies.type';
+import { Strategy } from '../../../../types/app/Strategies.type';
 import {
-
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import Container from '../../../components/layouts/Container/Container';
-import Card, { CardBody, CardFooter } from '../../../components/ui/Card';
-import TableTemplate from '../../../templates/common/TableParts.template';
-import { format } from '@formkit/tempo';
+import Container from '../../../../components/layouts/Container/Container';
+import Card, { CardBody, CardFooter } from '../../../../components/ui/Card';
+import TableTemplate from '../../../../templates/common/TableParts.template';
+import { useAppSelector } from '../../../../store/hook';
+import { RootState } from '../../../../store/rootReducer';
 
 
 const StrategiesList = () => {
+  const { strategies } = useAppSelector((state: RootState) => state.client)
+
 
 
   const columnHelper = createColumnHelper<Strategy>();
@@ -46,7 +47,7 @@ const StrategiesList = () => {
   ]
 
   const table = useReactTable({
-		data: investmentStrategies,
+		data: strategies,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

@@ -19,7 +19,7 @@ import { transferProspectToClient } from '../../../store/slices/prospect/prospec
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { firestoreService } from '../../../config/firebase.config'
 import InvestmentList from './InvestmentList.component'
-import Strategies from './Strategies.component'
+import Strategies from './strategiesComponents/Strategies.component'
 import toast from 'react-hot-toast'
 
 const teams = [

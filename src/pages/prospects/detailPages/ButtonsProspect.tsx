@@ -1,8 +1,8 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import Button, { IButtonProps } from '../../../components/ui/Button';
 
-type TButtonKey = 'INFORMACION_PERSONAL' | 'NOTAS' | 'INTERACCIONES' 
-type TButtonText = 'Información Personal' | 'Notas' | 'Interacciones' 
+type TButtonKey = 'INFORMACION_PERSONAL' | 'NOTAS' | 'INTERACCIONES' | 'AGENDA'
+type TButtonText = 'Información Personal' | 'Notas' | 'Interacciones' | 'Agenda'
 
 // El tipo TButtons debe ser una lista de botones con su texto
 export type TButtons = {
@@ -19,6 +19,7 @@ export const ButtonsProspect: TButton = {
   INFORMACION_PERSONAL: { text: 'Información Personal' },
   NOTAS: { text: 'Notas' },
 	INTERACCIONES: { text: 'Interacciones' },
+	AGENDA: { text: 'Agenda' },
 };
 
 interface IPeriodButtonsPartialProps {

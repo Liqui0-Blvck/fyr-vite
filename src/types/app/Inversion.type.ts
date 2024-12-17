@@ -2,7 +2,7 @@ export interface Investment {
   id: string;                      // Unique ID for each investment
   userID: string;                  // ID of the user who owns the investment
   leadID: string;                  // ID of the prospect to whom the investment belongs
-  investmentType: InvestmentType;  // Type of the investment (Stocks, Bonds, etc.)
+  investmentType: string;  // Type of the investment (Stocks, Bonds, etc.)
   investedAmount: number;          // Amount of money invested
   investmentDate: string;          // Date of the investment
   maturityDate?: string;           // Maturity date of the investment
@@ -30,4 +30,4 @@ export interface Investment {
   updatedAt: string;               // Date of last update
 }
 
-export type InvestmentType = 'Stocks' | 'Bonds' | 'Real Estate' | 'Mutual Funds' | 'Cryptocurrencies' | 'Startups' | 'Commodities';
+// export type InvestmentType = 'Stocks' | 'Bonds' | 'Real Estate' | 'Mutual Funds' | 'Cryptocurrencies' | 'Startups' | 'Commodities';

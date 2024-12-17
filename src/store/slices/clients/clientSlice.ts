@@ -387,11 +387,13 @@ export const addNewInvestment = createAsyncThunk(
   }
 )
 
+
+
 export const addNewStrategies = createAsyncThunk(
   'clients/addNewStrategies',
   async (strategies: Strategy, { rejectWithValue }) => {
     try {
-      await addDoc(collection(firestoreService, 'investments'), {
+      await addDoc(collection(firestoreService, 'strategies'), {
         ...strategies
       });
 
@@ -404,6 +406,30 @@ export const addNewStrategies = createAsyncThunk(
   }
 )
 
+
+export const getStrategiesByUser = createAsyncThunk(
+  'clients/getStrategies',
+  async (userID: string, { rejectWithValue }) => {
+    try {
+      const strategiesSnapshot = await getDocs(
+        query(
+          collection(firestoreService, 'strategies'),
+          where('userID', '==', userID),
+          orderBy('createdAt', 'desc')
+        )
+      )
+
+      const strategies = strategiesSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      })) as Strategy[];
+
+      return strategies;
+    } catch (error: any) {
+      console.error('Error fetching the strategies:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+)
 
 // Slice de Redux
 const clientsSlice = createSlice({
@@ -516,6 +542,18 @@ const clientsSlice = createSlice({
         state.strategies.push(action.payload);
       })
       .addCase(addNewStrategies.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getStrategiesByUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getStrategiesByUser.fulfilled, (state, action: PayloadAction<Strategy[]>) => {
+        state.loading = false;
+        state.strategies = action.payload;
+      })
+      .addCase(getStrategiesByUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

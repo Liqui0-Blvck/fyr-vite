@@ -18,10 +18,9 @@ import { RootState } from '../../../store/rootReducer'
 import { transferProspectToClient } from '../../../store/slices/prospect/prospectSlice'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { firestoreService } from '../../../config/firebase.config'
-import InvestmentList from './InvestmentList.component'
-import Strategies from './Strategies.component'
 import toast from 'react-hot-toast'
 import Loading from '../../../components/Loading'
+import Agenda from './Agenda.component'
 
 const teams = [
   { id: "1", name: "Equipo de Ventas" },
@@ -322,6 +321,12 @@ const DetailProspect = () => {
                 <InteractionsList />
               )
             }
+            {
+              activeButton?.text === 'Agenda' && (
+                <Agenda />
+              )
+            }
+
            
           </CardBody>
         </Card>

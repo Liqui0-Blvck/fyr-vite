@@ -28,6 +28,9 @@ const DetailProspectPage = lazy(() => import('../pages/prospects/detailPages/Det
 const ClientPage = lazy(() => import('../pages/clients/Clients.page'));
 const DetailClientPage = lazy(() => import('../pages/clients/detailPages/DetailClient.page'));
 
+// Pages Calendar
+const CalendarPage = lazy(() => import('../pages/calendar/Calendar.page'));
+
 
 
 const contentRoutes: RouteProps[] = [
@@ -44,6 +47,11 @@ const contentRoutes: RouteProps[] = [
 	// clients urls
 	{path: appPages.clientPage.to, element: <ClientPage />},
 	{path: appPages.clientPage.subPages.detail_page.to, element: <DetailClientPage />},
+
+
+	// calendar urls
+	{path: appPages.calendarPage.to, element: <CalendarPage />},
+
 	
 
 
