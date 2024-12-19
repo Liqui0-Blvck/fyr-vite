@@ -13,13 +13,14 @@ const Agenda = () => {
   const [openModalForm, setOpenModalForm] = useState(false)
   const [openModalDetail, setOpenModalDetail] = useState(false)
   const { user } = useAppSelector((state: RootState) => state.auth.user)
-  const { prospect } = useAppSelector((state: RootState) => state.prospect)
+  const { client } = useAppSelector((state: RootState) => state.client)
 
   const { events, loading } = useAppSelector((state: RootState) => state.calendar)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(fetchEventsByUser({ userId: user?.uid!, inviteeEmail: prospect?.email! }))
+    dispatch(fetchEventsByUser({ userId: user?.uid!, inviteeEmail: client?.email! })).unwrap()
+    return () => {}
   }, [])
 
 
@@ -46,14 +47,14 @@ const Agenda = () => {
           loading
             ? <Loading />
             : (
-              <CalendarPartial 
-                  height={500} 
-                  open={openModalDetail} 
-                  setIsOpen={setOpenModalDetail} 
-                  events={events}
-                  type='view' 
-                  form={true} 
-                  formAction={setOpenModalForm}/>
+            <CalendarPartial 
+                height={500} 
+                open={openModalDetail} 
+                setIsOpen={setOpenModalDetail} 
+                events={events}
+                type='view' 
+                form={true} 
+                formAction={setOpenModalForm}/>
             )
         }
       </Container>

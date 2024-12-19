@@ -4,7 +4,7 @@ import Input from '../../../components/form/Input'
 import Label from '../../../components/form/Label'
 import Select from '../../../components/form/Select'
 import Validation from '../../../components/form/Validation'
-import { Investment } from '../../../types/app/Inversion.type'
+import { Investment } from '../../../types/app/Investment.type'
 import { investmentStrategies } from '../../../mocks/Data'
 import Textarea from '../../../components/form/Textarea'
 import Button from '../../../components/ui/Button'
@@ -84,6 +84,7 @@ const InvestmentForm: FC<InvestmentFormProps> = ({ isClosed }) => {
           maturityDate: new Date(values.maturityDate).toISOString(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          
   
         })).unwrap()
   

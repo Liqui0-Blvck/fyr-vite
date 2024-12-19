@@ -205,7 +205,7 @@ const ClientsList = () => {
       <Container className={`${showFilters ? 'flex gap-4 ' : ''}`}>
         <AnimatePresence>
           {showFilters && (
-            <FilterCard onFilter={handleFilterChange}/>
+            <FilterCard onFilter={() => handleFilterChange(filters)}/>
           )}
         </AnimatePresence>
 

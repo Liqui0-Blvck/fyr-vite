@@ -1,5 +1,6 @@
 import { Strategy } from "src/types/app/Strategies.type";
-import { Investment } from "../types/app/Inversion.type";
+import { Investment } from "../types/app/Investment.type";
+import { Task } from "src/types/app/Tasks.type";
 
 export const investmentRecords: Investment[] = [
   {
@@ -238,7 +239,8 @@ export const investmentStrategies: Strategy[] = [
     type: 'Bonds',
     expectedReturn: 5,
     risk: 'Low',
-    creationDate: '2024-01-01',
+    updatedAt: '2024-01-01',
+    createdAt: '2024-01-01',
     status: 'Active',
     investments: [
       {
@@ -274,7 +276,8 @@ export const investmentStrategies: Strategy[] = [
     type: 'Stocks',
     expectedReturn: 15,
     risk: 'High',
-    creationDate: '2024-03-01',
+    createdAt: '2024-03-01',
+    updatedAt: '2024-03-01',
     status: 'Active',
     investments: [
       {
@@ -333,7 +336,8 @@ export const investmentStrategies: Strategy[] = [
     type: 'Real Estate',
     expectedReturn: 8,
     risk: 'Medium',
-    creationDate: '2024-06-01',
+    createdAt: '2024-06-01',
+    updatedAt: '2024-06-01',
     status: 'Active',
     investments: [
       {
@@ -362,3 +366,160 @@ export const investmentStrategies: Strategy[] = [
     ]
   }
 ];
+
+
+export const tasks: Task[] = [
+  {
+    "id": "task1",
+    "title": "Diseñar la pantalla de inicio",
+    "description": "Crear el mockup de la pantalla de inicio con Figma, incluyendo header, footer y componentes principales.",
+    "status": "inProgress",
+    "priority": "high",
+    "dueDate": "2024-01-15T00:00:00.000Z",
+    "createdAt": "2023-12-01T09:00:00.000Z",
+    "updatedAt": "2023-12-05T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user1",
+    },
+    "tags": ["UI/UX", "design"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task2",
+    "title": "Implementar autenticación de usuarios",
+    "description": "Agregar funcionalidad de login y signup mediante Firebase Auth. Incluir validaciones de correo y contraseña.",
+    "status": "pending",
+    "priority": "critical",
+    "dueDate": "2024-01-10T00:00:00.000Z",
+    "createdAt": "2023-12-02T09:00:00.000Z",
+    "updatedAt": "2023-12-03T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user2",
+    },
+    "tags": ["auth", "backend", "firebase"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task3",
+    "title": "Configurar CI/CD",
+    "description": "Integrar pipeline de CI/CD con GitHub Actions, ejecutar tests y desplegar a la rama main.",
+    "status": "inProgress",
+    "priority": "medium",
+    "dueDate": "2024-01-20T00:00:00.000Z",
+    "createdAt": "2023-12-03T09:00:00.000Z",
+    "updatedAt": "2023-12-06T11:00:00.000Z",
+    "assignedTo": {
+      "userId": "user3",
+      "role": "manager"
+    },
+    "tags": ["devops", "ci/cd", "github-actions"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task4",
+    "title": "Escribir documentación de la API",
+    "description": "Crear documentación en Swagger para los endpoints del API, incluyendo parámetros, respuestas y ejemplos.",
+    "status": "pending",
+    "priority": "low",
+    "dueDate": "2024-02-01T00:00:00.000Z",
+    "createdAt": "2023-12-04T09:00:00.000Z",
+    "updatedAt": "2023-12-04T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user4",
+    },
+    "tags": ["documentation", "api", "swagger"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task5",
+    "title": "Optimizar la carga de imágenes",
+    "description": "Implementar lazy loading para imágenes pesadas y reducir el tiempo de carga de la página.",
+    "status": "inProgress",
+    "priority": "high",
+    "dueDate": "2024-01-25T00:00:00.000Z",
+    "createdAt": "2023-12-05T09:00:00.000Z",
+    "updatedAt": "2023-12-07T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user2",
+    },
+    "tags": ["performance", "frontend", "optimization"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task6",
+    "title": "Agregar notificaciones push",
+    "description": "Integrar Firebase Cloud Messaging para enviar notificaciones push en tiempo real.",
+    "status": "pending",
+    "priority": "medium",
+    "dueDate": "2024-01-30T00:00:00.000Z",
+    "createdAt": "2023-12-06T09:00:00.000Z",
+    "updatedAt": "2023-12-06T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user5",
+      "role": "executive"
+    },
+    "tags": ["notifications", "firebase"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task7",
+    "title": "Refactorizar componentes obsoletos",
+    "description": "Actualizar componentes legacy a componentes funcionales con hooks. Mejorar organización del código.",
+    "status": "inProgress",
+    "priority": "medium",
+    "dueDate": "2024-01-18T00:00:00.000Z",
+    "createdAt": "2023-12-07T09:00:00.000Z",
+    "updatedAt": "2023-12-08T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user1",
+    },
+    "tags": ["refactor", "frontend", "hooks"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task8",
+    "title": "Crear página de FAQ",
+    "description": "Diseñar y desarrollar una página de Preguntas Frecuentes, incluyendo búsqueda y categorías.",
+    "status": "pending",
+    "priority": "low",
+    "dueDate": "2024-02-05T00:00:00.000Z",
+    "createdAt": "2023-12-08T09:00:00.000Z",
+    "updatedAt": "2023-12-08T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user3",
+      "role": "manager"
+    },
+    "tags": ["content", "frontend", "documentation"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task9",
+    "title": "Analizar métricas de uso",
+    "description": "Revisar Google Analytics y otras métricas para comprender el comportamiento de los usuarios.",
+    "status": "completed",
+    "priority": "medium",
+    "dueDate": "2023-12-20T00:00:00.000Z",
+    "createdAt": "2023-12-09T09:00:00.000Z",
+    "updatedAt": "2023-12-10T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user2",
+    },
+    "tags": ["analytics", "metrics", "data"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  },
+  {
+    "id": "task10",
+    "title": "Implementar modo oscuro",
+    "description": "Agregar la capacidad de alternar entre modo claro y modo oscuro en la interfaz.",
+    "status": "inProgress",
+    "priority": "high",
+    "dueDate": "2024-01-12T00:00:00.000Z",
+    "createdAt": "2023-12-10T09:00:00.000Z",
+    "updatedAt": "2023-12-12T10:00:00.000Z",
+    "assignedTo": {
+      "userId": "user4",
+    },
+    "tags": ["UI", "theme", "frontend"],
+    "columnId": "WgpQxGF1QY4YSaKJLh3D"
+  }
+]

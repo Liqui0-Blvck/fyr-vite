@@ -14,8 +14,13 @@ import Nav, {
 } from '../../../components/layouts/Navigation/Nav';
 import Badge from '../../../components/ui/Badge';
 import UserTemplate from '../User/User.template';
+import { useAppSelector } from '../../../store/hook';
+import { RootState } from '../../../store/rootReducer';
 
 const DefaultAsideTemplate = () => {
+	const { user } = useAppSelector((state: RootState) => state.auth.user)
+
+	
 
 	return (
 		<Aside>
@@ -28,9 +33,32 @@ const DefaultAsideTemplate = () => {
 					<NavItem {...appPages.prospectPage}/>
 					<NavItem {...appPages.clientPage}/>
 					<NavItem {...appPages.calendarPage}/>
-					<NavItem {...appPages.marketingPage}/>
-				</Nav>
+					{
+						user?.role === 'executive' && (
+							<NavCollapse
+								text={appPages.tasksPage.text}
+								to={appPages.tasksPage.to}
+								icon={appPages.tasksPage.icon}
+								>
+								<NavItem {...appPages.tasksPage.subpages.task_list} />
+								<NavItem {...appPages.tasksPage.subpages.task_dashboard} />
+							</NavCollapse>
+						)
+					}
 
+					{
+						user?.role === 'admin' && (
+							<NavCollapse
+								text={appPages.teamManagementPage.text}
+								to={appPages.teamManagementPage.to}
+								icon={appPages.teamManagementPage.icon}
+							>
+								<NavItem {...appPages.teamManagementPage.subpages.teams}/>
+								<NavItem {...appPages.teamManagementPage.subpages.roles}/>
+							</NavCollapse>
+						)
+					}
+				</Nav>
 			</AsideBody>
 			<AsideFooter>
 				<Nav>

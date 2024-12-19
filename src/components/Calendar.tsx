@@ -19,11 +19,14 @@ import Dropdown, {
 } from '../components/ui/Dropdown';
 import { TIcons } from '../types/icons.type';
 import Avatar from '../components/Avatar';
-import Modal, { ModalBody, ModalHeader } from './ui/Modal';
+import Modal, { ModalBody, ModalFooter, ModalHeader } from './ui/Modal';
 import { Event } from '../types/app/Events.type';
 import Badge from './ui/Badge';
 import Icon from './icon/Icon';
 import { format } from '@formkit/tempo';
+import { useAppDispatch, useAppSelector } from '..//store/hook';
+import { RootState } from '../store/rootReducer';
+import { updateEvent } from '../store/slices/calendar/calendarSlice';
 
 interface ICalendarPartialProps {
   height?: string | number;
@@ -51,6 +54,12 @@ const CalendarPartial: FC<ICalendarPartialProps> = ({ height, open, setIsOpen, e
 
 	const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 	const [initialEvents, setInitialEvents] = useState<any[]>([]);
+	const { user } = useAppSelector((state: RootState) => state.auth.user);
+	const dispatch = useAppDispatch()
+	
+	console.log(selectedEvent)
+
+	
 
 
 	useEffect(() => {
@@ -105,7 +114,7 @@ const CalendarPartial: FC<ICalendarPartialProps> = ({ height, open, setIsOpen, e
 	};
 
 
-	const handleDateSelect = (selectInfo: DateSelectArg) => {
+	const handleDateSelect = (_selectInfo: DateSelectArg) => {
 
 
     
@@ -174,7 +183,7 @@ const CalendarPartial: FC<ICalendarPartialProps> = ({ height, open, setIsOpen, e
           setIsOpen={setIsOpen}
         >
           <ModalHeader>
-            <h3>Detalle Fecha Agendada</h3>
+            <h3>Fecha Agendada</h3>
           </ModalHeader>
           <ModalBody>
 						<Card className="w-full max-w-3xl mx-auto">
@@ -214,7 +223,9 @@ const CalendarPartial: FC<ICalendarPartialProps> = ({ height, open, setIsOpen, e
 									{selectedEvent?.organizer && (
 										<div className="flex items-center space-x-2">
 											<Icon icon='HeroUser' className="h-5 w-5 text-muted-foreground" />
-											<span>Organizer: {selectedEvent?.organizer}</span>
+											<span>Organizer: {
+												selectedEvent?.organizer === user?.uid ? 'You' : `${user?.first_name! + user?.last_name}`
+												}</span>
 										</div>
 									)}
 
@@ -227,7 +238,9 @@ const CalendarPartial: FC<ICalendarPartialProps> = ({ height, open, setIsOpen, e
 
 									{selectedEvent?.priority && (
 										<div className="flex items-center space-x-2">
-											<Badge variant={selectedEvent?.priority === 'High' ? 'outline' : selectedEvent?.priority === 'Medium' ? 'default' : 'solid'}>
+											<Badge
+												color={selectedEvent?.priority === 'High' ? 'red' : selectedEvent?.priority === 'Medium' ? 'amber' : 'emerald'}
+												variant={selectedEvent?.priority === 'High' ? 'outline' : selectedEvent?.priority === 'Medium' ? 'default' : 'solid'}>
 												Priority: {selectedEvent?.priority}
 											</Badge>
 										</div>
@@ -295,8 +308,44 @@ const CalendarPartial: FC<ICalendarPartialProps> = ({ height, open, setIsOpen, e
 								</div>
 							</CardBody>
 						</Card>
-						
           </ModalBody>
+					<ModalFooter>
+						<Button
+							variant='solid'
+							color='red'
+							onClick={() => {
+								dispatch(
+									updateEvent({
+										id: selectedEvent?.id!,
+										eventData: {
+											...selectedEvent,
+											status: 'Cancelled',
+										},
+									})
+								)
+							}}
+						>
+						Cancelar Evento	
+						</Button>
+
+						<Button
+							variant='solid'
+							color='emerald'
+							onClick={() => {
+								dispatch(
+									updateEvent({
+										id: selectedEvent?.id!,
+										eventData: {
+											...selectedEvent,
+											status: 'Completed',
+										},
+									})
+								)
+							}}
+							>
+							Confirmar Evento
+						</Button>
+					</ModalFooter>
         </Modal>
       )
       }

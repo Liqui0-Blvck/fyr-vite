@@ -9,7 +9,7 @@ import { appPages } from '../../../config/pages.config'
 import Modal, { ModalBody, ModalFooter, ModalHeader } from '../../../components/ui/Modal'
 import Select from '../../../components/form/Select'
 import Label from '../../../components/form/Label'
-import ProspectButtonsPartial, { ButtonsProspect, TButtons } from './ButtonsProspect'
+import ProspectButtonsPartial, { ButtonsProspect, TButtons } from './ButtonsClient'
 import PersonalInfo from './PersonalInfo.component'
 import NotesComponent from './Notes.component'
 import InteractionsList from './InteractionsList.component'
@@ -21,6 +21,7 @@ import { firestoreService } from '../../../config/firebase.config'
 import InvestmentList from './InvestmentList.component'
 import Strategies from './strategiesComponents/Strategies.component'
 import toast from 'react-hot-toast'
+import Agenda from './Agenda.component'
 
 const teams = [
   { id: "1", name: "Equipo de Ventas" },
@@ -246,6 +247,11 @@ const DetailClient = () => {
             {
               activeButton?.text === 'Interacciones' && (
                 <InteractionsList />
+              )
+            }
+            {
+              activeButton?.text === 'Agenda' && (
+                <Agenda />
               )
             }
             {

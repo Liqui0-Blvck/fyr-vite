@@ -64,7 +64,7 @@ export const transferProspectToClient = createAsyncThunk<
   { rejectValue: string }
 >(
   'prospects/transferProspectToClient',
-  async ({ prospectID, userID }, { rejectWithValue, dispatch }) => {
+  async ({ prospectID }, { rejectWithValue }) => {
     try {
       // Reference to the 'prospects' collection
       const leadRef = collection(firestoreService, 'prospects');

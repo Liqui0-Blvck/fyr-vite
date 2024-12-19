@@ -12,6 +12,7 @@ import Button from '../../components/ui/Button'
 import Validation from '../../components/form/Validation'
 import { createEvent } from '../../store/slices/calendar/calendarSlice'
 import toast from 'react-hot-toast'
+import { useLocation } from 'react-router-dom'
 
 
 interface ICalendarAgendaFormProps {
@@ -21,7 +22,13 @@ interface ICalendarAgendaFormProps {
 const CalendarAgendaForm: FC<ICalendarAgendaFormProps> = ({ isClosed }) => {
   const { isSubmitting, handleSubmit } = useSubmitButton()
   const { user } = useAppSelector((state: RootState) => state.auth.user)
+  const { pathname } = useLocation()
+  const { client } = useAppSelector((state: RootState) => state.client)
+  const { prospect } = useAppSelector((state: RootState) => state.prospect)
   const dispatch = useAppDispatch()
+
+  console.log(client)
+  console.log(prospect)
 
   const formik = useFormik({
     initialValues: {
@@ -34,9 +41,21 @@ const CalendarAgendaForm: FC<ICalendarAgendaFormProps> = ({ isClosed }) => {
       start: '',
       end: '',
     },
-    onSubmit: (values) => {
-      handleSubmit(async () => {
-        //@ts-ignore
+    onSubmit: async (values) => {
+      // Manejo adecuado de los invitados
+      let invitees: string[] = [];
+  
+      if (pathname.includes('/client')) {
+        if (client && client.email) {
+          invitees.push(client.email); // Si existe un cliente con email, lo agregamos
+        }
+      } else if (pathname.includes('/prospect')) {
+          if (prospect && prospect.email) {
+          invitees.push(prospect.email); // Si existe un prospecto con email, lo agregamos
+        }
+      }
+  
+      try {
         await dispatch(createEvent({
           id: generateUID(),
           title: values.title,
@@ -47,14 +66,19 @@ const CalendarAgendaForm: FC<ICalendarAgendaFormProps> = ({ isClosed }) => {
           start: values.start,
           end: values.end,
           priority: values.priority,
-          invitees: [], // Puedes agregar los invitados de alguna manera si es necesario
-          organizer: user?.uid,
-        })).unwrap()
-        toast.success('Evento creado correctamente')
-        isClosed(true)
-      })
+          invitees: invitees,  // Aseguramos que invitees sea un array de correos
+          organizer: user?.uid, // ID del organizador
+          status: 'pending',
+        })).unwrap();
+  
+        toast.success('Evento creado correctamente');
+        isClosed(false); // Cierra el formulario o el modal
+      } catch (error) {
+        toast.error('Hubo un error al crear el evento');
+      }
     }
-  })
+  });
+  
 
   return (
     <div className='flex flex-col gap-5'>

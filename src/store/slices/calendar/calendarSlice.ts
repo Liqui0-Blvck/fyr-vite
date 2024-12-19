@@ -39,6 +39,43 @@ export const fetchEvents = createAsyncThunk<Event[], void, { rejectValue: string
   }
 );
 
+export const fetchEventsByUser = createAsyncThunk<Event[], { userId: string, inviteeEmail: string }, { rejectValue: string }>(
+  'calendar/fetchEventsByUser',
+  async ({ userId, inviteeEmail }, { rejectWithValue }) => {
+    try {
+      const eventsRef = collection(firestoreService, 'events');
+
+      // Consulta que filtra por el organizador y por el correo electrónico de los invitados
+      const q = query(
+        eventsRef,
+        where('organizer', '==', userId), // Filtra por el organizador
+        where('invitees', 'array-contains', inviteeEmail) // Filtra por el correo electrónico del prospecto
+      );
+
+
+      // Obtener los documentos de la consulta
+      const querySnapshot = await getDocs(q);
+
+      console.log(querySnapshot.docs);
+
+      // Mapear los documentos a un array de eventos
+      const events = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Event[];
+
+      console.log(events)
+
+      // Retornar los eventos encontrados
+      return events;
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      return rejectWithValue('Error fetching events');
+    }
+  }
+);
+
+
 // 2. Crear un evento
 export const createEvent = createAsyncThunk<Event, Event, { rejectValue: string }>(
   'calendar/createEvent',
@@ -95,27 +132,37 @@ const calendarSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchEvents.fulfilled, (state, action: PayloadAction<Event[]>) => {
-        state.events = action.payload;
+        state.events = action.payload;  // Reemplazar los eventos actuales por los nuevos
         state.loading = false;
       })
       .addCase(fetchEvents.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-
+      .addCase(fetchEventsByUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchEventsByUser.fulfilled, (state, action: PayloadAction<Event[]>) => {
+        state.events = action.payload;  // Reemplazar los eventos con los eventos filtrados por userId y prospecto
+        state.loading = false;
+      })
+      .addCase(fetchEventsByUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       .addCase(createEvent.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(createEvent.fulfilled, (state, action: PayloadAction<Event>) => {
-        state.events.push(action.payload);
+        state.events.push(action.payload); // Agregar nuevo evento
         state.loading = false;
       })
       .addCase(createEvent.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-
       .addCase(updateEvent.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -131,7 +178,6 @@ const calendarSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-
       .addCase(deleteEvent.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -148,3 +194,4 @@ const calendarSlice = createSlice({
 });
 
 export default calendarSlice.reducer;
+

@@ -12,7 +12,7 @@ const NewlettersComponent = () => {
       promotionalEmails: true,
       productUpdates: true
     },
-    onSubmit: (values) => {
+    onSubmit: (_values) => {
 
     }
   })

@@ -1,4 +1,4 @@
-import { Investment } from "./Inversion.type";
+import { Investment } from "./Investment.type";
 
 export interface Strategy {
   id: string; // ID único de la estrategia

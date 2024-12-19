@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import isHotkey from 'is-hotkey';
 import { Editable, Slate, withReact } from 'slate-react';
-import { createEditor, Descendant } from 'slate';
+
 import { withHistory } from 'slate-history';
 import classNames from 'classnames';
 import {
@@ -27,6 +27,7 @@ import { TColors } from '../types/colors.type';
 import { TColorIntensity } from '../types/colorIntensities.type';
 import themeConfig from '../config/theme.config';
 import { TRounded } from '../types/rounded.type';
+import { createEditor, Descendant } from 'slate';
 
 const HOTKEYS = {
 	'mod+b': 'bold',
@@ -146,6 +147,7 @@ const RichText: FC<IRichTextProps> = (props) => {
 			`}</style>
 			<Slate
 				editor={editor}
+				//@ts-ignore
 				initialValue={!value.length ? initialValue : value}
 				onChange={handleChange}>
 				<Toolbar>

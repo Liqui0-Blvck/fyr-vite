@@ -14,7 +14,7 @@ export const appPages = {
 		to: '/prospect',
 		text: 'Prospectos',
 		icon: 'HeroUser',
-		subPages: {
+		subpages: {
 			detail_page: {
 				id: 'detail_page',
 				to: '/prospect/:id',
@@ -28,7 +28,7 @@ export const appPages = {
 		to: '/client',
 		text: 'Clientes',
 		icon: 'HeroUser',
-		subPages: {
+		subpages: {
 			detail_page: {
 				id: 'detail_page',
 				to: '/client/:id',
@@ -48,6 +48,47 @@ export const appPages = {
 		to: '/marketing',
 		text: 'Marketing',
 		icon: 'HeroSquare3Stack3D',
+	},
+	tasksPage: {
+		id: 'tasksPage',
+		to: '/tasks',
+		text: 'Tareas',
+		icon: 'HeroClipboardDocumentCheck',
+		subpages: {
+			task_list: {
+				id: 'task_list',
+				to: '/tasks/list',
+				text: 'Lista de tareas',
+				icon: 'HeroClipboardDocumentCheck',
+			},
+			task_dashboard: {
+				id: 'task_dashboard',
+				to: '/tasks/dashboard',
+				text: 'Tablero de tareas',
+				icon: 'HeroRectangleStack',
+			}
+		}
+	},
+	teamManagementPage: {
+		id: 'teamManagementPage',
+		to: '/team-management',
+		text: 'Gestión de equipo',
+		icon: 'HeroUserGroup',
+		subpages: {
+			teams: {
+				id: 'teams',
+				to: '/team-management/teams',
+				text: 'Equipos',
+				icon: 'HeroUserGroup',
+			},
+			roles: {
+				id: 'roles',
+				to: '/team-management/roles',
+				text: 'Roles',
+				icon: 'HeroShieldCheck',
+			}
+		}
+
 	}
 };
 

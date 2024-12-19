@@ -4,12 +4,14 @@ import auth, { AuthStates } from './slices/auth';
 import prospect, { ProspectsState } from './slices/prospect/prospectSlice';
 import client, { ClientsState } from './slices/clients/clientSlice';
 import calendar, { CalendarsState } from './slices/calendar/calendarSlice';
+import task, { TasksState } from './slices/tasks/tasksSlice';
 
 export type RootState = {
   auth: AuthStates,
   prospect: ProspectsState,
   client: ClientsState,
-  calendar: CalendarsState
+  calendar: CalendarsState,
+  task: TasksState,
 };
 
 export interface AsyncReducers {
@@ -20,7 +22,8 @@ const staticReducers = {
   auth,
   prospect,
   client,
-  calendar
+  calendar,
+  task
 
 };
 

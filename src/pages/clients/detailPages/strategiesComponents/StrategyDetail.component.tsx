@@ -10,7 +10,7 @@ interface StrategyDetailProps {
   isClosed: Dispatch<SetStateAction<boolean>>
 }
 
-function generateAIResponse(strategy: Strategy, input: string) {
+function generateAIResponse(strategy: Strategy, _input: string) {
   // Simulación de respuestas de IA basadas en la estrategia y la entrada del usuario
   const responses = [
     `Basado en la estrategia ${strategy.name}, te recomiendo considerar invertir en ${strategy.type === 'Conservador' ? 'bonos gubernamentales' : strategy.type === 'Moderado' ? 'una mezcla de acciones y bonos' : 'acciones de alto crecimiento'}.`,

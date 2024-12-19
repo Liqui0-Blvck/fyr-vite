@@ -30,10 +30,12 @@ interface EditProfileProps {
 }
 
 const rolesDb = [
-  { id: 'admin', name: 'Admin' },
-  { id: 'user', name: 'User' },
-  { id: 'guest', name: 'Guest' },
+  { id: 'admin', name: 'Administrador' }, // Persona encargada de supervisar y gestionar todo.
+  { id: 'manager', name: 'Jefe de Área' }, // Responsable de un área o equipo específico.
+  { id: 'executive', name: 'Ejecutivo' }, // Usuario que realiza las interacciones con prospectos y clientes.
+  { id: 'guest', name: 'Invitado' }, // Usuario con acceso limitado para visualización básica.
 ]
+
 
 const EditProfile = () => {
   const { user } = useAppSelector((state: RootState) => state.auth.user)

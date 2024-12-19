@@ -69,7 +69,7 @@ interface ChangePasswordPayload {
 // Thunk para actualizar la contraseña
 export const changePassword = createAsyncThunk(
   'auth/changePassword',
-  async (passwords: ChangePasswordPayload, { rejectWithValue, getState }) => {
+  async (passwords: ChangePasswordPayload, { rejectWithValue }) => {
     const auth = getAuth();
     const user = auth.currentUser;
 

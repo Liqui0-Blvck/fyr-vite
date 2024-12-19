@@ -6,7 +6,7 @@ import Card, {
   CardTitle,
 } from '../../../components/ui/Card';
 import Timeline, { TimelineItem } from '../../../components/Timeline';
-import { Investment } from 'src/types/app/Inversion.type';
+import { Investment } from 'src/types/app/Investment.type';
 
 interface TimelinePartialProps {
   investment: Investment | null;

@@ -6,7 +6,7 @@ import { Event } from '../../../types/app/Events.type';
 import { Interaction } from '../../../types/app/Interaction.type';
 import { Notes } from '../../../types/app/Notes.type';
 import { collection, doc, query, where, getDocs, deleteDoc, orderBy , addDoc, startAfter, limit, updateDoc } from 'firebase/firestore';
-import { Investment } from '../../../types/app/Inversion.type';
+import { Investment } from '../../../types/app/Investment.type';
 import { investmentRecords } from '../../../mocks/Data';
 import { Strategy } from '../../../types/app/Strategies.type';
 
